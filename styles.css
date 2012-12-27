@@ -1,0 +1,21 @@
+#xchessboard{background:#eee;width:340px;border:1px solid #ccc;margin:0 auto;padding:10px;}
+#xchessboard table{border:2px solid #789;}
+#xchessboard table,#xchessboard tr,#xchessboard td,#xchessboard div{margin:0;padding:0;}
+#xchessboard td,#xchessboard div{height:42px;width:42px;background-repeat:no-repeat;}
+#xchessboard div{position:relative;top:0;left:0;}
+#xchessboard input{width:340px;border:1px solid #ccc;font-size:12px;margin-top:10px;padding:5px;}
+#xchessboard .ws{background-color:#cfdce6;}
+#xchessboard .bs{background-color:#a5bbc9;}
+#xchessboard .bp{background-image:url('./images/bp.png');}
+#xchessboard .br{background-image:url('./images/br.png');}
+#xchessboard .bn{background-image:url('./images/bn.png');}
+#xchessboard .bb{background-image:url('./images/bb.png');}
+#xchessboard .bq{background-image:url('./images/bq.png');}
+#xchessboard .bk{background-image:url('./images/bk.png');}
+#xchessboard .wp{background-image:url('./images/wp.png');}
+#xchessboard .wr{background-image:url('./images/wr.png');}
+#xchessboard .wn{background-image:url('./images/wn.png');}
+#xchessboard .wb{background-image:url('./images/wb.png');}
+#xchessboard .wq{background-image:url('./images/wq.png');}
+#xchessboard .wk{background-image:url('./images/wk.png');}
+#xchessboard .highlight{background-image:url('./images/light.png');}
