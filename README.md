@@ -1,7 +1,7 @@
 Isepic Chess
 ================
 
-This is a drag-drop chess board written in JavaScript, it uses some jQuery to manipulate the DOM part.
+This is a drag-and-drop chess board written in JavaScript, it uses some jQuery for the DOM manipulation.
 
 Fatures
 -------------
@@ -22,6 +22,6 @@ To Do
 Copyright and License
 -------------
 
-Copyright (c) 2012 Ajax Isepic (ajax333221)
+Copyright © 2012 Ajax Isepic (ajax333221)
 
 Licensed under MIT License: http://opensource.org/licenses/mit-license.php
