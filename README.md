@@ -1,26 +1,27 @@
-JavaScript-Chess
+Isepic Chess
 ================
 
-This is a drag-drop chess board using jQuery
+This is a drag-drop chess board written in JavaScript, it uses some jQuery to manipulate the DOM part.
 
 Fatures
-================
+-------------
 
 - FEN validation
-- one-click get FEN position
 - supports drag-and-drop on pieces
-- highlight the squares when a piece is selected (legal moves)
-- half/full move clock
+- highlight of legal squares when a piece is selected
+- (half/full) move clock support
 
 To Do
-================
+-------------
 
+- rotate board
 - pawn promotion
-- rotate board button
-- store moves in PGN notation
+- read/store PGN
 - one-click jump to move from the (upcoming) PGN move list
 
-License
-================
+Copyright and License
+-------------
 
-MIT License: http://opensource.org/licenses/mit-license.php
+Copyright (c) 2012 Ajax Isepic (ajax333221)
+
+Licensed under MIT License: http://opensource.org/licenses/mit-license.php
