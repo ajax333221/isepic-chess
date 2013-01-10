@@ -1,9 +1,11 @@
 Isepic Chess
 ================
 
-This is a drag-and-drop chess board written in JavaScript, it uses some jQuery for the DOM manipulation.
+This is a drag-and-drop chess board written in JavaScript, it uses jQuery for DOM manipulation.
 
-Fatures
+**Status:** the project is partially finished (see the [To Do list](https://github.com/ajax333221/Isepic-Chess#to-do)).
+
+Features
 -------------
 
 - FEN validation
@@ -15,7 +17,7 @@ To Do
 -------------
 
 - rotate board
-- pawn promotion
+- show captured pieces
 - read/store PGN
 - one-click jump to move from the (upcoming) PGN move list
 
