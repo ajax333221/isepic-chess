@@ -3,23 +3,28 @@ Isepic Chess
 
 This is a drag-and-drop chess board written in JavaScript, it uses jQuery for DOM manipulation.
 
-**Status:** the project is partially finished (see the [To Do list](https://github.com/ajax333221/Isepic-Chess#to-do)).
+Currently, it can be used to analyze lengthy variations that are hard to calculate mentally or as a FEN reader, but in a near future its purposes will expand to cover more areas (e.g PGN reader).
+
+**Status:** the project is ongoing (see the [To Do list](https://github.com/ajax333221/Isepic-Chess#to-do)).
 
 Features
 -------------
 
-- FEN validation
-- supports drag-and-drop on pieces
-- highlight of legal squares when a piece is selected
-- (half/full) move clock support
+- advanced FEN validation
+- drag-and-drop pieces
+- highlight of legal moves
+- underpromote pawns (e.g knight, bishop, etc)
+- PGN move list
 
 To Do
 -------------
 
 - rotate board
 - show captured pieces
-- read/store PGN
-- one-click jump to move from the (upcoming) PGN move list
+- read custom PGN
+- one-click jump to position from the PGN move list
+- support move variations
+- manually set up positions
 
 Copyright and License
 -------------
