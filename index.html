@@ -12,11 +12,14 @@
 		
 		<script type="text/javascript">
 			$(function(){
-				writeBoard(null);
+				//console.log(xTest());
 				
-				/*move this into the .js?*/
-				$("#xfen").click(function(){
-					$(this).select();
+				initBoard("xboard","8/8/8/3k4/4PpP1/8/3K4/8 b - e3 0 1");
+				
+				$("body").click(function(){
+					if(typeof xboard!=="undefined"){
+						displayBoard(xboard);
+					}
 				});
 			});
 		</script>
