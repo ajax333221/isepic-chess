@@ -11,10 +11,12 @@ Features
 -------------
 
 - advanced FEN validation
-- drag-and-drop pieces
-- highlight of legal moves
-- underpromote pawns (e.g knight, bishop, etc)
+- ~~drag-and-drop pieces~~
+- ~~highlight of legal moves~~
+- ~~underpromote pawns (e.g knight, bishop, etc)~~
 - PGN move list
+
+**Note (Jun 2013):** some features are temproally disabled as the project is getting a major rewrite to be more object oriented.
 
 To Do
 -------------
