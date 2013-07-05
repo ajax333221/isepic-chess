@@ -14,14 +14,14 @@ Features
 - ~~drag-and-drop pieces~~
 - ~~highlight of legal moves~~
 - ~~underpromote pawns (e.g knight, bishop, etc)~~
-- PGN move list
+- ~~PGN move list~~
+- rotate board
 
 **Note (Jun 2013):** some features are temproally disabled as the project is getting a major rewrite to be more object oriented.
 
 To Do
 -------------
 
-- rotate board
 - show captured pieces
 - read custom PGN
 - one-click jump to position from the PGN move list
