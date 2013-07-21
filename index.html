@@ -14,9 +14,21 @@
 			$(function(){
 				//console.log(xTest());
 				
-				initBoard("xboard","r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1 ");
+				initBoard("xboard",null);
 				
-				simulateMove(bosToPos("h8"),bosToPos("h1"),xboard);
+				simulateMove(bosToPos("d2"),bosToPos("d4"),xboard);
+				simulateMove(bosToPos("d7"),bosToPos("d5"),xboard);
+				simulateMove(bosToPos("g1"),bosToPos("f3"),xboard);
+				simulateMove(bosToPos("c8"),bosToPos("f5"),xboard);
+				simulateMove(bosToPos("e2"),bosToPos("e3"),xboard);
+				simulateMove(bosToPos("b8"),bosToPos("c6"),xboard);
+				simulateMove(bosToPos("f1"),bosToPos("b5"),xboard);
+				simulateMove(bosToPos("a7"),bosToPos("a6"),xboard);
+				simulateMove(bosToPos("b5"),bosToPos("c6"),xboard);
+				simulateMove(bosToPos("b7"),bosToPos("c6"),xboard);
+				simulateMove(bosToPos("b1"),bosToPos("d2"),xboard);
+				simulateMove(bosToPos("h7"),bosToPos("h6"),xboard);
+				simulateMove(bosToPos("c2"),bosToPos("c4"),xboard);
 				
 				$("body").click(function(){
 					if(typeof xboard!=="undefined"){
