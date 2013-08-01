@@ -14,21 +14,10 @@
 			$(function(){
 				//console.log(xTest());
 				
-				initBoard("xboard",null);
+				initBoard("xboard","8/8/8/2k2p2/5pP1/8/5K2/8 b - g3 0 1 ");
 				
-				moveCaller(bosToPos("d2"),bosToPos("d4"),xboard);
-				moveCaller(bosToPos("d7"),bosToPos("d5"),xboard);
-				moveCaller(bosToPos("g1"),bosToPos("f3"),xboard);
-				moveCaller(bosToPos("c8"),bosToPos("f5"),xboard);
-				moveCaller(bosToPos("e2"),bosToPos("e3"),xboard);
-				moveCaller(bosToPos("b8"),bosToPos("c6"),xboard);
-				moveCaller(bosToPos("f1"),bosToPos("b5"),xboard);
-				moveCaller(bosToPos("a7"),bosToPos("a6"),xboard);
-				moveCaller(bosToPos("b5"),bosToPos("c6"),xboard);
-				moveCaller(bosToPos("b7"),bosToPos("c6"),xboard);
-				moveCaller(bosToPos("b1"),bosToPos("d2"),xboard);
-				moveCaller(bosToPos("h7"),bosToPos("h6"),xboard);
-				moveCaller(bosToPos("c2"),bosToPos("c4"),xboard);
+				moveCaller(bosToPos("f4"),bosToPos("g3"),xboard);
+				moveCaller(bosToPos("f2"),bosToPos("g3"),xboard);
 				
 				$("body").click(function(){
 					if(typeof xboard!=="undefined"){
