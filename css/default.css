@@ -1,13 +1,16 @@
-#xchessboard{font:normal 13px Helvetica,Arial,sans-serif;background:#eee;width:340px;border:1px solid #ccc;margin:0 auto;padding:10px;}
+#xchessboard{font:normal 13px Helvetica,Arial,sans-serif;background:#eee;margin:0 auto;padding:10px;}
 #xchessboard,#xchessboard input,#xchessboard textarea{width:340px;border:1px solid #ccc;}
 #xchessboard table{border:2px solid #789;}
-#xchessboard table,#xchessboard tr,#xchessboard td,#xchessboard div{margin:0;padding:0;}
-#xchessboard td,#xchessboard div{height:42px;width:42px;background-repeat:no-repeat;}
-#xchessboard div{position:relative;top:0;left:0;}
+#xchessboard table,#xchessboard tr,#xchessboard td{margin:0;padding:0;}
+#xchessboard td{height:42px;width:42px;background-repeat:no-repeat;}
 #xchessboard input{font-size:11px;margin:10px 0;padding:5px;}
 #xchessboard textarea{height:60px;font-size:13px;margin-bottom:10px;padding:5px;}
 #xchessboard .ws{background-color:#cfdce6;}
 #xchessboard .bs{background-color:#a5bbc9;}
+#xchessboard .ws.highlight{background-color:#dce6a7;}
+#xchessboard .bs.highlight{background-color:#bece92;}
+#xchessboard .ws.lastmove{background-color:#d3cdd1;}
+#xchessboard .bs.lastmove{background-color:#adafb7;}
 #xchessboard .bp{background-image:url('../images/bp.png');}
 #xchessboard .br{background-image:url('../images/br.png');}
 #xchessboard .bn{background-image:url('../images/bn.png');}
@@ -20,4 +23,3 @@
 #xchessboard .wb{background-image:url('../images/wb.png');}
 #xchessboard .wq{background-image:url('../images/wq.png');}
 #xchessboard .wk{background-image:url('../images/wk.png');}
-#xchessboard .highlight{background-image:url('../images/light.png');}
