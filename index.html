@@ -12,81 +12,9 @@
 		
 		<script type="text/javascript">
 			$(function(){
-				initBoard("xboard",null);
-				displayBoard(xboard,xboard.ActiveColor);
-				
-				/*the code below is for testing purposes*/
-				//console.log(xTest());
-				var I,LEN,LEGALMOVES,OLDFEN,ORIGIN=null;
+				createBoard("xboard",null);
 				UGLY_FUNCTION();
-				
-				$("body").append(
-				"<div>"+
-				"<a href='#' class='f0'>default</a><br>"+
-				"<a href='#' class='f1'>castle w</a><br>"+
-				"<a href='#' class='f2'>castle b</a><br>"+
-				"<a href='#' class='f3'>enpass w</a><br>"+
-				"<a href='#' class='f4'>enpass b</a>"+
-				"</div>");
-				
-				$(".f0").click(function(){
-					initBoard("xboard",null);
-					displayBoard(xboard,xboard.ActiveColor);
-					UGLY_FUNCTION();
-				});
-				
-				$(".f1").click(function(){
-					initBoard("xboard","r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1");
-					displayBoard(xboard,xboard.ActiveColor);
-					UGLY_FUNCTION();
-				});
-				
-				$(".f2").click(function(){
-					initBoard("xboard","r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R b KQkq - 0 1");
-					displayBoard(xboard,xboard.ActiveColor);
-					UGLY_FUNCTION();
-				});
-				
-				$(".f3").click(function(){
-					initBoard("xboard","4k3/8/4P3/3pP3/2P5/8/8/4K3 w - d6 0 1");
-					displayBoard(xboard,xboard.ActiveColor);
-					UGLY_FUNCTION();
-				});
-				
-				$(".f4").click(function(){
-					initBoard("xboard","4k3/8/8/3p4/3pPp2/3p4/8/4K3 b - e3 0 1");
-					displayBoard(xboard,xboard.ActiveColor);
-					UGLY_FUNCTION();
-				});
-				
-				function UGLY_FUNCTION(){
-					$(".ws,.bs").click(function(){
-						if(ORIGIN){
-							$(".ws,.bs").unbind('click');
-							$(".highlight").removeClass("highlight");
-							OLDFEN=xboard.Fen;
-							moveCaller(bosToPos(ORIGIN),bosToPos(this.id),xboard);
-							if(OLDFEN!=xboard.Fen){
-								$("#"+ORIGIN).addClass("lastmove");
-								$("#"+this.id).addClass("lastmove");
-							}
-							ORIGIN=null;
-							UGLY_FUNCTION();
-						}else{
-							LEGALMOVES=legalMoves(bosToPos(this.id),xboard);
-							LEN=LEGALMOVES.length;
-							
-							if(LEN){
-								ORIGIN=this.id;
-								$(this).addClass("highlight");
-								
-								for(I=0;I<LEN;I++){
-									$("#"+posToBos(LEGALMOVES[I])).removeClass("lastmove").addClass("highlight");
-								}
-							}
-						}
-					});
-				}
+				//console.log(xTest());
 			});
 		</script>
 	</head>

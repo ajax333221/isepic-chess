@@ -39,21 +39,21 @@ Features
 -------------
 
 - advanced FEN validation
-- highlight of legal moves
+- highlight legal moves
 - rotate board
 - PGN move list
+- navigation arrows
+- one-click jump to move from the PGN move list
+- highlight last move (works while navigating through PGN move list too)
 - ~~drag-and-drop pieces~~ (currently disabled)
 - ~~underpromote pawns (e.g knight, bishop, etc)~~ (currently defaults to queen)
-
-**Note (Jun 2013):** some features are temporally disabled as the project is getting a major rewrite to be more object oriented.
 
 To Do
 -------------
 
+- read PGN
 - show captured pieces
-- read custom PGN
-- one-click jump to position from the PGN move list
-- support move variations
+- move variations
 - manually set up positions
 
 Copyright and License
