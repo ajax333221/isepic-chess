@@ -7,10 +7,10 @@
 #xchessboard textarea{height:60px;font-size:13px;margin-bottom:10px;padding:5px;}
 #xchessboard .ws{background-color:#cfdce6;}
 #xchessboard .bs{background-color:#a5bbc9;}
-#xchessboard .ws.highlight{background-color:#dce6a7;}
-#xchessboard .bs.highlight{background-color:#bece92;}
 #xchessboard .ws.lastmove{background-color:#d3cdd1;}
 #xchessboard .bs.lastmove{background-color:#adafb7;}
+#xchessboard .ws.highlight{background-color:#dce6a7!important;}
+#xchessboard .bs.highlight{background-color:#bece92!important;}
 #xchessboard .bp{background-image:url('../images/bp.png');}
 #xchessboard .br{background-image:url('../images/br.png');}
 #xchessboard .bn{background-image:url('../images/bn.png');}
