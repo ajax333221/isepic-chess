@@ -23,3 +23,6 @@
 #xchessboard .wb{background-image:url('../images/wb.png');}
 #xchessboard .wq{background-image:url('../images/wq.png');}
 #xchessboard .wk{background-image:url('../images/wk.png');}
+#xchessboard .xpgn_active{color:#c74c1f;background:#fefe9b;}
+#xchessboard .xpgn_goto{cursor:pointer;}
+#xchessboard .xpgn_goto:hover{color:#c74c1f;background:#e0e0e0;}
