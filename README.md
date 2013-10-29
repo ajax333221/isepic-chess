@@ -45,8 +45,8 @@ Features
 - navigation arrows
 - one-click jump to move from the PGN move list
 - highlight last move (works while navigating through PGN move list too)
+- underpromote pawns (e.g knight, bishop, etc)
 - ~~drag-and-drop pieces~~ (currently disabled)
-- ~~underpromote pawns (e.g knight, bishop, etc)~~ (currently defaults to queen)
 
 To Do
 -------------
