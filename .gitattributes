@@ -1,2 +1,6 @@
-# Normalize line endings for all text-based files
-* text=auto
+# Normalize line endings
+*        text=auto
+
+*.html   text diff=html
+*.css    text
+*.js     text
