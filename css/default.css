@@ -9,18 +9,18 @@
 #xboard .bs.lastmove{background-color:#b58d72;}
 #xboard .ws.highlight{background-color:#8edcc7!important;}
 #xboard .bs.highlight{background-color:#7cc8b0!important;}
-#xboard .bp{background-image:url('../images/wiki/bp.png');}
-#xboard .br{background-image:url('../images/wiki/br.png');}
-#xboard .bn{background-image:url('../images/wiki/bn.png');}
-#xboard .bb{background-image:url('../images/wiki/bb.png');}
-#xboard .bq{background-image:url('../images/wiki/bq.png');}
-#xboard .bk{background-image:url('../images/wiki/bk.png');}
-#xboard .wp{background-image:url('../images/wiki/wp.png');}
-#xboard .wr{background-image:url('../images/wiki/wr.png');}
-#xboard .wn{background-image:url('../images/wiki/wn.png');}
-#xboard .wb{background-image:url('../images/wiki/wb.png');}
-#xboard .wq{background-image:url('../images/wiki/wq.png');}
-#xboard .wk{background-image:url('../images/wiki/wk.png');}
+#xboard .bp{background-image:url('../images/bp.png');}
+#xboard .br{background-image:url('../images/br.png');}
+#xboard .bn{background-image:url('../images/bn.png');}
+#xboard .bb{background-image:url('../images/bb.png');}
+#xboard .bq{background-image:url('../images/bq.png');}
+#xboard .bk{background-image:url('../images/bk.png');}
+#xboard .wp{background-image:url('../images/wp.png');}
+#xboard .wr{background-image:url('../images/wr.png');}
+#xboard .wn{background-image:url('../images/wn.png');}
+#xboard .wb{background-image:url('../images/wb.png');}
+#xboard .wq{background-image:url('../images/wq.png');}
+#xboard .wk{background-image:url('../images/wk.png');}
 #xcontrols input{font-size:11px;margin:10px 0 0 0;padding:5px;}
 #xcontrols hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
 #xmovelist{margin:10px 0 0 0;font-size:14px;color:#4862a3;}
