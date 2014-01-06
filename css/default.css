@@ -1,14 +1,14 @@
 #xchessboard{font:normal 13px Helvetica,Arial,sans-serif;color:#333;background:#eee;margin:0 auto;padding:10px;}
-#xchessboard,#xcontrols input{width:340px;border:1px solid #ccc;}
+#xchessboard,#xcontrols input{width:292px;border:1px solid #ccc;}
 #xboard{border:2px solid #789;}
 #xboard,#xboard tr,#xboard td{margin:0;padding:0;}
-#xboard td{height:42px;width:42px;background-repeat:no-repeat;}
-#xboard .ws{background-color:#ebc89d;}
+#xboard td{height:36px;width:36px;background-repeat:no-repeat;background-position:3px 3px;}
+#xboard .ws{background-color:#e0bd96;}
 #xboard .bs{background-color:#bd996b;}
-#xboard .ws.lastmove{background-color:#e0b9a0;}
+#xboard .ws.lastmove{background-color:#d7a784;}
 #xboard .bs.lastmove{background-color:#b58d72;}
-#xboard .ws.highlight{background-color:#c3d89c!important;}
-#xboard .bs.highlight{background-color:#a2b779!important;}
+#xboard .ws.highlight{background-color:#8edcc7!important;}
+#xboard .bs.highlight{background-color:#7cc8b0!important;}
 #xboard .bp{background-image:url('../images/wiki/bp.png');}
 #xboard .br{background-image:url('../images/wiki/br.png');}
 #xboard .bn{background-image:url('../images/wiki/bn.png');}
