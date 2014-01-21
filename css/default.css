@@ -29,5 +29,5 @@
 #xmovelist .xpgn_active{color:#c74c1f;background:#fefe9b;}
 #xmovelist .xpgn_goto{cursor:pointer;}
 #xmovelist .xpgn_goto:hover{color:#c74c1f;background:#e0e0e0;}
-#xgoto0,#xgoto1,#xgoto2,#xgoto3{width:25px!important;}
 #xrotate{width:50px!important;}
+#xgoto0,#xgoto1,#xgoto2,#xgoto3{width:25px!important;}
