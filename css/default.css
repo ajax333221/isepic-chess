@@ -5,8 +5,8 @@
 #xboard td{height:36px;width:36px;background-repeat:no-repeat;background-position:3px 3px;}
 #xboard .ws{background-color:#e0bd96;}
 #xboard .bs{background-color:#bd996b;}
-#xboard .ws.lastmove{background-color:#d7a784;}
-#xboard .bs.lastmove{background-color:#b58d72;}
+#xboard .ws.lastmove{background-color:#bdc997;}
+#xboard .bs.lastmove{background-color:#abb58b;}
 #xboard .ws.highlight{background-color:#8edcc7!important;}
 #xboard .bs.highlight{background-color:#7cc8b0!important;}
 #xboard .bp{background-image:url('../images/bp.png');}
