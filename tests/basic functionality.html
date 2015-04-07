@@ -11,6 +11,26 @@
 		<script src="../isepic-chess.js" type="text/javascript"></script>
 		
 		<script type="text/javascript">
+			function testDisambiguation(){
+				initBoard("xboard","6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",false);
+				
+				moveCaller(bosToPos("c3"),bosToPos("d4"),xboard);
+				moveCaller(bosToPos("h3"),bosToPos("g3"),xboard);
+				moveCaller(bosToPos("d4"),bosToPos("c3"),xboard);
+				moveCaller(bosToPos("g3"),bosToPos("h3"),xboard);
+				moveCaller(bosToPos("e5"),bosToPos("d4"),xboard);
+				moveCaller(bosToPos("h3"),bosToPos("f3"),xboard);
+				moveCaller(bosToPos("d4"),bosToPos("e5"),xboard);
+				moveCaller(bosToPos("f3"),bosToPos("g3"),xboard);
+				moveCaller(bosToPos("c5"),bosToPos("d4"),xboard);
+				
+				if((xboard.MoveList[1][1]+xboard.MoveList[5][1]+xboard.MoveList[9][1])!="B3d4Bed4Bc5d4"){
+					return "Error [1] "+(xboard.MoveList[1][1]+xboard.MoveList[5][1]+xboard.MoveList[9][1])+" != B3d4Bed4Bc5d4";
+				}
+				
+				return "Test testDisambiguation() was successful.";
+			}
+			
 			function testBasicFunctionality(){
 				initBoard("xboard",null,false);
 				
@@ -125,11 +145,10 @@
 				}
 				
 				
-				/*test para piece movements*/
 				/*test castling rights*/
 				/*test castling*/
-				/*test disambiguation*/
 				/*test all underpromotion*/
+				/*test para piece movements*/
 				
 				return "Test testBasicFunctionality() was successful.";
 			}
@@ -151,7 +170,7 @@
 			}
 			
 			$(function(){
-				$("body").html("<h2 style='padding-top:50px;text-align:center;'>"+testBasicFunctionality()+"<br>"+testFenPositions()+"</h2>");
+				$("body").html("<h2 style='padding-top:50px;text-align:center;'>"+testDisambiguation()+"<br>"+testBasicFunctionality()+"<br>"+testFenPositions()+"</h2>");
 			});
 		</script>
 	</head>
