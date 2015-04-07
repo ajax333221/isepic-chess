@@ -22,8 +22,8 @@ Features
 - navigation arrows
 - jump to move from the move list
 - pawn promotion droplist (default Queen)
-- original chess pieces style by ajax333221
 - ~~drag-and-drop pieces~~ (currently disabled)
+- original chess pieces style by ajax333221 ![White King](images/wk.png "white king")![White Queen](images/wq.png "white queen")
 
 To Do
 -------------
