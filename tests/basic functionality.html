@@ -62,7 +62,7 @@
 				moveCaller(bosToPos("h8"),bosToPos("h2"),xboard);
 				moveCaller(bosToPos("b5"),bosToPos("d7"),xboard);
 				
-				if((legalMoves(bosToPos("b8"),xboard).join("")+legalMoves(bosToPos("c8"),xboard).join("")+legalMoves(bosToPos("d8"),xboard).join("")+legalMoves(bosToPos("e8"),xboard).join(""))!="1,31,31,31,31,5"){
+				if((legalMoves(bosToPos("b8"),xboard).join("")+legalMoves(bosToPos("c8"),xboard).join("")+legalMoves(bosToPos("d8"),xboard).join("")+legalMoves(bosToPos("e8"),xboard).join(""))!="1,31,31,31,51,3"){
 					return "Error [5] remove check via (knight, bishop, queen, king) capture and via (king) moving out of check";
 				}
 				
@@ -124,7 +124,7 @@
 					return "Error [12] rook movement with capture";
 				}
 				
-				if(legalMoves(bosToPos("b1"),xboard).join("")!="5,05,2"){
+				if(legalMoves(bosToPos("b1"),xboard).join("")!="5,25,0"){
 					return "Error [13] knight movement, prevent capture ally";
 				}
 				
