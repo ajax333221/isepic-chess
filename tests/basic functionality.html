@@ -12,17 +12,17 @@
 		
 		<script type="text/javascript">
 			function testDisambiguation(){
-				initBoard("xboard","6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",false);
+				initBoard("xboard", "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1", false);
 				
-				moveCaller(bosToPos("c3"),bosToPos("d4"),xboard);
-				moveCaller(bosToPos("h3"),bosToPos("g3"),xboard);
-				moveCaller(bosToPos("d4"),bosToPos("c3"),xboard);
-				moveCaller(bosToPos("g3"),bosToPos("h3"),xboard);
-				moveCaller(bosToPos("e5"),bosToPos("d4"),xboard);
-				moveCaller(bosToPos("h3"),bosToPos("f3"),xboard);
-				moveCaller(bosToPos("d4"),bosToPos("e5"),xboard);
-				moveCaller(bosToPos("f3"),bosToPos("g3"),xboard);
-				moveCaller(bosToPos("c5"),bosToPos("d4"),xboard);
+				moveCaller(bosToPos("c3"), bosToPos("d4"), xboard);
+				moveCaller(bosToPos("h3"), bosToPos("g3"), xboard);
+				moveCaller(bosToPos("d4"), bosToPos("c3"), xboard);
+				moveCaller(bosToPos("g3"), bosToPos("h3"), xboard);
+				moveCaller(bosToPos("e5"), bosToPos("d4"), xboard);
+				moveCaller(bosToPos("h3"), bosToPos("f3"), xboard);
+				moveCaller(bosToPos("d4"), bosToPos("e5"), xboard);
+				moveCaller(bosToPos("f3"), bosToPos("g3"), xboard);
+				moveCaller(bosToPos("c5"), bosToPos("d4"), xboard);
 				
 				if((xboard.MoveList[1][1]+xboard.MoveList[5][1]+xboard.MoveList[9][1])!="B3d4Bed4Bc5d4"){
 					return "Error [1] "+(xboard.MoveList[1][1]+xboard.MoveList[5][1]+xboard.MoveList[9][1])+" != B3d4Bed4Bc5d4";
@@ -32,17 +32,17 @@
 			}
 			
 			function testBasicFunctionality(){
-				initBoard("xboard",null,false);
+				initBoard("xboard", null, false);
 				
-				moveCaller(bosToPos("e2"),bosToPos("e4"),xboard);
-				moveCaller(bosToPos("f7"),bosToPos("f5"),xboard);
-				moveCaller(bosToPos("d1"),bosToPos("h5"),xboard);
+				moveCaller(bosToPos("e2"), bosToPos("e4"), xboard);
+				moveCaller(bosToPos("f7"), bosToPos("f5"), xboard);
+				moveCaller(bosToPos("d1"), bosToPos("h5"), xboard);
 				
-				if(xboard.ActiveChecks!=1){
+				if(xboard.Active.checks!=1){
 					return "Error [1] checks";
 				}
 				
-				if(legalMoves(bosToPos("g7"),xboard).join("")!="2,6"){
+				if(legalMoves(bosToPos("g7"), xboard).join("")!="2,6"){
 					return "Error [2] remove check via pawn blocking";
 				}
 				
@@ -50,97 +50,97 @@
 					return "Error [3] movelist format, enpass, clocks";
 				}
 				
-				moveCaller(bosToPos("g7"),bosToPos("g6"),xboard);
-				moveCaller(bosToPos("h5"),bosToPos("g6"),xboard);
+				moveCaller(bosToPos("g7"), bosToPos("g6"), xboard);
+				moveCaller(bosToPos("h5"), bosToPos("g6"), xboard);
 				
-				if(legalMoves(bosToPos("h7"),xboard).join("")!="2,6"){
+				if(legalMoves(bosToPos("h7"), xboard).join("")!="2,6"){
 					return "Error [4] remove check via pawn capture";
 				}
 				
-				moveCaller(bosToPos("h7"),bosToPos("g6"),xboard);
-				moveCaller(bosToPos("f1"),bosToPos("b5"),xboard);
-				moveCaller(bosToPos("h8"),bosToPos("h2"),xboard);
-				moveCaller(bosToPos("b5"),bosToPos("d7"),xboard);
+				moveCaller(bosToPos("h7"), bosToPos("g6"), xboard);
+				moveCaller(bosToPos("f1"), bosToPos("b5"), xboard);
+				moveCaller(bosToPos("h8"), bosToPos("h2"), xboard);
+				moveCaller(bosToPos("b5"), bosToPos("d7"), xboard);
 				
-				if((legalMoves(bosToPos("b8"),xboard).join("")+legalMoves(bosToPos("c8"),xboard).join("")+legalMoves(bosToPos("d8"),xboard).join("")+legalMoves(bosToPos("e8"),xboard).join(""))!="1,31,31,31,51,3"){
+				if((legalMoves(bosToPos("b8"), xboard).join("")+legalMoves(bosToPos("c8"), xboard).join("")+legalMoves(bosToPos("d8"), xboard).join("")+legalMoves(bosToPos("e8"), xboard).join(""))!="1,31,31,31,51,3"){
 					return "Error [5] remove check via (knight, bishop, queen, king) capture and via (king) moving out of check";
 				}
 				
-				moveCaller(bosToPos("e8"),bosToPos("f7"),xboard);
-				moveCaller(bosToPos("e4"),bosToPos("f5"),xboard);
-				moveCaller(bosToPos("h2"),bosToPos("h6"),xboard);
-				moveCaller(bosToPos("g1"),bosToPos("f3"),xboard);
-				moveCaller(bosToPos("a7"),bosToPos("a5"),xboard);
-				moveCaller(bosToPos("f5"),bosToPos("g6"),xboard);
-				moveCaller(bosToPos("f7"),bosToPos("f6"),xboard);
-				moveCaller(bosToPos("g6"),bosToPos("g7"),xboard);
-				moveCaller(bosToPos("a8"),bosToPos("a6"),xboard);
-				moveCaller(bosToPos("d7"),bosToPos("e8"),xboard);
-				moveCaller(bosToPos("f6"),bosToPos("f5"),xboard);
-				moveCaller(bosToPos("e8"),bosToPos("f7"),xboard);
-				moveCaller(bosToPos("h6"),bosToPos("c6"),xboard);
+				moveCaller(bosToPos("e8"), bosToPos("f7"), xboard);
+				moveCaller(bosToPos("e4"), bosToPos("f5"), xboard);
+				moveCaller(bosToPos("h2"), bosToPos("h6"), xboard);
+				moveCaller(bosToPos("g1"), bosToPos("f3"), xboard);
+				moveCaller(bosToPos("a7"), bosToPos("a5"), xboard);
+				moveCaller(bosToPos("f5"), bosToPos("g6"), xboard);
+				moveCaller(bosToPos("f7"), bosToPos("f6"), xboard);
+				moveCaller(bosToPos("g6"), bosToPos("g7"), xboard);
+				moveCaller(bosToPos("a8"), bosToPos("a6"), xboard);
+				moveCaller(bosToPos("d7"), bosToPos("e8"), xboard);
+				moveCaller(bosToPos("f6"), bosToPos("f5"), xboard);
+				moveCaller(bosToPos("e8"), bosToPos("f7"), xboard);
+				moveCaller(bosToPos("h6"), bosToPos("c6"), xboard);
 				
-				setPromoteTo(4,xboard);
+				setPromoteTo(4, xboard);
 				
-				moveCaller(bosToPos("g7"),bosToPos("f8"),xboard);
+				moveCaller(bosToPos("g7"), bosToPos("f8"), xboard);
 				
 				if(xboard.MoveList[xboard.MoveList.length-1][1]!="gxf8=R"){
 					return "Error [6] underpromote to rook";
 				}
 				
-				moveCaller(bosToPos("a5"),bosToPos("a4"),xboard);
-				moveCaller(bosToPos("f7"),bosToPos("g6"),xboard);
+				moveCaller(bosToPos("a5"), bosToPos("a4"), xboard);
+				moveCaller(bosToPos("f7"), bosToPos("g6"), xboard);
 				
-				if(xboard.ActiveChecks!=2){
+				if(xboard.Active.checks!=2){
 					return "Error [7] 2 active checks via discovered check";
 				}
 				
-				moveCaller(bosToPos("f5"),bosToPos("g6"),xboard);
-				moveCaller(bosToPos("e1"),bosToPos("g1"),xboard);
+				moveCaller(bosToPos("f5"), bosToPos("g6"), xboard);
+				moveCaller(bosToPos("e1"), bosToPos("g1"), xboard);
 				
-				if(legalMoves(bosToPos("a4"),xboard).join("")!="5,0"){
+				if(legalMoves(bosToPos("a4"), xboard).join("")!="5,0"){
 					return "Error [8] prevent pawn capture moving forward";
 				}
 				
-				moveCaller(bosToPos("a6"),bosToPos("b6"),xboard);
+				moveCaller(bosToPos("a6"), bosToPos("b6"), xboard);
 				
 				if(xboard.MoveList[xboard.MoveList.length-1][1]!="Rab6"){
 					return "Error [9] pgn disambiguation";
 				}
 				
-				if(legalMoves(bosToPos("b2"),xboard).join("")!="5,14,1"){
+				if(legalMoves(bosToPos("b2"), xboard).join("")!="5,14,1"){
 					return "Error [10] pawn can move two squares";
 				}
 				
-				moveCaller(bosToPos("b2"),bosToPos("b4"),xboard);
+				moveCaller(bosToPos("b2"), bosToPos("b4"), xboard);
 				
-				if(legalMoves(bosToPos("a4"),xboard).join("")!="5,05,1"){
+				if(legalMoves(bosToPos("a4"), xboard).join("")!="5,05,1"){
 					return "Error [11] pawn can capture enpassant or move";
 				}
 				
-				moveCaller(bosToPos("c6"),bosToPos("f6"),xboard);
+				moveCaller(bosToPos("c6"), bosToPos("f6"), xboard);
 				
-				if(legalMoves(bosToPos("f8"),xboard).join("")!="0,40,31,52,50,6"){
+				if(legalMoves(bosToPos("f8"), xboard).join("")!="0,40,31,52,50,6"){
 					return "Error [12] rook movement with capture";
 				}
 				
-				if(legalMoves(bosToPos("b1"),xboard).join("")!="5,25,0"){
+				if(legalMoves(bosToPos("b1"), xboard).join("")!="5,25,0"){
 					return "Error [13] knight movement, prevent capture ally";
 				}
 				
-				moveCaller(bosToPos("a2"),bosToPos("a3"),xboard);
+				moveCaller(bosToPos("a2"), bosToPos("a3"), xboard);
 				
-				if(legalMoves(bosToPos("a4"),xboard).join("")!=""){
+				if(legalMoves(bosToPos("a4"), xboard).join("")!=""){
 					return "Error [14] prevent pawn capture moving forward(again) and no enpassant";
 				}
 				
-				moveCaller(bosToPos("b6"),bosToPos("a6"),xboard);
+				moveCaller(bosToPos("b6"), bosToPos("a6"), xboard);
 				
 				if(xboard.MoveList[xboard.MoveList.length-1][1]!="Ra6"){
 					return "Error [15] no pgn disambiguation needed";
 				}
 				
-				if(legalMoves(bosToPos("b4"),xboard).join("")!="3,1"){
+				if(legalMoves(bosToPos("b4"), xboard).join("")!="3,1"){
 					return "Error [16] pawn can only move one square forward";
 				}
 				
@@ -154,12 +154,92 @@
 			}
 			
 			function testFenPositions(){
-				var i,len,invalid_positions;
+				var i, len, invalid_positions;
 				
-				invalid_positions=["","hi","8/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KkQq - 0 1","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kqky - 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e4 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e9 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq x5 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNRw KQkq - 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR wKQkq - 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq- 0 1","8/8/8/8/8/8/8/8 b - - 0 1","8/7k/8/8/8/8/8/8 b - - 0 1","8/7K/8/8/8/8/8/8 b - - 0 1","8/K6K/8/8/8/7k/8/8 b - - 0 1","8/k6k/8/8/8/7K/8/8 b - - 0 1","P7/8/7K/8/8/7k/8/8 b - - 0 1","p7/8/7K/8/8/7k/8/8 b - - 0 1","8/8/7K/8/8/7k/8/p7 b - - 0 1","8/8/7K/8/8/7k/8/P7 b - - 0 1","p7/8/7K/8/8/7k/8/P7 b - - 0 1","P7/8/7K/8/8/7k/8/p7 b - - 0 1","8/8/61K/8/8/7k/8/8 b - - 0 1","8/8/K32P1/8/8/7k/8/8 b - - 0 1","8/8/1K51/8/8/7k/8/8 b - - 0 1","8/8/8K/8/8/7k/8/8 b - - 0 1","8/8/K8/8/8/7k/8/8 b - - 0 1","R7R/8/K7/8/8/7k/8/8 b - - 0 1","rnbqkbnr/pppp1ppp/8/4p3/1P6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppp1ppp/8/4p3/1p6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppppppp/8/8/8/R7/PPPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppp1ppp/8/4p3/7B/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppp1ppp/8/4p3/7b/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPNPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPnPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/1ppppppp/p7/8/7Q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1","rnbqkbnr/1ppppppp/p7/8/7q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1","4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRRR w - - 0 1","4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRQQ w - - 0 1","rnbqkbnr/pppp1ppp/8/4p3/8/PP6/1NPRPPBR/RNBQKBNR w KQkq - 0 1","8/8/4R3/2K5/3N2B1/8/4k3/8 b - - 0 1","8/7q/8/1k1p4/4K3/6n1/8/8 w - - 0 1","8/7q/5n2/1k1p4/4K3/6n1/8/4r3 w - - 0 1","8/8/8/1K6/5k2/6P1/8/8 w - - 0 1","8/8/8/1K6/1r3k2/8/8/8 b - - 0 1","8/8/8/1K6/1r3k2/6P1/8/8 b - - 0 1","8/8/8/1K6/1r3k2/6P1/8/8 w - - 0 1","8/8/4N3/1K6/5k2/8/8/8 w - - 0 1","8/8/4K3/4k3/8/8/8/8 w - - 0 1","8/8/2K5/8/6P1/2k5/8/8 w - g3 0 1","8/8/2K5/6p1/6P1/2k5/8/8 b - g6 0 1","8/8/2K5/8/8/2k5/8/8 w - g6 0 1","8/8/2K3N1/6p1/8/2k5/8/8 w - g6 0 1","8/8/2K3N1/6p1/6P1/2k3n1/8/8 b - g3 0 1","8/8/2K5/8/6p1/2k5/8/8 w - g3 0 1","8/8/2K5/8/6p1/2k5/8/8 b - g3 0 1","8/8/2K5/6P1/8/2k5/8/8 w - g6 0 1","8/8/2K5/6P1/8/2k5/8/8 b - g6 0 1","8/7P/2k4P/7P/7P/2K4P/7P/8 w - - 0 1","8/P7/P1k5/P7/P7/P1K5/P7/8 w - - 0 1","3knbnr/2pppppp/8/P7/P7/P3K3/P7/8 w - - 0 1","8/7p/2k4p/7p/7p/7p/PPPPPP2/K7 w - - 0 1","rnbq1rk1/ppppppbp/5np1/8/8/4P3/PPPPP1PP/4K3 w - - 0 1","rnbq1rk1/1pppppbp/5np1/8/4P3/4P3/PPP1P1PP/4K3 w - - 0 1","rnbq1rk1/3pppbp/5np1/4P3/4P3/4P3/PP2P1PP/4K3 w - - 0 1","4K3/8/8/8/8/4k3/8/8 w KQ - 0 1","8/4K3/8/8/8/8/8/4k3 w kq - 0 1","8/8/2k5/8/8/8/8/4K2R w Q - 0 1","8/8/2k5/8/8/8/8/r3K3 w K - 0 1","8/8/2k5/8/8/8/8/4K3 w K - 0 1","8/8/2k5/8/8/8/8/4K3 w Q - 0 1","8/8/2k5/8/8/8/8/4K3 w KQ - 0 1","4K3/8/2k5/8/8/8/8/R6R w KQ - 0 1","r6r/8/8/8/2K5/8/8/4k3 w kq - 0 1","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 0","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 1 1","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 00 1","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 5 3","rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -0 1","rnbqkb1r/pppppppp/8/8/3N1n2/8/PPPPPPPP/RNBQKB1R b KQkq - 8 4","rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"];
+				invalid_positions=["",
+				"hi",
+				"8/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KkQq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w Kqky - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e4 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e9 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq x5 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNRw KQkq - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR wKQkq - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq- 0 1",
+				"8/8/8/8/8/8/8/8 b - - 0 1",
+				"8/7k/8/8/8/8/8/8 b - - 0 1",
+				"8/7K/8/8/8/8/8/8 b - - 0 1",
+				"8/K6K/8/8/8/7k/8/8 b - - 0 1",
+				"8/k6k/8/8/8/7K/8/8 b - - 0 1",
+				"P7/8/7K/8/8/7k/8/8 b - - 0 1",
+				"p7/8/7K/8/8/7k/8/8 b - - 0 1",
+				"8/8/7K/8/8/7k/8/p7 b - - 0 1",
+				"8/8/7K/8/8/7k/8/P7 b - - 0 1",
+				"p7/8/7K/8/8/7k/8/P7 b - - 0 1",
+				"P7/8/7K/8/8/7k/8/p7 b - - 0 1",
+				"8/8/61K/8/8/7k/8/8 b - - 0 1",
+				"8/8/K32P1/8/8/7k/8/8 b - - 0 1",
+				"8/8/1K51/8/8/7k/8/8 b - - 0 1",
+				"8/8/8K/8/8/7k/8/8 b - - 0 1",
+				"8/8/K8/8/8/7k/8/8 b - - 0 1",
+				"R7R/8/K7/8/8/7k/8/8 b - - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/1P6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/1p6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/R7/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/7B/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/7b/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPNPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPnPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/1ppppppp/p7/8/7Q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbnr/1ppppppp/p7/8/7q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRRR w - - 0 1","4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRQQ w - - 0 1",
+				"rnbqkbnr/pppp1ppp/8/4p3/8/PP6/1NPRPPBR/RNBQKBNR w KQkq - 0 1","8/8/4R3/2K5/3N2B1/8/4k3/8 b - - 0 1",
+				"8/7q/8/1k1p4/4K3/6n1/8/8 w - - 0 1","8/7q/5n2/1k1p4/4K3/6n1/8/4r3 w - - 0 1",
+				"8/8/8/1K6/5k2/6P1/8/8 w - - 0 1",
+				"8/8/8/1K6/1r3k2/8/8/8 b - - 0 1",
+				"8/8/8/1K6/1r3k2/6P1/8/8 b - - 0 1",
+				"8/8/8/1K6/1r3k2/6P1/8/8 w - - 0 1",
+				"8/8/4N3/1K6/5k2/8/8/8 w - - 0 1",
+				"8/8/4K3/4k3/8/8/8/8 w - - 0 1",
+				"8/8/2K5/8/6P1/2k5/8/8 w - g3 0 1",
+				"8/8/2K5/6p1/6P1/2k5/8/8 b - g6 0 1",
+				"8/8/2K5/8/8/2k5/8/8 w - g6 0 1",
+				"8/8/2K3N1/6p1/8/2k5/8/8 w - g6 0 1",
+				"8/8/2K3N1/6p1/6P1/2k3n1/8/8 b - g3 0 1",
+				"8/8/2K5/8/6p1/2k5/8/8 w - g3 0 1",
+				"8/8/2K5/8/6p1/2k5/8/8 b - g3 0 1",
+				"8/8/2K5/6P1/8/2k5/8/8 w - g6 0 1",
+				"8/8/2K5/6P1/8/2k5/8/8 b - g6 0 1",
+				"8/7P/2k4P/7P/7P/2K4P/7P/8 w - - 0 1",
+				"8/P7/P1k5/P7/P7/P1K5/P7/8 w - - 0 1",
+				"3knbnr/2pppppp/8/P7/P7/P3K3/P7/8 w - - 0 1",
+				"8/7p/2k4p/7p/7p/7p/PPPPPP2/K7 w - - 0 1",
+				"rnbq1rk1/ppppppbp/5np1/8/8/4P3/PPPPP1PP/4K3 w - - 0 1",
+				"rnbq1rk1/1pppppbp/5np1/8/4P3/4P3/PPP1P1PP/4K3 w - - 0 1",
+				"rnbq1rk1/3pppbp/5np1/4P3/4P3/4P3/PP2P1PP/4K3 w - - 0 1",
+				"4K3/8/8/8/8/4k3/8/8 w KQ - 0 1",
+				"8/4K3/8/8/8/8/8/4k3 w kq - 0 1",
+				"8/8/2k5/8/8/8/8/4K2R w Q - 0 1",
+				"8/8/2k5/8/8/8/8/r3K3 w K - 0 1",
+				"8/8/2k5/8/8/8/8/4K3 w K - 0 1",
+				"8/8/2k5/8/8/8/8/4K3 w Q - 0 1",
+				"8/8/2k5/8/8/8/8/4K3 w KQ - 0 1",
+				"4K3/8/2k5/8/8/8/8/R6R w KQ - 0 1",
+				"r6r/8/8/8/2K5/8/8/4k3 w kq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 0",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 1 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 00 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 5 3",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -0 1",
+				"rnbqkb1r/pppppppp/8/8/3N1n2/8/PPPPPPPP/RNBQKB1R b KQkq - 8 4",
+				"rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"];
 				
-				for(i=0,len=invalid_positions.length;i<len;i++){
-					initBoard("xboard",invalid_positions[i],false);
+				for(i=0, len=invalid_positions.length; i<len; i++){
+					initBoard("xboard", invalid_positions[i], false);
 					
 					if(xboard.Fen!=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"){
 						return "Error: ["+i+"] \""+xboard.Fen+"\" wasn't caught.";
@@ -170,7 +250,17 @@
 			}
 			
 			$(function(){
-				$("body").html("<h2 style='padding-top:50px;text-align:center;'>"+testDisambiguation()+"<br>"+testBasicFunctionality()+"<br>"+testFenPositions()+"</h2>");
+				var startTIME, endTIME, testDis, testBasic, testFen;
+				
+				startTIME=new Date().getTime();
+				//---
+				testDis=testDisambiguation();
+				testBasic=testBasicFunctionality();
+				testFen=testFenPositions();
+				//---
+				endTIME=new Date().getTime();
+				
+				$("body").html("<h2 style='padding-top:50px;text-align:center;'>"+testDis+"<br>"+testBasic+"<br>"+testFen+"<br>"+(endTIME-startTIME)+"</h2>");
 			});
 		</script>
 	</head>
