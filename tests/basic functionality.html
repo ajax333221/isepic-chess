@@ -12,135 +12,139 @@
 		
 		<script type="text/javascript">
 			function testDisambiguation(){
-				initBoard("xboard", "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1", false);
+				var targetB;
 				
-				moveCaller(bosToPos("c3"), bosToPos("d4"), xboard);
-				moveCaller(bosToPos("h3"), bosToPos("g3"), xboard);
-				moveCaller(bosToPos("d4"), bosToPos("c3"), xboard);
-				moveCaller(bosToPos("g3"), bosToPos("h3"), xboard);
-				moveCaller(bosToPos("e5"), bosToPos("d4"), xboard);
-				moveCaller(bosToPos("h3"), bosToPos("f3"), xboard);
-				moveCaller(bosToPos("d4"), bosToPos("e5"), xboard);
-				moveCaller(bosToPos("f3"), bosToPos("g3"), xboard);
-				moveCaller(bosToPos("c5"), bosToPos("d4"), xboard);
+				targetB=initBoard("xboard", "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1", false, true);
 				
-				if((xboard.MoveList[1][1]+xboard.MoveList[5][1]+xboard.MoveList[9][1])!="B3d4Bed4Bc5d4"){
-					return "Error [1] "+(xboard.MoveList[1][1]+xboard.MoveList[5][1]+xboard.MoveList[9][1])+" != B3d4Bed4Bc5d4";
+				moveCaller(bosToPos("c3"), bosToPos("d4"), targetB);
+				moveCaller(bosToPos("h3"), bosToPos("g3"), targetB);
+				moveCaller(bosToPos("d4"), bosToPos("c3"), targetB);
+				moveCaller(bosToPos("g3"), bosToPos("h3"), targetB);
+				moveCaller(bosToPos("e5"), bosToPos("d4"), targetB);
+				moveCaller(bosToPos("h3"), bosToPos("f3"), targetB);
+				moveCaller(bosToPos("d4"), bosToPos("e5"), targetB);
+				moveCaller(bosToPos("f3"), bosToPos("g3"), targetB);
+				moveCaller(bosToPos("c5"), bosToPos("d4"), targetB);
+				
+				if((targetB.MoveList[1][1]+targetB.MoveList[5][1]+targetB.MoveList[9][1])!="B3d4Bed4Bc5d4"){
+					return "Error [1] "+(targetB.MoveList[1][1]+targetB.MoveList[5][1]+targetB.MoveList[9][1])+" != B3d4Bed4Bc5d4";
 				}
 				
 				return "Test testDisambiguation() was successful.";
 			}
 			
 			function testBasicFunctionality(){
-				initBoard("xboard", null, false);
+				var targetB;
 				
-				moveCaller(bosToPos("e2"), bosToPos("e4"), xboard);
-				moveCaller(bosToPos("f7"), bosToPos("f5"), xboard);
-				moveCaller(bosToPos("d1"), bosToPos("h5"), xboard);
+				targetB=initBoard("xboard", null, false, true);
 				
-				if(xboard.Active.checks!=1){
+				moveCaller(bosToPos("e2"), bosToPos("e4"), targetB);
+				moveCaller(bosToPos("f7"), bosToPos("f5"), targetB);
+				moveCaller(bosToPos("d1"), bosToPos("h5"), targetB);
+				
+				if(targetB.Active.checks!=1){
 					return "Error [1] checks";
 				}
 				
-				if(legalMoves(bosToPos("g7"), xboard).join("")!="2,6"){
+				if(legalMoves(bosToPos("g7"), targetB).join("")!="2,6"){
 					return "Error [2] remove check via pawn blocking";
 				}
 				
-				if(xboard.MoveList.join("&")!="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1,,,&rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1,e4,e2,e4&rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2,f5,f7,f5&rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2,Qh5+,d1,h5"){
+				if(targetB.MoveList.join("&")!="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1,,,&rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1,e4,e2,e4&rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2,f5,f7,f5&rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2,Qh5+,d1,h5"){
 					return "Error [3] movelist format, enpass, clocks";
 				}
 				
-				moveCaller(bosToPos("g7"), bosToPos("g6"), xboard);
-				moveCaller(bosToPos("h5"), bosToPos("g6"), xboard);
+				moveCaller(bosToPos("g7"), bosToPos("g6"), targetB);
+				moveCaller(bosToPos("h5"), bosToPos("g6"), targetB);
 				
-				if(legalMoves(bosToPos("h7"), xboard).join("")!="2,6"){
+				if(legalMoves(bosToPos("h7"), targetB).join("")!="2,6"){
 					return "Error [4] remove check via pawn capture";
 				}
 				
-				moveCaller(bosToPos("h7"), bosToPos("g6"), xboard);
-				moveCaller(bosToPos("f1"), bosToPos("b5"), xboard);
-				moveCaller(bosToPos("h8"), bosToPos("h2"), xboard);
-				moveCaller(bosToPos("b5"), bosToPos("d7"), xboard);
+				moveCaller(bosToPos("h7"), bosToPos("g6"), targetB);
+				moveCaller(bosToPos("f1"), bosToPos("b5"), targetB);
+				moveCaller(bosToPos("h8"), bosToPos("h2"), targetB);
+				moveCaller(bosToPos("b5"), bosToPos("d7"), targetB);
 				
-				if((legalMoves(bosToPos("b8"), xboard).join("")+legalMoves(bosToPos("c8"), xboard).join("")+legalMoves(bosToPos("d8"), xboard).join("")+legalMoves(bosToPos("e8"), xboard).join(""))!="1,31,31,31,51,3"){
+				if((legalMoves(bosToPos("b8"), targetB).join("")+legalMoves(bosToPos("c8"), targetB).join("")+legalMoves(bosToPos("d8"), targetB).join("")+legalMoves(bosToPos("e8"), targetB).join(""))!="1,31,31,31,51,3"){
 					return "Error [5] remove check via (knight, bishop, queen, king) capture and via (king) moving out of check";
 				}
 				
-				moveCaller(bosToPos("e8"), bosToPos("f7"), xboard);
-				moveCaller(bosToPos("e4"), bosToPos("f5"), xboard);
-				moveCaller(bosToPos("h2"), bosToPos("h6"), xboard);
-				moveCaller(bosToPos("g1"), bosToPos("f3"), xboard);
-				moveCaller(bosToPos("a7"), bosToPos("a5"), xboard);
-				moveCaller(bosToPos("f5"), bosToPos("g6"), xboard);
-				moveCaller(bosToPos("f7"), bosToPos("f6"), xboard);
-				moveCaller(bosToPos("g6"), bosToPos("g7"), xboard);
-				moveCaller(bosToPos("a8"), bosToPos("a6"), xboard);
-				moveCaller(bosToPos("d7"), bosToPos("e8"), xboard);
-				moveCaller(bosToPos("f6"), bosToPos("f5"), xboard);
-				moveCaller(bosToPos("e8"), bosToPos("f7"), xboard);
-				moveCaller(bosToPos("h6"), bosToPos("c6"), xboard);
+				moveCaller(bosToPos("e8"), bosToPos("f7"), targetB);
+				moveCaller(bosToPos("e4"), bosToPos("f5"), targetB);
+				moveCaller(bosToPos("h2"), bosToPos("h6"), targetB);
+				moveCaller(bosToPos("g1"), bosToPos("f3"), targetB);
+				moveCaller(bosToPos("a7"), bosToPos("a5"), targetB);
+				moveCaller(bosToPos("f5"), bosToPos("g6"), targetB);
+				moveCaller(bosToPos("f7"), bosToPos("f6"), targetB);
+				moveCaller(bosToPos("g6"), bosToPos("g7"), targetB);
+				moveCaller(bosToPos("a8"), bosToPos("a6"), targetB);
+				moveCaller(bosToPos("d7"), bosToPos("e8"), targetB);
+				moveCaller(bosToPos("f6"), bosToPos("f5"), targetB);
+				moveCaller(bosToPos("e8"), bosToPos("f7"), targetB);
+				moveCaller(bosToPos("h6"), bosToPos("c6"), targetB);
 				
-				setPromoteTo(4, xboard);
+				setPromoteTo(4, targetB);
 				
-				moveCaller(bosToPos("g7"), bosToPos("f8"), xboard);
+				moveCaller(bosToPos("g7"), bosToPos("f8"), targetB);
 				
-				if(xboard.MoveList[xboard.MoveList.length-1][1]!="gxf8=R"){
+				if(targetB.MoveList[targetB.MoveList.length-1][1]!="gxf8=R"){
 					return "Error [6] underpromote to rook";
 				}
 				
-				moveCaller(bosToPos("a5"), bosToPos("a4"), xboard);
-				moveCaller(bosToPos("f7"), bosToPos("g6"), xboard);
+				moveCaller(bosToPos("a5"), bosToPos("a4"), targetB);
+				moveCaller(bosToPos("f7"), bosToPos("g6"), targetB);
 				
-				if(xboard.Active.checks!=2){
+				if(targetB.Active.checks!=2){
 					return "Error [7] 2 active checks via discovered check";
 				}
 				
-				moveCaller(bosToPos("f5"), bosToPos("g6"), xboard);
-				moveCaller(bosToPos("e1"), bosToPos("g1"), xboard);
+				moveCaller(bosToPos("f5"), bosToPos("g6"), targetB);
+				moveCaller(bosToPos("e1"), bosToPos("g1"), targetB);
 				
-				if(legalMoves(bosToPos("a4"), xboard).join("")!="5,0"){
+				if(legalMoves(bosToPos("a4"), targetB).join("")!="5,0"){
 					return "Error [8] prevent pawn capture moving forward";
 				}
 				
-				moveCaller(bosToPos("a6"), bosToPos("b6"), xboard);
+				moveCaller(bosToPos("a6"), bosToPos("b6"), targetB);
 				
-				if(xboard.MoveList[xboard.MoveList.length-1][1]!="Rab6"){
+				if(targetB.MoveList[targetB.MoveList.length-1][1]!="Rab6"){
 					return "Error [9] pgn disambiguation";
 				}
 				
-				if(legalMoves(bosToPos("b2"), xboard).join("")!="5,14,1"){
+				if(legalMoves(bosToPos("b2"), targetB).join("")!="5,14,1"){
 					return "Error [10] pawn can move two squares";
 				}
 				
-				moveCaller(bosToPos("b2"), bosToPos("b4"), xboard);
+				moveCaller(bosToPos("b2"), bosToPos("b4"), targetB);
 				
-				if(legalMoves(bosToPos("a4"), xboard).join("")!="5,05,1"){
+				if(legalMoves(bosToPos("a4"), targetB).join("")!="5,05,1"){
 					return "Error [11] pawn can capture enpassant or move";
 				}
 				
-				moveCaller(bosToPos("c6"), bosToPos("f6"), xboard);
+				moveCaller(bosToPos("c6"), bosToPos("f6"), targetB);
 				
-				if(legalMoves(bosToPos("f8"), xboard).join("")!="0,40,31,52,50,6"){
+				if(legalMoves(bosToPos("f8"), targetB).join("")!="0,40,31,52,50,6"){
 					return "Error [12] rook movement with capture";
 				}
 				
-				if(legalMoves(bosToPos("b1"), xboard).join("")!="5,25,0"){
+				if(legalMoves(bosToPos("b1"), targetB).join("")!="5,25,0"){
 					return "Error [13] knight movement, prevent capture ally";
 				}
 				
-				moveCaller(bosToPos("a2"), bosToPos("a3"), xboard);
+				moveCaller(bosToPos("a2"), bosToPos("a3"), targetB);
 				
-				if(legalMoves(bosToPos("a4"), xboard).join("")!=""){
+				if(legalMoves(bosToPos("a4"), targetB).join("")!=""){
 					return "Error [14] prevent pawn capture moving forward(again) and no enpassant";
 				}
 				
-				moveCaller(bosToPos("b6"), bosToPos("a6"), xboard);
+				moveCaller(bosToPos("b6"), bosToPos("a6"), targetB);
 				
-				if(xboard.MoveList[xboard.MoveList.length-1][1]!="Ra6"){
+				if(targetB.MoveList[targetB.MoveList.length-1][1]!="Ra6"){
 					return "Error [15] no pgn disambiguation needed";
 				}
 				
-				if(legalMoves(bosToPos("b4"), xboard).join("")!="3,1"){
+				if(legalMoves(bosToPos("b4"), targetB).join("")!="3,1"){
 					return "Error [16] pawn can only move one square forward";
 				}
 				
@@ -154,7 +158,7 @@
 			}
 			
 			function testFenPositions(){
-				var i, len, invalid_positions;
+				var i, len, targetB, invalid_positions;
 				
 				invalid_positions=["",
 				"hi",
@@ -239,10 +243,10 @@
 				"rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"];
 				
 				for(i=0, len=invalid_positions.length; i<len; i++){
-					initBoard("xboard", invalid_positions[i], false);
+					targetB=initBoard("xboard", invalid_positions[i], false, true);
 					
-					if(xboard.Fen!=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"){
-						return "Error: ["+i+"] \""+xboard.Fen+"\" wasn't caught.";
+					if(targetB.Fen!=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"){
+						return "Error: ["+i+"] \""+targetB.Fen+"\" wasn't caught.";
 					}
 				}
 				
