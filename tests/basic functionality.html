@@ -26,8 +26,8 @@
 				moveCaller(bosToPos("f3"), bosToPos("g3"), targetB);
 				moveCaller(bosToPos("c5"), bosToPos("d4"), targetB);
 				
-				if((targetB.MoveList[1][1]+targetB.MoveList[5][1]+targetB.MoveList[9][1])!="B3d4Bed4Bc5d4"){
-					return "Error [1] "+(targetB.MoveList[1][1]+targetB.MoveList[5][1]+targetB.MoveList[9][1])+" != B3d4Bed4Bc5d4";
+				if((targetB.MoveList[1].PGNmove+targetB.MoveList[5].PGNmove+targetB.MoveList[9].PGNmove)!="B3d4Bed4Bc5d4"){
+					return "Error [1] "+(targetB.MoveList[1].PGNmove+targetB.MoveList[5].PGNmove+targetB.MoveList[9].PGNmove)+" != B3d4Bed4Bc5d4";
 				}
 				
 				return "Test testDisambiguation() was successful.";
@@ -50,7 +50,7 @@
 					return "Error [2] remove check via pawn blocking";
 				}
 				
-				if(targetB.MoveList.join("&")!="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1,,,&rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1,e4,e2,e4&rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2,f5,f7,f5&rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2,Qh5+,d1,h5"){
+				if(JSON.stringify(targetB.MoveList)!="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"FromBos\":\"\",\"ToBos\":\"\"},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"FromBos\":\"e2\",\"ToBos\":\"e4\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"FromBos\":\"f7\",\"ToBos\":\"f5\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"FromBos\":\"d1\",\"ToBos\":\"h5\"}]"){
 					return "Error [3] movelist format, enpass, clocks";
 				}
 				
@@ -88,7 +88,7 @@
 				
 				moveCaller(bosToPos("g7"), bosToPos("f8"), targetB);
 				
-				if(targetB.MoveList[targetB.MoveList.length-1][1]!="gxf8=R"){
+				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="gxf8=R"){
 					return "Error [6] underpromote to rook";
 				}
 				
@@ -108,7 +108,7 @@
 				
 				moveCaller(bosToPos("a6"), bosToPos("b6"), targetB);
 				
-				if(targetB.MoveList[targetB.MoveList.length-1][1]!="Rab6"){
+				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="Rab6"){
 					return "Error [9] pgn disambiguation";
 				}
 				
@@ -140,7 +140,7 @@
 				
 				moveCaller(bosToPos("b6"), bosToPos("a6"), targetB);
 				
-				if(targetB.MoveList[targetB.MoveList.length-1][1]!="Ra6"){
+				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="Ra6"){
 					return "Error [15] no pgn disambiguation needed";
 				}
 				
