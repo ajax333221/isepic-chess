@@ -1,18 +1,14 @@
 Isepic Chess
 ================
 
-This is a project written in JavaScript with some of the basic features you would expect to see like legal moves, move list, FEN reader, etc (see [Features](https://github.com/ajax333221/Isepic-Chess#features)). It uses jQuery for DOM manipulation.
+This project is written in JavaScript with some of the basic features you would expect to see like legal moves, move list, FEN reader, etc (see [Features](https://github.com/ajax333221/Isepic-Chess#features)). It uses jQuery for DOM manipulation.
 
-**Status:** the project is unfinished (see [To Do list](https://github.com/ajax333221/Isepic-Chess#to-do)).
-
-The code is as optimized as possible (which is probably a bad idea), I have spent hundreds of hours on the structure and fully reviewed the code multiple times. I could probably have finished the project by now, but my focus is aimed at making the code shorter and shorter.
+**Note:** it is still under construction with multiple [unfinished features](https://github.com/ajax333221/Isepic-Chess#to-do).
 
 Demo
 -------------
 
 http://ajax333221.github.io/Isepic-Chess/
-
-**Note:** most likely not the latest release.
 
 Features
 -------------
