@@ -16,15 +16,15 @@
 				
 				targetB=initBoard("xboard", "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1", false, true);
 				
-				moveCaller(bosToPos("c3"), bosToPos("d4"), targetB);
-				moveCaller(bosToPos("h3"), bosToPos("g3"), targetB);
-				moveCaller(bosToPos("d4"), bosToPos("c3"), targetB);
-				moveCaller(bosToPos("g3"), bosToPos("h3"), targetB);
-				moveCaller(bosToPos("e5"), bosToPos("d4"), targetB);
-				moveCaller(bosToPos("h3"), bosToPos("f3"), targetB);
-				moveCaller(bosToPos("d4"), bosToPos("e5"), targetB);
-				moveCaller(bosToPos("f3"), bosToPos("g3"), targetB);
-				moveCaller(bosToPos("c5"), bosToPos("d4"), targetB);
+				targetB.moveCaller(bosToPos("c3"), bosToPos("d4"));
+				targetB.moveCaller(bosToPos("h3"), bosToPos("g3"));
+				targetB.moveCaller(bosToPos("d4"), bosToPos("c3"));
+				targetB.moveCaller(bosToPos("g3"), bosToPos("h3"));
+				targetB.moveCaller(bosToPos("e5"), bosToPos("d4"));
+				targetB.moveCaller(bosToPos("h3"), bosToPos("f3"));
+				targetB.moveCaller(bosToPos("d4"), bosToPos("e5"));
+				targetB.moveCaller(bosToPos("f3"), bosToPos("g3"));
+				targetB.moveCaller(bosToPos("c5"), bosToPos("d4"));
 				
 				if((targetB.MoveList[1].PGNmove+targetB.MoveList[5].PGNmove+targetB.MoveList[9].PGNmove)!="B3d4Bed4Bc5d4"){
 					return "Error [1] "+(targetB.MoveList[1].PGNmove+targetB.MoveList[5].PGNmove+targetB.MoveList[9].PGNmove)+" != B3d4Bed4Bc5d4";
@@ -38,15 +38,15 @@
 				
 				targetB=initBoard("xboard", null, false, true);
 				
-				moveCaller(bosToPos("e2"), bosToPos("e4"), targetB);
-				moveCaller(bosToPos("f7"), bosToPos("f5"), targetB);
-				moveCaller(bosToPos("d1"), bosToPos("h5"), targetB);
+				targetB.moveCaller(bosToPos("e2"), bosToPos("e4"));
+				targetB.moveCaller(bosToPos("f7"), bosToPos("f5"));
+				targetB.moveCaller(bosToPos("d1"), bosToPos("h5"));
 				
 				if(targetB.Active.checks!=1){
 					return "Error [1] checks";
 				}
 				
-				if(legalMoves(bosToPos("g7"), targetB).join("")!="2,6"){
+				if(targetB.legalMoves(bosToPos("g7")).join("")!="2,6"){
 					return "Error [2] remove check via pawn blocking";
 				}
 				
@@ -54,97 +54,97 @@
 					return "Error [3] movelist format, enpass, clocks";
 				}
 				
-				moveCaller(bosToPos("g7"), bosToPos("g6"), targetB);
-				moveCaller(bosToPos("h5"), bosToPos("g6"), targetB);
+				targetB.moveCaller(bosToPos("g7"), bosToPos("g6"));
+				targetB.moveCaller(bosToPos("h5"), bosToPos("g6"));
 				
-				if(legalMoves(bosToPos("h7"), targetB).join("")!="2,6"){
+				if(targetB.legalMoves(bosToPos("h7")).join("")!="2,6"){
 					return "Error [4] remove check via pawn capture";
 				}
 				
-				moveCaller(bosToPos("h7"), bosToPos("g6"), targetB);
-				moveCaller(bosToPos("f1"), bosToPos("b5"), targetB);
-				moveCaller(bosToPos("h8"), bosToPos("h2"), targetB);
-				moveCaller(bosToPos("b5"), bosToPos("d7"), targetB);
+				targetB.moveCaller(bosToPos("h7"), bosToPos("g6"));
+				targetB.moveCaller(bosToPos("f1"), bosToPos("b5"));
+				targetB.moveCaller(bosToPos("h8"), bosToPos("h2"));
+				targetB.moveCaller(bosToPos("b5"), bosToPos("d7"));
 				
-				if((legalMoves(bosToPos("b8"), targetB).join("")+legalMoves(bosToPos("c8"), targetB).join("")+legalMoves(bosToPos("d8"), targetB).join("")+legalMoves(bosToPos("e8"), targetB).join(""))!="1,31,31,31,51,3"){
+				if((targetB.legalMoves(bosToPos("b8")).join("")+targetB.legalMoves(bosToPos("c8")).join("")+targetB.legalMoves(bosToPos("d8")).join("")+targetB.legalMoves(bosToPos("e8")).join(""))!="1,31,31,31,51,3"){
 					return "Error [5] remove check via (knight, bishop, queen, king) capture and via (king) moving out of check";
 				}
 				
-				moveCaller(bosToPos("e8"), bosToPos("f7"), targetB);
-				moveCaller(bosToPos("e4"), bosToPos("f5"), targetB);
-				moveCaller(bosToPos("h2"), bosToPos("h6"), targetB);
-				moveCaller(bosToPos("g1"), bosToPos("f3"), targetB);
-				moveCaller(bosToPos("a7"), bosToPos("a5"), targetB);
-				moveCaller(bosToPos("f5"), bosToPos("g6"), targetB);
-				moveCaller(bosToPos("f7"), bosToPos("f6"), targetB);
-				moveCaller(bosToPos("g6"), bosToPos("g7"), targetB);
-				moveCaller(bosToPos("a8"), bosToPos("a6"), targetB);
-				moveCaller(bosToPos("d7"), bosToPos("e8"), targetB);
-				moveCaller(bosToPos("f6"), bosToPos("f5"), targetB);
-				moveCaller(bosToPos("e8"), bosToPos("f7"), targetB);
-				moveCaller(bosToPos("h6"), bosToPos("c6"), targetB);
+				targetB.moveCaller(bosToPos("e8"), bosToPos("f7"));
+				targetB.moveCaller(bosToPos("e4"), bosToPos("f5"));
+				targetB.moveCaller(bosToPos("h2"), bosToPos("h6"));
+				targetB.moveCaller(bosToPos("g1"), bosToPos("f3"));
+				targetB.moveCaller(bosToPos("a7"), bosToPos("a5"));
+				targetB.moveCaller(bosToPos("f5"), bosToPos("g6"));
+				targetB.moveCaller(bosToPos("f7"), bosToPos("f6"));
+				targetB.moveCaller(bosToPos("g6"), bosToPos("g7"));
+				targetB.moveCaller(bosToPos("a8"), bosToPos("a6"));
+				targetB.moveCaller(bosToPos("d7"), bosToPos("e8"));
+				targetB.moveCaller(bosToPos("f6"), bosToPos("f5"));
+				targetB.moveCaller(bosToPos("e8"), bosToPos("f7"));
+				targetB.moveCaller(bosToPos("h6"), bosToPos("c6"));
 				
-				setPromoteTo(4, targetB);
+				targetB.setPromoteTo(4);
 				
-				moveCaller(bosToPos("g7"), bosToPos("f8"), targetB);
+				targetB.moveCaller(bosToPos("g7"), bosToPos("f8"));
 				
 				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="gxf8=R"){
 					return "Error [6] underpromote to rook";
 				}
 				
-				moveCaller(bosToPos("a5"), bosToPos("a4"), targetB);
-				moveCaller(bosToPos("f7"), bosToPos("g6"), targetB);
+				targetB.moveCaller(bosToPos("a5"), bosToPos("a4"));
+				targetB.moveCaller(bosToPos("f7"), bosToPos("g6"));
 				
 				if(targetB.Active.checks!=2){
 					return "Error [7] 2 active checks via discovered check";
 				}
 				
-				moveCaller(bosToPos("f5"), bosToPos("g6"), targetB);
-				moveCaller(bosToPos("e1"), bosToPos("g1"), targetB);
+				targetB.moveCaller(bosToPos("f5"), bosToPos("g6"));
+				targetB.moveCaller(bosToPos("e1"), bosToPos("g1"));
 				
-				if(legalMoves(bosToPos("a4"), targetB).join("")!="5,0"){
+				if(targetB.legalMoves(bosToPos("a4")).join("")!="5,0"){
 					return "Error [8] prevent pawn capture moving forward";
 				}
 				
-				moveCaller(bosToPos("a6"), bosToPos("b6"), targetB);
+				targetB.moveCaller(bosToPos("a6"), bosToPos("b6"));
 				
 				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="Rab6"){
 					return "Error [9] pgn disambiguation";
 				}
 				
-				if(legalMoves(bosToPos("b2"), targetB).join("")!="5,14,1"){
+				if(targetB.legalMoves(bosToPos("b2")).join("")!="5,14,1"){
 					return "Error [10] pawn can move two squares";
 				}
 				
-				moveCaller(bosToPos("b2"), bosToPos("b4"), targetB);
+				targetB.moveCaller(bosToPos("b2"), bosToPos("b4"));
 				
-				if(legalMoves(bosToPos("a4"), targetB).join("")!="5,05,1"){
+				if(targetB.legalMoves(bosToPos("a4")).join("")!="5,05,1"){
 					return "Error [11] pawn can capture enpassant or move";
 				}
 				
-				moveCaller(bosToPos("c6"), bosToPos("f6"), targetB);
+				targetB.moveCaller(bosToPos("c6"), bosToPos("f6"));
 				
-				if(legalMoves(bosToPos("f8"), targetB).join("")!="0,40,31,52,50,6"){
+				if(targetB.legalMoves(bosToPos("f8")).join("")!="0,40,31,52,50,6"){
 					return "Error [12] rook movement with capture";
 				}
 				
-				if(legalMoves(bosToPos("b1"), targetB).join("")!="5,25,0"){
+				if(targetB.legalMoves(bosToPos("b1")).join("")!="5,25,0"){
 					return "Error [13] knight movement, prevent capture ally";
 				}
 				
-				moveCaller(bosToPos("a2"), bosToPos("a3"), targetB);
+				targetB.moveCaller(bosToPos("a2"), bosToPos("a3"));
 				
-				if(legalMoves(bosToPos("a4"), targetB).join("")!=""){
+				if(targetB.legalMoves(bosToPos("a4")).join("")!=""){
 					return "Error [14] prevent pawn capture moving forward(again) and no enpassant";
 				}
 				
-				moveCaller(bosToPos("b6"), bosToPos("a6"), targetB);
+				targetB.moveCaller(bosToPos("b6"), bosToPos("a6"));
 				
 				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="Ra6"){
 					return "Error [15] no pgn disambiguation needed";
 				}
 				
-				if(legalMoves(bosToPos("b4"), targetB).join("")!="3,1"){
+				if(targetB.legalMoves(bosToPos("b4")).join("")!="3,1"){
 					return "Error [16] pawn can only move one square forward";
 				}
 				
