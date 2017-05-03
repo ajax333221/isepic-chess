@@ -5,10 +5,12 @@
 #xboard td{height:36px;width:36px;background-repeat:no-repeat;background-position:3px 3px;}
 #xboard .ws{background-color:#e0bd96;}
 #xboard .bs{background-color:#bd996b;}
-#xboard .ws.lastmove{background-color:#bdc997;}
-#xboard .bs.lastmove{background-color:#abb58b;}
+#xboard .ws.lastmove{background-color:#bfcc99;}
+#xboard .bs.lastmove{background-color:#a9b584;}
 #xboard .ws.highlight{background-color:#8edcc7!important;}
 #xboard .bs.highlight{background-color:#7cc8b0!important;}
+#xboard .ws.currpiece{background-color:#eaf051!important;}
+#xboard .bs.currpiece{background-color:#e0e639!important;}
 #xboard .bp{background-image:url('../images/bp.png');}
 #xboard .br{background-image:url('../images/br.png');}
 #xboard .bn{background-image:url('../images/bn.png');}
@@ -21,6 +23,7 @@
 #xboard .wb{background-image:url('../images/wb.png');}
 #xboard .wq{background-image:url('../images/wq.png');}
 #xboard .wk{background-image:url('../images/wk.png');}
+#xboard .xy{background-image:none!important;}
 #xcontrols input{font-size:11px;margin:10px 0 0 0;padding:5px;}
 #xcontrols hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
 #xmovelist{margin:10px 0 0 0;font-size:14px;color:#4862a3;}
