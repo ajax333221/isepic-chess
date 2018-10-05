@@ -12,153 +12,192 @@
 		
 		<script type="text/javascript">
 			function testDisambiguation(){
-				var targetB;
+				var board;
 				
-				targetB=initBoard("xboard", "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1", false, true);
+				board=initBoard({
+					name : "board_testDis",
+					fen : "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
 				
-				targetB.moveCaller(bosToPos("c3"), bosToPos("d4"));
-				targetB.moveCaller(bosToPos("h3"), bosToPos("g3"));
-				targetB.moveCaller(bosToPos("d4"), bosToPos("c3"));
-				targetB.moveCaller(bosToPos("g3"), bosToPos("h3"));
-				targetB.moveCaller(bosToPos("e5"), bosToPos("d4"));
-				targetB.moveCaller(bosToPos("h3"), bosToPos("f3"));
-				targetB.moveCaller(bosToPos("d4"), bosToPos("e5"));
-				targetB.moveCaller(bosToPos("f3"), bosToPos("g3"));
-				targetB.moveCaller(bosToPos("c5"), bosToPos("d4"));
-				
-				if((targetB.MoveList[1].PGNmove+targetB.MoveList[5].PGNmove+targetB.MoveList[9].PGNmove)!="B3d4Bed4Bc5d4"){
-					return "Error [1] "+(targetB.MoveList[1].PGNmove+targetB.MoveList[5].PGNmove+targetB.MoveList[9].PGNmove)+" != B3d4Bed4Bc5d4";
+				if(!board){
+					removeBoard(board);
+					return "Error [0] failed to initBoard()";
 				}
 				
+				board.moveCaller(bosToPos("c3"), bosToPos("d4"));
+				board.moveCaller(bosToPos("h3"), bosToPos("g3"));
+				board.moveCaller(bosToPos("d4"), bosToPos("c3"));
+				board.moveCaller(bosToPos("g3"), bosToPos("h3"));
+				board.moveCaller(bosToPos("e5"), bosToPos("d4"));
+				board.moveCaller(bosToPos("h3"), bosToPos("f3"));
+				board.moveCaller(bosToPos("d4"), bosToPos("e5"));
+				board.moveCaller(bosToPos("f3"), bosToPos("g3"));
+				board.moveCaller(bosToPos("c5"), bosToPos("d4"));
+				
+				if((board.MoveList[1].PGNmove+board.MoveList[5].PGNmove+board.MoveList[9].PGNmove)!="B3d4Bed4Bc5d4"){
+					removeBoard(board);
+					return "Error [1] "+(board.MoveList[1].PGNmove+board.MoveList[5].PGNmove+board.MoveList[9].PGNmove)+" != B3d4Bed4Bc5d4";
+				}
+				
+				removeBoard(board);
 				return "Test testDisambiguation() was successful.";
 			}
 			
 			function testBasicFunctionality(){
-				var targetB;
+				var board;
 				
-				targetB=initBoard("xboard", null, false, true);
+				board=initBoard({
+					name : "board_testBas",
+					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+					isRotated : true,
+					isHidden : true,
+					invalidFenStop : true
+				});
 				
-				targetB.moveCaller(bosToPos("e2"), bosToPos("e4"));
-				targetB.moveCaller(bosToPos("f7"), bosToPos("f5"));
-				targetB.moveCaller(bosToPos("d1"), bosToPos("h5"));
+				if(!board){
+					removeBoard(board);
+					return "Error [0] failed to initBoard()";
+				}
 				
-				if(targetB.Active.checks!=1){
+				board.moveCaller(bosToPos("e2"), bosToPos("e4"));
+				board.moveCaller(bosToPos("f7"), bosToPos("f5"));
+				board.moveCaller(bosToPos("d1"), bosToPos("h5"));
+				
+				if(board.Active.checks!=1){
+					removeBoard(board);
 					return "Error [1] checks";
 				}
 				
-				if(targetB.legalMoves(bosToPos("g7")).join("")!="2,6"){
+				if(legalMoves(board.Fen, bosToPos("g7")).join("")!="2,6"){
+					removeBoard(board);
 					return "Error [2] remove check via pawn blocking";
 				}
 				
-				if(JSON.stringify(targetB.MoveList)!="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"FromBos\":\"\",\"ToBos\":\"\"},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"FromBos\":\"e2\",\"ToBos\":\"e4\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"FromBos\":\"f7\",\"ToBos\":\"f5\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"FromBos\":\"d1\",\"ToBos\":\"h5\"}]"){
+				if(JSON.stringify(board.MoveList)!="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"FromBos\":\"\",\"ToBos\":\"\"},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"FromBos\":\"e2\",\"ToBos\":\"e4\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"FromBos\":\"f7\",\"ToBos\":\"f5\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"FromBos\":\"d1\",\"ToBos\":\"h5\"}]"){
+					removeBoard(board);
 					return "Error [3] movelist format, enpass, clocks";
 				}
 				
-				targetB.moveCaller(bosToPos("g7"), bosToPos("g6"));
-				targetB.moveCaller(bosToPos("h5"), bosToPos("g6"));
+				board.moveCaller(bosToPos("g7"), bosToPos("g6"));
+				board.moveCaller(bosToPos("h5"), bosToPos("g6"));
 				
-				if(targetB.legalMoves(bosToPos("h7")).join("")!="2,6"){
+				if(legalMoves(board.Fen, bosToPos("h7")).join("")!="2,6"){
+					removeBoard(board);
 					return "Error [4] remove check via pawn capture";
 				}
 				
-				targetB.moveCaller(bosToPos("h7"), bosToPos("g6"));
-				targetB.moveCaller(bosToPos("f1"), bosToPos("b5"));
-				targetB.moveCaller(bosToPos("h8"), bosToPos("h2"));
-				targetB.moveCaller(bosToPos("b5"), bosToPos("d7"));
+				board.moveCaller(bosToPos("h7"), bosToPos("g6"));
+				board.moveCaller(bosToPos("f1"), bosToPos("b5"));
+				board.moveCaller(bosToPos("h8"), bosToPos("h2"));
+				board.moveCaller(bosToPos("b5"), bosToPos("d7"));
 				
-				if((targetB.legalMoves(bosToPos("b8")).join("")+targetB.legalMoves(bosToPos("c8")).join("")+targetB.legalMoves(bosToPos("d8")).join("")+targetB.legalMoves(bosToPos("e8")).join(""))!="1,31,31,31,51,3"){
+				if((legalMoves(board.Fen, bosToPos("b8")).join("")+legalMoves(board.Fen, bosToPos("c8")).join("")+legalMoves(board.Fen, bosToPos("d8")).join("")+legalMoves(board.Fen, bosToPos("e8")).join(""))!="1,31,31,31,51,3"){
+					removeBoard(board);
 					return "Error [5] remove check via (knight, bishop, queen, king) capture and via (king) moving out of check";
 				}
 				
-				targetB.moveCaller(bosToPos("e8"), bosToPos("f7"));
-				targetB.moveCaller(bosToPos("e4"), bosToPos("f5"));
-				targetB.moveCaller(bosToPos("h2"), bosToPos("h6"));
-				targetB.moveCaller(bosToPos("g1"), bosToPos("f3"));
-				targetB.moveCaller(bosToPos("a7"), bosToPos("a5"));
-				targetB.moveCaller(bosToPos("f5"), bosToPos("g6"));
-				targetB.moveCaller(bosToPos("f7"), bosToPos("f6"));
-				targetB.moveCaller(bosToPos("g6"), bosToPos("g7"));
-				targetB.moveCaller(bosToPos("a8"), bosToPos("a6"));
-				targetB.moveCaller(bosToPos("d7"), bosToPos("e8"));
-				targetB.moveCaller(bosToPos("f6"), bosToPos("f5"));
-				targetB.moveCaller(bosToPos("e8"), bosToPos("f7"));
-				targetB.moveCaller(bosToPos("h6"), bosToPos("c6"));
+				board.moveCaller(bosToPos("e8"), bosToPos("f7"));
+				board.moveCaller(bosToPos("e4"), bosToPos("f5"));
+				board.moveCaller(bosToPos("h2"), bosToPos("h6"));
+				board.moveCaller(bosToPos("g1"), bosToPos("f3"));
+				board.moveCaller(bosToPos("a7"), bosToPos("a5"));
+				board.moveCaller(bosToPos("f5"), bosToPos("g6"));
+				board.moveCaller(bosToPos("f7"), bosToPos("f6"));
+				board.moveCaller(bosToPos("g6"), bosToPos("g7"));
+				board.moveCaller(bosToPos("a8"), bosToPos("a6"));
+				board.moveCaller(bosToPos("d7"), bosToPos("e8"));
+				board.moveCaller(bosToPos("f6"), bosToPos("f5"));
+				board.moveCaller(bosToPos("e8"), bosToPos("f7"));
+				board.moveCaller(bosToPos("h6"), bosToPos("c6"));
 				
-				targetB.setPromoteTo(4);
+				board.setPromoteTo(4);
 				
-				targetB.moveCaller(bosToPos("g7"), bosToPos("f8"));
+				board.moveCaller(bosToPos("g7"), bosToPos("f8"));
 				
-				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="gxf8=R"){
+				if(board.MoveList[board.MoveList.length-1].PGNmove!="gxf8=R"){
+					removeBoard(board);
 					return "Error [6] underpromote to rook";
 				}
 				
-				targetB.moveCaller(bosToPos("a5"), bosToPos("a4"));
-				targetB.moveCaller(bosToPos("f7"), bosToPos("g6"));
+				board.moveCaller(bosToPos("a5"), bosToPos("a4"));
+				board.moveCaller(bosToPos("f7"), bosToPos("g6"));
 				
-				if(targetB.Active.checks!=2){
+				if(board.Active.checks!=2){
+					removeBoard(board);
 					return "Error [7] 2 active checks via discovered check";
 				}
 				
-				targetB.moveCaller(bosToPos("f5"), bosToPos("g6"));
-				targetB.moveCaller(bosToPos("e1"), bosToPos("g1"));
+				board.moveCaller(bosToPos("f5"), bosToPos("g6"));
+				board.moveCaller(bosToPos("e1"), bosToPos("g1"));
 				
-				if(targetB.legalMoves(bosToPos("a4")).join("")!="5,0"){
+				if(legalMoves(board.Fen, bosToPos("a4")).join("")!="5,0"){
+					removeBoard(board);
 					return "Error [8] prevent pawn capture moving forward";
 				}
 				
-				targetB.moveCaller(bosToPos("a6"), bosToPos("b6"));
+				board.moveCaller(bosToPos("a6"), bosToPos("b6"));
 				
-				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="Rab6"){
+				if(board.MoveList[board.MoveList.length-1].PGNmove!="Rab6"){
+					removeBoard(board);
 					return "Error [9] pgn disambiguation";
 				}
 				
-				if(targetB.legalMoves(bosToPos("b2")).join("")!="5,14,1"){
+				if(legalMoves(board.Fen, bosToPos("b2")).join("")!="5,14,1"){
+					removeBoard(board);
 					return "Error [10] pawn can move two squares";
 				}
 				
-				targetB.moveCaller(bosToPos("b2"), bosToPos("b4"));
+				board.moveCaller(bosToPos("b2"), bosToPos("b4"));
 				
-				if(targetB.legalMoves(bosToPos("a4")).join("")!="5,05,1"){
+				if(legalMoves(board.Fen, bosToPos("a4")).join("")!="5,05,1"){
+					removeBoard(board);
 					return "Error [11] pawn can capture enpassant or move";
 				}
 				
-				targetB.moveCaller(bosToPos("c6"), bosToPos("f6"));
+				board.moveCaller(bosToPos("c6"), bosToPos("f6"));
 				
-				if(targetB.legalMoves(bosToPos("f8")).join("")!="0,40,31,52,50,6"){
+				if(legalMoves(board.Fen, bosToPos("f8")).join("")!="0,40,31,52,50,6"){
+					removeBoard(board);
 					return "Error [12] rook movement with capture";
 				}
 				
-				if(targetB.legalMoves(bosToPos("b1")).join("")!="5,25,0"){
+				if(legalMoves(board.Fen, bosToPos("b1")).join("")!="5,25,0"){
+					removeBoard(board);
 					return "Error [13] knight movement, prevent capture ally";
 				}
 				
-				targetB.moveCaller(bosToPos("a2"), bosToPos("a3"));
+				board.moveCaller(bosToPos("a2"), bosToPos("a3"));
 				
-				if(targetB.legalMoves(bosToPos("a4")).join("")!=""){
+				if(legalMoves(board.Fen, bosToPos("a4")).join("")!=""){
+					removeBoard(board);
 					return "Error [14] prevent pawn capture moving forward(again) and no enpassant";
 				}
 				
-				targetB.moveCaller(bosToPos("b6"), bosToPos("a6"));
+				board.moveCaller(bosToPos("b6"), bosToPos("a6"));
 				
-				if(targetB.MoveList[targetB.MoveList.length-1].PGNmove!="Ra6"){
+				if(board.MoveList[board.MoveList.length-1].PGNmove!="Ra6"){
+					removeBoard(board);
 					return "Error [15] no pgn disambiguation needed";
 				}
 				
-				if(targetB.legalMoves(bosToPos("b4")).join("")!="3,1"){
+				if(legalMoves(board.Fen, bosToPos("b4")).join("")!="3,1"){
+					removeBoard(board);
 					return "Error [16] pawn can only move one square forward";
 				}
-				
 				
 				/*test castling rights*/
 				/*test castling*/
 				/*test all underpromotion*/
 				/*test para piece movements*/
 				
+				removeBoard(board);
 				return "Test testBasicFunctionality() was successful.";
 			}
 			
 			function testFenPositions(){
-				var i, len, targetB, invalid_positions;
+				var i, len, board, invalid_positions;
 				
 				invalid_positions=["",
 				"hi",
@@ -243,28 +282,39 @@
 				"rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"];
 				
 				for(i=0, len=invalid_positions.length; i<len; i++){
-					targetB=initBoard("xboard", invalid_positions[i], false, true);
+					board=initBoard({
+						name : "board_testFens",
+						fen : invalid_positions[i],
+						isHidden : true
+					});
 					
-					if(targetB.Fen!=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"){
-						return "Error: ["+i+"] \""+targetB.Fen+"\" wasn't caught.";
+					if(!board){
+						removeBoard(board);
+						return "Error [0] failed to initBoard()";
+					}
+					
+					if(board.Fen!=="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"){
+						removeBoard(board);
+						return "Error: ["+i+"] \""+board.Fen+"\" wasn't caught.";
 					}
 				}
 				
+				removeBoard(board);
 				return "Test testFenPositions() was successful.";
 			}
 			
 			$(function(){
-				var startTIME, endTIME, testDis, testBasic, testFen;
+				var start_time, end_time, test_dis, test_basic, test_fen;
 				
-				startTIME=new Date().getTime();
+				start_time=new Date().getTime();
 				//---
-				testDis=testDisambiguation();
-				testBasic=testBasicFunctionality();
-				testFen=testFenPositions();
+				test_dis=testDisambiguation();
+				test_basic=testBasicFunctionality();
+				test_fen=testFenPositions();
 				//---
-				endTIME=new Date().getTime();
+				end_time=new Date().getTime();
 				
-				$("body").html("<h2 style='padding-top:50px;text-align:center;'>"+testDis+"<br>"+testBasic+"<br>"+testFen+"<br>"+(endTIME-startTIME)+"</h2>");
+				$("body").html("<h2 style='padding-top:50px;text-align:center;'>"+test_dis+"<br>"+test_basic+"<br>"+test_fen+"<br>"+(end_time-start_time)+"</h2>");
 			});
 		</script>
 	</head>
