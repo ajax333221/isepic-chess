@@ -1,8 +1,9 @@
-#xchessboard{font:normal 13px Helvetica,Arial,sans-serif;color:#333;background:#eee;margin:0 auto;padding:10px;}
-#xchessboard,#xcontrols input{width:292px;border:1px solid #ccc;}
+body{margin:0;padding:0;}
+#xchessboard{font:normal 13px Helvetica,Arial,sans-serif;color:#333;background:#eee;margin:20px;padding:20px;min-width:500px;}
+#xchessboard,#xcontrols input{border:1px solid #ccc;}
 #xboard{border:2px solid #789;}
 #xboard,#xboard tr,#xboard td{margin:0;padding:0;}
-#xboard td{height:36px;width:36px;background-repeat:no-repeat;background-position:3px 3px;}
+#xboard td{height:45px;width:45px;background-repeat:no-repeat;background-size:cover;}
 #xboard .ws{background-color:#e0bd96;}
 #xboard .bs{background-color:#bd996b;}
 #xboard .ws.lastmove{background-color:#bfcc99;}
@@ -24,15 +25,18 @@
 #xboard .wq{background-image:url('../images/wq.png');}
 #xboard .wk{background-image:url('../images/wk.png');}
 #xboard .xy{background-image:none!important;}
-#xcontrols input{font-size:11px;margin:10px 0 0 0;padding:5px;}
+#xcontrols{margin-top:20px;}
+#xcontrols input{font-size:11px;margin-top:10px;background:#fafafa;cursor:pointer;}
+#xcontrols input:hover{color:#496873;background:#fff;}
+#xcontrols input[type=text]{width:385px;padding:10px;margin-left:10px;}
+#xcontrols select{padding:5px 15px;margin-left:10px;}
 #xcontrols hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
-#xmovelist{margin:10px 0 0 0;font-size:14px;color:#4862a3;}
+#xmovelist{margin:10px 0 0 0;font-size:18px;color:#4862a3;}
 #xmovelist span{padding:0 0 0 2px;}
 #xmovelist .xpgn_number{padding:0;color:#555;font-weight:bold;}
 #xmovelist .xpgn_active{color:#c74c1f;background:#fefe9b;}
 #xmovelist .xpgn_goto{cursor:pointer;}
 #xmovelist .xpgn_goto:hover{color:#c74c1f;background:#e0e0e0;}
-#xrotate{width:50px!important;}
-#xgoto0,#xgoto1,#xgoto2,#xgoto3{width:25px!important;}
-#xobjinfo{font-size:15px;position:absolute;right:100px;top:10px;border:1px solid #789;width:250px;padding:5px;background:#e3eddf;}
+#xrotate,#xgoto0,#xgoto1,#xgoto2,#xgoto3{padding:15px;margin-left:10px;}
+#xobjinfo{font-size:15px;border:1px solid #789;padding:5px;margin-top:60px;background:#e3eddf;}
 #xobjinfo strong{background:#effffb;}
