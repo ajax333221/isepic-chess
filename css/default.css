@@ -3,7 +3,7 @@ body{margin:0;padding:0;}
 #xchessboard,#xcontrols input{border:1px solid #ccc;}
 #xboard{border:2px solid #789;}
 #xboard,#xboard tr,#xboard td{margin:0;padding:0;}
-#xboard td{height:45px;width:45px;background-repeat:no-repeat;background-size:cover;}
+#xboard td{height:39px;width:39px;background-repeat:no-repeat;background-size:75%;background-position:50% 50%;}
 #xboard .ws{background-color:#e0bd96;}
 #xboard .bs{background-color:#bd996b;}
 #xboard .ws.lastmove{background-color:#bfcc99;}
