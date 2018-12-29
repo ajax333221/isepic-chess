@@ -1,8 +1,8 @@
 body{margin:0;padding:0;}
 #xchessboard{font:normal 13px Helvetica,Arial,sans-serif;color:#333;background:#eee;margin:20px;padding:20px;min-width:500px;}
 #xchessboard,#xcontrols input{border:1px solid #ccc;}
-#xboard{border:2px solid #789;}
-#xboard,#xboard tr,#xboard td{margin:0;padding:0;}
+#xboard table{border:2px solid #789;}
+#xboard table,#xboard tr,#xboard td{margin:0;padding:0;}
 #xboard td{height:39px;width:39px;background-repeat:no-repeat;background-size:75%;background-position:50% 50%;}
 #xboard .ws{background-color:#e0bd96;}
 #xboard .bs{background-color:#bd996b;}
@@ -37,6 +37,6 @@ body{margin:0;padding:0;}
 #xmovelist .xpgn_active{color:#c74c1f;background:#fefe9b;}
 #xmovelist .xpgn_goto{cursor:pointer;}
 #xmovelist .xpgn_goto:hover{color:#c74c1f;background:#e0e0e0;}
-#xrotate,#xgoto0,#xgoto1,#xgoto2,#xgoto3{padding:15px;margin-left:10px;}
+#xrotate,#xnav_first,#xnav_previous,#xnav_next,#xnav_last{padding:15px;margin-left:10px;}
 #xobjinfo{font-size:15px;border:1px solid #789;padding:5px;margin-top:60px;background:#e3eddf;}
 #xobjinfo strong{background:#effffb;}
