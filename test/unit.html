@@ -11,9 +11,10 @@
 				var board, board_created, error_msg;
 				
 				error_msg="";
-				board_created=false;
 				
 				//if(!error_msg){
+					board_created=false;
+					
 					board=IsepicChess.initBoard({
 						name : "board_testDis",
 						fen : "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",
@@ -55,9 +56,10 @@
 				var board, board_created, error_msg;
 				
 				error_msg="";
-				board_created=false;
 				
 				//if(!error_msg){
+					board_created=false;
+					
 					board=IsepicChess.initBoard({
 						name : "board_testBas",
 						fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -339,7 +341,7 @@
 				
 				end_time=new Date().getTime();
 				
-				$("body").html("<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><h2>"+test_dis+"</h2><h2>"+test_basic+"</h2><h2>"+test_fen+"</h2><span>"+(end_time-start_time)+" ms</span>");
+				$("body").html("<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><h2>"+test_dis+"</h2><h2>"+test_basic+"</h2><h2>"+test_fen+"</h2><span>"+(end_time-start_time)+" ms</span></div>");
 			});
 		</script>
 	</head>
