@@ -1,4 +1,7 @@
 body{margin:0;padding:0;}
+#xtests{margin-top:50px;color:green;text-align:center;}
+#xtests span{color:black;}
+#xtests .redColor, #xchessboard .redColor{color:red;}
 #xchessboard{font:normal 13px Helvetica,Arial,sans-serif;color:#333;background:#eee;margin:20px;padding:20px;min-width:500px;}
 #xchessboard,#xcontrols input{border:1px solid #ccc;}
 #xboard table{border:2px solid #789;}
@@ -12,18 +15,18 @@ body{margin:0;padding:0;}
 #xboard .bs.highlight{background-color:#7cc8b0!important;}
 #xboard .ws.currpiece{background-color:#eaf051!important;}
 #xboard .bs.currpiece{background-color:#e0e639!important;}
-#xboard .bp{background-image:url('../images/bp.png');}
-#xboard .br{background-image:url('../images/br.png');}
-#xboard .bn{background-image:url('../images/bn.png');}
-#xboard .bb{background-image:url('../images/bb.png');}
-#xboard .bq{background-image:url('../images/bq.png');}
-#xboard .bk{background-image:url('../images/bk.png');}
-#xboard .wp{background-image:url('../images/wp.png');}
-#xboard .wr{background-image:url('../images/wr.png');}
-#xboard .wn{background-image:url('../images/wn.png');}
-#xboard .wb{background-image:url('../images/wb.png');}
-#xboard .wq{background-image:url('../images/wq.png');}
-#xboard .wk{background-image:url('../images/wk.png');}
+#xboard .bp{background-image:url('./images/bp.png');}
+#xboard .br{background-image:url('./images/br.png');}
+#xboard .bn{background-image:url('./images/bn.png');}
+#xboard .bb{background-image:url('./images/bb.png');}
+#xboard .bq{background-image:url('./images/bq.png');}
+#xboard .bk{background-image:url('./images/bk.png');}
+#xboard .wp{background-image:url('./images/wp.png');}
+#xboard .wr{background-image:url('./images/wr.png');}
+#xboard .wn{background-image:url('./images/wn.png');}
+#xboard .wb{background-image:url('./images/wb.png');}
+#xboard .wq{background-image:url('./images/wq.png');}
+#xboard .wk{background-image:url('./images/wk.png');}
 #xboard .xy{background-image:none!important;}
 #xcontrols{margin-top:20px;}
 #xcontrols input{font-size:11px;margin-top:10px;background:#fafafa;cursor:pointer;}
