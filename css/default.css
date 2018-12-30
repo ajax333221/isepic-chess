@@ -1,8 +1,15 @@
 body{margin:0;padding:0;}
-#xtests{margin-top:50px;color:green;text-align:center;}
-#xtests span{color:black;}
-#xtests .redColor, #xchessboard .redColor{color:red;}
 #xchessboard{font:normal 13px Helvetica,Arial,sans-serif;color:#333;background:#eee;margin:20px;padding:20px;min-width:500px;}
+#xchessboard a,#xchessboard a:visited{color:#4183c4;text-decoration:none;}
+#xchessboard a:hover,#xchessboard a:focus{color:#265079;text-decoration:none;}
+#xchessboard a:active{color:#63664B;}
+#xchessboard h3{margin:0 0 25px 0;padding:8px 15px;color:#696B55;background:#e3e3e3;}
+#xchessboard h3 a{margin-left:40px;font-size:12px;}
+#xchessboard.tests{color:green;text-align:center;}
+#xchessboard.tests span{color:#333;}
+#xchessboard .inlineb{display:inline-block;}
+#xchessboard .redColor{color:red;}
+#xchessboard hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
 #xchessboard,#xcontrols input{border:1px solid #ccc;}
 #xboard table{border:2px solid #789;}
 #xboard table,#xboard tr,#xboard td{margin:0;padding:0;}
@@ -33,13 +40,12 @@ body{margin:0;padding:0;}
 #xcontrols input:hover{color:#496873;background:#fff;}
 #xcontrols input[type=text]{width:385px;padding:10px;margin-left:10px;}
 #xcontrols select{padding:5px 15px;margin-left:10px;}
-#xcontrols hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
-#xmovelist{margin:10px 0 0 0;font-size:18px;color:#4862a3;}
+#xmovelist{margin:10px 0 0 0;padding:10px;font-size:18px;color:#4862a3;border:1px solid #c4cca7;background:#eef2df;}
 #xmovelist span{padding:0 0 0 2px;}
 #xmovelist .xpgn_number{padding:0;color:#555;font-weight:bold;}
 #xmovelist .xpgn_active{color:#c74c1f;background:#fefe9b;}
 #xmovelist .xpgn_goto{cursor:pointer;}
 #xmovelist .xpgn_goto:hover{color:#c74c1f;background:#e0e0e0;}
 #xrotate,#xnav_first,#xnav_previous,#xnav_next,#xnav_last{padding:15px;margin-left:10px;}
-#xobjinfo{font-size:15px;border:1px solid #789;padding:5px;margin-top:60px;background:#e3eddf;}
-#xobjinfo strong{background:#effffb;}
+#xinfoholder{margin:20px 0 0 0;padding:10px;font-size:15px;border:1px solid #d0d0d0;background:#e3e3e3;}
+#xinfoholder strong{background:#f0efff;}

@@ -8,21 +8,23 @@
 		<script src="../js/isepic-chess.js"></script>
 		<script>
 			function testDisambiguation(){
-				var board, error_msg;
+				var board, board_created, error_msg;
 				
 				error_msg="";
-				
-				board=IsepicChess.initBoard({
-					name : "board_testDis",
-					fen : "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",
-					isHidden : true,
-					invalidFenStop : true
-				});
+				board_created=false;
 				
 				//if(!error_msg){
+					board=IsepicChess.initBoard({
+						name : "board_testDis",
+						fen : "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",
+						isHidden : true,
+						invalidFenStop : true
+					});
+					
 					if(board===null){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [0] failed to initBoard()";
+					}else{
+						board_created=true;
 					}
 				//}
 				
@@ -38,33 +40,36 @@
 					board.moveCaller(IsepicChess.bosToPos("c5"), IsepicChess.bosToPos("d4"));
 					
 					if((board.MoveList[1].PGNmove+board.MoveList[5].PGNmove+board.MoveList[9].PGNmove)!=="B3d4Bed4Bc5d4"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [1] "+(board.MoveList[1].PGNmove+board.MoveList[5].PGNmove+board.MoveList[9].PGNmove)+" !== B3d4Bed4Bc5d4";
 					}
 				}
 				
-				IsepicChess.removeBoard(board.BoardName);
+				if(board_created){
+					IsepicChess.removeBoard(board.BoardName);
+				}
 				
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testDisambiguation() was successful.");
 			}
 			
 			function testBasicFunctionality(){
-				var board, error_msg;
+				var board, board_created, error_msg;
 				
 				error_msg="";
-				
-				board=IsepicChess.initBoard({
-					name : "board_testBas",
-					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					isRotated : true,
-					isHidden : true,
-					invalidFenStop : true
-				});
+				board_created=false;
 				
 				//if(!error_msg){
+					board=IsepicChess.initBoard({
+						name : "board_testBas",
+						fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+						isRotated : true,
+						isHidden : true,
+						invalidFenStop : true
+					});
+					
 					if(board===null){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [0] failed to initBoard()";
+					}else{
+						board_created=true;
 					}
 				//}
 				
@@ -74,21 +79,18 @@
 					board.moveCaller(IsepicChess.bosToPos("d1"), IsepicChess.bosToPos("h5"));
 					
 					if(board.Active.checks!==1){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [1] checks";
 					}
 				}
 				
 				if(!error_msg){
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("g7")).join("")!=="2,6"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [2] remove check via pawn blocking";
 					}
 				}
 				
 				if(!error_msg){
 					if(JSON.stringify(board.MoveList)!=="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"FromBos\":\"\",\"ToBos\":\"\"},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"FromBos\":\"e2\",\"ToBos\":\"e4\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"FromBos\":\"f7\",\"ToBos\":\"f5\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"FromBos\":\"d1\",\"ToBos\":\"h5\"}]"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [3] movelist format, enpass, clocks";
 					}
 				}
@@ -98,7 +100,6 @@
 					board.moveCaller(IsepicChess.bosToPos("h5"), IsepicChess.bosToPos("g6"));
 					
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("h7")).join("")!=="2,6"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [4] remove check via pawn capture";
 					}
 				}
@@ -110,7 +111,6 @@
 					board.moveCaller(IsepicChess.bosToPos("b5"), IsepicChess.bosToPos("d7"));
 					
 					if((IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("b8")).join("")+IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("c8")).join("")+IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("d8")).join("")+IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("e8")).join(""))!=="1,31,31,31,51,3"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [5] remove check via (knight, bishop, queen, king) capture and via (king) moving out of check";
 					}
 				}
@@ -135,7 +135,6 @@
 					board.moveCaller(IsepicChess.bosToPos("g7"), IsepicChess.bosToPos("f8"));
 					
 					if(board.MoveList[board.MoveList.length-1].PGNmove!=="gxf8=R"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [6] underpromote to rook";
 					}
 				}
@@ -145,7 +144,6 @@
 					board.moveCaller(IsepicChess.bosToPos("f7"), IsepicChess.bosToPos("g6"));
 					
 					if(board.Active.checks!==2){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [7] 2 active checks via discovered check";
 					}
 				}
@@ -155,7 +153,6 @@
 					board.moveCaller(IsepicChess.bosToPos("e1"), IsepicChess.bosToPos("g1"));
 					
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("a4")).join("")!=="5,0"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [8] prevent pawn capture moving forward";
 					}
 				}
@@ -164,14 +161,12 @@
 					board.moveCaller(IsepicChess.bosToPos("a6"), IsepicChess.bosToPos("b6"));
 					
 					if(board.MoveList[board.MoveList.length-1].PGNmove!=="Rab6"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [9] pgn disambiguation";
 					}
 				}
 				
 				if(!error_msg){
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("b2")).join("")!=="5,14,1"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [10] pawn can move two squares";
 					}
 				}
@@ -180,7 +175,6 @@
 					board.moveCaller(IsepicChess.bosToPos("b2"), IsepicChess.bosToPos("b4"));
 					
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("a4")).join("")!=="5,05,1"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [11] pawn can capture enpassant or move";
 					}
 				}
@@ -189,14 +183,12 @@
 					board.moveCaller(IsepicChess.bosToPos("c6"), IsepicChess.bosToPos("f6"));
 					
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("f8")).join("")!=="0,40,31,52,50,6"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [12] rook movement with capture";
 					}
 				}
 				
 				if(!error_msg){
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("b1")).join("")!=="5,25,0"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [13] knight movement, prevent capture ally";
 					}
 				}
@@ -205,7 +197,6 @@
 					board.moveCaller(IsepicChess.bosToPos("a2"), IsepicChess.bosToPos("a3"));
 					
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("a4")).join("")!==""){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [14] prevent pawn capture moving forward(again) and no enpassant";
 					}
 				}
@@ -214,26 +205,25 @@
 					board.moveCaller(IsepicChess.bosToPos("b6"), IsepicChess.bosToPos("a6"));
 					
 					if(board.MoveList[board.MoveList.length-1].PGNmove!=="Ra6"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [15] no pgn disambiguation needed";
 					}
 				}
 				
 				if(!error_msg){
 					if(IsepicChess.legalMoves(board.Fen, IsepicChess.bosToPos("b4")).join("")!=="3,1"){
-						IsepicChess.removeBoard(board.BoardName);
 						error_msg="Error [16] pawn can only move one square forward";
 					}
 				}
 				
 				/*nuevo: falta cloneBoard(), etc*/
-				
 				/*test castling rights*/
 				/*test castling*/
 				/*test all underpromotion*/
 				/*test para piece movements*/
 				
-				IsepicChess.removeBoard(board.BoardName);
+				if(board_created){
+					IsepicChess.removeBoard(board.BoardName);
+				}
 				
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testBasicFunctionality() was successful.");
 			}
@@ -341,19 +331,15 @@
 			$(function(){
 				var start_time, end_time, test_dis, test_basic, test_fen;
 				
-				if(!window.IsepicChess){
-					console.log("Error: IsepicChess is not defined");
-				}else{
-					start_time=new Date().getTime();
-					
-					test_dis=testDisambiguation();
-					test_basic=testBasicFunctionality();
-					test_fen=testFenPositions();
-					
-					end_time=new Date().getTime();
-					
-					$("body").html("<div id='xtests'><h2>"+test_dis+"<br>"+test_basic+"<br>"+test_fen+"</h2><span>"+(end_time-start_time)+" ms</span>");
-				}
+				start_time=new Date().getTime();
+				
+				test_dis=testDisambiguation();
+				test_basic=testBasicFunctionality();
+				test_fen=testFenPositions();
+				
+				end_time=new Date().getTime();
+				
+				$("body").html("<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><h2>"+test_dis+"</h2><h2>"+test_basic+"</h2><h2>"+test_fen+"</h2><span>"+(end_time-start_time)+" ms</span>");
 			});
 		</script>
 	</head>

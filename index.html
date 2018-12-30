@@ -8,47 +8,45 @@
 		<script src="./js/isepic-chess.js"></script>
 		<script>
 			$(function(){
-				if(!window.IsepicChess){
-					console.log("Error: IsepicChess is not defined");
-				}else{
-					var m_board=IsepicChess.initBoard({
-						name : "main"
-					});
-					
-					var o_board=IsepicChess.initBoard({
-						name : "other",
-						isRotated : true
-					});
-					
-					var oc_board=IsepicChess.initBoard({
-						name : "other_copy"
-					});
-					
-					var h_board=IsepicChess.initBoard({
-						name : "hidden_board",
-						isHidden : true
-					});
-					
-					var rff_board=IsepicChess.initBoard({
-						name : "resume_from_fen",
-						fen : "rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2"
-					});
-					
-					o_board.moveCaller(IsepicChess.bosToPos("f2"), IsepicChess.bosToPos("f4"));
-					o_board.moveCaller(IsepicChess.bosToPos("e7"), IsepicChess.bosToPos("e6"));
-					o_board.moveCaller([6, 6], [4, 6]);//"g2", "g4"
-					o_board.moveCaller(IsepicChess.bosToPos("d8"), IsepicChess.bosToPos("h4"));
-					o_board.setCurrentMove(-1, false);//go to previous move "2.g4"
-					//o_board.refreshBoard();//refresh changes
-					
-					IsepicChess.cloneBoard("other_copy", "other");//...(to, from)
-					//oc_board.refreshBoard();//refresh changes
-					
-					rff_board.toggleIsRotated();
-					//rff_board.refreshBoard();//refresh changes
-					
-					m_board.refreshBoard();//switch to main board
-				}
+				var m_board, o_board, oc_board, h_board, rff_board;
+				
+				m_board=IsepicChess.initBoard({
+					name : "main"
+				});
+				
+				o_board=IsepicChess.initBoard({
+					name : "other",
+					isRotated : true
+				});
+				
+				oc_board=IsepicChess.initBoard({
+					name : "other_copy"
+				});
+				
+				h_board=IsepicChess.initBoard({
+					name : "hidden_board",
+					isHidden : true
+				});
+				
+				rff_board=IsepicChess.initBoard({
+					name : "resume_from_fen",
+					fen : "rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2"
+				});
+				
+				o_board.moveCaller(IsepicChess.bosToPos("f2"), IsepicChess.bosToPos("f4"));
+				o_board.moveCaller(IsepicChess.bosToPos("e7"), IsepicChess.bosToPos("e6"));
+				o_board.moveCaller([6, 6], [4, 6]);//"g2", "g4"
+				o_board.moveCaller(IsepicChess.bosToPos("d8"), IsepicChess.bosToPos("h4"));
+				o_board.setCurrentMove(-1, false);//go to previous move "2.g4"
+				//o_board.refreshBoard();//refresh changes
+				
+				IsepicChess.cloneBoard("other_copy", "other");//...(to, from)
+				//oc_board.refreshBoard();//refresh changes
+				
+				rff_board.toggleIsRotated();
+				//rff_board.refreshBoard();//refresh changes
+				
+				m_board.refreshBoard();//switch to main board
 			});
 		</script>
 	</head>
