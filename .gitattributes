@@ -1,18 +1,5 @@
-## AUTO-DETECT
-*        text=auto
+# AUTO-DETECT
+* text=auto
 
-## SOURCE CODE
-*.html   text diff=html
-*.css    text
-*.js     text
-
-## DOCUMENTATION
-*.txt    text
-*.md     text
-
-## GRAPHICS
-*.png    binary
-
-## CONFIGS
-.gitignore     text
-.gitattributes text
+# JS files use LF
+*.js eol=lf
