@@ -389,6 +389,7 @@
 					$("#xdebug_toggle").click(function(){
 						$(this).html("Debug "+($("#xobjinfo").is(":visible") ? "▲" : "▼"));
 						$("#xobjinfo").toggle();
+						return false;
 					});
 				}else if($("#xboard .tableb").hasClass("rotated")!==that.IsRotated){
 					$("#xboard").html(_getTableHTML(that.IsRotated));
