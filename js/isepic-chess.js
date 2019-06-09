@@ -73,20 +73,24 @@
 		}
 		
 		function _getTableHTML(is_rotated){
-			var i, j, rtn;
+			var i, j, rank_char, file_char, rtn;
 			
-			rtn="<table class='tableb"+(is_rotated ? " rotated" : "")+"' cellpadding='0' cellspacing='0'>";
+			file_char="<td class='label'></td><td class='label'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label'>")+"</td>";
+			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
+			rtn+="<tr>"+file_char+"<td class='"+("label dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td></tr>";
 			
 			for(i=0; i<8; i++){//0...7
-				rtn+="<tr>";
+				rank_char=(is_rotated ? (i+1) : (8-i));
+				rtn+="<tr><td class='label'>"+rank_char+"</td>";
 				
 				for(j=0; j<8; j++){//0...7
-					rtn+="<td class='"+((i+j)%2 ? "b" : "w")+"s' id='"+posToBos(is_rotated ? [(7-i), (7-j)] : [i, j])+"'></td>";
+					rtn+="<td class='"+(((i+j)%2 ? "b" : "w")+"s")+"' id='"+posToBos(is_rotated ? [(7-i), (7-j)] : [i, j])+"'></td>";
 				}
 				
-				rtn+="</tr>";
+				rtn+="<td class='label'>"+rank_char+"</td></tr>";
 			}
 			
+			rtn+="<tr>"+file_char+"<td class='"+("label dot "+(is_rotated ? "b" : "w")+"side")+"'>◘</td></tr>";
 			rtn+="</table>";
 			
 			return rtn;
@@ -339,7 +343,7 @@
 			rtn="";
 			
 			for(i=1, len=move_list.length; i<len; i++){//1<len
-				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='xpgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span id='xpgn"+i+"' class='xpgn_"+(i!==that.CurrentMove ? "goto" : "active")+"'>"+move_list[i].PGNmove+"</span>";
+				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='xpgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span id='"+("xpgn"+i)+"' class='"+("xpgn_"+(i!==that.CurrentMove ? "goto" : "active"))+"'>"+move_list[i].PGNmove+"</span>";
 			}
 			
 			if(black_starts && rtn!==""){
@@ -475,6 +479,9 @@
 				that.giveSquareMovement();
 				
 				$("#xobjinfo").html(that.getObjInfoHTML());
+				
+				$(".wside, .bside").removeClass("w_color b_color");
+				$("."+(that.Active.isBlack ? "b" : "w")+"side").addClass((that.Active.isBlack ? "b" : "w")+"_color");
 			}
 		}
 		
