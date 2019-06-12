@@ -14,14 +14,14 @@ body{margin:0;padding:0;}
 #xboard table{border:1px solid #a9a9a9;}
 #xboard table,#xboard tr,#xboard td{margin:0;padding:0;}
 #xboard td{height:39px;width:39px;text-align:center;vertical-align:middle;background-repeat:no-repeat;background-size:75%;background-position:50% 50%;}
-#xboard .ws{background-color:#e0bd96;}
-#xboard .bs{background-color:#bd996b;}
-#xboard .ws.lastmove{background-color:#bfcc99;}
-#xboard .bs.lastmove{background-color:#a9b584;}
-#xboard .ws.highlight{background-color:#8edcc7!important;}
-#xboard .bs.highlight{background-color:#7cc8b0!important;}
-#xboard .ws.currpiece{background-color:#eaf051!important;}
-#xboard .bs.currpiece{background-color:#e0e639!important;}
+#xboard .ws{background-color:#93d798;}
+#xboard .bs{background-color:#3dae60;}
+#xboard .ws.lastmove{background-color:#62e95f;}
+#xboard .bs.lastmove{background-color:#43da4b;}
+#xboard .ws.highlight{background-color:#3bebc5!important;}
+#xboard .bs.highlight{background-color:#1cdcb1!important;}
+#xboard .ws.currpiece{background-color:#daf71d!important;}
+#xboard .bs.currpiece{background-color:#c9f012!important;}
 #xboard .bp{background-image:url('./images/bp.png');}
 #xboard .br{background-image:url('./images/br.png');}
 #xboard .bn{background-image:url('./images/bn.png');}
