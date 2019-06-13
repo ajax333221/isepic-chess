@@ -378,24 +378,28 @@
 		}
 		
 		function _refreshBoard(){
-			var that;
+			var that, is_new_html;
 			
 			that=this;
 			
 			if(!that.IsHidden){
-				if(!$("#xchessboard").length){
-					$("body").append("<div id='xchessboard'><h3 class='inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='xboard'>"+_getTableHTML(that.IsRotated)+"</div><div id='xcontrols'><input id='xfen' value='' type='text'><br><input id='xnav_first' value='|<' type='button'> <input id='xnav_previous' value='<' type='button'> <input id='xnav_next' value='>' type='button'> <input id='xnav_last' value='>|' type='button'><input id='xrotate' value='rotate' type='button'><select id='xpromote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='xtabs'></p><p id='xmovelist'></p></div><div id='xinfoholder'><a id='xdebug_toggle' href='#'>Debug ▲</a><p id='xobjinfo' style='display: none'></p></div></div>");
+				is_new_html=!$("#xchessboard").length;
+				
+				if(is_new_html){
+					$("body").append("<div id='xchessboard'><h3 class='inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='xboard'></div><div id='xcontrols'><input id='xfen' value='' type='text'><br><input id='xnav_first' value='|<' type='button'> <input id='xnav_previous' value='<' type='button'> <input id='xnav_next' value='>' type='button'> <input id='xnav_last' value='>|' type='button'><input id='xrotate' value='rotate' type='button'><select id='xpromote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='xtabs'></p><p id='xmovelist'></p></div><div id='xinfoholder'><a id='xdebug_toggle' href='#'>Debug ▲</a><p id='xobjinfo' style='display:none'></p></div></div>");
 					
 					$("#xfen").click(function(){
 						$(this).select();
 					});
 					
 					$("#xdebug_toggle").click(function(){
-						$(this).html("Debug "+($("#xobjinfo").is(":visible") ? "▲" : "▼"));
+						$(this).text("Debug "+($("#xobjinfo").is(":visible") ? "▲" : "▼"));
 						$("#xobjinfo").toggle();
 						return false;
 					});
-				}else if($("#xboard .tableb").hasClass("rotated")!==that.IsRotated){
+				}
+				
+				if(is_new_html || $("#xboard .tableb").hasClass("rotated")!==that.IsRotated){
 					$("#xboard").html(_getTableHTML(that.IsRotated));
 				}
 				
@@ -461,6 +465,9 @@
 				
 				that.resetPieceClasses();
 				
+				$(".wside, .bside").removeClass("w_color b_color");
+				$("."+(that.Active.isBlack ? "b" : "w")+"side").addClass((that.Active.isBlack ? "b" : "w")+"_color");
+				
 				$("#xmovelist").html(that.getMoveListHTML() || "...");
 				
 				$(".xpgn_goto").unbind("click").click(function(){
@@ -479,9 +486,6 @@
 				that.giveSquareMovement();
 				
 				$("#xobjinfo").html(that.getObjInfoHTML());
-				
-				$(".wside, .bside").removeClass("w_color b_color");
-				$("."+(that.Active.isBlack ? "b" : "w")+"side").addClass((that.Active.isBlack ? "b" : "w")+"_color");
 			}
 		}
 		
