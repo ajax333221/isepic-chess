@@ -21,6 +21,7 @@ Features
 To Do
 -------------
 
+- documentation
 - PGN viewer
 - show captured pieces
 - move list variations

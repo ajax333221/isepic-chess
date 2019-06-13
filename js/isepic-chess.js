@@ -54,7 +54,7 @@
 				rtn+=(i ? " | " : "");
 				
 				board_name=board_list[i];
-				board=_selectBoard(board_name);
+				board=selectBoard(board_name);
 				
 				if(board!==null){
 					if(board.IsHidden){
@@ -92,27 +92,6 @@
 			
 			rtn+="<tr>"+file_char+"<td class='"+("label dot "+(is_rotated ? "b" : "w")+"side")+"'>◘</td></tr>";
 			rtn+="</table>";
-			
-			return rtn;
-		}
-		
-		function _selectBoard(board_name){
-			var no_errors, rtn;
-			
-			no_errors=true;
-			
-			//if(no_errors){
-				rtn=null;
-				
-				if(!boardExists(board_name)){
-					no_errors=false;
-					console.log("Error[_selectBoard]: \""+board_name+"\" is not defined");
-				}
-			//}
-			
-			if(no_errors){
-				rtn=_boards[board_name];
-			}
 			
 			return rtn;
 		}
@@ -412,7 +391,7 @@
 					
 					//if(no_errors){
 						board_name=$(this).attr("data-target");
-						board=_selectBoard(board_name);
+						board=selectBoard(board_name);
 						
 						if(board===null){
 							no_errors=false;
@@ -428,6 +407,7 @@
 				});
 				
 				/*enves de siempre unbind(), solo hacerlo si el board es diferente (cuidado no doble al mismo tampoco)*/
+				/*nota, cada refresh se hace el unbind y bind a los de ID, muy mal eso*/
 				
 				$("#xnav_first").unbind("click").click(function(){
 					if(that.setCurrentMove(0, true)){
@@ -973,6 +953,27 @@
 			return (typeof _boards[board_name]!=="undefined");
 		}
 		
+		function selectBoard(board_name){
+			var no_errors, rtn;
+			
+			no_errors=true;
+			
+			//if(no_errors){
+				rtn=null;
+				
+				if(!boardExists(board_name)){
+					no_errors=false;
+					console.log("Error[selectBoard]: \""+board_name+"\" is not defined");
+				}
+			//}
+			
+			if(no_errors){
+				rtn=_boards[board_name];
+			}
+			
+			return rtn;
+		}
+		
 		function bosToPos(bos){
 			return [(8-(bos.charAt(1)*1)), "abcdefgh".indexOf(bos.charAt(0))];
 		}
@@ -1266,7 +1267,7 @@
 					}
 				}
 				
-				new_board=_selectBoard(board_name);
+				new_board=selectBoard(board_name);
 				
 				if(new_board===null){
 					no_errors=false;
@@ -1297,7 +1298,7 @@
 				new_board.refreshBoard();
 			}
 			
-			return _selectBoard(board_name);
+			return selectBoard(board_name);
 		}
 		
 		function cloneBoard(to_board_name, from_board_name){
@@ -1373,6 +1374,7 @@
 		
 		return {
 			boardExists : boardExists,
+			selectBoard : selectBoard,
 			bosToPos : bosToPos,
 			posToBos : posToBos,
 			toBos : toBos,

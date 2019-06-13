@@ -34,7 +34,7 @@
 				});
 				
 				o_board.moveCaller(IsepicChess.bosToPos("f2"), IsepicChess.bosToPos("f4"));
-				o_board.moveCaller(IsepicChess.bosToPos("e7"), IsepicChess.bosToPos("e6"));
+				IsepicChess.selectBoard("other").moveCaller(IsepicChess.bosToPos("e7"), IsepicChess.bosToPos("e6"));//o_board.moveCaller(...)
 				o_board.moveCaller([6, 6], [4, 6]);//"g2", "g4"
 				o_board.moveCaller(IsepicChess.bosToPos("d8"), IsepicChess.bosToPos("h4"));
 				o_board.setCurrentMove(-1, false);//go to previous move "2.g4"
@@ -46,7 +46,7 @@
 				rff_board.toggleIsRotated();
 				//rff_board.refreshBoard();//refresh changes
 				
-				m_board.refreshBoard();//switch to main board
+				m_board.refreshBoard();//switch to main board + refresh changes
 			});
 		</script>
 	</head>
