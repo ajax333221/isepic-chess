@@ -330,18 +330,45 @@
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testFenPositions() was successful.");
 			}
 			
+			function testMisc(){
+				var error_msg;
+				
+				error_msg="";
+				
+				//if(!error_msg){
+					if(IsepicChess.toPos("A1").join(",")!=="7,0"){
+						error_msg="Error [0] failed to qos.toLowerCase()";
+					}
+				//}
+				
+				if(!error_msg){
+					if(IsepicChess.posToBos("H8")!==IsepicChess.toBos("h8")){
+						error_msg="Error [1] posToBos(str) !== toBos(str)";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.toBos(IsepicChess.bosToPos("H8"))!==IsepicChess.toBos("h8")){
+						error_msg="Error [2] toBos(bosToPos(str)) !== toBos(str)";
+					}
+				}
+				
+				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testMisc() was successful.");
+			}
+			
 			$(function(){
-				var start_time, end_time, test_dis, test_basic, test_fen;
+				var start_time, end_time, test_dis, test_basic, test_fen, test_misc;
 				
 				start_time=new Date().getTime();
 				
 				test_dis=testDisambiguation();
 				test_basic=testBasicFunctionality();
 				test_fen=testFenPositions();
+				test_misc=testMisc();
 				
 				end_time=new Date().getTime();
 				
-				$("body").html("<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><h2>"+test_dis+"</h2><h2>"+test_basic+"</h2><h2>"+test_fen+"</h2><span>"+(end_time-start_time)+" ms</span></div>");
+				$("body").html("<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><h2>"+test_dis+"</h2><h2>"+test_basic+"</h2><h2>"+test_fen+"</h2><h2>"+test_misc+"</h2><span>"+(end_time-start_time)+" ms</span></div>");
 			});
 		</script>
 	</head>

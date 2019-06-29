@@ -97,7 +97,7 @@
 		}
 		
 		function _basicFenTest(fen){/*restructurar con noErrors*/
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, piece_char, total_pieces, fen_board, total_files_in_current_row, keep_going, rtn_is_legal;
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, piece_char, total_pieces, fen_board, total_files_in_current_rank, keep_going, rtn_is_legal;
 			
 			rtn_is_legal=false;
 			
@@ -116,7 +116,7 @@
 						
 						outer:
 						for(i=0; i<8; i++){//0...7
-							total_files_in_current_row=0;
+							total_files_in_current_rank=0;
 							last_is_num=false;
 							
 							for(j=0, len=fen_board_arr[i].length; j<len; j++){//0<len
@@ -130,10 +130,10 @@
 								
 								last_is_num=current_is_num;
 								
-								total_files_in_current_row+=(temp || 1);
+								total_files_in_current_rank+=(temp || 1);
 							}
 							
-							if(total_files_in_current_row!==8){
+							if(total_files_in_current_rank!==8){
 								keep_going=false;
 								break;
 							}
@@ -173,7 +173,7 @@
 			return that[toBos(qos)];
 		}
 		
-		function _countChecks(king_pos, early_break){
+		function _countChecks(king_qos, early_break){
 			var i, j, that, as_knight, rtn_total_checks;
 			
 			that=this;
@@ -184,7 +184,7 @@
 				as_knight=!!i;
 				
 				for(j=1; j<9; j++){//1...8
-					if(that.isAttacked(king_pos, j, as_knight)){
+					if(that.isAttacked(king_qos, j, as_knight)){
 						rtn_total_checks++;
 						
 						if(early_break){
@@ -596,8 +596,8 @@
 							temp=that.NonActive.sign;//(that.Active.isBlack ? _WHITE_SIGN : _BLACK_SIGN)
 							en_passant_pos=bosToPos(that.EnPassantBos);
 							
-							en_passant_rank=en_passant_pos[0];
-							en_passant_file=en_passant_pos[1];
+							en_passant_rank=getRankPos(en_passant_pos);
+							en_passant_file=getFilePos(en_passant_pos);
 							
 							/*negar todo permite salvar?*/
 							keep_going=(!that.HalfMove && !that.getValue(en_passant_pos) && en_passant_rank===(that.Active.isBlack ? 5 : 2) && !that.getValue([(en_passant_rank+temp), en_passant_file]) && that.getValue([(en_passant_rank-temp), en_passant_file])===temp);
@@ -662,31 +662,31 @@
 			return rtn_is_legal;
 		}
 		
-		function _candidateMoves(initial_pos, piece_direction, as_knight, total_squares, allow_capture){
+		function _candidateMoves(initial_qos, piece_direction, as_knight, total_squares, allow_capture){
 			var that;
 			
 			that=this;
 			
-			return that.testCollision(1, initial_pos, piece_direction, as_knight, total_squares, allow_capture, null);
+			return that.testCollision(1, initial_qos, piece_direction, as_knight, total_squares, allow_capture, null);
 		}
 		
-		function _isAttacked(initial_pos, piece_direction, as_knight){
+		function _isAttacked(initial_qos, piece_direction, as_knight){
 			var that;
 			
 			that=this;
 			
-			return that.testCollision(2, initial_pos, piece_direction, as_knight, null, null, null);
+			return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null);
 		}
 		
-		function _disambiguationPos(initial_pos, piece_direction, as_knight, ally_abs_val){
+		function _disambiguationPos(initial_qos, piece_direction, as_knight, ally_abs_val){
 			var that;
 			
 			that=this;
 			
-			return that.testCollision(3, initial_pos, piece_direction, as_knight, null, null, ally_abs_val);
+			return that.testCollision(3, initial_qos, piece_direction, as_knight, null, null, ally_abs_val);
 		}
 		
-		function _testCollision(op, initial_pos, piece_direction, as_knight, total_squares, allow_capture, ally_abs_val){
+		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_abs_val){
 			var i, that, current_pos, current_val, current_imp_val, rank_change, file_change, rtn;
 			
 			that=this;
@@ -698,7 +698,7 @@
 			rtn=(op===2 ? false : []);
 			
 			for(i=0; i<total_squares; i++){//0<total_squares
-				current_pos=[(initial_pos[0]+(rank_change*(i+1))), (initial_pos[1]+(file_change*(i+1)))];
+				current_pos=[(getRankPos(initial_qos)+(rank_change*(i+1))), (getFilePos(initial_qos)+(file_change*(i+1)))];
 				
 				if(!insideBoard(current_pos)){
 					break;
@@ -761,26 +761,26 @@
 			return rtn;
 		}
 		
-		function _moveCaller(initial_pos, final_pos){
+		function _moveCaller(initial_qos, final_qos){
 			var that, rtn_can_move;
 			
 			that=this;
-			rtn_can_move=isLegalMove(that.Fen, initial_pos, final_pos);
+			rtn_can_move=isLegalMove(that.Fen, initial_qos, final_qos);
 			
 			if(rtn_can_move){
-				that.makeMove(initial_pos, final_pos);
+				that.makeMove(initial_qos, final_qos);
 			}
 			
 			return rtn_can_move;
 		}
 		
-		function _makeMove(initial_pos, final_pos){
+		function _makeMove(initial_qos, final_qos){
 			var that, active_color, active_sign, active_color_king_rank, pawn_moved, promoted_val, piece_val, piece_abs_val, initial_bos, final_bos, active_color_rook, new_en_passant_bos, new_active_castling_availity, new_non_active_castling_availity, king_castled, non_en_passant_capture, to_promotion_rank, pgn_move;
 			
 			that=this;
 			
-			initial_bos=posToBos(initial_pos);
-			final_bos=posToBos(final_pos);
+			initial_bos=toBos(initial_qos);
+			final_bos=toBos(final_qos);
 			
 			active_color=that.Active.isBlack;
 			active_sign=that.Active.sign;
@@ -790,27 +790,27 @@
 			new_en_passant_bos="";
 			promoted_val=0;
 			king_castled=0;
-			non_en_passant_capture=that.getValue(final_pos);
+			non_en_passant_capture=that.getValue(final_qos);
 			
 			new_active_castling_availity=(active_color ? that.BCastling : that.WCastling);
 			new_non_active_castling_availity=(active_color ? that.WCastling : that.BCastling);
 			
-			to_promotion_rank=(final_pos[0]===(active_color ? 7 : 0));/*NO hacer (7-active_color_king_rank)*/
+			to_promotion_rank=(getRankPos(final_qos)===(active_color ? 7 : 0));/*NO hacer (7-active_color_king_rank)*/
 			active_color_king_rank=(active_color ? 0 : 7);
 			
-			piece_val=that.getValue(initial_pos);
+			piece_val=that.getValue(initial_qos);
 			piece_abs_val=(piece_val*active_sign);//same as Math.abs(piece_val)
 			
 			if(piece_abs_val===_KING){
-				if(new_active_castling_availity){/*NO useless if(Math.abs(initial_pos[1]-final_pos[1])>1)*/
+				if(new_active_castling_availity){/*NO useless if(Math.abs(getFilePos(initial_qos)-getFilePos(final_qos))>1)*/
 					new_active_castling_availity=0;
 					
-					if(final_pos[1]===6){//short
+					if(getFilePos(final_qos)===6){//short
 						king_castled=1;
 						
 						that[posToBos([active_color_king_rank, 5])]=active_color_rook;
 						that[posToBos([active_color_king_rank, 7])]=_EMPTY_SQR;
-					}else if(final_pos[1]===2){//long
+					}else if(getFilePos(final_qos)===2){//long
 						king_castled=2;
 						
 						that[posToBos([active_color_king_rank, 3])]=active_color_rook;
@@ -820,10 +820,10 @@
 			}else if(piece_abs_val===_PAWN){
 				pawn_moved=true;
 				
-				if(Math.abs(initial_pos[0]-final_pos[0])>1){//new enpass
-					new_en_passant_bos=(final_bos.charAt(0)+""+(active_color ? 6 : 3));
+				if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpass
+					new_en_passant_bos=(getFileBos(final_bos)+""+(active_color ? 6 : 3));
 				}else if(sameSqr(final_bos, that.EnPassantBos)){//pawn x enpass
-					that[(final_bos.charAt(0)+""+(active_color ? 4 : 5))]=_EMPTY_SQR;
+					that[(getFileBos(final_bos)+""+(active_color ? 4 : 5))]=_EMPTY_SQR;
 				}else if(to_promotion_rank){//promotion
 					promoted_val=(that.PromoteTo*active_sign);
 				}
@@ -841,19 +841,19 @@
 			}
 			
 			//test for rook move (original square)
-			if(new_active_castling_availity && piece_abs_val===_ROOK && initial_pos[0]===active_color_king_rank){
-				if(initial_pos[1]===7 && new_active_castling_availity!==2){//short
+			if(new_active_castling_availity && piece_abs_val===_ROOK && getRankPos(initial_qos)===active_color_king_rank){
+				if(getFilePos(initial_qos)===7 && new_active_castling_availity!==2){//short
 					new_active_castling_availity--;
-				}else if(initial_pos[1]===0 && new_active_castling_availity!==1){//long
+				}else if(getFilePos(initial_qos)===0 && new_active_castling_availity!==1){//long
 					new_active_castling_availity-=2;
 				}
 			}
 			
 			//test for rook capture (original square)
 			if(new_non_active_castling_availity && non_en_passant_capture===-active_color_rook && to_promotion_rank){
-				if(final_pos[1]===7 && new_non_active_castling_availity!==2){//short
+				if(getFilePos(final_qos)===7 && new_non_active_castling_availity!==2){//short
 					new_non_active_castling_availity--;
-				}else if(final_pos[1]===0 && new_non_active_castling_availity!==1){//long
+				}else if(getFilePos(final_qos)===0 && new_non_active_castling_availity!==1){//long
 					new_non_active_castling_availity-=2;
 				}
 			}
@@ -879,22 +879,22 @@
 			that.MoveList.push({Fen : that.Fen, PGNmove : (pgn_move+(that.Active.checks ? "+" : "")), FromBos : initial_bos, ToBos : final_bos});/*# with checkmate*/
 		}
 		
-		function _getNotation(initial_bos, final_bos, piece_abs_val, promoted_val, king_castled, non_en_passant_capture){
+		function _getNotation(initial_qos, final_qos, piece_abs_val, promoted_val, king_castled, non_en_passant_capture){
 			var i, j, len, that, temp, temp2, temp3, initial_file_char, final_pos, ambiguity, as_knight, rtn;
 			
 			that=this;
 			
 			rtn="";
-			initial_file_char=initial_bos.charAt(0);
+			initial_file_char=getFileBos(initial_qos);
 			
 			if(king_castled){//castling king
 				rtn+=(king_castled!==1 ? "O-O-O" : "O-O");
 			}else if(piece_abs_val===_PAWN){
-				if(initial_file_char!==final_bos.charAt(0)){
+				if(initial_file_char!==getFileBos(final_qos)){
 					rtn+=(initial_file_char+"x");
 				}
 				
-				rtn+=final_bos;
+				rtn+=toBos(final_qos);
 				
 				if(promoted_val){
 					rtn+=("="+_pieceChar(promoted_val).toUpperCase());
@@ -904,7 +904,7 @@
 				
 				if(piece_abs_val!==_KING){//knight, bishop, rook, queen
 					temp2=[];
-					final_pos=bosToPos(final_bos);
+					final_pos=toPos(final_qos);
 					as_knight=(piece_abs_val===_KNIGHT);
 					
 					for(i=0; i<2; i++){//0...1
@@ -918,20 +918,20 @@
 						temp3="";
 						
 						for(i=0; i<len; i++){//0<len
-							if(!sameSqr(temp2[i], initial_bos) && isLegalMove(that.Fen, temp2[i], final_pos)){
+							if(!sameSqr(temp2[i], initial_qos) && isLegalMove(that.Fen, temp2[i], final_pos)){
 								temp3+=posToBos(temp2[i]);
 							}
 						}
 						
 						if(temp3){
-							ambiguity=(_strContains(temp3, initial_file_char)+(_strContains(temp3, initial_bos.charAt(1))*2));
+							ambiguity=(_strContains(temp3, initial_file_char)+(_strContains(temp3, getRankBos(initial_qos))*2));
 							
 							if(ambiguity!==1){//0,2,3
 								rtn+=initial_file_char;
 							}
 							
 							if(ambiguity && ambiguity!==2){//1,3
-								rtn+=initial_bos.charAt(1);
+								rtn+=getRankBos(initial_qos);
 							}
 						}
 					}
@@ -941,7 +941,7 @@
 					rtn+="x";
 				}
 				
-				rtn+=final_bos;
+				rtn+=toBos(final_qos);
 			}
 			
 			return rtn;
@@ -974,28 +974,40 @@
 			return rtn;
 		}
 		
-		function bosToPos(bos){
-			return [(8-(bos.charAt(1)*1)), "abcdefgh".indexOf(bos.charAt(0))];
+		function bosToPos(qos){
+			return [(8-(getRankBos(qos)*1)), "abcdefgh".indexOf(getFileBos(qos))];
 		}
 		
-		function posToBos(pos){
-			return ("abcdefgh".charAt(pos[1])+""+(8-pos[0]));
+		function posToBos(qos){
+			return ("abcdefgh".charAt(getFilePos(qos))+""+(8-getRankPos(qos)));
 		}
 		
 		function toBos(qos){
-			return ((typeof qos)==="string" ? qos : posToBos(qos));
+			return ((typeof qos)==="string" ? qos.toLowerCase() : posToBos(qos));
 		}
 		
-		function insideBoard(pos){
-			var rtn;
-			
-			rtn=false;
-			
-			if(Array.isArray(pos) && pos.length===2){
-				rtn=((pos[0]<=7 && pos[0]>=0) && (pos[1]<=7 && pos[1]>=0));
-			}
-			
-			return rtn;
+		function toPos(qos){
+			return ((typeof qos)==="string" ? bosToPos(qos) : qos);
+		}
+		
+		function getRankPos(qos){
+			return toPos(qos)[0];
+		}
+		
+		function getFilePos(qos){
+			return toPos(qos)[1];
+		}
+		
+		function getRankBos(qos){
+			return toBos(qos).charAt(1);
+		}
+		
+		function getFileBos(qos){
+			return toBos(qos).charAt(0);
+		}
+		
+		function insideBoard(qos){
+			return (sameSqr(toPos(qos), qos) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
 		}
 		
 		function sameSqr(qos1, qos2){
@@ -1021,7 +1033,7 @@
 			return no_errors;
 		}
 		
-		function legalMoves(fen, piece_pos){
+		function legalMoves(fen, piece_qos){
 			var i, j, len, len2, temp, temp2, temp3, board, active_color, non_active_sign, current_adjacent_file, piece_val, imp_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, board_created, no_errors, rtn;
 			
 			no_errors=true;
@@ -1030,7 +1042,7 @@
 				rtn=false;
 				board_created=false;
 				
-				if(!insideBoard(piece_pos)){
+				if(!insideBoard(piece_qos)){
 					no_errors=false;
 				}
 			//}
@@ -1054,7 +1066,7 @@
 				active_color=board.Active.isBlack;
 				non_active_sign=board.NonActive.sign;
 				
-				piece_val=board.getValue(piece_pos);
+				piece_val=board.getValue(piece_qos);
 				imp_val=(piece_val*-non_active_sign);
 				
 				if(imp_val<=0){
@@ -1073,7 +1085,7 @@
 				
 				if(is_king){//king
 					for(i=1; i<9; i++){//1...8
-						if((temp=board.candidateMoves(piece_pos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
+						if((temp=board.candidateMoves(piece_qos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 					
 					active_castling_availity=(active_color ? board.BCastling : board.WCastling);
@@ -1081,7 +1093,7 @@
 					if(active_castling_availity && !board.Active.checks){
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
-								if(board.candidateMoves(piece_pos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
+								if(board.candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
 									can_castle_current_side=true;
 									
 									for(j=0; j<2; j++){//0...1
@@ -1099,12 +1111,12 @@
 						}
 					}
 				}else if(imp_val===_PAWN){
-					piece_rank=piece_pos[0];
+					piece_rank=getRankPos(piece_qos);
 					
-					if((temp=board.candidateMoves(piece_pos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
+					if((temp=board.candidateMoves(piece_qos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
 					
 					for(i=0; i<2; i++){//0...1
-						current_adjacent_file=(piece_pos[1]+(i ? 1 : -1));
+						current_adjacent_file=(getFilePos(piece_qos)+(i ? 1 : -1));
 						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
 						
 						if(insideBoard(current_diagonal_pawn_pos)){
@@ -1124,7 +1136,7 @@
 					
 					for(i=0; i<2; i++){//0...1
 						for(j=(imp_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
-							if((temp=board.candidateMoves(piece_pos, j--, as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
+							if((temp=board.candidateMoves(piece_qos, j--, as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
 						}
 					}
 				}
@@ -1134,11 +1146,11 @@
 						current_pos=pre_validated_arr_pos[i][j];
 						
 						temp=board[posToBos(current_pos)];
-						temp2=board[posToBos(piece_pos)];
+						temp2=board[toBos(piece_qos)];
 						temp3=board[en_passant_capturable_bos];
 						
 						board[posToBos(current_pos)]=piece_val;
-						board[posToBos(piece_pos)]=_EMPTY_SQR;
+						board[toBos(piece_qos)]=_EMPTY_SQR;
 						
 						if(en_passant_capturable_bos && sameSqr(current_pos, board.EnPassantBos)){
 							board[en_passant_capturable_bos]=_EMPTY_SQR;
@@ -1149,7 +1161,7 @@
 						}
 						
 						board[posToBos(current_pos)]=temp;
-						board[posToBos(piece_pos)]=temp2;
+						board[toBos(piece_qos)]=temp2;
 						board[en_passant_capturable_bos]=temp3;
 					}
 				}
@@ -1162,16 +1174,16 @@
 			return rtn;
 		}
 		
-		function isLegalMove(fen, initial_pos, final_pos){
+		function isLegalMove(fen, initial_qos, final_qos){
 			var moves, rtn;
 			
 			rtn=false;
 			
-			if(insideBoard(final_pos)){
-				moves=legalMoves(fen, initial_pos);
+			if(insideBoard(final_qos)){
+				moves=legalMoves(fen, initial_qos);
 				
 				if(moves){
-					rtn=_strContains(moves.join("/"), final_pos.join());
+					rtn=_strContains(moves.join("/"), toPos(final_qos).join());
 				}
 			}
 			
@@ -1378,6 +1390,11 @@
 			bosToPos : bosToPos,
 			posToBos : posToBos,
 			toBos : toBos,
+			toPos : toPos,
+			getRankPos : getRankPos,
+			getFilePos : getFilePos,
+			getRankBos : getRankBos,
+			getFileBos : getFileBos,
 			insideBoard : insideBoard,
 			sameSqr : sameSqr,
 			removeBoard : removeBoard,
