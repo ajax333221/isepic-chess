@@ -96,71 +96,85 @@
 			return rtn;
 		}
 		
-		function _basicFenTest(fen){/*restructurar con noErrors*/
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, piece_char, total_pieces, fen_board, total_files_in_current_rank, keep_going, rtn_is_legal;
+		function _basicFenTest(fen){
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, piece_char, total_pieces, fen_board, total_files_in_current_rank, error_msg;
 			
-			rtn_is_legal=false;
+			error_msg="";
 			
-			if(fen){
+			//if(!error_msg){
+				if(!fen){
+					error_msg="Error [0] empty fen";
+				}
+			//}
+			
+			if(!error_msg){
 				optional_clocks=fen.replace(/^([rnbqkRNBQK1-8]+\/)([rnbqkpRNBQKP1-8]+\/){6}([rnbqkRNBQK1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])($|\s)/, "");
-				keep_going=(fen.length!==optional_clocks.length);
 				
-				if(keep_going){
-					if(optional_clocks.length){
-						keep_going=(/^(0|[1-9][0-9]*)\s([1-9][0-9]*)$/.test(optional_clocks));
-					}
-					
-					if(keep_going){
-						fen_board=fen.split(" ")[0];
-						fen_board_arr=fen_board.split("/");
-						
-						outer:
-						for(i=0; i<8; i++){//0...7
-							total_files_in_current_rank=0;
-							last_is_num=false;
-							
-							for(j=0, len=fen_board_arr[i].length; j<len; j++){//0<len
-								temp=(fen_board_arr[i].charAt(j)*1);
-								current_is_num=!!temp;
-								
-								if(last_is_num && current_is_num){
-									keep_going=false;
-									break outer;
-								}
-								
-								last_is_num=current_is_num;
-								
-								total_files_in_current_rank+=(temp || 1);
-							}
-							
-							if(total_files_in_current_rank!==8){
-								keep_going=false;
-								break;
-							}
-						}
-						
-						if(keep_going){
-							for(i=0; i<2; i++){//0...1
-								total_pieces=new Array(6);
-								
-								for(j=0; j<6; j++){//0...5
-									piece_char=_pieceChar(j+1);
-									total_pieces[j]=_occurrences(fen_board, (i ? piece_char.toUpperCase() : piece_char));
-								}
-								
-								if((total_pieces[5]!==1) || (total_pieces[0]>8) || ((Math.max(total_pieces[1]-2, 0)+Math.max(total_pieces[2]-2, 0)+Math.max(total_pieces[3]-2, 0)+Math.max(total_pieces[4]-1, 0))>(8-total_pieces[0]))){
-									keep_going=false;
-									break;
-								}
-							}
-							
-							rtn_is_legal=keep_going;
-						}
+				if(fen.length===optional_clocks.length){
+					error_msg="Error [1] invalid fen structure";
+				}
+			}
+			
+			if(!error_msg){
+				if(optional_clocks.length){
+					if(!(/^(0|[1-9][0-9]*)\s([1-9][0-9]*)$/.test(optional_clocks))){
+						error_msg="Error [2] invalid half/full move";
 					}
 				}
 			}
 			
-			return rtn_is_legal;
+			if(!error_msg){
+				fen_board=fen.split(" ")[0];
+				fen_board_arr=fen_board.split("/");
+				
+				outer:
+				for(i=0; i<8; i++){//0...7
+					total_files_in_current_rank=0;
+					last_is_num=false;
+					
+					for(j=0, len=fen_board_arr[i].length; j<len; j++){//0<len
+						temp=(fen_board_arr[i].charAt(j)*1);
+						current_is_num=!!temp;
+						
+						if(last_is_num && current_is_num){
+							error_msg="Error [3] two consecutive numeric values";
+							break outer;
+						}
+						
+						last_is_num=current_is_num;
+						total_files_in_current_rank+=(temp || 1);
+					}
+					
+					if(total_files_in_current_rank!==8){
+						error_msg="Error [4] rank without exactly 8 columns";
+						break;
+					}
+				}
+			}
+			
+			if(!error_msg){
+				for(i=0; i<2; i++){//0...1
+					total_pieces=new Array(6);
+					
+					for(j=0; j<6; j++){//0...5
+						piece_char=_pieceChar(j+1);
+						total_pieces[j]=_occurrences(fen_board, (i ? piece_char.toUpperCase() : piece_char));
+					}
+					
+					if(total_pieces[5]!==1){
+						error_msg="Error [5] board without exactly one "+(i ? "white" : "black")+" king";
+						break;
+					}else if(total_pieces[0]>8){
+						error_msg="Error [6] more than 8 "+(i ? "white" : "black")+" pawns";
+						break;
+					}else if((Math.max(total_pieces[1]-2, 0)+Math.max(total_pieces[2]-2, 0)+Math.max(total_pieces[3]-2, 0)+Math.max(total_pieces[4]-1, 0))>(8-total_pieces[0])){
+						error_msg="Error [7] promoted pieces exceed the number of missing pawns for "+(i ? "white" : "black");
+						break;
+					}
+				}
+			}
+			
+			return error_msg;
 		}
 		
 		//---------------- board
@@ -1191,7 +1205,7 @@
 				p.isHidden=(p.isHidden===true);
 				board_name=p.name;
 				
-				fen_was_valid=((typeof p.fen)==="string" && _basicFenTest(pre_fen));
+				fen_was_valid=((typeof p.fen)==="string" && !_basicFenTest(pre_fen));
 				
 				if(p.invalidFenStop && !fen_was_valid){
 					no_errors=false;
