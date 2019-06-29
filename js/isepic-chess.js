@@ -297,17 +297,17 @@
 		}
 		
 		function _resetPieceClasses(){
-			var i, j, that, temp, new_class, current_bos;
+			var i, j, that, temp, new_class, current_pos;
 			
 			that=this;
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					current_bos=toBos(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
-					temp=that.getValue(current_bos);
+					current_pos=(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
+					temp=that.getValue(current_pos);
 					
 					new_class=(((i+j)%2 ? "b" : "w")+"s"+(temp ? ((temp<0 ? " b" : " w")+_pieceChar(temp)) : ""));
-					$("#"+current_bos).attr("class", new_class);
+					$("#"+toBos(current_pos)).attr("class", new_class);
 				}
 			}
 		}
@@ -774,12 +774,9 @@
 		}
 		
 		function _makeMove(initial_qos, final_qos){
-			var that, active_color, active_sign, active_color_king_rank, pawn_moved, promoted_val, piece_val, piece_abs_val, initial_bos, final_bos, active_color_rook, new_en_passant_bos, new_active_castling_availity, new_non_active_castling_availity, king_castled, non_en_passant_capture, to_promotion_rank, pgn_move;
+			var that, active_color, active_sign, active_color_king_rank, pawn_moved, promoted_val, piece_val, piece_abs_val, active_color_rook, new_en_passant_bos, new_active_castling_availity, new_non_active_castling_availity, king_castled, non_en_passant_capture, to_promotion_rank, pgn_move;
 			
 			that=this;
-			
-			initial_bos=toBos(initial_qos);
-			final_bos=toBos(final_qos);
 			
 			active_color=that.Active.isBlack;
 			active_sign=that.Active.sign;
@@ -820,15 +817,15 @@
 				pawn_moved=true;
 				
 				if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpass
-					new_en_passant_bos=(getFileBos(final_bos)+""+(active_color ? 6 : 3));
-				}else if(sameSqr(final_bos, that.EnPassantBos)){//pawn x enpass
-					that[(getFileBos(final_bos)+""+(active_color ? 4 : 5))]=_EMPTY_SQR;
+					new_en_passant_bos=(getFileBos(final_qos)+""+(active_color ? 6 : 3));
+				}else if(sameSqr(final_qos, that.EnPassantBos)){//pawn x enpass
+					that[(getFileBos(final_qos)+""+(active_color ? 4 : 5))]=_EMPTY_SQR;
 				}else if(to_promotion_rank){//promotion
 					promoted_val=(that.PromoteTo*active_sign);
 				}
 			}
 			
-			pgn_move=that.getNotation(initial_bos, final_bos, piece_abs_val, promoted_val, king_castled, non_en_passant_capture);/*NO move below*/
+			pgn_move=that.getNotation(initial_qos, final_qos, piece_abs_val, promoted_val, king_castled, non_en_passant_capture);/*NO move below*/
 			
 			that.HalfMove++;
 			if(pawn_moved || non_en_passant_capture){
@@ -862,8 +859,8 @@
 			
 			that.EnPassantBos=new_en_passant_bos;/*NO move this up*/
 			
-			that[final_bos]=(promoted_val || piece_val);
-			that[initial_bos]=_EMPTY_SQR;
+			that[toBos(final_qos)]=(promoted_val || piece_val);
+			that[toBos(initial_qos)]=_EMPTY_SQR;
 			
 			that.toggleActiveColor();
 			
@@ -875,11 +872,11 @@
 				that.MoveList=that.MoveList.slice(0, that.CurrentMove);/*mejor start variation*/
 			}
 			
-			that.MoveList.push({Fen : that.Fen, PGNmove : (pgn_move+(that.Active.checks ? "+" : "")), FromBos : initial_bos, ToBos : final_bos});/*# with checkmate*/
+			that.MoveList.push({Fen : that.Fen, PGNmove : (pgn_move+(that.Active.checks ? "+" : "")), FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});/*# with checkmate*/
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_abs_val, promoted_val, king_castled, non_en_passant_capture){
-			var i, j, len, that, temp, temp2, temp3, initial_file_char, final_pos, ambiguity, as_knight, rtn;
+			var i, j, len, that, temp, temp2, temp3, initial_file_char, ambiguity, as_knight, rtn;
 			
 			that=this;
 			
@@ -903,12 +900,11 @@
 				
 				if(piece_abs_val!==_KING){//knight, bishop, rook, queen
 					temp2=[];
-					final_pos=toPos(final_qos);
 					as_knight=(piece_abs_val===_KNIGHT);
 					
 					for(i=0; i<2; i++){//0...1
 						for(j=(piece_abs_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
-							if((temp=that.disambiguationPos(final_pos, j--, as_knight, piece_abs_val)).length){temp2.push(temp);}
+							if((temp=that.disambiguationPos(final_qos, j--, as_knight, piece_abs_val)).length){temp2.push(temp);}
 						}
 					}
 					
@@ -917,7 +913,7 @@
 						temp3="";
 						
 						for(i=0; i<len; i++){//0<len
-							if(!sameSqr(temp2[i], initial_qos) && isLegalMove(that.Fen, temp2[i], final_pos)){
+							if(!sameSqr(temp2[i], initial_qos) && isLegalMove(that.Fen, temp2[i], final_qos)){
 								temp3+=toBos(temp2[i]);
 							}
 						}
@@ -998,7 +994,7 @@
 		}
 		
 		function insideBoard(qos){
-			return (sameSqr(toPos(qos), qos) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
+			return ((toBos(toPos(qos))===toBos(qos)) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
 		}
 		
 		function sameSqr(qos1, qos2){
