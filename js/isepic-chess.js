@@ -163,12 +163,13 @@
 					
 					if(total_pieces[5]!==1){
 						error_msg="Error [5] board without exactly one "+(i ? "white" : "black")+" king";
-						break;
 					}else if(total_pieces[0]>8){
 						error_msg="Error [6] more than 8 "+(i ? "white" : "black")+" pawns";
-						break;
 					}else if((Math.max(total_pieces[1]-2, 0)+Math.max(total_pieces[2]-2, 0)+Math.max(total_pieces[3]-2, 0)+Math.max(total_pieces[4]-1, 0))>(8-total_pieces[0])){
 						error_msg="Error [7] promoted pieces exceed the number of missing pawns for "+(i ? "white" : "black");
+					}
+					
+					if(error_msg){
 						break;
 					}
 				}
@@ -593,86 +594,101 @@
 			that.Fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-")+" "+that.HalfMove+" "+that.FullMove);
 		}
 		
-		function _refinedFenTest(){/*restructurar con noErrors*/
-			var i, j, k, that, temp, temp2, current_sign, keep_going, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, rtn_is_legal;
+		function _refinedFenTest(){
+			var i, j, k, that, temp, temp2, current_sign, keep_going, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
 			
-			that=this;
-			rtn_is_legal=false;
+			error_msg="";
 			
-			if((that.HalfMove-that.Active.isBlack+1)<(that.FullMove*2)){
-				if(that.Active.checks<3){
-					that.toggleActiveColor();
-					keep_going=!that.countChecks(that.NonActive.kingPos, true);
-					that.toggleActiveColor();
+			//if(!error_msg){
+				that=this;
+				
+				if((that.HalfMove-that.Active.isBlack+1)>=(that.FullMove*2)){
+					error_msg="Error [0] exceeding half moves ratio";
+				}
+			//}
+			
+			if(!error_msg){
+				if(that.Active.checks>=3){
+					error_msg="Error [1] king is checked more times than possible";
+				}
+			}
+			
+			if(!error_msg){
+				that.toggleActiveColor();
+				
+				if(that.countChecks(that.NonActive.kingPos, true)){
+					error_msg="Error [2] non-active king in check";
+				}
+				
+				that.toggleActiveColor();
+			}
+			
+			if(!error_msg){
+				if(that.EnPassantBos){
+					temp=that.NonActive.sign;//(that.Active.isBlack ? _WHITE_SIGN : _BLACK_SIGN)
 					
-					if(keep_going){
-						if(that.EnPassantBos){
-							temp=that.NonActive.sign;//(that.Active.isBlack ? _WHITE_SIGN : _BLACK_SIGN)
-							
-							en_passant_rank=getRankPos(that.EnPassantBos);
-							en_passant_file=getFilePos(that.EnPassantBos);
-							
-							/*negar todo permite salvar?*/
-							keep_going=(!that.HalfMove && !that.getValue(that.EnPassantBos) && en_passant_rank===(that.Active.isBlack ? 5 : 2) && !that.getValue([(en_passant_rank+temp), en_passant_file]) && that.getValue([(en_passant_rank-temp), en_passant_file])===temp);
-						}
-						
-						if(keep_going){
-							fen_board=that.Fen.split(" ")[0];
-							
-							for(i=0; i<2; i++){//0...1
-								min_captured=0;
-								
-								for(j=0; j<8; j++){//0...7
-									min_captured_holder=((j===0 || j===7) ? [1, 3, 6, 10, 99] : [1, 2, 4, 6, 9]);
-									temp2="";
-									
-									for(k=0; k<8; k++){//0...7
-										temp2+="#"+(that.getValue([k, j]) || "");
-									}
-									
-									total_pawns_in_current_file=_occurrences(temp2, (i ? "#-1" : "#1"));
-									
-									if(total_pawns_in_current_file>1){
-										min_captured+=min_captured_holder[total_pawns_in_current_file-2];
-									}
-								}
-								
-								if(min_captured>(15-_occurrences(fen_board, (i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
-									keep_going=false;
-									break;
-								}
-							}
-							
-							if(keep_going){
-								for(i=0; i<2; i++){//0...1
-									current_castling_availity=(i ? that.WCastling : that.BCastling);
-									
-									if(current_castling_availity){
-										current_sign=(i ? _WHITE_SIGN : _BLACK_SIGN);
-										current_king_rank=(i ? 7 : 0);
-										
-										if(that.getValue([current_king_rank, 4])!==(current_sign*_KING)){
-											keep_going=false;
-										}else if(current_castling_availity!==2 && that.getValue([current_king_rank, 7])!==(current_sign*_ROOK)){
-											keep_going=false;
-										}else if(current_castling_availity!==1 && that.getValue([current_king_rank, 0])!==(current_sign*_ROOK)){
-											keep_going=false;
-										}
-									}
-									
-									if(!keep_going){
-										break;
-									}
-								}
-								
-								rtn_is_legal=keep_going;
-							}
-						}
+					en_passant_rank=getRankPos(that.EnPassantBos);
+					en_passant_file=getFilePos(that.EnPassantBos);
+					
+					/*negar esto bien*/
+					if(!(!that.HalfMove && !that.getValue(that.EnPassantBos) && en_passant_rank===(that.Active.isBlack ? 5 : 2) && !that.getValue([(en_passant_rank+temp), en_passant_file]) && that.getValue([(en_passant_rank-temp), en_passant_file])===temp)){
+						error_msg="Error [3] bad en-passant";
 					}
 				}
 			}
 			
-			return rtn_is_legal;
+			if(!error_msg){
+				fen_board=that.Fen.split(" ")[0];
+				
+				for(i=0; i<2; i++){//0...1
+					min_captured=0;
+					
+					for(j=0; j<8; j++){//0...7
+						min_captured_holder=((j===0 || j===7) ? [1, 3, 6, 10, 99] : [1, 2, 4, 6, 9]);
+						temp2="";
+						
+						for(k=0; k<8; k++){//0...7
+							temp2+="#"+(that.getValue([k, j]) || "");
+						}
+						
+						total_pawns_in_current_file=_occurrences(temp2, (i ? "#-1" : "#1"));
+						
+						if(total_pawns_in_current_file>1){
+							min_captured+=min_captured_holder[total_pawns_in_current_file-2];
+						}
+					}
+					
+					if(min_captured>(15-_occurrences(fen_board, (i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
+						error_msg="Error [4] not enough captured pieces to support the total doubled pawns";
+						break;
+					}
+				}
+			}
+			
+			if(!error_msg){
+				for(i=0; i<2; i++){//0...1
+					current_castling_availity=(i ? that.WCastling : that.BCastling);
+					
+					if(current_castling_availity){
+						current_sign=(i ? _WHITE_SIGN : _BLACK_SIGN);
+						current_king_rank=(i ? 7 : 0);
+						
+						if(that.getValue([current_king_rank, 4])!==(current_sign*_KING)){
+							error_msg="Error [5] "+(i ? "white" : "black")+" castling ability without king in original position";
+						}else if(current_castling_availity!==2 && that.getValue([current_king_rank, 7])!==(current_sign*_ROOK)){
+							error_msg="Error [6] "+(i ? "white" : "black")+" short castling ability with missing H-file rook";
+						}else if(current_castling_availity!==1 && that.getValue([current_king_rank, 0])!==(current_sign*_ROOK)){
+							error_msg="Error [7] "+(i ? "white" : "black")+" long castling ability with missing A-file rook";
+						}
+					}
+					
+					if(error_msg){
+						break;
+					}
+				}
+			}
+			
+			return error_msg;
 		}
 		
 		function _candidateMoves(initial_qos, piece_direction, as_knight, total_squares, allow_capture){
@@ -1292,7 +1308,7 @@
 				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
 				new_board.firstTimeDefaults(p.isHidden, p.isRotated);
 				
-				postfen_was_valid=new_board.refinedFenTest();
+				postfen_was_valid=!new_board.refinedFenTest();
 				
 				if(p.invalidFenStop && !postfen_was_valid){
 					no_errors=false;
