@@ -33,10 +33,10 @@
 					fen : "rnbqkbnr/pppp1ppp/8/4p3/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2"
 				});
 				
-				o_board.moveCaller(IsepicChess.bosToPos("f2"), IsepicChess.bosToPos("f4"));
-				IsepicChess.selectBoard("other").moveCaller(IsepicChess.bosToPos("e7"), IsepicChess.bosToPos("e6"));//o_board.moveCaller(...)
-				o_board.moveCaller([6, 6], [4, 6]);//"g2", "g4"
-				o_board.moveCaller(IsepicChess.bosToPos("d8"), IsepicChess.bosToPos("h4"));
+				o_board.moveCaller("f2", "f4");
+				IsepicChess.selectBoard("other").moveCaller("e7", "e6");//o_board.moveCaller(...)
+				o_board.moveCaller([6, 6], [4, 6]);//[6, 6]="g2", [4, 6]="g4"
+				o_board.moveCaller("d8", "h4");
 				o_board.setCurrentMove(-1, false);//go to previous move "2.g4"
 				//o_board.refreshBoard();//refresh changes
 				

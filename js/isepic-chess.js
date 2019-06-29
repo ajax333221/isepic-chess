@@ -84,7 +84,7 @@
 				rtn+="<tr><td class='label'>"+rank_char+"</td>";
 				
 				for(j=0; j<8; j++){//0...7
-					rtn+="<td class='"+(((i+j)%2 ? "b" : "w")+"s")+"' id='"+posToBos(is_rotated ? [(7-i), (7-j)] : [i, j])+"'></td>";
+					rtn+="<td class='"+(((i+j)%2 ? "b" : "w")+"s")+"' id='"+toBos(is_rotated ? [(7-i), (7-j)] : [i, j])+"'></td>";
 				}
 				
 				rtn+="<td class='label'>"+rank_char+"</td></tr>";
@@ -266,7 +266,7 @@
 						temp=that.FromSquare;
 						that.FromSquare="";
 						
-						if(that.moveCaller(bosToPos(temp), bosToPos(this.id))){
+						if(that.moveCaller(temp, this.id)){
 							that.refreshBoard();
 						}else{
 							that.giveSquareMovement();
@@ -278,7 +278,7 @@
 					}
 					
 					if(need_highlight){
-						legal_moves=legalMoves(that.Fen, bosToPos(this.id));
+						legal_moves=legalMoves(that.Fen, this.id);
 						len=legal_moves.length;
 						
 						if(len){
@@ -286,7 +286,7 @@
 							$(this).addClass("currpiece");
 							
 							for(i=0; i<len; i++){//0<len
-								$("#"+posToBos(legal_moves[i])).addClass("highlight");
+								$("#"+toBos(legal_moves[i])).addClass("highlight");
 							}
 						}
 					}
@@ -303,7 +303,7 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					current_bos=posToBos(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
+					current_bos=toBos(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
 					temp=that.getValue(current_bos);
 					
 					new_class=(((i+j)%2 ? "b" : "w")+"s"+(temp ? ((temp<0 ? " b" : " w")+_pieceChar(temp)) : ""));
@@ -342,8 +342,8 @@
 			rtn+="<br><strong>en_passant:</strong> "+(that.EnPassantBos ? that.EnPassantBos : "-");
 			rtn+="<br><strong>active_color:</strong> "+(that.Active.isBlack ? "black" : "white");
 			rtn+="<br><strong>active_king_checks:</strong> "+that.Active.checks;
-			rtn+="<br><strong>active_king_pos:</strong> "+posToBos(that.Active.kingPos);
-			rtn+="<br><strong>non_active_king_pos:</strong> "+posToBos(that.NonActive.kingPos);
+			rtn+="<br><strong>active_king_pos:</strong> "+toBos(that.Active.kingPos);
+			rtn+="<br><strong>non_active_king_pos:</strong> "+toBos(that.NonActive.kingPos);
 			rtn+="<br><strong>white_castling:</strong> "+(_castlingChars(that.WCastling).toUpperCase() || "-");
 			rtn+="<br><strong>black_castling:</strong> "+(_castlingChars(that.BCastling) || "-");
 			rtn+="<br><strong>half_moves:</strong> "+that.HalfMove;
@@ -489,7 +489,7 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					that[posToBos([i, j])]=_EMPTY_SQR;
+					that[toBos([i, j])]=_EMPTY_SQR;
 				}
 			}
 			
@@ -504,7 +504,7 @@
 					
 					if(!skip_files){
 						piece_char=temp.toLowerCase();
-						that[posToBos([i, current_file])]="*pnbrqk".indexOf(piece_char)*(temp===piece_char ? _BLACK_SIGN : _WHITE_SIGN);
+						that[toBos([i, current_file])]="*pnbrqk".indexOf(piece_char)*(temp===piece_char ? _BLACK_SIGN : _WHITE_SIGN);
 					}
 					
 					current_file+=(skip_files || 1);
@@ -580,7 +580,7 @@
 		}
 		
 		function _refinedFenTest(){/*restructurar con noErrors*/
-			var i, j, k, that, temp, temp2, current_sign, keep_going, en_passant_pos, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, rtn_is_legal;
+			var i, j, k, that, temp, temp2, current_sign, keep_going, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, rtn_is_legal;
 			
 			that=this;
 			rtn_is_legal=false;
@@ -594,13 +594,12 @@
 					if(keep_going){
 						if(that.EnPassantBos){
 							temp=that.NonActive.sign;//(that.Active.isBlack ? _WHITE_SIGN : _BLACK_SIGN)
-							en_passant_pos=bosToPos(that.EnPassantBos);
 							
-							en_passant_rank=getRankPos(en_passant_pos);
-							en_passant_file=getFilePos(en_passant_pos);
+							en_passant_rank=getRankPos(that.EnPassantBos);
+							en_passant_file=getFilePos(that.EnPassantBos);
 							
 							/*negar todo permite salvar?*/
-							keep_going=(!that.HalfMove && !that.getValue(en_passant_pos) && en_passant_rank===(that.Active.isBlack ? 5 : 2) && !that.getValue([(en_passant_rank+temp), en_passant_file]) && that.getValue([(en_passant_rank-temp), en_passant_file])===temp);
+							keep_going=(!that.HalfMove && !that.getValue(that.EnPassantBos) && en_passant_rank===(that.Active.isBlack ? 5 : 2) && !that.getValue([(en_passant_rank+temp), en_passant_file]) && that.getValue([(en_passant_rank-temp), en_passant_file])===temp);
 						}
 						
 						if(keep_going){
@@ -808,13 +807,13 @@
 					if(getFilePos(final_qos)===6){//short
 						king_castled=1;
 						
-						that[posToBos([active_color_king_rank, 5])]=active_color_rook;
-						that[posToBos([active_color_king_rank, 7])]=_EMPTY_SQR;
+						that[toBos([active_color_king_rank, 5])]=active_color_rook;
+						that[toBos([active_color_king_rank, 7])]=_EMPTY_SQR;
 					}else if(getFilePos(final_qos)===2){//long
 						king_castled=2;
 						
-						that[posToBos([active_color_king_rank, 3])]=active_color_rook;
-						that[posToBos([active_color_king_rank, 0])]=_EMPTY_SQR;
+						that[toBos([active_color_king_rank, 3])]=active_color_rook;
+						that[toBos([active_color_king_rank, 0])]=_EMPTY_SQR;
 					}
 				}
 			}else if(piece_abs_val===_PAWN){
@@ -919,7 +918,7 @@
 						
 						for(i=0; i<len; i++){//0<len
 							if(!sameSqr(temp2[i], initial_qos) && isLegalMove(that.Fen, temp2[i], final_pos)){
-								temp3+=posToBos(temp2[i]);
+								temp3+=toBos(temp2[i]);
 							}
 						}
 						
@@ -974,20 +973,12 @@
 			return rtn;
 		}
 		
-		function bosToPos(qos){
-			return [(8-(getRankBos(qos)*1)), "abcdefgh".indexOf(getFileBos(qos))];
-		}
-		
-		function posToBos(qos){
-			return ("abcdefgh".charAt(getFilePos(qos))+""+(8-getRankPos(qos)));
-		}
-		
 		function toBos(qos){
-			return ((typeof qos)==="string" ? qos.toLowerCase() : posToBos(qos));
+			return ((typeof qos)==="string" ? qos.toLowerCase() : ("abcdefgh".charAt(getFilePos(qos))+""+(8-getRankPos(qos))));
 		}
 		
 		function toPos(qos){
-			return ((typeof qos)==="string" ? bosToPos(qos) : qos);
+			return ((typeof qos)==="string" ? [(8-(getRankBos(qos)*1)), "abcdefgh".indexOf(getFileBos(qos))] : qos);
 		}
 		
 		function getRankPos(qos){
@@ -1126,7 +1117,7 @@
 							if(temp2>0 && temp2!==_KING){
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
 							}else if(sameSqr(current_diagonal_pawn_pos, board.EnPassantBos)){
-								en_passant_capturable_bos=posToBos([piece_rank, current_adjacent_file]);
+								en_passant_capturable_bos=toBos([piece_rank, current_adjacent_file]);
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
 							}
 						}
@@ -1145,11 +1136,11 @@
 					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
 						current_pos=pre_validated_arr_pos[i][j];
 						
-						temp=board[posToBos(current_pos)];
+						temp=board[toBos(current_pos)];
 						temp2=board[toBos(piece_qos)];
 						temp3=board[en_passant_capturable_bos];
 						
-						board[posToBos(current_pos)]=piece_val;
+						board[toBos(current_pos)]=piece_val;
 						board[toBos(piece_qos)]=_EMPTY_SQR;
 						
 						if(en_passant_capturable_bos && sameSqr(current_pos, board.EnPassantBos)){
@@ -1160,7 +1151,7 @@
 							rtn.push(current_pos);
 						}
 						
-						board[posToBos(current_pos)]=temp;
+						board[toBos(current_pos)]=temp;
 						board[toBos(piece_qos)]=temp2;
 						board[en_passant_capturable_bos]=temp3;
 					}
@@ -1275,7 +1266,7 @@
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
-						target[posToBos([i, j])]=null;
+						target[toBos([i, j])]=null;
 					}
 				}
 				
@@ -1337,7 +1328,7 @@
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
-						mutable_keys.push(posToBos([i, j]));
+						mutable_keys.push(toBos([i, j]));
 					}
 				}
 				
@@ -1387,8 +1378,6 @@
 		return {
 			boardExists : boardExists,
 			selectBoard : selectBoard,
-			bosToPos : bosToPos,
-			posToBos : posToBos,
 			toBos : toBos,
 			toPos : toPos,
 			getRankPos : getRankPos,
