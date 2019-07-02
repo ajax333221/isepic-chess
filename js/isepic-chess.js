@@ -630,8 +630,7 @@
 					en_passant_rank=getRankPos(that.EnPassantBos);
 					en_passant_file=getFilePos(that.EnPassantBos);
 					
-					/*negar esto bien*/
-					if(!(!that.HalfMove && !that.getValue(that.EnPassantBos) && en_passant_rank===(that.Active.isBlack ? 5 : 2) && !that.getValue([(en_passant_rank+temp), en_passant_file]) && that.getValue([(en_passant_rank-temp), en_passant_file])===temp)){
+					if(that.HalfMove || that.getValue(that.EnPassantBos) || en_passant_rank!==(that.Active.isBlack ? 5 : 2) || that.getValue([(en_passant_rank+temp), en_passant_file]) || that.getValue([(en_passant_rank-temp), en_passant_file])!==temp){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -729,7 +728,7 @@
 			for(i=0; i<total_squares; i++){//0<total_squares
 				current_pos=[(getRankPos(initial_qos)+(rank_change*(i+1))), (getFilePos(initial_qos)+(file_change*(i+1)))];
 				
-				if(!insideBoard(current_pos)){
+				if(!isInsideBoard(current_pos)){
 					break;
 				}
 				
@@ -923,7 +922,7 @@
 				rtn+=toBos(final_qos);
 				
 				if(promoted_val){
-					rtn+=("="+_pieceChar(promoted_val).toUpperCase());
+					rtn+="="+_pieceChar(promoted_val).toUpperCase();
 				}
 			}else{//knight, bishop, rook, queen, non-castling king
 				rtn+=_pieceChar(piece_abs_val).toUpperCase();
@@ -1023,7 +1022,7 @@
 			return toBos(qos).charAt(0);
 		}
 		
-		function insideBoard(qos){
+		function isInsideBoard(qos){
 			return ((toBos(toPos(qos))===toBos(qos)) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
 		}
 		
@@ -1059,7 +1058,7 @@
 				rtn=false;
 				board_created=false;
 				
-				if(!insideBoard(piece_qos)){
+				if(!isInsideBoard(piece_qos)){
 					no_errors=false;
 				}
 			//}
@@ -1136,7 +1135,7 @@
 						current_adjacent_file=(getFilePos(piece_qos)+(i ? 1 : -1));
 						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
 						
-						if(insideBoard(current_diagonal_pawn_pos)){
+						if(isInsideBoard(current_diagonal_pawn_pos)){
 							temp2=(board.getValue(current_diagonal_pawn_pos)*non_active_sign);
 							
 							/*NO use (x && ...), we have negative numbers too*/
@@ -1196,7 +1195,7 @@
 			
 			rtn=false;
 			
-			if(insideBoard(final_qos)){
+			if(isInsideBoard(final_qos)){
 				moves=legalMoves(fen, initial_qos);
 				
 				if(moves){
@@ -1410,7 +1409,7 @@
 			getFilePos : getFilePos,
 			getRankBos : getRankBos,
 			getFileBos : getFileBos,
-			insideBoard : insideBoard,
+			isInsideBoard : isInsideBoard,
 			sameSqr : sameSqr,
 			removeBoard : removeBoard,
 			legalMoves : legalMoves,
