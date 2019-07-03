@@ -11,10 +11,9 @@
 				var board, board_created, error_msg;
 				
 				error_msg="";
+				board_created=false;
 				
 				//if(!error_msg){
-					board_created=false;
-					
 					board=IsepicChess.initBoard({
 						name : "board_testDis",
 						fen : "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",
@@ -56,10 +55,9 @@
 				var board, board_created, error_msg;
 				
 				error_msg="";
+				board_created=false;
 				
 				//if(!error_msg){
-					board_created=false;
-					
 					board=IsepicChess.initBoard({
 						name : "board_testBas",
 						fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
@@ -86,7 +84,7 @@
 				}
 				
 				if(!error_msg){
-					if(IsepicChess.legalMoves(board.Fen, "g7").join("")!=="2,6"){
+					if(board.legalMoves("g7").join("")!=="2,6"){
 						error_msg="Error [2] remove check via pawn blocking";
 					}
 				}
@@ -101,7 +99,7 @@
 					board.moveCaller("g7", "g6");
 					board.moveCaller("h5", "g6");
 					
-					if(IsepicChess.legalMoves(board.Fen, "h7").join("")!=="2,6"){
+					if(board.legalMoves("h7").join("")!=="2,6"){
 						error_msg="Error [4] remove check via pawn capture";
 					}
 				}
@@ -112,7 +110,7 @@
 					board.moveCaller("h8", "h2");
 					board.moveCaller("b5", "d7");
 					
-					if((IsepicChess.legalMoves(board.Fen, "b8").join("")+IsepicChess.legalMoves(board.Fen, "c8").join("")+IsepicChess.legalMoves(board.Fen, "d8").join("")+IsepicChess.legalMoves(board.Fen, "e8").join(""))!=="1,31,31,31,51,3"){
+					if((board.legalMoves("b8").join("")+board.legalMoves("c8").join("")+board.legalMoves("d8").join("")+board.legalMoves("e8").join(""))!=="1,31,31,31,51,3"){
 						error_msg="Error [5] remove check via (knight, bishop, queen, king) capture and via (king) moving out of check";
 					}
 				}
@@ -154,7 +152,7 @@
 					board.moveCaller("f5", "g6");
 					board.moveCaller("e1", "g1");
 					
-					if(IsepicChess.legalMoves(board.Fen, "a4").join("")!=="5,0"){
+					if(board.legalMoves("a4").join("")!=="5,0"){
 						error_msg="Error [8] prevent pawn capture moving forward";
 					}
 				}
@@ -168,7 +166,7 @@
 				}
 				
 				if(!error_msg){
-					if(IsepicChess.legalMoves(board.Fen, "b2").join("")!=="5,14,1"){
+					if(board.legalMoves("b2").join("")!=="5,14,1"){
 						error_msg="Error [10] pawn can move two squares";
 					}
 				}
@@ -176,7 +174,7 @@
 				if(!error_msg){
 					board.moveCaller("b2", "b4");
 					
-					if(IsepicChess.legalMoves(board.Fen, "a4").join("")!=="5,05,1"){
+					if(board.legalMoves("a4").join("")!=="5,05,1"){
 						error_msg="Error [11] pawn can capture enpassant or move";
 					}
 				}
@@ -184,13 +182,13 @@
 				if(!error_msg){
 					board.moveCaller("c6", "f6");
 					
-					if(IsepicChess.legalMoves(board.Fen, "f8").join("")!=="0,40,31,52,50,6"){
+					if(board.legalMoves("f8").join("")!=="0,40,31,52,50,6"){
 						error_msg="Error [12] rook movement with capture";
 					}
 				}
 				
 				if(!error_msg){
-					if(IsepicChess.legalMoves(board.Fen, "b1").join("")!=="5,25,0"){
+					if(board.legalMoves("b1").join("")!=="5,25,0"){
 						error_msg="Error [13] knight movement, prevent capture ally";
 					}
 				}
@@ -198,7 +196,7 @@
 				if(!error_msg){
 					board.moveCaller("a2", "a3");
 					
-					if(IsepicChess.legalMoves(board.Fen, "a4").join("")!==""){
+					if(board.legalMoves("a4").join("")!==""){
 						error_msg="Error [14] prevent pawn capture moving forward(again) and no enpassant";
 					}
 				}
@@ -212,7 +210,7 @@
 				}
 				
 				if(!error_msg){
-					if(IsepicChess.legalMoves(board.Fen, "b4").join("")!=="3,1"){
+					if(board.legalMoves("b4").join("")!=="3,1"){
 						error_msg="Error [16] pawn can only move one square forward";
 					}
 				}

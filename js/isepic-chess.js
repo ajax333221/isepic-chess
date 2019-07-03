@@ -293,7 +293,7 @@
 					}
 					
 					if(need_highlight){
-						legal_moves=legalMoves(that.Fen, this.id);
+						legal_moves=that.legalMoves(this.id);
 						len=legal_moves.length;
 						
 						if(len){
@@ -789,6 +789,145 @@
 			return rtn;
 		}
 		
+		function _legalMoves(piece_qos){
+			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, imp_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, no_errors, rtn;
+			
+			that=this;
+			
+			rtn=[];
+			no_errors=true;
+			
+			//if(no_errors){
+				if(!isInsideBoard(piece_qos)){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				active_color=that.Active.isBlack;
+				non_active_sign=that.NonActive.sign;
+				
+				piece_val=that.getValue(piece_qos);
+				imp_val=(piece_val*-non_active_sign);
+				
+				if(imp_val<=0){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				pre_validated_arr_pos=[];
+				
+				en_passant_capturable_bos="";
+				
+				is_king=(imp_val===_KING);
+				active_color_king_rank=(active_color ? 0 : 7);
+				
+				if(is_king){//king
+					for(i=1; i<9; i++){//1...8
+						if((temp=that.candidateMoves(piece_qos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
+					}
+					
+					active_castling_availity=(active_color ? that.BCastling : that.WCastling);
+					
+					if(active_castling_availity && !that.Active.checks){
+						for(i=0; i<2; i++){//0...1
+							if(active_castling_availity!==(i ? 1 : 2)){
+								if(that.candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
+									can_castle_current_side=true;
+									
+									for(j=0; j<2; j++){//0...1
+										if(that.countChecks([active_color_king_rank, (j+(i ? 2 : 5))], true)){//5...6 or 2...3
+											can_castle_current_side=false;
+											break;
+										}
+									}
+									
+									if(can_castle_current_side){
+										pre_validated_arr_pos.push([[active_color_king_rank, (i ? 2 : 6)]]);
+									}
+								}
+							}
+						}
+					}
+				}else if(imp_val===_PAWN){
+					piece_rank=getRankPos(piece_qos);
+					
+					if((temp=that.candidateMoves(piece_qos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
+					
+					for(i=0; i<2; i++){//0...1
+						current_adjacent_file=(getFilePos(piece_qos)+(i ? 1 : -1));
+						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
+						
+						if(isInsideBoard(current_diagonal_pawn_pos)){
+							temp2=(that.getValue(current_diagonal_pawn_pos)*non_active_sign);
+							
+							/*NO use (x && ...), we have negative numbers too*/
+							if(temp2>0 && temp2!==_KING){
+								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
+							}else if(sameSqr(current_diagonal_pawn_pos, that.EnPassantBos)){
+								en_passant_capturable_bos=toBos([piece_rank, current_adjacent_file]);
+								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
+							}
+						}
+					}
+				}else{//knight, bishop, rook, queen
+					as_knight=(imp_val===_KNIGHT);
+					
+					for(i=0; i<2; i++){//0...1
+						for(j=(imp_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
+							if((temp=that.candidateMoves(piece_qos, j--, as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
+						}
+					}
+				}
+				
+				for(i=0, len=pre_validated_arr_pos.length; i<len; i++){//0<len
+					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
+						current_pos=pre_validated_arr_pos[i][j];
+						
+						temp=that[toBos(current_pos)];
+						temp2=that[toBos(piece_qos)];
+						temp3=that[en_passant_capturable_bos];
+						
+						that[toBos(current_pos)]=piece_val;
+						that[toBos(piece_qos)]=_EMPTY_SQR;
+						
+						if(en_passant_capturable_bos && sameSqr(current_pos, that.EnPassantBos)){
+							that[en_passant_capturable_bos]=_EMPTY_SQR;
+						}
+						
+						if(!that.countChecks((is_king ? current_pos : that.Active.kingPos), true)){
+							rtn.push(current_pos);
+						}
+						
+						that[toBos(current_pos)]=temp;
+						that[toBos(piece_qos)]=temp2;
+						that[en_passant_capturable_bos]=temp3;
+					}
+				}
+			}
+			
+			return rtn;
+		}
+		
+		function _isLegalMove(initial_qos, final_qos){
+			var that, moves, rtn;
+			
+			that=this;
+			
+			rtn=false;
+			
+			if(isInsideBoard(final_qos)){
+				moves=that.legalMoves(initial_qos);
+				
+				if(moves.length){
+					rtn=_strContains(moves.join("/"), toPos(final_qos).join());
+				}
+			}
+			
+			return rtn;
+		}
+		
 		function _moveCaller(initial_qos, final_qos){
 			var that, rtn_can_move;
 			
@@ -1050,20 +1189,13 @@
 		}
 		
 		function legalMoves(fen, piece_qos){
-			var i, j, len, len2, temp, temp2, temp3, board, active_color, non_active_sign, current_adjacent_file, piece_val, imp_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, board_created, no_errors, rtn;
+			var board, board_created, no_errors, rtn;
 			
+			rtn=[];
+			board_created=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				rtn=false;
-				board_created=false;
-				
-				if(!isInsideBoard(piece_qos)){
-					no_errors=false;
-				}
-			//}
-			
-			if(no_errors){
 				board=initBoard({
 					name : "board_legalMoves",
 					fen : fen,
@@ -1076,111 +1208,10 @@
 				}else{
 					board_created=true;
 				}
-			}
+			//}
 			
 			if(no_errors){
-				active_color=board.Active.isBlack;
-				non_active_sign=board.NonActive.sign;
-				
-				piece_val=board.getValue(piece_qos);
-				imp_val=(piece_val*-non_active_sign);
-				
-				if(imp_val<=0){
-					no_errors=false;
-				}
-			}
-			
-			if(no_errors){
-				rtn=[];
-				pre_validated_arr_pos=[];
-				
-				en_passant_capturable_bos="";
-				
-				is_king=(imp_val===_KING);
-				active_color_king_rank=(active_color ? 0 : 7);
-				
-				if(is_king){//king
-					for(i=1; i<9; i++){//1...8
-						if((temp=board.candidateMoves(piece_qos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
-					}
-					
-					active_castling_availity=(active_color ? board.BCastling : board.WCastling);
-					
-					if(active_castling_availity && !board.Active.checks){
-						for(i=0; i<2; i++){//0...1
-							if(active_castling_availity!==(i ? 1 : 2)){
-								if(board.candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
-									can_castle_current_side=true;
-									
-									for(j=0; j<2; j++){//0...1
-										if(board.countChecks([active_color_king_rank, (j+(i ? 2 : 5))], true)){//5...6 or 2...3
-											can_castle_current_side=false;
-											break;
-										}
-									}
-									
-									if(can_castle_current_side){
-										pre_validated_arr_pos.push([[active_color_king_rank, (i ? 2 : 6)]]);
-									}
-								}
-							}
-						}
-					}
-				}else if(imp_val===_PAWN){
-					piece_rank=getRankPos(piece_qos);
-					
-					if((temp=board.candidateMoves(piece_qos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
-					
-					for(i=0; i<2; i++){//0...1
-						current_adjacent_file=(getFilePos(piece_qos)+(i ? 1 : -1));
-						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
-						
-						if(isInsideBoard(current_diagonal_pawn_pos)){
-							temp2=(board.getValue(current_diagonal_pawn_pos)*non_active_sign);
-							
-							/*NO use (x && ...), we have negative numbers too*/
-							if(temp2>0 && temp2!==_KING){
-								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
-							}else if(sameSqr(current_diagonal_pawn_pos, board.EnPassantBos)){
-								en_passant_capturable_bos=toBos([piece_rank, current_adjacent_file]);
-								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
-							}
-						}
-					}
-				}else{//knight, bishop, rook, queen
-					as_knight=(imp_val===_KNIGHT);
-					
-					for(i=0; i<2; i++){//0...1
-						for(j=(imp_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
-							if((temp=board.candidateMoves(piece_qos, j--, as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
-						}
-					}
-				}
-				
-				for(i=0, len=pre_validated_arr_pos.length; i<len; i++){//0<len
-					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
-						current_pos=pre_validated_arr_pos[i][j];
-						
-						temp=board[toBos(current_pos)];
-						temp2=board[toBos(piece_qos)];
-						temp3=board[en_passant_capturable_bos];
-						
-						board[toBos(current_pos)]=piece_val;
-						board[toBos(piece_qos)]=_EMPTY_SQR;
-						
-						if(en_passant_capturable_bos && sameSqr(current_pos, board.EnPassantBos)){
-							board[en_passant_capturable_bos]=_EMPTY_SQR;
-						}
-						
-						if(!board.countChecks((is_king ? current_pos : board.Active.kingPos), true)){
-							rtn.push(current_pos);
-						}
-						
-						board[toBos(current_pos)]=temp;
-						board[toBos(piece_qos)]=temp2;
-						board[en_passant_capturable_bos]=temp3;
-					}
-				}
+				rtn=board.legalMoves(piece_qos);
 			}
 			
 			if(board_created){
@@ -1191,16 +1222,33 @@
 		}
 		
 		function isLegalMove(fen, initial_qos, final_qos){
-			var moves, rtn;
+			var board, board_created, no_errors, rtn;
 			
 			rtn=false;
+			board_created=false;
+			no_errors=true;
 			
-			if(isInsideBoard(final_qos)){
-				moves=legalMoves(fen, initial_qos);
+			//if(no_errors){
+				board=initBoard({
+					name : "board_isLegalMove",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
 				
-				if(moves){
-					rtn=_strContains(moves.join("/"), toPos(final_qos).join());
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
 				}
+			//}
+			
+			if(no_errors){
+				rtn=board.isLegalMove(initial_qos, final_qos);
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
 			}
 			
 			return rtn;
@@ -1254,6 +1302,8 @@
 						disambiguationPos : _disambiguationPos,
 						testCollision : _testCollision,
 						moveCaller : _moveCaller,
+						isLegalMove : _isLegalMove,
+						legalMoves : _legalMoves,
 						makeMove : _makeMove,
 						getNotation : _getNotation
 					};

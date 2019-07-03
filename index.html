@@ -35,18 +35,20 @@
 				
 				o_board.moveCaller("f2", "f4");
 				IsepicChess.selectBoard("other").moveCaller("e7", "e6");//o_board.moveCaller(...)
-				o_board.moveCaller([6, 6], [4, 6]);//[6, 6] = "g2", [4, 6] = "g4"
+				o_board.moveCaller([6, 6], [4, 6]);//[6, 6]="g2", [4, 6]="g4"
 				o_board.moveCaller("d8", "h4");
 				o_board.setCurrentMove(-1, false);//go to previous move "2.g4"
-				//o_board.refreshBoard();//refresh changes
+				//o_board.refreshBoard();//...only one visual refresh is needed
 				
-				IsepicChess.cloneBoard("other_copy", "other");//...(to, from)
-				//oc_board.refreshBoard();//refresh changes
+				IsepicChess.cloneBoard("other_copy", "other");//cloneBoard(to, from)
+				//oc_board.refreshBoard();//...only one visual refresh is needed
 				
 				rff_board.toggleIsRotated();
-				//rff_board.refreshBoard();//refresh changes
+				//rff_board.refreshBoard();//...only one visual refresh is needed
 				
-				m_board.refreshBoard();//switch to main board + refresh changes
+				m_board.refreshBoard();//visual refresh (also switches to the board)
+				
+				console.log(m_board.legalMoves("b1").map(x => IsepicChess.toBos(x)));//["c3", "a3"]
 			});
 		</script>
 	</head>
