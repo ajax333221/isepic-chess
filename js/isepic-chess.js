@@ -185,7 +185,15 @@
 			
 			that=this;
 			
-			return that[toBos(qos)];
+			return that.Squares[toBos(qos)];
+		}
+		
+		function _setValue(qos, val){
+			var that;
+			
+			that=this;
+			
+			that.Squares[toBos(qos)]=val;
 		}
 		
 		function _countChecks(king_qos, early_break){
@@ -504,7 +512,7 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					that[toBos([i, j])]=_EMPTY_SQR;
+					that.setValue([i, j], _EMPTY_SQR);
 				}
 			}
 			
@@ -519,7 +527,7 @@
 					
 					if(!skip_files){
 						piece_char=temp.toLowerCase();
-						that[toBos([i, current_file])]="*pnbrqk".indexOf(piece_char)*(temp===piece_char ? _BLACK_SIGN : _WHITE_SIGN);
+						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*(temp===piece_char ? _BLACK_SIGN : _WHITE_SIGN)));
 					}
 					
 					current_file+=(skip_files || 1);
@@ -595,7 +603,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, temp2, current_sign, keep_going, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
+			var i, j, k, that, temp, temp2, current_sign, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
 			
 			error_msg="";
 			
@@ -885,24 +893,30 @@
 					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
 						current_pos=pre_validated_arr_pos[i][j];
 						
-						temp=that[toBos(current_pos)];
-						temp2=that[toBos(piece_qos)];
-						temp3=that[en_passant_capturable_bos];
+						temp=that.getValue(current_pos);
+						temp2=that.getValue(piece_qos);
 						
-						that[toBos(current_pos)]=piece_val;
-						that[toBos(piece_qos)]=_EMPTY_SQR;
+						that.setValue(current_pos, piece_val);
+						that.setValue(piece_qos, _EMPTY_SQR);
 						
-						if(en_passant_capturable_bos && sameSqr(current_pos, that.EnPassantBos)){
-							that[en_passant_capturable_bos]=_EMPTY_SQR;
+						if(en_passant_capturable_bos){
+							temp3=that.getValue(en_passant_capturable_bos);/*NO outside if(en_passant_capturable_bos)*/
+							
+							if(sameSqr(current_pos, that.EnPassantBos)){
+								that.setValue(en_passant_capturable_bos, _EMPTY_SQR);
+							}
 						}
 						
 						if(!that.countChecks((is_king ? current_pos : that.Active.kingPos), true)){
 							rtn.push(current_pos);
 						}
 						
-						that[toBos(current_pos)]=temp;
-						that[toBos(piece_qos)]=temp2;
-						that[en_passant_capturable_bos]=temp3;
+						that.setValue(current_pos, temp);
+						that.setValue(piece_qos, temp2);
+						
+						if(en_passant_capturable_bos){
+							that.setValue(en_passant_capturable_bos, temp3);
+						}
 					}
 				}
 			}
@@ -972,13 +986,13 @@
 					if(getFilePos(final_qos)===6){//short
 						king_castled=1;
 						
-						that[toBos([active_color_king_rank, 5])]=active_color_rook;
-						that[toBos([active_color_king_rank, 7])]=_EMPTY_SQR;
+						that.setValue([active_color_king_rank, 5], active_color_rook);
+						that.setValue([active_color_king_rank, 7], _EMPTY_SQR);
 					}else if(getFilePos(final_qos)===2){//long
 						king_castled=2;
 						
-						that[toBos([active_color_king_rank, 3])]=active_color_rook;
-						that[toBos([active_color_king_rank, 0])]=_EMPTY_SQR;
+						that.setValue([active_color_king_rank, 3], active_color_rook);
+						that.setValue([active_color_king_rank, 0], _EMPTY_SQR);
 					}
 				}
 			}else if(piece_abs_val===_PAWN){
@@ -987,7 +1001,7 @@
 				if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpass
 					new_en_passant_bos=(getFileBos(final_qos)+""+(active_color ? 6 : 3));
 				}else if(sameSqr(final_qos, that.EnPassantBos)){//pawn x enpass
-					that[(getFileBos(final_qos)+""+(active_color ? 4 : 5))]=_EMPTY_SQR;
+					that.setValue(((getFileBos(final_qos)+""+(active_color ? 4 : 5))), _EMPTY_SQR);
 				}else if(to_promotion_rank){//promotion
 					promoted_val=(that.PromoteTo*active_sign);
 				}
@@ -1027,8 +1041,8 @@
 			
 			that.EnPassantBos=new_en_passant_bos;/*NO move this up*/
 			
-			that[toBos(final_qos)]=(promoted_val || piece_val);
-			that[toBos(initial_qos)]=_EMPTY_SQR;
+			that.setValue(final_qos, (promoted_val || piece_val));
+			that.setValue(initial_qos, _EMPTY_SQR);
 			
 			that.toggleActiveColor();
 			
@@ -1282,6 +1296,7 @@
 						id : _next_board_id++,
 						BoardName : board_name,
 						getValue : _getValue,
+						setValue : _setValue,
 						countChecks : _countChecks,
 						toggleActiveColor : _toggleActiveColor,
 						toggleIsRotated : _toggleIsRotated,
@@ -1338,10 +1353,11 @@
 				target.PromoteTo=null;
 				target.FromSquare=null;
 				target.IsHidden=null;
+				target.Squares={};
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
-						target[toBos([i, j])]=null;
+						target.setValue([i, j], null);
 					}
 				}
 				
@@ -1380,7 +1396,7 @@
 		}
 		
 		function cloneBoard(to_board_name, from_board_name){
-			var i, j, mutable_keys, no_errors;
+			var mutable_keys, no_errors;
 			
 			no_errors=true;
 			
@@ -1399,13 +1415,7 @@
 			}
 			
 			if(no_errors){
-				mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden"];
-				
-				for(i=0; i<8; i++){//0...7
-					for(j=0; j<8; j++){//0...7
-						mutable_keys.push(toBos([i, j]));
-					}
-				}
+				mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
 				
 				$.each(mutable_keys, function(i, key){
 					if(typeof _boards[from_board_name][key]==="object"){
