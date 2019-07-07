@@ -480,6 +480,7 @@
 				});
 				
 				$("#xfen").val(that.Fen);
+				$("#xpromote").val(that.PromoteTo);
 				
 				if(that.CurrentMove!==0){
 					$("#"+that.MoveList[that.CurrentMove].FromBos).addClass("lastmove");
@@ -492,7 +493,7 @@
 			}
 		}
 		
-		function _firstTimeDefaults(is_hidden, rotate_board){
+		function _firstTimeDefaults(is_hidden, rotate_board, promote_to){
 			var that;
 			
 			that=this;
@@ -500,7 +501,7 @@
 			that.InitialFullMove=that.FullMove;
 			that.MoveList=[{Fen : that.Fen, PGNmove : "", FromBos : "", ToBos : ""}];
 			that.CurrentMove=0;
-			that.PromoteTo=_QUEEN;
+			that.PromoteTo=promote_to;
 			that.IsRotated=!!rotate_board;
 			that.IsHidden=!!is_hidden;
 		}
@@ -1268,7 +1269,7 @@
 			return rtn;
 		}
 		
-		function initBoard(p){//{name, fen, isRotated, isHidden, invalidFenStop}
+		function initBoard(p){//{name, fen, isRotated, isHidden, promoteTo, invalidFenStop}
 			var i, j, target, board_name, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors;
 			
 			no_errors=true;
@@ -1280,6 +1281,7 @@
 				p.name=(((typeof p.name)==="string" && p.name.length) ? p.name : ("board_"+new Date().getTime()));
 				p.isRotated=(p.isRotated===true);
 				p.isHidden=(p.isHidden===true);
+				p.promoteTo=((p.promoteTo*1) || _QUEEN);
 				board_name=p.name;
 				
 				fen_was_valid=((typeof p.fen)==="string" && !_basicFenTest(pre_fen));
@@ -1371,7 +1373,7 @@
 			
 			if(no_errors){
 				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
-				new_board.firstTimeDefaults(p.isHidden, p.isRotated);
+				new_board.firstTimeDefaults(p.isHidden, p.isRotated, p.promoteTo);
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -1386,7 +1388,7 @@
 			if(no_errors){
 				if(!postfen_was_valid){
 					new_board.readFen(_DEFAULT_FEN);
-					new_board.firstTimeDefaults(p.isHidden, p.isRotated);
+					new_board.firstTimeDefaults(p.isHidden, p.isRotated, p.promoteTo);
 				}
 				
 				new_board.refreshBoard();
