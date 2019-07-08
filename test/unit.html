@@ -52,10 +52,11 @@
 			}
 			
 			function testBasicFunctionality(){
-				var board, board_created, error_msg;
+				var board, board_copy, board_created, error_msg;
 				
 				error_msg="";
 				board_created=false;
+				board_copy_created=false;
 				
 				//if(!error_msg){
 					board=IsepicChess.initBoard({
@@ -215,14 +216,222 @@
 					}
 				}
 				
-				/*nuevo: falta cloneBoard(), etc*/
-				/*test castling rights*/
-				/*test castling*/
-				/*test all underpromotion*/
-				/*test para piece movements*/
+				if(!error_msg){
+					board=IsepicChess.initBoard({
+						name : "board_testBas",
+						fen : "r3k2r/pppq1ppp/2npb3/2b1N3/2B1n3/2NPB3/PPPQ1PPP/R3K2R w KQkq - 4 9",
+						isHidden : true,
+						invalidFenStop : true
+					});
+					
+					if(board===null){
+						error_msg="Error [17] failed to initBoard()";
+					}else{
+						board_created=true;
+					}
+				}
+				
+				if(!error_msg){
+					board_copy=IsepicChess.initBoard({
+						name : "board_testBas_copy"
+					});
+					
+					if(board_copy===null){
+						error_msg="Error [18] failed to initBoard()";
+					}else{
+						board_copy_created=true;
+					}
+				}
+				
+				if(!error_msg){
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					
+					if(!IsepicChess.boardExists(board_copy.BoardName)){
+						error_msg="Error [19] failed to cloneBoard()";
+					}
+				}
+				
+				if(!error_msg){
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="3 3"){
+						error_msg="Error [20] incorrect castling values for KQkq";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("h1", "g1");
+					
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="2 3"){
+						error_msg="Error [21] incorrect castling values for Qkq";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("h8", "g8");
+					
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="2 2"){
+						error_msg="Error [22] incorrect castling values for Qq";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("a1", "b1");
+					
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="0 2"){
+						error_msg="Error [23] incorrect castling values for q";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("a8", "b8");
+					
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="0 0"){
+						error_msg="Error [24] incorrect castling values for no castling rights";
+					}
+				}
+				
+				if(!error_msg){
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board_copy.moveCaller("e1", "e2");
+					
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="0 3"){
+						error_msg="Error [25] incorrect castling values for no castling rights via white king move";
+					}
+				}
+				
+				if(!error_msg){
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board_copy.moveCaller("a1", "d1");
+					board_copy.moveCaller("e8", "e7");
+					
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="1 0"){
+						error_msg="Error [26] incorrect castling values for no castling rights via black king move";
+					}
+				}
+				
+				if(!error_msg){
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board_copy.moveCaller("e5", "d7");
+					board_copy.moveCaller("e4", "g3");
+					board_copy.moveCaller("d7", "b6");
+					board_copy.moveCaller("g3", "h1");
+					board_copy.moveCaller("b6", "a8");
+					board_copy.moveCaller("h1", "g3");
+					board_copy.moveCaller("a8", "b6");
+					
+					if((board_copy.WCastling+" "+board_copy.BCastling)!=="2 1"){
+						error_msg="Error [27] castling values remained after rook capture";
+					}
+				}
+				
+				if(!error_msg){
+					board=IsepicChess.initBoard({
+						name : "board_testBas",
+						fen : "r3k2r/4p3/3B1P2/2NpN1N1/1Pn1n1n1/3b1p2/4P3/R3K2R w KQkq - 0 1",
+						isHidden : true,
+						invalidFenStop : true
+					});
+					
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					
+					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f1,d1,g1,c1"){
+						error_msg="Error [28] incorrect white castling moves";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("b4", "b5");
+					
+					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f8,d8,g8,c8"){
+						error_msg="Error [29] incorrect black castling moves";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("c4", "d2");
+					
+					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="d1,c1"){
+						error_msg="Error [30] long castle incorrectly prevented by attack on b square";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("d6", "e7");
+					
+					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!==""){
+						error_msg="Error [31] castle not being prevented via first square";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("g4", "e3");
+					
+					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!==""){
+						error_msg="Error [32] castle not being prevented on d square";
+					}
+				}
+				
+				if(!error_msg){
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board_copy.moveCaller("f6", "f7");
+					
+					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f8,d8"){
+						error_msg="Error [33] black king trying to castle being at check";
+					}
+				}
+				
+				if(!error_msg){
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board_copy.moveCaller("b4", "b5");
+					board_copy.moveCaller("c4", "a3");
+					board_copy.moveCaller("b5", "b6");
+					board_copy.moveCaller("a3", "c2");
+					
+					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f1,d1"){
+						error_msg="Error [34] whie king trying to castle being at check";
+					}
+				}
+				
+				if(!error_msg){
+					board=IsepicChess.initBoard({
+						name : "board_testBas",
+						fen : "8/1k1PPPPP/8/8/8/8/1K1ppppp/5R2 w - - 0 1",
+						isHidden : true,
+						promoteTo : 4,
+						invalidFenStop : true
+					});
+					
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board_copy.setPromoteTo(3);
+					
+					board.moveCaller("h7", "h8");
+					
+					if(board.getValue("h8")!==4){
+						error_msg="Error [35] incorrect promotion to wr";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("h7", "h8");
+					
+					if(board_copy.getValue("h8")!==3){
+						error_msg="Error [36] failed to setPromoteTo()";
+					}
+				}
+				
+				if(!error_msg){
+					board_copy.moveCaller("e2", "f1");
+					
+					if(board_copy.getValue("f1")!==-3){
+						error_msg="Error [37] wrong promotion color";
+					}
+				}
 				
 				if(board_created){
 					IsepicChess.removeBoard(board.BoardName);
+				}
+				
+				if(board_copy_created){
+					IsepicChess.removeBoard(board_copy.BoardName);
 				}
 				
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testBasicFunctionality() was successful.");
