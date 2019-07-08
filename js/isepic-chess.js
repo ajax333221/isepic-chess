@@ -1134,11 +1134,10 @@
 		function selectBoard(board_name){
 			var no_errors, rtn;
 			
+			rtn=null;
 			no_errors=true;
 			
 			//if(no_errors){
-				rtn=null;
-				
 				if(!boardExists(board_name)){
 					no_errors=false;
 					console.log("Error[selectBoard]: \""+board_name+"\" is not defined");
