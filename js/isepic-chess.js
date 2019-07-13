@@ -14,8 +14,6 @@
 		var _ROOK=4;
 		var _QUEEN=5;
 		var _KING=6;
-		var _WHITE_SIGN=1;
-		var _BLACK_SIGN=-1;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
 		//---------------- utilities
@@ -42,10 +40,6 @@
 		
 		function _pieceChar(val){
 			return ["*", "p", "n", "b", "r", "q", "k"][Math.abs(val)];
-		}
-		
-		function _getSign(zal){
-			return ((typeof zal==="boolean" ? !zal : (toVal(zal)>0)) ? _WHITE_SIGN : _BLACK_SIGN);
 		}
 		
 		function _getBoardTabsHTML(current_board){
@@ -232,8 +226,8 @@
 			
 			that.Active.isBlack=!temp;
 			that.NonActive.isBlack=temp;
-			that.Active.sign=_getSign(!temp);
-			that.NonActive.sign=_getSign(temp);
+			that.Active.sign=getSign(!temp);
+			that.NonActive.sign=getSign(temp);
 			
 			/*NO hace King Pos refresh, eso lo hace refreshKingPosChecksAndFen()*/
 		}
@@ -532,8 +526,8 @@
 					
 					if(!skip_files){
 						piece_char=temp.toLowerCase();
-						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*_getSign(temp===piece_char)));
-						/*FALTA toVal(), quizas no ocupa * _getSign(), depende de si toVal() hace lo de minusc y mayusc*/
+						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*getSign(temp===piece_char)));
+						/*FALTA toVal(), quizas no ocupa * getSign(), depende de si toVal() hace lo de minusc y mayusc*/
 					}
 					
 					current_file+=(skip_files || 1);
@@ -552,8 +546,8 @@
 			temp=(fen_parts[1]==="b");
 			that.Active.isBlack=temp;
 			that.NonActive.isBlack=!temp;
-			that.Active.sign=_getSign(temp);
-			that.NonActive.sign=_getSign(!temp);
+			that.Active.sign=getSign(temp);
+			that.NonActive.sign=getSign(!temp);
 			
 			that.WCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
 			that.BCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
@@ -683,7 +677,7 @@
 					current_castling_availity=(i ? that.WCastling : that.BCastling);
 					
 					if(current_castling_availity){
-						current_sign=_getSign(!i);
+						current_sign=getSign(!i);
 						current_king_rank=(i ? 7 : 0);
 						
 						if(that.getValue([current_king_rank, 4])!==(current_sign*_KING)){
@@ -751,7 +745,7 @@
 				if(current_val){
 					current_abs_val=Math.abs(current_val);
 					
-					if(_getSign(current_val)===that.NonActive.sign){//is enemy piece
+					if(getSign(current_val)===that.NonActive.sign){//is enemy piece
 						if(op===1){
 							if(allow_capture && current_abs_val!==_KING){
 								rtn.push(current_pos);
@@ -824,7 +818,7 @@
 				
 				piece_val=that.getValue(piece_qos);
 				
-				if(_getSign(piece_val)===non_active_sign){//is enemy piece
+				if(getSign(piece_val)===non_active_sign){//is enemy piece
 					no_errors=false;
 				}
 			}
@@ -875,10 +869,9 @@
 						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
 						
 						if(isInsideBoard(current_diagonal_pawn_pos)){
-							temp2=(that.getValue(current_diagonal_pawn_pos)*non_active_sign);
+							temp2=that.getValue(current_diagonal_pawn_pos);
 							
-							/*NO use (x && ...), we have negative numbers too*/
-							if(temp2>0 && temp2!==_KING){
+							if(temp2 && getSign(temp2)===non_active_sign && Math.abs(temp2)!==_KING){
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
 							}else if(sameSqr(current_diagonal_pawn_pos, that.EnPassantBos)){
 								en_passant_capturable_bos=toBos([piece_rank, current_adjacent_file]);
@@ -1005,9 +998,9 @@
 			}else if(piece_abs_val===_PAWN){
 				pawn_moved=true;
 				
-				if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpass
+				if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpassant
 					new_en_passant_bos=(getFileBos(final_qos)+""+(active_color ? 6 : 3));
-				}else if(sameSqr(final_qos, that.EnPassantBos)){//pawn x enpass
+				}else if(sameSqr(final_qos, that.EnPassantBos)){//enpassant capture
 					that.setValue(((getFileBos(final_qos)+""+(active_color ? 4 : 5))), _EMPTY_SQR);
 				}else if(to_promotion_rank){//promotion
 					promoted_val=(that.PromoteTo*active_sign);
@@ -1171,6 +1164,10 @@
 		
 		function toPos(qos){
 			return ((typeof qos)==="string" ? [(8-(getRankBos(qos)*1)), "abcdefgh".indexOf(getFileBos(qos))] : qos);
+		}
+		
+		function getSign(zal){
+			return ((typeof zal==="boolean" ? !zal : (toVal(zal)>0)) ? 1 : -1);
 		}
 		
 		function getRankPos(qos){
@@ -1482,6 +1479,7 @@
 			toVal : toVal,
 			toBos : toBos,
 			toPos : toPos,
+			getSign : getSign,
 			getRankPos : getRankPos,
 			getFilePos : getFilePos,
 			getRankBos : getRankBos,
