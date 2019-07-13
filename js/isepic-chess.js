@@ -44,6 +44,10 @@
 			return ["*", "p", "n", "b", "r", "q", "k"][Math.abs(val)];
 		}
 		
+		function _getSign(zal){
+			return ((typeof zal==="boolean" ? zal : (toVal(zal)>0)) ? _WHITE_SIGN : _BLACK_SIGN);
+		}
+		
 		function _getBoardTabsHTML(current_board){
 			var i, len, board, board_name, board_list, rtn;
 			
@@ -228,8 +232,8 @@
 			
 			that.Active.isBlack=!temp;
 			that.NonActive.isBlack=temp;
-			that.Active.sign=(temp ? _WHITE_SIGN : _BLACK_SIGN);
-			that.NonActive.sign=(temp ? _BLACK_SIGN : _WHITE_SIGN);
+			that.Active.sign=_getSign(temp);
+			that.NonActive.sign=_getSign(!temp);
 			
 			/*NO hace King Pos refresh, eso lo hace refreshKingPosChecksAndFen()*/
 		}
@@ -528,7 +532,8 @@
 					
 					if(!skip_files){
 						piece_char=temp.toLowerCase();
-						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*(temp===piece_char ? _BLACK_SIGN : _WHITE_SIGN)));
+						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*_getSign(temp!==piece_char)));
+						/*FALTA toVal(), quizas no ocupa * _getSign(), depende de si toVal() hace lo de minusc y mayusc*/
 					}
 					
 					current_file+=(skip_files || 1);
@@ -547,8 +552,8 @@
 			temp=(fen_parts[1]==="b");
 			that.Active.isBlack=temp;
 			that.NonActive.isBlack=!temp;
-			that.Active.sign=(temp ? _BLACK_SIGN : _WHITE_SIGN);
-			that.NonActive.sign=(temp ? _WHITE_SIGN : _BLACK_SIGN);
+			that.Active.sign=_getSign(!temp);
+			that.NonActive.sign=_getSign(temp);
 			
 			that.WCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
 			that.BCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
@@ -577,8 +582,7 @@
 					if(current_val){
 						current_is_black=(current_val<0);
 						
-						//if((current_val*(current_is_black ? _BLACK_SIGN : _WHITE_SIGN))===_KING){
-						if((current_is_black ? -current_val : current_val)===_KING){
+						if(Math.abs(current_val)===_KING){
 							if(that.Active.isBlack===current_is_black){
 								that.Active.kingPos=current_pos;
 							}else{
@@ -588,6 +592,7 @@
 						
 						piece_char=_pieceChar(current_val);
 						new_fen_board+=(empty_consecutive_squares || "")+(current_is_black ? piece_char : piece_char.toUpperCase());
+						/*FALTA toBal(current_val) que con el signo te de la letra en minusc o mayusc*/
 						
 						empty_consecutive_squares=-1;
 					}
@@ -634,7 +639,7 @@
 			
 			if(!error_msg){
 				if(that.EnPassantBos){
-					temp=that.NonActive.sign;//(that.Active.isBlack ? _WHITE_SIGN : _BLACK_SIGN)
+					temp=that.NonActive.sign;
 					
 					en_passant_rank=getRankPos(that.EnPassantBos);
 					en_passant_file=getFilePos(that.EnPassantBos);
@@ -678,7 +683,7 @@
 					current_castling_availity=(i ? that.WCastling : that.BCastling);
 					
 					if(current_castling_availity){
-						current_sign=(i ? _WHITE_SIGN : _BLACK_SIGN);
+						current_sign=_getSign(!!i);
 						current_king_rank=(i ? 7 : 0);
 						
 						if(that.getValue([current_king_rank, 4])!==(current_sign*_KING)){
@@ -724,7 +729,7 @@
 		}
 		
 		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_abs_val){
-			var i, that, current_pos, current_val, current_imp_val, rank_change, file_change, rtn;
+			var i, that, current_pos, current_val, current_abs_val, rank_change, file_change, rtn;
 			
 			that=this;
 			
@@ -744,46 +749,47 @@
 				current_val=that.getValue(current_pos);
 				
 				if(current_val){
-					current_imp_val=(current_val*that.NonActive.sign);//(current_val*(that.Active.isBlack ? _WHITE_SIGN : _BLACK_SIGN)) -> (that.Active.isBlack ? current_val : -current_val)
+					current_abs_val=Math.abs(current_val);
 					
-					if(current_imp_val>0){
+					if(_getSign(current_val)===that.NonActive.sign){//is enemy piece
 						if(op===1){
-							if(allow_capture && current_imp_val!==_KING){
+							if(allow_capture && current_abs_val!==_KING){
 								rtn.push(current_pos);
 							}
 						}else if(op===2){
 							if(as_knight){
-								if(current_imp_val===_KNIGHT){
+								if(current_abs_val===_KNIGHT){
 									rtn=true;
 								}
-							}else if(current_imp_val===_KING){
+							}else if(current_abs_val===_KING){
 								if(!i){
 									rtn=true;
 								}
-							}else if(current_imp_val===_QUEEN){
+							}else if(current_abs_val===_QUEEN){
 								rtn=true;
 							}else if(piece_direction%2){
-								if(current_imp_val==_ROOK){
+								if(current_abs_val==_ROOK){
 									rtn=true;
 								}
-							}else if(current_imp_val===_BISHOP){
+							}else if(current_abs_val===_BISHOP){
 								rtn=true;
-							}else if(!i && current_imp_val===_PAWN){
-								if(current_val===_PAWN){//white pawn
+							}else if(!i && current_abs_val===_PAWN){
+								if(current_val===_PAWN){
 									if(piece_direction===4 || piece_direction===6){
 										rtn=true;
 									}
-								}else{//black pawn
-									/*NO merge in a single else if, the minimizer will do this*/
+								}else{
 									if(piece_direction===2 || piece_direction===8){
 										rtn=true;
 									}
 								}
 							}
 						}
-					}else if(op===3){
-						if(ally_abs_val===-current_imp_val){
-							rtn=current_pos;
+					}else{//is ally piece
+						if(op===3){
+							if(ally_abs_val===current_abs_val){
+								rtn=current_pos;
+							}
 						}
 					}
 					
@@ -799,7 +805,7 @@
 		}
 		
 		function _legalMoves(piece_qos){
-			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, imp_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, no_errors, rtn;
+			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, piece_abs_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, no_errors, rtn;
 			
 			that=this;
 			
@@ -817,19 +823,19 @@
 				non_active_sign=that.NonActive.sign;
 				
 				piece_val=that.getValue(piece_qos);
-				imp_val=(piece_val*-non_active_sign);
 				
-				if(imp_val<=0){
+				if(_getSign(piece_val)===non_active_sign){//is enemy piece
 					no_errors=false;
 				}
 			}
 			
-			if(no_errors){
+			if(no_errors){//is inside board + is ally piece
 				pre_validated_arr_pos=[];
 				
 				en_passant_capturable_bos="";
+				piece_abs_val=Math.abs(piece_val);
 				
-				is_king=(imp_val===_KING);
+				is_king=(piece_abs_val===_KING);
 				active_color_king_rank=(active_color ? 0 : 7);
 				
 				if(is_king){//king
@@ -859,7 +865,7 @@
 							}
 						}
 					}
-				}else if(imp_val===_PAWN){
+				}else if(piece_abs_val===_PAWN){
 					piece_rank=getRankPos(piece_qos);
 					
 					if((temp=that.candidateMoves(piece_qos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
@@ -881,10 +887,10 @@
 						}
 					}
 				}else{//knight, bishop, rook, queen
-					as_knight=(imp_val===_KNIGHT);
+					as_knight=(piece_abs_val===_KNIGHT);
 					
 					for(i=0; i<2; i++){//0...1
-						for(j=(imp_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
+						for(j=(piece_abs_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
 							if((temp=that.candidateMoves(piece_qos, j--, as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
 						}
 					}
@@ -978,7 +984,7 @@
 			active_color_king_rank=(active_color ? 0 : 7);
 			
 			piece_val=that.getValue(initial_qos);
-			piece_abs_val=(piece_val*active_sign);//same as Math.abs(piece_val)
+			piece_abs_val=Math.abs(piece_val);/*NO sobreoptimizar con (piece_val*active_sign)*/
 			
 			if(piece_abs_val===_KING){
 				if(new_active_castling_availity){/*NO useless if(Math.abs(getFilePos(initial_qos)-getFilePos(final_qos))>1)*/
@@ -1149,6 +1155,14 @@
 			}
 			
 			return rtn;
+		}
+		
+		function toBal(qal){/*FALTA*/
+			return qal;
+		}
+		
+		function toVal(qal){/*FALTA*/
+			return qal;
 		}
 		
 		function toBos(qos){
@@ -1464,6 +1478,8 @@
 		return {
 			boardExists : boardExists,
 			selectBoard : selectBoard,
+			toBal : toBal,
+			toVal : toVal,
 			toBos : toBos,
 			toPos : toPos,
 			getRankPos : getRankPos,
