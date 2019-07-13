@@ -34,12 +34,12 @@
 			return rtn;
 		}
 		
-		function _castlingChars(val){
-			return ["", "k", "q", "kq"][val];
+		function _castlingChars(num){
+			return ["", "k", "q", "kq"][num];
 		}
 		
-		function _pieceChar(val){
-			return ["*", "p", "n", "b", "r", "q", "k"][Math.abs(val)];
+		function _pieceChar(qal){
+			return ["*", "p", "n", "b", "r", "q", "k"][toAbsVal(qal)];
 		}
 		
 		function _getBoardTabsHTML(current_board){
@@ -186,12 +186,12 @@
 			return that.Squares[toBos(qos)];
 		}
 		
-		function _setValue(qos, val){
+		function _setValue(qos, qal){
 			var that;
 			
 			that=this;
 			
-			that.Squares[toBos(qos)]=val;
+			that.Squares[toBos(qos)]=toVal(qal);
 		}
 		
 		function _countChecks(king_qos, early_break){
@@ -239,14 +239,14 @@
 			that.IsRotated=!that.IsRotated;
 		}
 		
-		function _setPromoteTo(abs_val){
+		function _setPromoteTo(qal){
 			var that;
 			
 			that=this;
-			that.PromoteTo=abs_val;
+			that.PromoteTo=toAbsVal(qal);
 		}
 		
-		function _setCurrentMove(val, is_goto){
+		function _setCurrentMove(num, is_goto){
 			var len, that, temp, rtn_moved;
 			
 			that=this;
@@ -254,7 +254,7 @@
 			len=that.MoveList.length;
 			
 			if(len>1){
-				temp=Math.min(Math.max((is_goto ? val : (val+that.CurrentMove)), 0), (len-1));
+				temp=Math.min(Math.max((is_goto ? num : (num+that.CurrentMove)), 0), (len-1));
 				
 				if(temp!==that.CurrentMove){
 					rtn_moved=true;
@@ -318,16 +318,16 @@
 		}
 		
 		function _resetPieceClasses(){
-			var i, j, that, temp, new_class, current_pos;
+			var i, j, that, new_class, current_pos, current_val;
 			
 			that=this;
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
 					current_pos=(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
-					temp=that.getValue(current_pos);
+					current_val=that.getValue(current_pos);
 					
-					new_class=(((i+j)%2 ? "b" : "w")+"s"+(temp ? ((temp<0 ? " b" : " w")+_pieceChar(temp)) : ""));
+					new_class=(((i+j)%2 ? "b" : "w")+"s"+(current_val ? ((current_val<0 ? " b" : " w")+_pieceChar(current_val)) : ""));
 					$("#"+toBos(current_pos)).attr("class", new_class);
 				}
 			}
@@ -491,7 +491,7 @@
 			}
 		}
 		
-		function _firstTimeDefaults(is_hidden, rotate_board, promote_to){
+		function _firstTimeDefaults(is_hidden, rotate_board, promote_qal){
 			var that;
 			
 			that=this;
@@ -499,7 +499,7 @@
 			that.InitialFullMove=that.FullMove;
 			that.MoveList=[{Fen : that.Fen, PGNmove : "", FromBos : "", ToBos : ""}];
 			that.CurrentMove=0;
-			that.PromoteTo=promote_to;
+			that.setPromoteTo(promote_qal);
 			that.IsRotated=!!rotate_board;
 			that.IsHidden=!!is_hidden;
 		}
@@ -527,7 +527,7 @@
 					if(!skip_files){
 						piece_char=temp.toLowerCase();
 						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*getSign(temp===piece_char)));
-						/*FALTA toVal(), quizas no ocupa * getSign(), depende de si toVal() hace lo de minusc y mayusc*/
+						/*FALTA toVal() desde un qal que sea bal*/
 					}
 					
 					current_file+=(skip_files || 1);
@@ -576,7 +576,7 @@
 					if(current_val){
 						current_is_black=(current_val<0);
 						
-						if(Math.abs(current_val)===_KING){
+						if(toAbsVal(current_val)===_KING){
 							if(that.Active.isBlack===current_is_black){
 								that.Active.kingPos=current_pos;
 							}else{
@@ -586,7 +586,7 @@
 						
 						piece_char=_pieceChar(current_val);
 						new_fen_board+=(empty_consecutive_squares || "")+(current_is_black ? piece_char : piece_char.toUpperCase());
-						/*FALTA toBal(current_val) que con el signo te de la letra en minusc o mayusc*/
+						/*FALTA toBal(current_val)*/
 						
 						empty_consecutive_squares=-1;
 					}
@@ -714,15 +714,15 @@
 			return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null);
 		}
 		
-		function _disambiguationPos(initial_qos, piece_direction, as_knight, ally_abs_val){
+		function _disambiguationPos(initial_qos, piece_direction, as_knight, ally_qal){
 			var that;
 			
 			that=this;
 			
-			return that.testCollision(3, initial_qos, piece_direction, as_knight, null, null, ally_abs_val);
+			return that.testCollision(3, initial_qos, piece_direction, as_knight, null, null, ally_qal);
 		}
 		
-		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_abs_val){
+		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_qal){
 			var i, that, current_pos, current_val, current_abs_val, rank_change, file_change, rtn;
 			
 			that=this;
@@ -743,7 +743,7 @@
 				current_val=that.getValue(current_pos);
 				
 				if(current_val){
-					current_abs_val=Math.abs(current_val);
+					current_abs_val=toAbsVal(current_val);
 					
 					if(getSign(current_val)===that.NonActive.sign){//is enemy piece
 						if(op===1){
@@ -781,7 +781,7 @@
 						}
 					}else{//is ally piece
 						if(op===3){
-							if(ally_abs_val===current_abs_val){
+							if(toAbsVal(ally_qal)===current_abs_val){
 								rtn=current_pos;
 							}
 						}
@@ -827,7 +827,7 @@
 				pre_validated_arr_pos=[];
 				
 				en_passant_capturable_bos="";
-				piece_abs_val=Math.abs(piece_val);
+				piece_abs_val=toAbsVal(piece_val);
 				
 				is_king=(piece_abs_val===_KING);
 				active_color_king_rank=(active_color ? 0 : 7);
@@ -871,7 +871,7 @@
 						if(isInsideBoard(current_diagonal_pawn_pos)){
 							temp2=that.getValue(current_diagonal_pawn_pos);
 							
-							if(temp2 && getSign(temp2)===non_active_sign && Math.abs(temp2)!==_KING){
+							if(temp2 && getSign(temp2)===non_active_sign && toAbsVal(temp2)!==_KING){
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
 							}else if(sameSqr(current_diagonal_pawn_pos, that.EnPassantBos)){
 								en_passant_capturable_bos=toBos([piece_rank, current_adjacent_file]);
@@ -977,7 +977,7 @@
 			active_color_king_rank=(active_color ? 0 : 7);
 			
 			piece_val=that.getValue(initial_qos);
-			piece_abs_val=Math.abs(piece_val);/*NO sobreoptimizar con (piece_val*active_sign)*/
+			piece_abs_val=toAbsVal(piece_val);
 			
 			if(piece_abs_val===_KING){
 				if(new_active_castling_availity){/*NO useless if(Math.abs(getFilePos(initial_qos)-getFilePos(final_qos))>1)*/
@@ -1007,7 +1007,7 @@
 				}
 			}
 			
-			pgn_move=that.getNotation(initial_qos, final_qos, piece_abs_val, promoted_val, king_castled, non_en_passant_capture);/*NO move below*/
+			pgn_move=that.getNotation(initial_qos, final_qos, piece_val, promoted_val, king_castled, non_en_passant_capture);/*NO move below*/
 			
 			that.HalfMove++;
 			if(pawn_moved || non_en_passant_capture){
@@ -1051,18 +1051,19 @@
 			that.CurrentMove++;
 			
 			if(that.CurrentMove!==that.MoveList.length){
-				that.MoveList=that.MoveList.slice(0, that.CurrentMove);/*mejor start variation*/
+				that.MoveList=that.MoveList.slice(0, that.CurrentMove);/*start variation instead of overwrite*/
 			}
 			
 			that.MoveList.push({Fen : that.Fen, PGNmove : (pgn_move+(that.Active.checks ? "+" : "")), FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});/*# with checkmate*/
 		}
 		
-		function _getNotation(initial_qos, final_qos, piece_abs_val, promoted_val, king_castled, non_en_passant_capture){
-			var i, j, len, that, temp, temp2, temp3, initial_file_char, ambiguity, as_knight, rtn;
+		function _getNotation(initial_qos, final_qos, piece_qal, promoted_val, king_castled, non_en_passant_capture){
+			var i, j, len, that, temp, temp2, temp3, piece_abs_val, initial_file_char, ambiguity, as_knight, rtn;
 			
 			that=this;
 			
 			rtn="";
+			piece_abs_val=toAbsVal(piece_qal);
 			initial_file_char=getFileBos(initial_qos);
 			
 			if(king_castled){//castling king
@@ -1075,10 +1076,10 @@
 				rtn+=toBos(final_qos);
 				
 				if(promoted_val){
-					rtn+="="+_pieceChar(promoted_val).toUpperCase();
+					rtn+="="+_pieceChar(promoted_val).toUpperCase();/*FALTA un toAbsBal(promoted_val)*/
 				}
 			}else{//knight, bishop, rook, queen, non-castling king
-				rtn+=_pieceChar(piece_abs_val).toUpperCase();
+				rtn+=_pieceChar(piece_abs_val).toUpperCase();/*FALTA un toAbsBal(piece_qal)*/
 				
 				if(piece_abs_val!==_KING){//knight, bishop, rook, queen
 					temp2=[];
@@ -1156,6 +1157,10 @@
 		
 		function toVal(qal){/*FALTA*/
 			return qal;
+		}
+		
+		function toAbsVal(qal){/*FALTA que realmente sea qal*/
+			return Math.abs(qal);
 		}
 		
 		function toBos(qos){
@@ -1477,6 +1482,7 @@
 			selectBoard : selectBoard,
 			toBal : toBal,
 			toVal : toVal,
+			toAbsVal : toAbsVal,
 			toBos : toBos,
 			toPos : toPos,
 			getSign : getSign,
