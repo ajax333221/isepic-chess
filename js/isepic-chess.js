@@ -45,7 +45,7 @@
 		}
 		
 		function _getSign(zal){
-			return ((typeof zal==="boolean" ? zal : (toVal(zal)>0)) ? _WHITE_SIGN : _BLACK_SIGN);
+			return ((typeof zal==="boolean" ? !zal : (toVal(zal)>0)) ? _WHITE_SIGN : _BLACK_SIGN);
 		}
 		
 		function _getBoardTabsHTML(current_board){
@@ -232,8 +232,8 @@
 			
 			that.Active.isBlack=!temp;
 			that.NonActive.isBlack=temp;
-			that.Active.sign=_getSign(temp);
-			that.NonActive.sign=_getSign(!temp);
+			that.Active.sign=_getSign(!temp);
+			that.NonActive.sign=_getSign(temp);
 			
 			/*NO hace King Pos refresh, eso lo hace refreshKingPosChecksAndFen()*/
 		}
@@ -532,7 +532,7 @@
 					
 					if(!skip_files){
 						piece_char=temp.toLowerCase();
-						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*_getSign(temp!==piece_char)));
+						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*_getSign(temp===piece_char)));
 						/*FALTA toVal(), quizas no ocupa * _getSign(), depende de si toVal() hace lo de minusc y mayusc*/
 					}
 					
@@ -552,8 +552,8 @@
 			temp=(fen_parts[1]==="b");
 			that.Active.isBlack=temp;
 			that.NonActive.isBlack=!temp;
-			that.Active.sign=_getSign(!temp);
-			that.NonActive.sign=_getSign(temp);
+			that.Active.sign=_getSign(temp);
+			that.NonActive.sign=_getSign(!temp);
 			
 			that.WCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
 			that.BCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
@@ -683,7 +683,7 @@
 					current_castling_availity=(i ? that.WCastling : that.BCastling);
 					
 					if(current_castling_availity){
-						current_sign=_getSign(!!i);
+						current_sign=_getSign(!i);
 						current_king_rank=(i ? 7 : 0);
 						
 						if(that.getValue([current_king_rank, 4])!==(current_sign*_KING)){
