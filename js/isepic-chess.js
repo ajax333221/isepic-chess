@@ -18,6 +18,14 @@
 		
 		//---------------- utilities
 		
+		function _trimSpaces(str){
+			return str.replace(/^\s+|\s+$/g, "").replace(/\s\s+/g, " ");
+		}
+		
+		function _formatName(str){
+			return _trimSpaces(str).replace(/[^a-z0-9]/gi, " ").replace(/\s+/g, "_");
+		}
+		
 		function _strContains(str, str_to_find){
 			return (str.indexOf(str_to_find)!==-1);
 		}
@@ -243,7 +251,7 @@
 			var that;
 			
 			that=this;
-			that.PromoteTo=toAbsVal(qal);
+			that.PromoteTo=Math.min(Math.max((toAbsVal(qal) || _QUEEN), 2), 5);
 		}
 		
 		function _setCurrentMove(num, is_goto){
@@ -1057,7 +1065,7 @@
 			that.MoveList.push({Fen : that.Fen, PGNmove : (pgn_move+(that.Active.checks ? "+" : "")), FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});/*# with checkmate*/
 		}
 		
-		function _getNotation(initial_qos, final_qos, piece_qal, promoted_val, king_castled, non_en_passant_capture){
+		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
 			var i, j, len, that, temp, temp2, temp3, piece_abs_val, initial_file_char, ambiguity, as_knight, rtn;
 			
 			that=this;
@@ -1075,8 +1083,8 @@
 				
 				rtn+=toBos(final_qos);
 				
-				if(promoted_val){
-					rtn+="="+_pieceChar(promoted_val).toUpperCase();/*FALTA un toAbsBal(promoted_val)*/
+				if(promoted_qal){
+					rtn+="="+_pieceChar(promoted_qal).toUpperCase();/*FALTA un toAbsBal(promoted_qal)*/
 				}
 			}else{//knight, bishop, rook, queen, non-castling king
 				rtn+=_pieceChar(piece_abs_val).toUpperCase();/*FALTA un toAbsBal(piece_qal)*/
@@ -1151,16 +1159,40 @@
 			return rtn;
 		}
 		
-		function toBal(qal){/*FALTA*/
-			return qal;
+		function toVal(qal){
+			var rtn, temp;
+			
+			if((typeof qal)==="string"){
+				qal=(qal.replace(/[^pnbrqk]/gi, "") || "*");
+				temp=qal.toLowerCase();
+				
+				if(qal.length===1){
+					rtn=("*pnbrqk".indexOf(temp)*getSign(temp===qal));//sometimes is -0 but no worries
+				}
+			}else{
+				rtn=qal;
+			}
+			
+			return Math.min(Math.max(Math.floor(rtn*1 || 0), -6), 6);
 		}
 		
-		function toVal(qal){/*FALTA*/
-			return qal;
+		function toAbsVal(qal){
+			return Math.abs(toVal(qal));
 		}
 		
-		function toAbsVal(qal){/*FALTA que realmente sea qal*/
-			return Math.abs(qal);
+		function toBal(qal){
+			var rtn, abs_val;
+			
+			qal=toVal(qal);
+			abs_val=toAbsVal(qal);
+			
+			rtn=_pieceChar(abs_val);
+			
+			return (qal===abs_val ? rtn.toUpperCase() : rtn);
+		}
+		
+		function toAbsBal(qal){
+			return toBal(toAbsVal(qal));
 		}
 		
 		function toBos(qos){
@@ -1290,13 +1322,13 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				pre_fen=(""+p.fen).replace(/^\s+|\s+$/g, "").replace(/\s\s+/g, " ");
+				pre_fen=_trimSpaces(""+p.fen);
 				
 				p.invalidFenStop=(p.invalidFenStop===true);
-				p.name=(((typeof p.name)==="string" && p.name.length) ? p.name : ("board_"+new Date().getTime()));
+				p.name=(((typeof p.name)==="string" && _trimSpaces(p.name).length) ? _formatName(p.name) : ("board_"+new Date().getTime()));
 				p.isRotated=(p.isRotated===true);
 				p.isHidden=(p.isHidden===true);
-				p.promoteTo=((p.promoteTo*1) || _QUEEN);
+				p.promoteTo=toVal(p.promoteTo);
 				board_name=p.name;
 				
 				fen_was_valid=((typeof p.fen)==="string" && !_basicFenTest(pre_fen));
@@ -1480,9 +1512,10 @@
 		return {
 			boardExists : boardExists,
 			selectBoard : selectBoard,
-			toBal : toBal,
 			toVal : toVal,
 			toAbsVal : toAbsVal,
+			toBal : toBal,
+			toAbsBal : toAbsBal,
 			toBos : toBos,
 			toPos : toPos,
 			getSign : getSign,
