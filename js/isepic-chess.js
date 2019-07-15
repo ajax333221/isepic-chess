@@ -75,31 +75,31 @@
 		}
 		
 		function _getTableHTML(is_rotated){
-			var i, j, rank_char, file_char, rtn;
+			var i, j, rank_bos, label_td, rtn;
 			
-			file_char="<td class='label'></td><td class='label'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label'>")+"</td>";
+			label_td="<td class='label'></td><td class='label'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label'>")+"</td>";
 			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
-			rtn+="<tr>"+file_char+"<td class='"+("label dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td></tr>";
+			rtn+="<tr>"+label_td+"<td class='"+("label dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td></tr>";
 			
 			for(i=0; i<8; i++){//0...7
-				rank_char=(is_rotated ? (i+1) : (8-i));
-				rtn+="<tr><td class='label'>"+rank_char+"</td>";
+				rank_bos=(is_rotated ? (i+1) : (8-i));
+				rtn+="<tr><td class='label'>"+rank_bos+"</td>";
 				
 				for(j=0; j<8; j++){//0...7
 					rtn+="<td class='"+(((i+j)%2 ? "b" : "w")+"s")+"' id='"+toBos(is_rotated ? [(7-i), (7-j)] : [i, j])+"'></td>";
 				}
 				
-				rtn+="<td class='label'>"+rank_char+"</td></tr>";
+				rtn+="<td class='label'>"+rank_bos+"</td></tr>";
 			}
 			
-			rtn+="<tr>"+file_char+"<td class='"+("label dot "+(is_rotated ? "b" : "w")+"side")+"'>◘</td></tr>";
+			rtn+="<tr>"+label_td+"<td class='"+("label dot "+(is_rotated ? "b" : "w")+"side")+"'>◘</td></tr>";
 			rtn+="</table>";
 			
 			return rtn;
 		}
 		
 		function _basicFenTest(fen){
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, fen_board, total_files_in_current_rank, error_msg;
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, current_bal, fen_board_arr, total_pieces, fen_board, total_files_in_current_rank, error_msg;
 			
 			error_msg="";
 			
@@ -159,7 +159,8 @@
 					total_pieces=new Array(6);
 					
 					for(j=0; j<6; j++){//0...5
-						total_pieces[j]=_occurrences(fen_board, toBal((j+1)*getSign(!i)));
+						current_bal=toBal((j+1)*getSign(!i));
+						total_pieces[j]=_occurrences(fen_board, current_bal);
 					}
 					
 					if(total_pieces[5]!==1){
@@ -507,8 +508,8 @@
 			that.IsHidden=!!is_hidden;
 		}
 		
-		function _parseValuesFromFen(fenb){
-			var i, j, len, that, current_file, current_char, skip_files;
+		function _parseValuesFromFen(fen_board){
+			var i, j, len, that, current_file, current_char, fen_board_arr, skip_files;
 			
 			that=this;
 			
@@ -518,13 +519,13 @@
 				}
 			}
 			
-			fenb=fenb.split("/");
+			fen_board_arr=fen_board.split("/");
 			
 			for(i=0; i<8; i++){//0...7
 				current_file=0;
 				
-				for(j=0, len=fenb[i].length; j<len; j++){//0<len
-					current_char=fenb[i].charAt(j);
+				for(j=0, len=fen_board_arr[i].length; j<len; j++){//0<len
+					current_char=fen_board_arr[i].charAt(j);
 					skip_files=(current_char*1);
 					
 					if(!skip_files){
@@ -1054,19 +1055,19 @@
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
-			var i, j, len, that, temp, temp2, temp3, piece_abs_val, initial_file_char, ambiguity, as_knight, rtn;
+			var i, j, len, that, temp, temp2, temp3, piece_abs_val, initial_file_bos, ambiguity, as_knight, rtn;
 			
 			that=this;
 			
 			rtn="";
 			piece_abs_val=toAbsVal(piece_qal);
-			initial_file_char=getFileBos(initial_qos);
+			initial_file_bos=getFileBos(initial_qos);
 			
 			if(king_castled){//castling king
 				rtn+=(king_castled!==1 ? "O-O-O" : "O-O");
 			}else if(piece_abs_val===_PAWN){
-				if(initial_file_char!==getFileBos(final_qos)){
-					rtn+=(initial_file_char+"x");
+				if(initial_file_bos!==getFileBos(final_qos)){
+					rtn+=(initial_file_bos+"x");
 				}
 				
 				rtn+=toBos(final_qos);
@@ -1098,10 +1099,10 @@
 						}
 						
 						if(temp3){
-							ambiguity=(_strContains(temp3, initial_file_char)+(_strContains(temp3, getRankBos(initial_qos))*2));
+							ambiguity=(_strContains(temp3, initial_file_bos)+(_strContains(temp3, getRankBos(initial_qos))*2));
 							
 							if(ambiguity!==1){//0,2,3
-								rtn+=initial_file_char;
+								rtn+=initial_file_bos;
 							}
 							
 							if(ambiguity && ambiguity!==2){//1,3
