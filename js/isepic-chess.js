@@ -1363,9 +1363,9 @@
 						isAttacked : _isAttacked,
 						disambiguationPos : _disambiguationPos,
 						testCollision : _testCollision,
-						moveCaller : _moveCaller,
 						isLegalMove : _isLegalMove,
 						legalMoves : _legalMoves,
+						moveCaller : _moveCaller,
 						makeMove : _makeMove,
 						getNotation : _getNotation
 					};
