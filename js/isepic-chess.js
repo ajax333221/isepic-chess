@@ -19,11 +19,11 @@
 		//---------------- utilities
 		
 		function _trimSpaces(str){
-			return str.replace(/^\s+|\s+$/g, "").replace(/\s\s+/g, " ");
+			return (""+str).replace(/^\s+|\s+$/g, "").replace(/\s\s+/g, " ");
 		}
 		
 		function _formatName(str){
-			return _trimSpaces(str).replace(/[^a-z0-9]/gi, " ").replace(/\s+/g, "_");
+			return _trimSpaces(""+str).replace(/[^a-z0-9]/gi, " ").replace(/\s+/g, "_");
 		}
 		
 		function _strContains(str, str_to_find){
@@ -35,7 +35,7 @@
 			
 			rtn=0;
 			
-			if(typeof str==="string" && typeof str_rgxp==="string" && str_rgxp!==""){
+			if((typeof str)==="string" && (typeof str_rgxp)==="string" && str_rgxp!==""){
 				rtn=(str.match(RegExp(str_rgxp, "g")) || []).length;
 			}
 			
@@ -44,10 +44,6 @@
 		
 		function _castlingChars(num){
 			return ["", "k", "q", "kq"][num];
-		}
-		
-		function _pieceChar(qal){
-			return ["*", "p", "n", "b", "r", "q", "k"][toAbsVal(qal)];
 		}
 		
 		function _getBoardTabsHTML(current_board){
@@ -103,7 +99,7 @@
 		}
 		
 		function _basicFenTest(fen){
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, piece_char, total_pieces, fen_board, total_files_in_current_rank, error_msg;
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, fen_board, total_files_in_current_rank, error_msg;
 			
 			error_msg="";
 			
@@ -163,8 +159,7 @@
 					total_pieces=new Array(6);
 					
 					for(j=0; j<6; j++){//0...5
-						piece_char=_pieceChar(j+1);
-						total_pieces[j]=_occurrences(fen_board, (i ? piece_char.toUpperCase() : piece_char));
+						total_pieces[j]=_occurrences(fen_board, toBal((j+1)*getSign(!i)));
 					}
 					
 					if(total_pieces[5]!==1){
@@ -326,16 +321,16 @@
 		}
 		
 		function _resetPieceClasses(){
-			var i, j, that, new_class, current_pos, current_val;
+			var i, j, that, new_class, piece_class, current_pos;
 			
 			that=this;
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
 					current_pos=(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
-					current_val=that.getValue(current_pos);
+					piece_class=toPieceClass(that.getValue(current_pos));
 					
-					new_class=(((i+j)%2 ? "b" : "w")+"s"+(current_val ? ((current_val<0 ? " b" : " w")+_pieceChar(current_val)) : ""));
+					new_class=(((i+j)%2 ? "b" : "w")+"s"+(piece_class ? (" "+piece_class) : ""));
 					$("#"+toBos(current_pos)).attr("class", new_class);
 				}
 			}
@@ -379,7 +374,7 @@
 			rtn+="<br><strong>full_moves:</strong> "+that.FullMove;
 			rtn+="<br><strong>current_move:</strong> "+that.CurrentMove;
 			rtn+="<br><strong>initial_fullmove:</strong> "+that.InitialFullMove;
-			rtn+="<br><strong>promote_to:</strong> "+(that.Active.isBlack ? _pieceChar(that.PromoteTo) : _pieceChar(that.PromoteTo).toUpperCase());
+			rtn+="<br><strong>promote_to:</strong> "+toBal(that.PromoteTo*getSign(that.Active.isBlack));
 			rtn+="<br><strong>from_square:</strong> "+(that.FromSquare ? that.FromSquare : "-");
 			
 			return rtn;
@@ -513,7 +508,7 @@
 		}
 		
 		function _parseValuesFromFen(fenb){
-			var i, j, len, that, temp, current_file, skip_files, piece_char;
+			var i, j, len, that, current_file, current_char, skip_files;
 			
 			that=this;
 			
@@ -529,13 +524,11 @@
 				current_file=0;
 				
 				for(j=0, len=fenb[i].length; j<len; j++){//0<len
-					temp=fenb[i].charAt(j);
-					skip_files=(temp*1);
+					current_char=fenb[i].charAt(j);
+					skip_files=(current_char*1);
 					
 					if(!skip_files){
-						piece_char=temp.toLowerCase();
-						that.setValue([i, current_file], ("*pnbrqk".indexOf(piece_char)*getSign(temp===piece_char)));
-						/*FALTA toVal() desde un qal que sea bal*/
+						that.setValue([i, current_file], toVal(current_char));
 					}
 					
 					current_file+=(skip_files || 1);
@@ -569,7 +562,7 @@
 		}
 		
 		function _refreshKingPosChecksAndFen(){
-			var i, j, that, piece_char, current_pos, current_val, empty_consecutive_squares, new_fen_board, current_is_black;
+			var i, j, that, current_pos, current_val, empty_consecutive_squares, new_fen_board;
 			
 			that=this;
 			new_fen_board="";
@@ -582,20 +575,15 @@
 					current_val=that.getValue(current_pos);
 					
 					if(current_val){
-						current_is_black=(current_val<0);
-						
 						if(toAbsVal(current_val)===_KING){
-							if(that.Active.isBlack===current_is_black){
+							if(that.Active.isBlack===(current_val<0)){
 								that.Active.kingPos=current_pos;
 							}else{
 								that.NonActive.kingPos=current_pos;
 							}
 						}
 						
-						piece_char=_pieceChar(current_val);
-						new_fen_board+=(empty_consecutive_squares || "")+(current_is_black ? piece_char : piece_char.toUpperCase());
-						/*FALTA toBal(current_val)*/
-						
+						new_fen_board+=(empty_consecutive_squares || "")+toBal(current_val);
 						empty_consecutive_squares=-1;
 					}
 					
@@ -1084,10 +1072,10 @@
 				rtn+=toBos(final_qos);
 				
 				if(promoted_qal){
-					rtn+="="+_pieceChar(promoted_qal).toUpperCase();/*FALTA un toAbsBal(promoted_qal)*/
+					rtn+="="+toAbsBal(promoted_qal);
 				}
 			}else{//knight, bishop, rook, queen, non-castling king
-				rtn+=_pieceChar(piece_abs_val).toUpperCase();/*FALTA un toAbsBal(piece_qal)*/
+				rtn+=toAbsBal(piece_qal);
 				
 				if(piece_abs_val!==_KING){//knight, bishop, rook, queen
 					temp2=[];
@@ -1136,7 +1124,7 @@
 		//---------------- ic
 		
 		function boardExists(board_name){
-			return (typeof _boards[board_name]!=="undefined");
+			return ((typeof _boards[board_name])!=="undefined");
 		}
 		
 		function selectBoard(board_name){
@@ -1167,7 +1155,7 @@
 				temp=qal.toLowerCase();
 				
 				if(qal.length===1){
-					rtn=("*pnbrqk".indexOf(temp)*getSign(temp===qal));//sometimes is -0 but no worries
+					rtn=("*pnbrqk".indexOf(temp)*getSign(qal===temp));//sometimes is -0 but no worries
 				}
 			}else{
 				rtn=qal;
@@ -1186,13 +1174,22 @@
 			qal=toVal(qal);
 			abs_val=toAbsVal(qal);
 			
-			rtn=_pieceChar(abs_val);
+			rtn=["*", "p", "n", "b", "r", "q", "k"][abs_val];
 			
 			return (qal===abs_val ? rtn.toUpperCase() : rtn);
 		}
 		
 		function toAbsBal(qal){
 			return toBal(toAbsVal(qal));
+		}
+		
+		function toPieceClass(qal){
+			var temp, piece_bal;
+			
+			piece_bal=toBal(qal);
+			temp=piece_bal.toLowerCase();
+			
+			return (piece_bal!=="*" ? ((piece_bal===temp ? "b" : "w")+temp) : "");
 		}
 		
 		function toBos(qos){
@@ -1204,7 +1201,7 @@
 		}
 		
 		function getSign(zal){
-			return ((typeof zal==="boolean" ? !zal : (toVal(zal)>0)) ? 1 : -1);
+			return (((typeof zal)==="boolean" ? !zal : (toVal(zal)>0)) ? 1 : -1);
 		}
 		
 		function getRankPos(qos){
@@ -1322,7 +1319,7 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				pre_fen=_trimSpaces(""+p.fen);
+				pre_fen=_trimSpaces(p.fen);
 				
 				p.invalidFenStop=(p.invalidFenStop===true);
 				p.name=(((typeof p.name)==="string" && _trimSpaces(p.name).length) ? _formatName(p.name) : ("board_"+new Date().getTime()));
@@ -1467,7 +1464,7 @@
 				mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
 				
 				$.each(mutable_keys, function(i, key){
-					if(typeof _boards[from_board_name][key]==="object"){
+					if((typeof _boards[from_board_name][key])==="object"){
 						$.extend(true, _boards[to_board_name][key], _boards[from_board_name][key]);
 					}else{
 						_boards[to_board_name][key]=_boards[from_board_name][key];
@@ -1516,6 +1513,7 @@
 			toAbsVal : toAbsVal,
 			toBal : toBal,
 			toAbsBal : toAbsBal,
+			toPieceClass : toPieceClass,
 			toBos : toBos,
 			toPos : toPos,
 			getSign : getSign,
