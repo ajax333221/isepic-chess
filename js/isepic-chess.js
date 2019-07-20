@@ -726,7 +726,7 @@
 			
 			rank_change=(as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction-1];
 			file_change=(as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction-1];
-			total_squares=(as_knight ? 1 : (total_squares || 7));/*NO use math max 7, even if 999 the loop breaks on outside board*/
+			total_squares=(as_knight ? 1 : (total_squares || 7));
 			
 			rtn=(op===2 ? false : []);
 			
@@ -788,7 +788,7 @@
 				}
 				
 				if(op===1){
-					rtn.push(current_pos);/*NO move this up (por lo del break)*/
+					rtn.push(current_pos);//if capturing, this is unreachable because the break (no duplication occurs)
 				}
 			}
 			
@@ -897,7 +897,7 @@
 						that.setValue(piece_qos, _EMPTY_SQR);
 						
 						if(en_passant_capturable_bos){
-							temp3=that.getValue(en_passant_capturable_bos);/*NO outside if(en_passant_capturable_bos)*/
+							temp3=that.getValue(en_passant_capturable_bos);
 							
 							if(sameSqr(current_pos, that.EnPassantBos)){
 								that.setValue(en_passant_capturable_bos, _EMPTY_SQR);
@@ -970,14 +970,14 @@
 			new_active_castling_availity=(active_color ? that.BCastling : that.WCastling);
 			new_non_active_castling_availity=(active_color ? that.WCastling : that.BCastling);
 			
-			to_promotion_rank=(getRankPos(final_qos)===(active_color ? 7 : 0));/*NO hacer (7-active_color_king_rank)*/
+			to_promotion_rank=(getRankPos(final_qos)===(active_color ? 7 : 0));
 			active_color_king_rank=(active_color ? 0 : 7);
 			
 			piece_val=that.getValue(initial_qos);
 			piece_abs_val=toAbsVal(piece_val);
 			
 			if(piece_abs_val===_KING){
-				if(new_active_castling_availity){/*NO useless if(Math.abs(getFilePos(initial_qos)-getFilePos(final_qos))>1)*/
+				if(new_active_castling_availity){
 					new_active_castling_availity=0;
 					
 					if(getFilePos(final_qos)===6){//short
@@ -1004,7 +1004,7 @@
 				}
 			}
 			
-			pgn_move=that.getNotation(initial_qos, final_qos, piece_val, promoted_val, king_castled, non_en_passant_capture);/*NO move below*/
+			pgn_move=that.getNotation(initial_qos, final_qos, piece_val, promoted_val, king_castled, non_en_passant_capture);
 			
 			that.HalfMove++;
 			if(pawn_moved || non_en_passant_capture){
@@ -1036,7 +1036,7 @@
 			that.WCastling=(active_color ? new_non_active_castling_availity : new_active_castling_availity);
 			that.BCastling=(active_color ? new_active_castling_availity : new_non_active_castling_availity);
 			
-			that.EnPassantBos=new_en_passant_bos;/*NO move this up*/
+			that.EnPassantBos=new_en_passant_bos;
 			
 			that.setValue(final_qos, (promoted_val || piece_val));
 			that.setValue(initial_qos, _EMPTY_SQR);
@@ -1170,14 +1170,14 @@
 		}
 		
 		function toBal(qal){
-			var rtn, abs_val;
+			var rtn, val, abs_val;
 			
-			qal=toVal(qal);
+			val=toVal(qal);
 			abs_val=toAbsVal(qal);
 			
 			rtn=["*", "p", "n", "b", "r", "q", "k"][abs_val];
 			
-			return (qal===abs_val ? rtn.toUpperCase() : rtn);
+			return (val===abs_val ? rtn.toUpperCase() : rtn);
 		}
 		
 		function toAbsBal(qal){
@@ -1185,12 +1185,12 @@
 		}
 		
 		function toPieceClass(qal){
-			var temp, piece_bal;
+			var piece_bal, piece_lc_bal;
 			
 			piece_bal=toBal(qal);
-			temp=piece_bal.toLowerCase();
+			piece_lc_bal=piece_bal.toLowerCase();
 			
-			return (piece_bal!=="*" ? ((piece_bal===temp ? "b" : "w")+temp) : "");
+			return (piece_bal!=="*" ? ((piece_bal===piece_lc_bal ? "b" : "w")+piece_lc_bal) : "");
 		}
 		
 		function toBos(qos){
