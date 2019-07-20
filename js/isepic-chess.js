@@ -198,7 +198,23 @@
 			that.Squares[toBos(qos)]=toVal(qal);
 		}
 		
-		function _countChecks(king_qos, early_break){
+		function _countChecks(king_qos){
+			var that;
+			
+			that=this;
+			
+			return that.calculateChecks(king_qos, false);
+		}
+		
+		function _isCheck(king_qos){
+			var that;
+			
+			that=this;
+			
+			return !!that.calculateChecks(king_qos, true);
+		}
+		
+		function _calculateChecks(king_qos, early_break){
 			var i, j, that, as_knight, rtn_total_checks;
 			
 			that=this;
@@ -221,14 +237,6 @@
 			}
 			
 			return rtn_total_checks;
-		}
-		
-		function _isCheck(king_qos){
-			var that;
-			
-			that=this;
-			
-			return !!that.countChecks(king_qos, true);
 		}
 		
 		function _toggleActiveColor(){
@@ -1257,7 +1265,7 @@
 			return no_errors;
 		}
 		
-		function countChecks(fen, king_qos, early_break){
+		function countChecks(fen, king_qos){
 			var board, board_created, no_errors, rtn;
 			
 			rtn=0;
@@ -1280,7 +1288,7 @@
 			//}
 			
 			if(no_errors){
-				rtn=board.countChecks(king_qos, early_break);
+				rtn=board.countChecks(king_qos);
 			}
 			
 			if(board_created){
@@ -1419,8 +1427,9 @@
 						BoardName : board_name,
 						getValue : _getValue,
 						setValue : _setValue,
-						countChecks : _countChecks,
 						isCheck : _isCheck,
+						countChecks : _countChecks,
+						calculateChecks : _calculateChecks,
 						toggleActiveColor : _toggleActiveColor,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
@@ -1601,8 +1610,8 @@
 			isInsideBoard : isInsideBoard,
 			sameSqr : sameSqr,
 			removeBoard : removeBoard,
-			countChecks : countChecks,
 			isCheck : isCheck,
+			countChecks : countChecks,
 			legalMoves : legalMoves,
 			isLegalMove : isLegalMove,
 			initBoard : initBoard,
