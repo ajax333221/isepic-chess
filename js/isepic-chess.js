@@ -203,6 +203,7 @@
 			
 			that=this;
 			rtn_total_checks=0;
+			king_qos=(king_qos || that.Active.kingPos);
 			
 			outer:
 			for(i=0; i<2; i++){//0...1
@@ -220,6 +221,14 @@
 			}
 			
 			return rtn_total_checks;
+		}
+		
+		function _isCheck(king_qos){
+			var that;
+			
+			that=this;
+			
+			return !!that.countChecks(king_qos, true);
 		}
 		
 		function _toggleActiveColor(){
@@ -594,7 +603,7 @@
 				new_fen_board+=(empty_consecutive_squares || "")+(i!==7 ? "/" : "");
 			}
 			
-			that.Active.checks=that.countChecks(that.Active.kingPos, false);
+			that.Active.checks=that.countChecks();
 			
 			that.Fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-")+" "+that.HalfMove+" "+that.FullMove);
 		}
@@ -621,7 +630,7 @@
 			if(!error_msg){
 				that.toggleActiveColor();
 				
-				if(that.countChecks(that.NonActive.kingPos, true)){
+				if(that.isCheck(that.NonActive.kingPos)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
@@ -843,7 +852,7 @@
 									can_castle_current_side=true;
 									
 									for(j=0; j<2; j++){//0...1
-										if(that.countChecks([active_color_king_rank, (j+(i ? 2 : 5))], true)){//5...6 or 2...3
+										if(that.isCheck([active_color_king_rank, (j+(i ? 2 : 5))])){//5...6 or 2...3
 											can_castle_current_side=false;
 											break;
 										}
@@ -904,7 +913,7 @@
 							}
 						}
 						
-						if(!that.countChecks((is_king ? current_pos : that.Active.kingPos), true)){
+						if(!that.isCheck(is_king ? current_pos : "")){
 							rtn.push(current_pos);
 						}
 						
@@ -1248,6 +1257,72 @@
 			return no_errors;
 		}
 		
+		function countChecks(fen, king_qos, early_break){
+			var board, board_created, no_errors, rtn;
+			
+			rtn=0;
+			board_created=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				board=initBoard({
+					name : "board_countChecks",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
+				}
+			//}
+			
+			if(no_errors){
+				rtn=board.countChecks(king_qos, early_break);
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
+			}
+			
+			return rtn;
+		}
+		
+		function isCheck(fen, king_qos){
+			var board, board_created, no_errors, rtn;
+			
+			rtn=0;
+			board_created=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				board=initBoard({
+					name : "board_isCheck",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
+				}
+			//}
+			
+			if(no_errors){
+				rtn=board.isCheck(king_qos);
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
+			}
+			
+			return rtn;
+		}
+		
 		function legalMoves(fen, piece_qos){
 			var board, board_created, no_errors, rtn;
 			
@@ -1345,6 +1420,7 @@
 						getValue : _getValue,
 						setValue : _setValue,
 						countChecks : _countChecks,
+						isCheck : _isCheck,
 						toggleActiveColor : _toggleActiveColor,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
@@ -1525,6 +1601,8 @@
 			isInsideBoard : isInsideBoard,
 			sameSqr : sameSqr,
 			removeBoard : removeBoard,
+			countChecks : countChecks,
+			isCheck : isCheck,
 			legalMoves : legalMoves,
 			isLegalMove : isLegalMove,
 			initBoard : initBoard,

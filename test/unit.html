@@ -401,7 +401,7 @@
 					});
 					
 					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
-					board_copy.setPromoteTo(3);
+					board_copy.setPromoteTo("B");
 					
 					board.moveCaller("h7", "h8");
 					
@@ -434,9 +434,9 @@
 					IsepicChess.removeBoard(board_copy.BoardName);
 				}
 				
-				/* setPromoteTo with bal */
-				/* toVal/Bal + toAbsVal/Bal, lo de -0, lo de un toAbsBal()===toBal().toUpperCase(), etc */
 				/* toPieceClass */
+				/* IsepicChess [countChecks, legalMoves, isLegalMove] */
+				/* toVal/Bal + toAbsVal/Bal, lo de -0, lo de un toAbsBal()===toBal().toUpperCase(), etc */
 				
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testBasicFunctionality() was successful.");
 			}
