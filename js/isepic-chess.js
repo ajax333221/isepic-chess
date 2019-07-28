@@ -313,7 +313,7 @@
 						}else{
 							that.giveSquareMovement();
 							
-							if(!sameSqr(temp, this.id)){
+							if(!sameSquare(temp, this.id)){
 								need_highlight=true;
 							}
 						}
@@ -887,7 +887,7 @@
 							
 							if(temp2 && getSign(temp2)===non_active_sign && toAbsVal(temp2)!==_KING){
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
-							}else if(sameSqr(current_diagonal_pawn_pos, that.EnPassantBos)){
+							}else if(sameSquare(current_diagonal_pawn_pos, that.EnPassantBos)){
 								en_passant_capturable_bos=toBos([piece_rank, current_adjacent_file]);
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
 							}
@@ -916,7 +916,7 @@
 						if(en_passant_capturable_bos){
 							temp3=that.getValue(en_passant_capturable_bos);
 							
-							if(sameSqr(current_pos, that.EnPassantBos)){
+							if(sameSquare(current_pos, that.EnPassantBos)){
 								that.setValue(en_passant_capturable_bos, _EMPTY_SQR);
 							}
 						}
@@ -1014,7 +1014,7 @@
 				
 				if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpassant
 					new_en_passant_bos=(getFileBos(final_qos)+""+(active_color ? 6 : 3));
-				}else if(sameSqr(final_qos, that.EnPassantBos)){//enpassant capture
+				}else if(sameSquare(final_qos, that.EnPassantBos)){//enpassant capture
 					that.setValue(((getFileBos(final_qos)+""+(active_color ? 4 : 5))), _EMPTY_SQR);
 				}else if(to_promotion_rank){//promotion
 					promoted_val=(that.PromoteTo*active_sign);
@@ -1110,7 +1110,7 @@
 						temp3="";
 						
 						for(i=0; i<len; i++){//0<len
-							if(!sameSqr(temp2[i], initial_qos) && isLegalMove(that.Fen, temp2[i], final_qos)){
+							if(!sameSquare(temp2[i], initial_qos) && isLegalMove(that.Fen, temp2[i], final_qos)){
 								temp3+=toBos(temp2[i]);
 							}
 						}
@@ -1242,7 +1242,7 @@
 			return ((toBos(toPos(qos))===toBos(qos)) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
 		}
 		
-		function sameSqr(qos1, qos2){
+		function sameSquare(qos1, qos2){
 			return (toBos(qos1)===toBos(qos2));
 		}
 		
@@ -1608,7 +1608,7 @@
 			getRankBos : getRankBos,
 			getFileBos : getFileBos,
 			isInsideBoard : isInsideBoard,
-			sameSqr : sameSqr,
+			sameSquare : sameSquare,
 			removeBoard : removeBoard,
 			countChecks : countChecks,
 			isCheck : isCheck,
