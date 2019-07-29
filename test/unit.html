@@ -159,16 +159,22 @@
 				}
 				
 				if(!error_msg){
+					if(board.legalMoves("e4").join("")!==""){
+						error_msg="Error [9] wrong legal moves for empty square";
+					}
+				}
+				
+				if(!error_msg){
 					board.moveCaller("a6", "b6");
 					
 					if(board.MoveList[board.MoveList.length-1].PGNmove!=="Rab6"){
-						error_msg="Error [9] pgn disambiguation";
+						error_msg="Error [10] pgn disambiguation";
 					}
 				}
 				
 				if(!error_msg){
 					if(board.legalMoves("b2").join("")!=="5,14,1"){
-						error_msg="Error [10] pawn can move two squares";
+						error_msg="Error [11] pawn can move two squares";
 					}
 				}
 				
@@ -176,7 +182,7 @@
 					board.moveCaller("b2", "b4");
 					
 					if(board.legalMoves("a4").join("")!=="5,05,1"){
-						error_msg="Error [11] pawn can capture enpassant or move";
+						error_msg="Error [12] pawn can capture enpassant or move";
 					}
 				}
 				
@@ -184,13 +190,13 @@
 					board.moveCaller("c6", "f6");
 					
 					if(board.legalMoves("f8").join("")!=="0,40,31,52,50,6"){
-						error_msg="Error [12] rook movement with capture";
+						error_msg="Error [13] rook movement with capture";
 					}
 				}
 				
 				if(!error_msg){
 					if(board.legalMoves("b1").join("")!=="5,25,0"){
-						error_msg="Error [13] knight movement, prevent capture ally";
+						error_msg="Error [14] knight movement, prevent capture ally";
 					}
 				}
 				
@@ -198,7 +204,7 @@
 					board.moveCaller("a2", "a3");
 					
 					if(board.legalMoves("a4").join("")!==""){
-						error_msg="Error [14] prevent pawn capture moving forward(again) and no enpassant";
+						error_msg="Error [15] prevent pawn capture moving forward(again) and no enpassant";
 					}
 				}
 				
@@ -206,13 +212,13 @@
 					board.moveCaller("b6", "a6");
 					
 					if(board.MoveList[board.MoveList.length-1].PGNmove!=="Ra6"){
-						error_msg="Error [15] no pgn disambiguation needed";
+						error_msg="Error [16] no pgn disambiguation needed";
 					}
 				}
 				
 				if(!error_msg){
 					if(board.legalMoves("b4").join("")!=="3,1"){
-						error_msg="Error [16] pawn can only move one square forward";
+						error_msg="Error [17] pawn can only move one square forward";
 					}
 				}
 				
@@ -225,7 +231,7 @@
 					});
 					
 					if(board===null){
-						error_msg="Error [17] failed to initBoard()";
+						error_msg="Error [18] failed to initBoard()";
 					}else{
 						board_created=true;
 					}
@@ -237,7 +243,7 @@
 					});
 					
 					if(board_copy===null){
-						error_msg="Error [18] failed to initBoard()";
+						error_msg="Error [19] failed to initBoard()";
 					}else{
 						board_copy_created=true;
 					}
@@ -247,13 +253,13 @@
 					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
 					
 					if(!IsepicChess.boardExists(board_copy.BoardName)){
-						error_msg="Error [19] failed to cloneBoard()";
+						error_msg="Error [20] failed to cloneBoard()";
 					}
 				}
 				
 				if(!error_msg){
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="3 3"){
-						error_msg="Error [20] incorrect castling values for KQkq";
+						error_msg="Error [21] incorrect castling values for KQkq";
 					}
 				}
 				
@@ -261,7 +267,7 @@
 					board_copy.moveCaller("h1", "g1");
 					
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="2 3"){
-						error_msg="Error [21] incorrect castling values for Qkq";
+						error_msg="Error [22] incorrect castling values for Qkq";
 					}
 				}
 				
@@ -269,7 +275,7 @@
 					board_copy.moveCaller("h8", "g8");
 					
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="2 2"){
-						error_msg="Error [22] incorrect castling values for Qq";
+						error_msg="Error [23] incorrect castling values for Qq";
 					}
 				}
 				
@@ -277,7 +283,7 @@
 					board_copy.moveCaller("a1", "b1");
 					
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="0 2"){
-						error_msg="Error [23] incorrect castling values for q";
+						error_msg="Error [24] incorrect castling values for q";
 					}
 				}
 				
@@ -285,7 +291,7 @@
 					board_copy.moveCaller("a8", "b8");
 					
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="0 0"){
-						error_msg="Error [24] incorrect castling values for no castling rights";
+						error_msg="Error [25] incorrect castling values for no castling rights";
 					}
 				}
 				
@@ -294,7 +300,7 @@
 					board_copy.moveCaller("e1", "e2");
 					
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="0 3"){
-						error_msg="Error [25] incorrect castling values for no castling rights via white king move";
+						error_msg="Error [26] incorrect castling values for no castling rights via white king move";
 					}
 				}
 				
@@ -304,7 +310,7 @@
 					board_copy.moveCaller("e8", "e7");
 					
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="1 0"){
-						error_msg="Error [26] incorrect castling values for no castling rights via black king move";
+						error_msg="Error [27] incorrect castling values for no castling rights via black king move";
 					}
 				}
 				
@@ -319,7 +325,7 @@
 					board_copy.moveCaller("a8", "b6");
 					
 					if((board_copy.WCastling+" "+board_copy.BCastling)!=="2 1"){
-						error_msg="Error [27] castling values remained after rook capture";
+						error_msg="Error [28] castling values remained after rook capture";
 					}
 				}
 				
@@ -334,7 +340,7 @@
 					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f1,d1,g1,c1"){
-						error_msg="Error [28] incorrect white castling moves";
+						error_msg="Error [29] incorrect white castling moves";
 					}
 				}
 				
@@ -342,7 +348,7 @@
 					board_copy.moveCaller("b4", "b5");
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f8,d8,g8,c8"){
-						error_msg="Error [29] incorrect black castling moves";
+						error_msg="Error [30] incorrect black castling moves";
 					}
 				}
 				
@@ -350,7 +356,7 @@
 					board_copy.moveCaller("c4", "d2");
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="d1,c1"){
-						error_msg="Error [30] long castle incorrectly prevented by attack on b square";
+						error_msg="Error [31] long castle incorrectly prevented by attack on b square";
 					}
 				}
 				
@@ -358,7 +364,7 @@
 					board_copy.moveCaller("d6", "e7");
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!==""){
-						error_msg="Error [31] castle not being prevented via first square";
+						error_msg="Error [32] castle not being prevented via first square";
 					}
 				}
 				
@@ -366,7 +372,7 @@
 					board_copy.moveCaller("g4", "e3");
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!==""){
-						error_msg="Error [32] castle not being prevented on d square";
+						error_msg="Error [33] castle not being prevented on d square";
 					}
 				}
 				
@@ -375,7 +381,7 @@
 					board_copy.moveCaller("f6", "f7");
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f8,d8"){
-						error_msg="Error [33] black king trying to castle being at check";
+						error_msg="Error [34] black king trying to castle being at check";
 					}
 				}
 				
@@ -387,7 +393,7 @@
 					board_copy.moveCaller("a3", "c2");
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f1,d1"){
-						error_msg="Error [34] whie king trying to castle being at check";
+						error_msg="Error [35] whie king trying to castle being at check";
 					}
 				}
 				
@@ -406,7 +412,7 @@
 					board.moveCaller("h7", "h8");
 					
 					if(board.getValue("h8")!==4){
-						error_msg="Error [35] incorrect promotion to wr";
+						error_msg="Error [36] incorrect promotion to wr";
 					}
 				}
 				
@@ -414,7 +420,7 @@
 					board_copy.moveCaller("h7", "h8");
 					
 					if(board_copy.getValue("h8")!==3){
-						error_msg="Error [36] failed to setPromoteTo()";
+						error_msg="Error [37] failed to setPromoteTo()";
 					}
 				}
 				
@@ -422,7 +428,7 @@
 					board_copy.moveCaller("e2", "f1");
 					
 					if(board_copy.getValue("f1")!==-3){
-						error_msg="Error [37] wrong promotion color";
+						error_msg="Error [38] wrong promotion color";
 					}
 				}
 				

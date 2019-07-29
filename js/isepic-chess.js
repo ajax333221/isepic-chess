@@ -832,7 +832,7 @@
 				
 				piece_val=that.getValue(piece_qos);
 				
-				if(getSign(piece_val)===non_active_sign){//is enemy piece
+				if(!piece_val || getSign(piece_val)===non_active_sign){//is empty square or enemy piece
 					no_errors=false;
 				}
 			}
