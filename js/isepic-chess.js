@@ -23,7 +23,7 @@
 		}
 		
 		function _formatName(str){
-			return _trimSpaces(""+str).replace(/[^a-z0-9]/gi, " ").replace(/\s+/g, "_");
+			return _trimSpaces(""+str).replace(/[^a-z0-9]/gi, "_");
 		}
 		
 		function _strContains(str, str_to_find){
@@ -1564,7 +1564,9 @@
 		}
 		
 		function isLegalFen(fen){
-			var board;
+			var board, rtn;
+			
+			rtn=false;
 			
 			board=initBoard({
 				name : "board_legalFen",
@@ -1573,7 +1575,12 @@
 				invalidFenStop : true
 			});
 			
-			return (board!==null);
+			if(board!==null){
+				removeBoard(board.BoardName);
+				rtn=true;
+			}
+			
+			return rtn;
 		}
 		
 		function getBoardCount(){
