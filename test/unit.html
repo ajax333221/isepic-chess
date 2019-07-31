@@ -92,7 +92,7 @@
 				
 				if(!error_msg){
 					if(JSON.stringify(board.MoveList)!=="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"FromBos\":\"\",\"ToBos\":\"\"},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"FromBos\":\"e2\",\"ToBos\":\"e4\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"FromBos\":\"f7\",\"ToBos\":\"f5\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"FromBos\":\"d1\",\"ToBos\":\"h5\"}]"){
-						error_msg="Error [3] movelist format, enpass, clocks";
+						error_msg="Error [3] movelist format, enpassant, clocks";
 					}
 				}
 				
@@ -429,6 +429,33 @@
 					
 					if(board_copy.getValue("f1")!==-3){
 						error_msg="Error [38] wrong promotion color";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.isLegalMove("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "c4", "d3")){
+						error_msg="Error [39] taking enpassant results in self check";
+					}
+				}
+				
+				if(!error_msg){
+					if(!IsepicChess.isLegalMove("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "d4", "e3")){
+						error_msg="Error [40] missing option to remove check via enpassant";
+					}
+				}
+				
+				if(!error_msg){
+					board=IsepicChess.initBoard({
+						name : "board_testBas",
+						fen : "8/8/7k/6pP/5BKR/8/8/8 w - g6 0 1",
+						isHidden : true,
+						invalidFenStop : true
+					});
+					
+					board.moveCaller("h5", "g6");
+					
+					if(board.countChecks()!==2){
+						error_msg="Error [41] wrong double check to enpassant capture";
 					}
 				}
 				
