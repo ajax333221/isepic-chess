@@ -43,7 +43,7 @@
 		}
 		
 		function _castlingChars(num){
-			return ["", "k", "q", "kq"][num];
+			return ["", "k", "q", "kq"][Math.min(Math.max(Math.floor(num*1 || 0), 0), 3)];
 		}
 		
 		function _getBoardTabsHTML(current_board){
@@ -1625,7 +1625,17 @@
 			cloneBoard : cloneBoard,
 			isLegalFen : isLegalFen,
 			getBoardCount : getBoardCount,
-			getBoardNames : getBoardNames
+			getBoardNames : getBoardNames,
+			utilityMisc : {
+				trimSpaces : _trimSpaces,
+				formatName : _formatName,
+				strContains : _strContains,
+				occurrences : _occurrences,
+				castlingChars : _castlingChars,
+				getBoardTabsHTML : _getBoardTabsHTML,
+				getTableHTML : _getTableHTML,
+				basicFenTest : _basicFenTest
+			}
 		};
 	})();
 	
