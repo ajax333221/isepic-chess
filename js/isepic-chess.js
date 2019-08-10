@@ -42,8 +42,18 @@
 			return rtn;
 		}
 		
+		function _toInt(num, min_val, max_val){
+			num=(num*1 || 0);
+			num=(num<0 ? Math.ceil(num) : Math.floor(num));
+			
+			min_val=(((min_val || min_val===0) ? min_val : -Infinity) || 0);
+			max_val=(((max_val || max_val===0) ? max_val : Infinity) || 0);
+			
+			return Math.min(Math.max(num, min_val), max_val);
+		}
+		
 		function _castlingChars(num){
-			return ["", "k", "q", "kq"][Math.min(Math.max(Math.floor(num*1 || 0), 0), 3)];
+			return ["", "k", "q", "kq"][_toInt(num, 0, 3)];
 		}
 		
 		function _getBoardTabsHTML(current_board){
@@ -264,7 +274,7 @@
 			var that;
 			
 			that=this;
-			that.PromoteTo=Math.min(Math.max((toAbsVal(qal) || _QUEEN), 2), 5);
+			that.PromoteTo=_toInt((toAbsVal(qal) || _QUEEN), 2, 5);
 		}
 		
 		function _setCurrentMove(num, is_goto){
@@ -275,7 +285,7 @@
 			len=that.MoveList.length;
 			
 			if(len>1){
-				temp=Math.min(Math.max((is_goto ? num : (num+that.CurrentMove)), 0), (len-1));
+				temp=_toInt((is_goto ? num : (num+that.CurrentMove)), 0, (len-1));
 				
 				if(temp!==that.CurrentMove){
 					rtn_moved=true;
@@ -741,6 +751,7 @@
 			
 			that=this;
 			
+			piece_direction=_toInt(piece_direction, 1, 8);
 			rank_change=(as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction-1];
 			file_change=(as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction-1];
 			total_squares=(as_knight ? 1 : (total_squares || 7));
@@ -1179,7 +1190,7 @@
 				rtn=qal;
 			}
 			
-			return Math.min(Math.max(Math.floor(rtn*1 || 0), -6), 6);
+			return _toInt(rtn, -6, 6);
 		}
 		
 		function toAbsVal(qal){
@@ -1631,6 +1642,7 @@
 				formatName : _formatName,
 				strContains : _strContains,
 				occurrences : _occurrences,
+				toInt : _toInt,
 				castlingChars : _castlingChars,
 				getBoardTabsHTML : _getBoardTabsHTML,
 				getTableHTML : _getTableHTML,
