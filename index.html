@@ -20,9 +20,8 @@
 					promoteTo : "b"
 				});
 				
-				oc_board=IsepicChess.initBoard({
-					name : "other_copy"
-				});
+				IsepicChess.initBoard({name : "other_copy"});
+				oc_board=IsepicChess.selectBoard("other_copy");
 				
 				h_board=IsepicChess.initBoard({
 					name : "hidden_board",
@@ -41,7 +40,7 @@
 				o_board.setCurrentMove(-1, false);//go to previous move "2.g4"
 				//o_board.refreshBoard();//...only one visual refresh is needed
 				
-				IsepicChess.cloneBoard("other_copy", "other");//cloneBoard(to, from)
+				oc_board.cloneBoard("other");//IsepicChess.cloneBoard("other_copy", "other")
 				//oc_board.refreshBoard();//...only one visual refresh is needed
 				
 				rff_board.toggleIsRotated();

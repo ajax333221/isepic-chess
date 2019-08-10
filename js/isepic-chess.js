@@ -967,6 +967,41 @@
 			return rtn;
 		}
 		
+		function _cloneBoard(from_board_name){
+			var that, from_board, mutable_keys, no_errors;
+			
+			that=this;
+			
+			no_errors=true;
+			
+			//if(no_errors){
+				from_board=selectBoard(from_board_name);
+				
+				if(from_board===null){
+					no_errors=false;
+					console.log("Error[_cloneBoard]: \""+from_board_name+"\" is not defined");
+				}
+			//}
+			
+			if(no_errors){
+				mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
+				
+				that["MoveList"]=[];
+				
+				$.each(mutable_keys, function(i, key){
+					if((typeof from_board[key])==="object"){
+						$.extend(true, that[key], from_board[key]);
+					}else{
+						that[key]=from_board[key];
+					}
+				});
+				
+				/*algun refreshBoard(); pero problemas con hidden*/
+			}
+			
+			return no_errors;
+		}
+		
 		function _moveCaller(initial_qos, final_qos){
 			var that, rtn_can_move;
 			
@@ -1461,6 +1496,7 @@
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
 						legalMoves : _legalMoves,
+						cloneBoard : _cloneBoard,
 						moveCaller : _moveCaller,
 						makeMove : _makeMove,
 						getNotation : _getNotation
@@ -1539,39 +1575,25 @@
 		}
 		
 		function cloneBoard(to_board_name, from_board_name){
-			var mutable_keys, no_errors;
+			var to_board, no_errors;
 			
+			rtn=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!boardExists(from_board_name)){
+				to_board=selectBoard(to_board_name);
+				
+				if(to_board===null){
 					no_errors=false;
-					console.log("Error[cloneBoard]: \""+from_board_name+"\" is not defined");
+					console.log("Error[cloneBoard]: \""+to_board_name+"\" is not defined");
 				}
 			//}
 			
 			if(no_errors){
-				if(!boardExists(to_board_name)){
-					no_errors=false;
-					console.log("Error[cloneBoard]: \""+to_board_name+"\" is not defined");
-				}
+				rtn=to_board.cloneBoard(from_board_name);
 			}
 			
-			if(no_errors){
-				mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
-				
-				$.each(mutable_keys, function(i, key){
-					if((typeof _boards[from_board_name][key])==="object"){
-						$.extend(true, _boards[to_board_name][key], _boards[from_board_name][key]);
-					}else{
-						_boards[to_board_name][key]=_boards[from_board_name][key];
-					}
-				});
-				
-				/*algun refreshBoard(); pero problemas con hidden*/
-			}
-			
-			return no_errors;
+			return rtn;
 		}
 		
 		function isLegalFen(fen){
