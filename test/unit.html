@@ -377,7 +377,7 @@
 				}
 				
 				if(!error_msg){
-					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					IsepicChess.utilityMisc.cloneBoardObjs(board_copy, board);
 					board_copy.moveCaller("f6", "f7");
 					
 					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="f8,d8"){
@@ -386,7 +386,7 @@
 				}
 				
 				if(!error_msg){
-					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board_copy.cloneBoardFrom(board.BoardName);
 					board_copy.moveCaller("b4", "b5");
 					board_copy.moveCaller("c4", "a3");
 					board_copy.moveCaller("b5", "b6");
@@ -406,7 +406,7 @@
 						invalidFenStop : true
 					});
 					
-					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					board.cloneBoardTo(board_copy.BoardName);
 					board_copy.setPromoteTo("B");
 					
 					board.moveCaller("h7", "h8");
@@ -475,7 +475,7 @@
 				
 				/* toPieceClass */
 				/* IsepicChess [isCheck, countChecks, isLegalMove, legalMoves] */
-				/* b.cloneBoard y IC.cloneBoard, cuidar eso de MoveList=[] para jQuery extends */
+				/* todo lo de clone board (misc, b.fn, IC.x), cuidar eso de MoveList=[] para jQuery extends */
 				/* toVal/Bal + toAbsVal/Bal, lo de -0 debe dar 0, lo de un toAbsBal()===toBal().toUpperCase(), etc */
 				
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testBasicFunctionality() was successful.");

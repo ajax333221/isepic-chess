@@ -56,6 +56,22 @@
 			return ["", "k", "q", "kq"][_toInt(num, 0, 3)];
 		}
 		
+		function _cloneBoardObjs(to_board, from_board){
+			var mutable_keys;
+			
+			mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
+			
+			to_board["MoveList"]=[];
+			
+			$.each(mutable_keys, function(i, key){
+				if((typeof from_board[key])==="object"){
+					$.extend(true, to_board[key], from_board[key]);
+				}else{
+					to_board[key]=from_board[key];
+				}
+			});
+		}
+		
 		function _getBoardTabsHTML(current_board){
 			var i, len, board, board_name, board_list, rtn;
 			
@@ -967,8 +983,8 @@
 			return rtn;
 		}
 		
-		function _cloneBoard(from_board_name){
-			var that, from_board, mutable_keys, no_errors;
+		function _cloneBoardFrom(from_board_name){
+			var that, from_board, no_errors;
 			
 			that=this;
 			
@@ -979,23 +995,36 @@
 				
 				if(from_board===null){
 					no_errors=false;
-					console.log("Error[_cloneBoard]: \""+from_board_name+"\" is not defined");
+					console.log("Error[_cloneBoardFrom]: \""+from_board_name+"\" is not defined");
 				}
 			//}
 			
 			if(no_errors){
-				mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
+				_cloneBoardObjs(that, from_board);
+				/*algun refreshBoard(); pero problemas con hidden*/
+			}
+			
+			return no_errors;
+		}
+		
+		function _cloneBoardTo(to_board_name){
+			var that, to_board, no_errors;
+			
+			that=this;
+			
+			no_errors=true;
+			
+			//if(no_errors){
+				to_board=selectBoard(to_board_name);
 				
-				that["MoveList"]=[];
-				
-				$.each(mutable_keys, function(i, key){
-					if((typeof from_board[key])==="object"){
-						$.extend(true, that[key], from_board[key]);
-					}else{
-						that[key]=from_board[key];
-					}
-				});
-				
+				if(to_board===null){
+					no_errors=false;
+					console.log("Error[_cloneBoardTo]: \""+to_board_name+"\" is not defined");
+				}
+			//}
+			
+			if(no_errors){
+				_cloneBoardObjs(to_board, that);
 				/*algun refreshBoard(); pero problemas con hidden*/
 			}
 			
@@ -1496,7 +1525,8 @@
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
 						legalMoves : _legalMoves,
-						cloneBoard : _cloneBoard,
+						cloneBoardFrom : _cloneBoardFrom,
+						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
 						makeMove : _makeMove,
 						getNotation : _getNotation
@@ -1590,7 +1620,7 @@
 			//}
 			
 			if(no_errors){
-				rtn=to_board.cloneBoard(from_board_name);
+				rtn=to_board.cloneBoardFrom(from_board_name);
 			}
 			
 			return rtn;
@@ -1666,6 +1696,7 @@
 				occurrences : _occurrences,
 				toInt : _toInt,
 				castlingChars : _castlingChars,
+				cloneBoardObjs : _cloneBoardObjs,
 				getBoardTabsHTML : _getBoardTabsHTML,
 				getTableHTML : _getTableHTML,
 				basicFenTest : _basicFenTest
