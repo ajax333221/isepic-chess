@@ -1605,7 +1605,7 @@
 		}
 		
 		function cloneBoard(to_board_name, from_board_name){
-			var to_board, no_errors;
+			var to_board, no_errors, rtn;
 			
 			rtn=false;
 			no_errors=true;
