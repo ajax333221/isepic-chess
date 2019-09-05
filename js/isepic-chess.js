@@ -4,8 +4,8 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
-		var _next_board_id=0;
-		var _boards=Object.create(null);
+		var _NEXT_BOARD_ID=0;
+		var _BOARDS=Object.create(null);
 		
 		var _EMPTY_SQR=0;
 		var _PAWN=1;
@@ -15,6 +15,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
 		
 		//---------------- utilities
 		
@@ -52,19 +53,28 @@
 			return Math.min(Math.max(num, min_val), max_val);
 		}
 		
+		function _hashCode(val){
+			var i, len, hash;
+			
+			hash=0;
+			
+			for(i=0, len=val.length; i<len; i++){
+				hash=((hash<<5)-hash)+val.charCodeAt(i);
+				hash|=0;//to 32bit integer
+			}
+			
+			return hash;
+		}
+		
 		function _castlingChars(num){
 			return ["", "k", "q", "kq"][_toInt(num, 0, 3)];
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
-			var mutable_keys;
-			
-			mutable_keys=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
-			
 			to_board["MoveList"]=[];
 			
-			$.each(mutable_keys, function(i, key){
-				if((typeof from_board[key])==="object"){
+			$.each(_MUTABLE_KEYS, function(i, key){
+				if((typeof from_board[key])==="object" && from_board[key]!==null){
 					$.extend(true, to_board[key], from_board[key]);
 				}else{
 					to_board[key]=from_board[key];
@@ -983,6 +993,43 @@
 			return rtn;
 		}
 		
+		function _boardHash(){
+			var that, temp;
+			
+			that=this;
+			temp="";
+			
+			$.each(_MUTABLE_KEYS, function(i, key){
+				temp+=JSON.stringify(that[key]);
+			});
+			
+			return _hashCode(temp);
+		}
+		
+		function _isEqualBoard(to_board_name){
+			var that, to_board, no_errors, rtn;
+			
+			that=this;
+			
+			rtn=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				to_board=selectBoard(to_board_name);
+				
+				if(to_board===null){
+					no_errors=false;
+					console.log("Error[_isEqualBoard]: \""+to_board_name+"\" is not defined");
+				}
+			//}
+			
+			if(no_errors){
+				rtn=(that.boardHash()===to_board.boardHash());
+			}
+			
+			return rtn;
+		}
+		
 		function _cloneBoardFrom(from_board_name){
 			var that, from_board, no_errors;
 			
@@ -1217,7 +1264,7 @@
 		//---------------- ic
 		
 		function boardExists(board_name){
-			return ((typeof _boards[board_name])!=="undefined");
+			return ((typeof _BOARDS[board_name])!=="undefined");
 		}
 		
 		function selectBoard(board_name){
@@ -1234,7 +1281,7 @@
 			//}
 			
 			if(no_errors){
-				rtn=_boards[board_name];
+				rtn=_BOARDS[board_name];
 			}
 			
 			return rtn;
@@ -1334,7 +1381,7 @@
 			//}
 			
 			if(no_errors){
-				delete _boards[board_name];
+				delete _BOARDS[board_name];
 			}
 			
 			return no_errors;
@@ -1473,8 +1520,9 @@
 		}
 		
 		function initBoard(p){//{name, fen, isRotated, isHidden, promoteTo, invalidFenStop}
-			var i, j, target, board_name, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors;
+			var i, j, target, board_name, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
 			
+			rtn=null;
 			no_errors=true;
 			
 			//if(no_errors){
@@ -1497,8 +1545,8 @@
 			
 			if(no_errors){
 				if(!boardExists(board_name)){
-					_boards[board_name]={
-						id : _next_board_id++,
+					_BOARDS[board_name]={
+						id : _NEXT_BOARD_ID++,
 						BoardName : board_name,
 						getValue : _getValue,
 						setValue : _setValue,
@@ -1525,6 +1573,8 @@
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
 						legalMoves : _legalMoves,
+						boardHash : _boardHash,
+						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
@@ -1533,7 +1583,7 @@
 					};
 				}
 				
-				target=_boards[board_name];
+				target=_BOARDS[board_name];
 				
 				target.Active={
 					isBlack : null,
@@ -1598,10 +1648,11 @@
 					new_board.firstTimeDefaults(p.isHidden, p.isRotated, p.promoteTo);
 				}
 				
+				rtn=new_board;
 				new_board.refreshBoard();
 			}
 			
-			return selectBoard(board_name);
+			return rtn;
 		}
 		
 		function cloneBoard(to_board_name, from_board_name){
@@ -1647,7 +1698,7 @@
 		}
 		
 		function getBoardCount(){
-			return Object.keys(_boards).length;
+			return Object.keys(_BOARDS).length;
 		}
 		
 		function getBoardNames(){
@@ -1655,7 +1706,7 @@
 			
 			rtn=[];
 			
-			$.each(_boards, function(i, board){
+			$.each(_BOARDS, function(i, board){
 				rtn.push(i);
 			});
 			
@@ -1695,6 +1746,7 @@
 				strContains : _strContains,
 				occurrences : _occurrences,
 				toInt : _toInt,
+				hashCode : _hashCode,
 				castlingChars : _castlingChars,
 				cloneBoardObjs : _cloneBoardObjs,
 				getBoardTabsHTML : _getBoardTabsHTML,

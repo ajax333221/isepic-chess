@@ -8,23 +8,21 @@
 		<script src="../js/isepic-chess.js"></script>
 		<script>
 			function testDisambiguation(){
-				var board, board_created, error_msg;
+				var board, board_name, error_msg;
 				
 				error_msg="";
-				board_created=false;
+				board_name="board_testDis";
 				
 				//if(!error_msg){
 					board=IsepicChess.initBoard({
-						name : "board_testDis",
+						name : board_name,
 						fen : "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",
 						isHidden : true,
 						invalidFenStop : true
 					});
 					
 					if(board===null){
-						error_msg="Error [0] failed to initBoard(board_testDis)";
-					}else{
-						board_created=true;
+						error_msg="Error [0] failed to initBoard("+board_name+")";
 					}
 				//}
 				
@@ -44,23 +42,23 @@
 					}
 				}
 				
-				if(board_created){
-					IsepicChess.removeBoard(board.BoardName);
+				if(IsepicChess.selectBoard(board_name)!==null){
+					IsepicChess.removeBoard(board_name);
 				}
 				
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testDisambiguation() was successful.");
 			}
 			
 			function testBasicFunctionality(){
-				var board, board_copy, board_created, board_copy_created, error_msg;
+				var board, board_name, board_copy, board_copy_name, error_msg;
 				
 				error_msg="";
-				board_created=false;
-				board_copy_created=false;
+				board_name="board_testBas";
+				board_copy_name="board_testBas_copy";
 				
 				//if(!error_msg){
 					board=IsepicChess.initBoard({
-						name : "board_testBas",
+						name : board_name,
 						fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 						isRotated : true,
 						isHidden : true,
@@ -68,9 +66,7 @@
 					});
 					
 					if(board===null){
-						error_msg="Error [0] failed to initBoard(board_testBas)";
-					}else{
-						board_created=true;
+						error_msg="Error [0] failed to initBoard("+board_name+")";
 					}
 				//}
 				
@@ -224,28 +220,24 @@
 				
 				if(!error_msg){
 					board=IsepicChess.initBoard({
-						name : "board_testBas",
+						name : board_name,
 						fen : "r3k2r/pppq1ppp/2npb3/2b1N3/2B1n3/2NPB3/PPPQ1PPP/R3K2R w KQkq - 4 9",
 						isHidden : true,
 						invalidFenStop : true
 					});
 					
 					if(board===null){
-						error_msg="Error [18] failed to initBoard(board_testBas)";
-					}else{
-						board_created=true;
+						error_msg="Error [18] failed to initBoard("+board_name+")";
 					}
 				}
 				
 				if(!error_msg){
 					board_copy=IsepicChess.initBoard({
-						name : "board_testBas_copy"
+						name : board_copy_name
 					});
 					
 					if(board_copy===null){
-						error_msg="Error [19] failed to initBoard(board_testBas_copy)";
-					}else{
-						board_copy_created=true;
+						error_msg="Error [19] failed to initBoard("+board_copy_name+")";
 					}
 				}
 				
@@ -331,7 +323,7 @@
 				
 				if(!error_msg){
 					board=IsepicChess.initBoard({
-						name : "board_testBas",
+						name : board_name,
 						fen : "r3k2r/4p3/3B1P2/2NpN1N1/1Pn1n1n1/3b1p2/4P3/R3K2R w KQkq - 0 1",
 						isHidden : true,
 						invalidFenStop : true
@@ -399,7 +391,7 @@
 				
 				if(!error_msg){
 					board=IsepicChess.initBoard({
-						name : "board_testBas",
+						name : board_name,
 						fen : "8/1k1PPPPP/8/8/8/8/1K1ppppp/5R2 w - - 0 1",
 						isHidden : true,
 						promoteTo : 4,
@@ -446,7 +438,7 @@
 				
 				if(!error_msg){
 					board=IsepicChess.initBoard({
-						name : "board_testBas",
+						name : board_name,
 						fen : "8/8/7k/6pP/5BKR/8/8/8 w - g6 0 1",
 						isHidden : true,
 						invalidFenStop : true
@@ -465,12 +457,47 @@
 					}
 				}
 				
-				if(board_created){
-					IsepicChess.removeBoard(board.BoardName);
+				if(!error_msg){
+					board=IsepicChess.initBoard({
+						name : board_name,
+						fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+						isHidden : true,
+						invalidFenStop : true
+					});
+					
+					if(board===null){
+						error_msg="Error [43] failed to initBoard("+board_name+")";
+					}
 				}
 				
-				if(board_copy_created){
-					IsepicChess.removeBoard(board_copy.BoardName);
+				if(!error_msg){
+					if(board.boardHash()!==1243062527){
+						error_msg="Error [44] wrong hash for default fen (+ isHidden prop)";
+					}
+				}
+				
+				if(!error_msg){
+					board.moveCaller("a2", "a4");
+					
+					if(board.boardHash()!==2087058769){
+						error_msg="Error [45] wrong hash for board after a2-a4";
+					}
+				}
+				
+				if(!error_msg){
+					IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+					
+					if(!board.isEqualBoard(board_copy_name)){
+						error_msg="Error [46] wrong equal hashes";
+					}
+				}
+				
+				if(IsepicChess.selectBoard(board_name)!==null){
+					IsepicChess.removeBoard(board_name);
+				}
+				
+				if(IsepicChess.selectBoard(board_copy_name)!==null){
+					IsepicChess.removeBoard(board_copy_name);
 				}
 				
 				/* toPieceClass */
@@ -581,11 +608,11 @@
 			}
 			
 			function testUtilityMisc(){
-				var str_base, board, board_copy, board_created, board_copy_created, error_msg;
+				var str_base, board, board_name, board_copy, board_copy_name, error_msg;
 				
 				error_msg="";
-				board_created=false;
-				board_copy_created=false;
+				board_name="board_testUtil";
+				board_copy_name="board_testUtil_copy";
 				
 				//if(!error_msg){
 					if(IsepicChess.utilityMisc.trimSpaces(" a  b ")!=="a b"){
@@ -911,26 +938,22 @@
 				
 				if(!error_msg){
 					board=IsepicChess.initBoard({
-						name : "board_testUtil",
+						name : board_name,
 						fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
 					});
 					
 					if(board===null){
-						error_msg="Error [53] failed to initBoard(board_testUtil)";
-					}else{
-						board_created=true;
+						error_msg="Error [53] failed to initBoard("+board_name+")";
 					}
 				}
 				
 				if(!error_msg){
 					board_copy=IsepicChess.initBoard({
-						name : "board_testUtil_copy"
+						name : board_copy_name
 					});
 					
 					if(board_copy===null){
-						error_msg="Error [54] failed to initBoard(board_testUtil_copy)";
-					}else{
-						board_copy_created=true;
+						error_msg="Error [54] failed to initBoard("+board_copy_name+")";
 					}
 				}
 				
@@ -1092,12 +1115,24 @@
 					}
 				}
 				
-				if(board_created){
-					IsepicChess.removeBoard(board.BoardName);
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.hashCode("Aa")!==2112){
+						error_msg="Error [80] hashCode[0] known evaluation";
+					}
 				}
 				
-				if(board_copy_created){
-					IsepicChess.removeBoard(board_copy.BoardName);
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.hashCode("Aa")!==IsepicChess.utilityMisc.hashCode("BB")){
+						error_msg="Error [81] hashCode[1] known hash collision";
+					}
+				}
+				
+				if(IsepicChess.selectBoard(board_name)!==null){
+					IsepicChess.removeBoard(board_name);
+				}
+				
+				if(IsepicChess.selectBoard(board_copy_name)!==null){
+					IsepicChess.removeBoard(board_copy_name);
 				}
 				
 				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testUtilityMisc() was successful.");
