@@ -1024,7 +1024,7 @@
 			//}
 			
 			if(no_errors){
-				rtn=(that.boardHash()===to_board.boardHash());
+				rtn=(that.BoardName===to_board_name || that.boardHash()===to_board.boardHash());
 			}
 			
 			return rtn;
@@ -1655,6 +1655,28 @@
 			return rtn;
 		}
 		
+		function isEqualBoard(left_board_name, right_board_name){
+			var left_board, no_errors, rtn;
+			
+			rtn=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				left_board=selectBoard(left_board_name);
+				
+				if(left_board===null){
+					no_errors=false;
+					console.log("Error[isEqualBoard]: \""+left_board_name+"\" is not defined");
+				}
+			//}
+			
+			if(no_errors){
+				rtn=left_board.isEqualBoard(right_board_name);
+			}
+			
+			return rtn;
+		}
+		
 		function cloneBoard(to_board_name, from_board_name){
 			var to_board, no_errors, rtn;
 			
@@ -1736,6 +1758,7 @@
 			legalMoves : legalMoves,
 			isLegalMove : isLegalMove,
 			initBoard : initBoard,
+			isEqualBoard : isEqualBoard,
 			cloneBoard : cloneBoard,
 			isLegalFen : isLegalFen,
 			getBoardCount : getBoardCount,
