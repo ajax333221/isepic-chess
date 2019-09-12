@@ -96,8 +96,9 @@ getNotation(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction**
 To Do
 -------------
 
+- Documentation (:wrench: 40% done)
 - PGN viewer
-- show captured pieces
+- show material difference
 - is checkmate? / is draw?
 - move list variations
 - set-up position mode
