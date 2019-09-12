@@ -492,6 +492,26 @@
 					}
 				}
 				
+				if(!error_msg){
+					if(!IsepicChess.isEqualBoard(board.BoardName, board.BoardName)){
+						error_msg="Error [47] board not showing positive equality to itself";
+					}
+				}
+				
+				if(!error_msg){
+					if(!IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
+						error_msg="Error [48] two equal boards not showing positive equality";
+					}
+				}
+				
+				if(!error_msg){
+					board.moveCaller("a7", "a6");
+					
+					if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
+						error_msg="Error [49] different boards returning positive equality";
+					}
+				}
+				
 				if(IsepicChess.selectBoard(board_name)!==null){
 					IsepicChess.removeBoard(board_name);
 				}
@@ -1124,6 +1144,24 @@
 				if(!error_msg){
 					if(IsepicChess.utilityMisc.hashCode("Aa")!==IsepicChess.utilityMisc.hashCode("BB")){
 						error_msg="Error [81] hashCode[1] known hash collision";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.hashCode("")!==0){
+						error_msg="Error [82] hashCode[2] empty string";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.hashCode(" ")===0){
+						error_msg="Error [83] hashCode[3] whitespace";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.hashCode()!==IsepicChess.utilityMisc.hashCode(9)){
+						error_msg="Error [84] hashCode[4] zero default";
 					}
 				}
 				

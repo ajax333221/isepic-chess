@@ -57,6 +57,7 @@
 			var i, len, hash;
 			
 			hash=0;
+			val=((typeof val)==="string" ? val : "");
 			
 			for(i=0, len=val.length; i<len; i++){
 				hash=((hash<<5)-hash)+val.charCodeAt(i);
