@@ -1758,7 +1758,7 @@
 		}
 		
 		function mapToBos(arr){
-			return arr.map(x => IsepicChess.toBos(x));
+			return ($.isArray(arr) ? arr.map(x => IsepicChess.toBos(x)) : []);
 		}
 		
 		return {

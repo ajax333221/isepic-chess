@@ -53,6 +53,7 @@ Function | Parameters | Return | Description
 **isLegalFen**(<br>*fen*<br>) | <ul><li>fen (String)</li></ul> | Boolean | Test to see if a fen is legal.<hr>Examples:<ul><li>`IsepicChess.isLegalFen("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1") //true`</li><li>`IsepicChess.isLegalFen("0invalidfen0") //false`</li><li>`IsepicChess.isLegalFen("rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1") //false`</li></ul>
 **getBoardCount**() | - | Number | Total count of boards in use (hidden boards are included).<hr>Examples:<ul><li>`IsepicChess.getBoardCount() //5`</li><li>`IsepicChess.getBoardCount() //0`</li></ul>
 **getBoardNames**() | - | Array | Returns a list of the board names in use (hidden boards are included).<hr>Examples:<ul><li>`IsepicChess.getBoardNames() //["main", "other", "other_copy", "hidden_board", "resume_from_fen"]`</li><li>`IsepicChess.getBoardNames() //[]`</li></ul>
+**mapToBos**(<br>*arr*<br>) | <ul><li>arr (Array)</li></ul> | Success:<ul><li>**pieceBosArray** (Array)</li></ul><hr>Error:<ul><li>Array: `[]`</li></ul> | Applies `[...].map(x => IsepicChess.toBos(x))` to an array.<br><br>If `arr` is not an Array, `[]` will be returned.<hr>Examples:<ul><li>`IsepicChess.mapToBos([[0, 7], [2, 2]]) //["h8", "c6"]`</li><li>`IsepicChess.mapToBos([[1, 1], "a2"]) //["b7", "a2"]`</li><li>`IsepicChess.mapToBos("err") //[]`</li></ul>
 
 <hr>
 

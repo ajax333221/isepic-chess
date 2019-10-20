@@ -1130,6 +1130,24 @@
 					}
 				}
 				
+				if(!error_msg){
+					if(IsepicChess.mapToBos([[0, 7], [2, 2]]).join()!=="h8,c6"){
+						error_msg="Error [153] mapToBos() [[0, 7], [2, 2]] !== h8,c6";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.mapToBos([[1, 1], "a2"]).join()!=="b7,a2"){
+						error_msg="Error [154] mapToBos() [[1, 1], a2] !== b7,a2";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.mapToBos("err").join()!==""){
+						error_msg="Error [155] mapToBos() [err] !== empty_array";
+					}
+				}
+				
 				if(IsepicChess.selectBoard(board_name)!==null){
 					IsepicChess.removeBoard(board_name);
 				}
