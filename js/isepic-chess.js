@@ -1194,6 +1194,26 @@
 			that.MoveList.push({Fen : that.Fen, PGNmove : (pgn_move+(that.Active.checks ? "+" : "")), FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});/*# with checkmate*/
 		}
 		
+		function _getActivePiecesPos(){
+			var i, j, that, current_val, rtn;
+			
+			that=this;
+			
+			rtn=[];
+			
+			for(i=0; i<8; i++){//0...7
+				for(j=0; j<8; j++){//0...7
+					current_val=that.getValue([i, j]);
+					
+					if(current_val && getSign(current_val)===that.Active.sign){
+						rtn.push([i, j]);
+					}
+				}
+			}
+			
+			return rtn;
+		}
+		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
 			var i, j, len, that, temp, temp2, temp3, piece_abs_val, initial_file_bos, ambiguity, as_knight, rtn;
 			
@@ -1580,6 +1600,7 @@
 						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
 						makeMove : _makeMove,
+						getActivePiecesPos : _getActivePiecesPos,
 						getNotation : _getNotation
 					};
 				}
@@ -1736,6 +1757,10 @@
 			return rtn;
 		}
 		
+		function mapToBos(arr){
+			return arr.map(x => IsepicChess.toBos(x));
+		}
+		
 		return {
 			boardExists : boardExists,
 			selectBoard : selectBoard,
@@ -1764,6 +1789,7 @@
 			isLegalFen : isLegalFen,
 			getBoardCount : getBoardCount,
 			getBoardNames : getBoardNames,
+			mapToBos : mapToBos,
 			utilityMisc : {
 				trimSpaces : _trimSpaces,
 				formatName : _formatName,
