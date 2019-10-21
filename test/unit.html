@@ -121,7 +121,7 @@
 				}
 				
 				if(!error_msg){
-					if(JSON.stringify(board.MoveList)!=="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"FromBos\":\"\",\"ToBos\":\"\"},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"FromBos\":\"e2\",\"ToBos\":\"e4\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"FromBos\":\"f7\",\"ToBos\":\"f5\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"FromBos\":\"d1\",\"ToBos\":\"h5\"}]"){
+					if(JSON.stringify(board.MoveList)!=="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"PGNend\":\"\",\"FromBos\":\"\",\"ToBos\":\"\"},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"PGNend\":\"\",\"FromBos\":\"e2\",\"ToBos\":\"e4\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"PGNend\":\"\",\"FromBos\":\"f7\",\"ToBos\":\"f5\"},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"PGNend\":\"\",\"FromBos\":\"d1\",\"ToBos\":\"h5\"}]"){
 						error_msg="Error [3] movelist format, enpassant, clocks";
 					}
 				}
@@ -505,7 +505,7 @@
 				}
 				
 				if(!error_msg){
-					if(board.boardHash()!==1243062527){
+					if(board.boardHash()!==-1421636911){
 						error_msg="Error [44] wrong hash for default fen (+ isHidden prop)";
 					}
 				}
@@ -513,7 +513,7 @@
 				if(!error_msg){
 					board.moveCaller("a2", "a4");
 					
-					if(board.boardHash()!==2087058769){
+					if(board.boardHash()!==741762933){
 						error_msg="Error [45] wrong hash for board after a2-a4";
 					}
 				}
@@ -1191,6 +1191,8 @@
 				}
 				
 				end_time=new Date().getTime();
+				
+				/*ver que PGNmove de checkmate sea # + lo de PGNend stalemate, win, etc*/
 				
 				return {
 					testName : "testBasicFunctionality()",
