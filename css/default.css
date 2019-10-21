@@ -51,6 +51,7 @@ body{margin:0;padding:0;}
 #xmovelist{margin:10px 0 0 0;padding:10px;font-size:18px;color:#4862a3;border:1px solid #c4cca7;background:#eef2df;}
 #xmovelist span{padding:0 0 0 2px;}
 #xmovelist .xpgn_number{padding:0;color:#555;font-weight:bold;}
+#xmovelist .xpgn_result{padding:0;color:#555;}
 #xmovelist .xpgn_active{color:#c74c1f;background:#fefe9b;}
 #xmovelist .xpgn_goto{cursor:pointer;}
 #xmovelist .xpgn_goto:hover{color:#c74c1f;background:#e0e0e0;}

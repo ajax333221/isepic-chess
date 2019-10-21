@@ -92,7 +92,9 @@ cloneBoardFrom(...) | :wrench: | :wrench: | ? | :wrench: ... **under constructio
 cloneBoardTo(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 moveCaller(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 makeMove(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-getActivePiecesPos(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
+noLegalMoves(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
+isCheckmate(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
+isStalemate(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 getNotation(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 
 To Do
@@ -101,7 +103,6 @@ To Do
 - Documentation (:wrench: 40% done)
 - PGN viewer
 - show material difference
-- is checkmate? / is draw?
 - move list variations
 - set-up position mode
 - create, rename and delete boards through the UI

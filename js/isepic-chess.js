@@ -115,7 +115,7 @@
 			var i, j, rank_bos, label_td, rtn;
 			
 			label_td="<td class='label'></td><td class='label'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label'>")+"</td>";
-			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"'>";
+			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
 			rtn+="<tr>"+label_td+"<td class='"+("label dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td></tr>";
 			
 			for(i=0; i<8; i++){//0...7
@@ -401,7 +401,7 @@
 			rtn="";
 			
 			for(i=1, len=move_list.length; i<len; i++){//1<len
-				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='xpgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span id='"+("xpgn"+i)+"' class='"+("xpgn_"+(i!==that.CurrentMove ? "goto" : "active"))+"'>"+move_list[i].PGNmove+"</span>";
+				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='xpgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span id='"+("xpgn"+i)+"' class='"+("xpgn_"+(i!==that.CurrentMove ? "goto" : "active"))+"'>"+move_list[i].PGNmove+"</span>"+(move_list[i].PGNend ? (" <span class='xpgn_result'>"+move_list[i].PGNend+"</span>") : "");
 			}
 			
 			if(black_starts && rtn!==""){
@@ -555,7 +555,7 @@
 			that=this;
 			
 			that.InitialFullMove=that.FullMove;
-			that.MoveList=[{Fen : that.Fen, PGNmove : "", FromBos : "", ToBos : ""}];
+			that.MoveList=[{Fen : that.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : ""}];
 			that.CurrentMove=0;
 			that.setPromoteTo(promote_qal);
 			that.IsRotated=!!rotate_board;
@@ -1093,7 +1093,7 @@
 		}
 		
 		function _makeMove(initial_qos, final_qos){
-			var that, active_color, active_sign, active_color_king_rank, pawn_moved, promoted_val, piece_val, piece_abs_val, active_color_rook, new_en_passant_bos, new_active_castling_availity, new_non_active_castling_availity, king_castled, non_en_passant_capture, to_promotion_rank, pgn_move;
+			var that, active_color, active_sign, active_color_king_rank, pawn_moved, promoted_val, piece_val, piece_abs_val, active_color_rook, new_en_passant_bos, new_active_castling_availity, new_non_active_castling_availity, king_castled, non_en_passant_capture, to_promotion_rank, pgn_move, pgn_end;
 			
 			that=this;
 			
@@ -1191,27 +1191,58 @@
 				that.MoveList=that.MoveList.slice(0, that.CurrentMove);/*start variation instead of overwrite*/
 			}
 			
-			that.MoveList.push({Fen : that.Fen, PGNmove : (pgn_move+(that.Active.checks ? "+" : "")), FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});/*# with checkmate*/
+			pgn_end="";
+			
+			if(that.Active.checks){
+				if(that.isCheckmate()){
+					pgn_move+="#";
+					pgn_end=(active_color ? "0-1" : "1-0");
+				}else{
+					pgn_move+="+";
+				}
+			}else{
+				if(that.isStalemate()){
+					pgn_end="1/2-1/2";
+				}
+			}
+			
+			that.MoveList.push({Fen : that.Fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});
 		}
 		
-		function _getActivePiecesPos(){
-			var i, j, that, current_val, rtn;
+		function _noLegalMoves(){
+			var i, j, that, rtn;
 			
 			that=this;
 			
-			rtn=[];
+			rtn=true;
 			
+			outer:
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					current_val=that.getValue([i, j]);
-					
-					if(current_val && getSign(current_val)===that.Active.sign){
-						rtn.push([i, j]);
+					if(that.legalMoves([i, j]).length){
+						rtn=false;
+						break outer;
 					}
 				}
 			}
 			
 			return rtn;
+		}
+		
+		function _isCheckmate(){
+			var that;
+			
+			that=this;
+			
+			return (that.Active.checks && that.noLegalMoves());
+		}
+		
+		function _isStalemate(){
+			var that;
+			
+			that=this;
+			
+			return (!that.Active.checks && that.noLegalMoves());
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
@@ -1600,7 +1631,9 @@
 						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
 						makeMove : _makeMove,
-						getActivePiecesPos : _getActivePiecesPos,
+						noLegalMoves : _noLegalMoves,
+						isCheckmate : _isCheckmate,
+						isStalemate : _isStalemate,
 						getNotation : _getNotation
 					};
 				}
