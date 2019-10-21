@@ -7,11 +7,37 @@
 		<script src="../js/jquery-3.3.1.min.js"></script>
 		<script src="../js/isepic-chess.js"></script>
 		<script>
+			function formatResult(obj){
+				var tr_html;
+				
+				tr_html="<tr class='"+(obj.passed ? "success_box" : "danger_box")+"'>";
+				tr_html+="<td>"+obj.testName+"</td>";
+				tr_html+="<td>"+obj.result+"</td>";
+				tr_html+="<td class='elapsed_time'>"+obj.elapsedTime+"</td>";
+				tr_html+="<td>"+(obj.passed ? "✓" : "×")+"</td>";
+				tr_html+="</tr>";
+				
+				return tr_html;
+			}
+			
+			function updateElapsedTime(){
+				var total;
+				
+				total=0;
+				
+				$(".elapsed_time").each(function(index){
+					total+=($(this).html().split(" ")[0]*1 || 0);
+				});
+				
+				$("#total_time").html("Total elapsed time: "+total+" ms");
+			}
+			
 			function testDisambiguation(){
-				var board, board_name, error_msg;
+				var board, board_name, start_time, end_time, error_msg;
 				
 				error_msg="";
 				board_name="board_testDis";
+				start_time=new Date().getTime();
 				
 				//if(!error_msg){
 					board=IsepicChess.initBoard({
@@ -46,15 +72,23 @@
 					IsepicChess.removeBoard(board_name);
 				}
 				
-				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testDisambiguation() was successful.");
+				end_time=new Date().getTime();
+				
+				return {
+					testName : "testDisambiguation()",
+					result : (error_msg || "Ok"),
+					elapsedTime : ((end_time-start_time)+" ms"),
+					passed : !error_msg
+				};
 			}
 			
 			function testBasicFunctionality(){
-				var board, board_name, board_copy, board_copy_name, error_msg;
+				var board, board_name, board_copy, board_copy_name, start_time, end_time, error_msg;
 				
 				error_msg="";
 				board_name="board_testBas";
 				board_copy_name="board_testBas_copy";
+				start_time=new Date().getTime();
 				
 				//if(!error_msg){
 					board=IsepicChess.initBoard({
@@ -1156,11 +1190,18 @@
 					IsepicChess.removeBoard(board_copy_name);
 				}
 				
-				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testBasicFunctionality() was successful.");
+				end_time=new Date().getTime();
+				
+				return {
+					testName : "testBasicFunctionality()",
+					result : (error_msg || "Ok"),
+					elapsedTime : ((end_time-start_time)+" ms"),
+					passed : !error_msg
+				};
 			}
 			
 			function testFenPositions(){
-				var i, len, invalid_positions, error_msg;
+				var i, len, invalid_positions, start_time, end_time, error_msg;
 				
 				error_msg="";
 				
@@ -1249,6 +1290,8 @@
 				"rnbqkb1r/pppppppp/8/8/3N1n2/8/PPPPPPPP/RNBQKB1R b KQkq - 8 4",
 				"rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"];
 				
+				start_time=new Date().getTime();
+				
 				for(i=0, len=invalid_positions.length; i<len; i++){
 					if(IsepicChess.isLegalFen(invalid_positions[i])){
 						error_msg="Error ["+i+"] \""+invalid_positions[i]+"\" wasn't caught";
@@ -1256,15 +1299,23 @@
 					}
 				}
 				
-				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testFenPositions() was successful.");
+				end_time=new Date().getTime();
+				
+				return {
+					testName : "testFenPositions()",
+					result : (error_msg || "Ok"),
+					elapsedTime : ((end_time-start_time)+" ms"),
+					passed : !error_msg
+				};
 			}
 			
 			function testUtilityMisc(){
-				var str_base, board, board_name, board_copy, board_copy_name, error_msg;
+				var str_base, board, board_name, board_copy, board_copy_name, start_time, end_time, error_msg;
 				
 				error_msg="";
 				board_name="board_testUtil";
 				board_copy_name="board_testUtil_copy";
+				start_time=new Date().getTime();
 				
 				//if(!error_msg){
 					if(IsepicChess.utilityMisc.trimSpaces(" a  b ")!=="a b"){
@@ -1805,22 +1856,37 @@
 					IsepicChess.removeBoard(board_copy_name);
 				}
 				
-				return (error_msg ? ("<span class='redColor'>"+error_msg+"</span>") : "Test testUtilityMisc() was successful.");
+				end_time=new Date().getTime();
+				
+				return {
+					testName : "testUtilityMisc()",
+					result : (error_msg || "Ok"),
+					elapsedTime : ((end_time-start_time)+" ms"),
+					passed : !error_msg
+				};
 			}
 			
 			$(function(){
-				var start_time, end_time, test_dis, test_basic, test_fen, test_misc;
+				var tests_html;
 				
-				start_time=new Date().getTime();
+				tests_html="<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3>";
+				tests_html+="<table>";
+				tests_html+="<tr>";
+				tests_html+="<th>Test Name</th>";
+				tests_html+="<th>Result</th>";
+				tests_html+="<th>Elapsed time</th>";
+				tests_html+="<th>Passed?</th>";
+				tests_html+="</tr>";
 				
-				test_dis=testDisambiguation();
-				test_basic=testBasicFunctionality();
-				test_fen=testFenPositions();
-				test_misc=testUtilityMisc();
+				tests_html+=formatResult(testDisambiguation());
+				tests_html+=formatResult(testBasicFunctionality());
+				tests_html+=formatResult(testFenPositions());
+				tests_html+=formatResult(testUtilityMisc());
 				
-				end_time=new Date().getTime();
+				tests_html+="</table><pre id='total_time'>...</pre></div>";
+				$("body").html(tests_html);
 				
-				$("body").html("<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><h2>"+test_dis+"</h2><h2>"+test_basic+"</h2><h2>"+test_fen+"</h2><h2>"+test_misc+"</h2><span>"+(end_time-start_time)+" ms</span></div>");
+				updateElapsedTime();
 			});
 		</script>
 	</head>

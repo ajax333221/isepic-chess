@@ -5,12 +5,16 @@ body{margin:0;padding:0;}
 #xchessboard a:active{color:#63664B;}
 #xchessboard h3{margin:0 0 25px 0;padding:8px 15px;color:#696B55;background:#e3e3e3;}
 #xchessboard h3 a{margin-left:40px;font-size:12px;}
-#xchessboard.tests{color:green;text-align:center;}
-#xchessboard.tests span{color:#333;}
 #xchessboard .inlineb{display:inline-block;}
 #xchessboard .redColor{color:red;}
+#xchessboard .danger_box{color:#721c24;background:#f8d7da;}
+#xchessboard .success_box{color:#155724;background:#d4edda;}
 #xchessboard hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
 #xchessboard,#xcontrols input{border:1px solid #ccc;}
+#xchessboard.tests{text-align:center;}
+#xchessboard.tests table,#xchessboard.tests tr,#xchessboard.tests th,#xchessboard.tests td{margin:0;padding:0;}
+#xchessboard.tests table{border-collapse:collapse;text-align:center;background:#fbfbfb;margin:0 auto;}
+#xchessboard.tests th,#xchessboard.tests td{vertical-align:middle;border:1px solid #c0c0c0;padding:8px 16px;}
 #xboard table{border:1px solid #a9a9a9;}
 #xboard table,#xboard tr,#xboard td{margin:0;padding:0;}
 #xboard td{height:39px;width:39px;text-align:center;vertical-align:middle;background-repeat:no-repeat;background-size:75%;background-position:50% 50%;}

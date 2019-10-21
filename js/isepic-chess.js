@@ -115,7 +115,7 @@
 			var i, j, rank_bos, label_td, rtn;
 			
 			label_td="<td class='label'></td><td class='label'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label'>")+"</td>";
-			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
+			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"'>";
 			rtn+="<tr>"+label_td+"<td class='"+("label dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td></tr>";
 			
 			for(i=0; i<8; i++){//0...7
