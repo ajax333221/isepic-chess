@@ -1165,20 +1165,56 @@
 				}
 				
 				if(!error_msg){
+					if(IsepicChess.isCheckmate("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1")!==true){
+						error_msg="Error [153] isCheckmate() [8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1] !== true";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.isCheckmate("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1")!==false){
+						error_msg="Error [154] isCheckmate() [8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1] !== false";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.isCheckmate("0invalidfen0")!==false){
+						error_msg="Error [155] isCheckmate() [0invalidfen0] !== false";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.isStalemate("8/8/8/8/8/1k6/1r6/K7 w - - 0 1")!==true){
+						error_msg="Error [156] isStalemate() [8/8/8/8/8/1k6/1r6/K7 w - - 0 1] !== true";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.isStalemate("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1")!==false){
+						error_msg="Error [157] isStalemate() [8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1] !== false";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.isStalemate("0invalidfen0")!==false){
+						error_msg="Error [158] isStalemate() [0invalidfen0] !== false";
+					}
+				}
+				
+				if(!error_msg){
 					if(IsepicChess.mapToBos([[0, 7], [2, 2]]).join()!=="h8,c6"){
-						error_msg="Error [153] mapToBos() [[0, 7], [2, 2]] !== h8,c6";
+						error_msg="Error [159] mapToBos() [[0, 7], [2, 2]] !== h8,c6";
 					}
 				}
 				
 				if(!error_msg){
 					if(IsepicChess.mapToBos([[1, 1], "a2"]).join()!=="b7,a2"){
-						error_msg="Error [154] mapToBos() [[1, 1], a2] !== b7,a2";
+						error_msg="Error [160] mapToBos() [[1, 1], a2] !== b7,a2";
 					}
 				}
 				
 				if(!error_msg){
 					if(IsepicChess.mapToBos("err").join()!==""){
-						error_msg="Error [155] mapToBos() [err] !== empty_array";
+						error_msg="Error [161] mapToBos() [err] !== empty_array";
 					}
 				}
 				
