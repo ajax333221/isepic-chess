@@ -381,7 +381,7 @@
 				if(!error_msg){
 					board_copy.moveCaller("c4", "d2");
 					
-					if(board_copy.legalMoves(board_copy.Active.kingPos).map(x => IsepicChess.toBos(x)).join()!=="d1,c1"){
+					if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="d1,c1"){
 						error_msg="Error [31] long castle incorrectly prevented by attack on b square";
 					}
 				}

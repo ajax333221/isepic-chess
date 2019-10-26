@@ -48,7 +48,7 @@
 				
 				m_board.refreshBoard();//visual refresh (also switches to the board)
 				
-				console.log(m_board.legalMoves("b1").map(x => IsepicChess.toBos(x)));//["c3", "a3"]
+				console.log(IsepicChess.mapToBos(m_board.legalMoves("b1")));//["c3", "a3"]
 			});
 		</script>
 	</head>

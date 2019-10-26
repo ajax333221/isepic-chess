@@ -781,7 +781,7 @@
 			piece_direction=_toInt(piece_direction, 1, 8);
 			rank_change=(as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction-1];
 			file_change=(as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction-1];
-			total_squares=(as_knight ? 1 : (total_squares || 7));
+			total_squares=_toInt(as_knight ? 1 : (total_squares || 7));
 			
 			rtn=(op===2 ? false : []);
 			
@@ -1234,7 +1234,7 @@
 			
 			that=this;
 			
-			return (that.Active.checks && that.noLegalMoves());
+			return !!(that.Active.checks && that.noLegalMoves());
 		}
 		
 		function _isStalemate(){
@@ -1242,7 +1242,7 @@
 			
 			that=this;
 			
-			return (!that.Active.checks && that.noLegalMoves());
+			return !!(!that.Active.checks && that.noLegalMoves());
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
@@ -1413,7 +1413,7 @@
 		}
 		
 		function isInsideBoard(qos){
-			return ((toBos(toPos(qos))===toBos(qos)) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
+			return (toBos(toPos(qos))===toBos(qos) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
 		}
 		
 		function sameSquare(qos1, qos2){
@@ -1760,7 +1760,7 @@
 			rtn=false;
 			
 			board=initBoard({
-				name : "board_legalFen",
+				name : "board_isLegalFen",
 				fen : fen,
 				isHidden : true,
 				invalidFenStop : true
@@ -1769,6 +1769,72 @@
 			if(board!==null){
 				removeBoard(board.BoardName);
 				rtn=true;
+			}
+			
+			return rtn;
+		}
+		
+		function isCheckmate(fen){
+			var board, board_created, no_errors, rtn;
+			
+			rtn=false;
+			board_created=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				board=initBoard({
+					name : "board_isCheckmate",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
+				}
+			//}
+			
+			if(no_errors){
+				rtn=board.isCheckmate();
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
+			}
+			
+			return rtn;
+		}
+		
+		function isStalemate(fen){
+			var board, board_created, no_errors, rtn;
+			
+			rtn=false;
+			board_created=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				board=initBoard({
+					name : "board_isStalemate",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
+				}
+			//}
+			
+			if(no_errors){
+				rtn=board.isStalemate();
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
 			}
 			
 			return rtn;
@@ -1791,7 +1857,7 @@
 		}
 		
 		function mapToBos(arr){
-			return ($.isArray(arr) ? arr.map(x => IsepicChess.toBos(x)) : []);
+			return ($.isArray(arr) ? arr.map(x => toBos(x)) : []);
 		}
 		
 		return {
@@ -1820,6 +1886,8 @@
 			isEqualBoard : isEqualBoard,
 			cloneBoard : cloneBoard,
 			isLegalFen : isLegalFen,
+			isCheckmate : isCheckmate,
+			isStalemate : isStalemate,
 			getBoardCount : getBoardCount,
 			getBoardNames : getBoardNames,
 			mapToBos : mapToBos,
