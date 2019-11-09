@@ -263,6 +263,114 @@
 				};
 			}
 			
+			function fnIcOccurrences(){
+				var str_base, start_time, end_time, error_msg;
+				
+				error_msg="";
+				start_time=new Date().getTime();
+				
+				//if(!error_msg){
+					str_base=" ababABA  BABabab ";
+					
+					if(IsepicChess.utilityMisc.occurrences(str_base, " ")!==4){
+						error_msg="Error [0] single space";
+					}
+				//}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(str_base, str_base)!==1){
+						error_msg="Error [1] the complete string";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(str_base, "")!==0){
+						error_msg="Error [2] empty in something";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences("", "a")!==0){
+						error_msg="Error [3] something in empty";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(str_base, "x")!==0){
+						error_msg="Error [4] not found char";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(str_base, "a")!==4){
+						error_msg="Error [5] a";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(str_base, "ba")!==2){
+						error_msg="Error [6] ba";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(str_base, "ab")!==4){
+						error_msg="Error [7] ab";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(str_base, "bab")!==2){
+						error_msg="Error [8] bab";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences("aAa", "A")!==1){
+						error_msg="Error [9] uppercase";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences("oóo", "ó")!==1){
+						error_msg="Error [10] aeiou";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences("1", 1)!==0){
+						error_msg="Error [11] non string right";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(1, "1")!==0){
+						error_msg="Error [12] non string left";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(1, 1)!==0){
+						error_msg="Error [13] non string both";
+					}
+				}
+				
+				if(!error_msg){
+					if(IsepicChess.utilityMisc.occurrences(" abc Ddd  eEfFgGhHiIII  jk ", "e|D|k|i|x")!==4){
+						error_msg="Error [14] regexp OR";
+					}
+				}
+				
+				end_time=new Date().getTime();
+				
+				return {
+					testName : "<strong>[Function] </strong> IC.utilityMisc.occurrences()",
+					result : (error_msg || "Ok"),
+					elapsedTime : ((end_time-start_time)+" ms"),
+					passed : !error_msg
+				};
+			}
+			
 			function fnIcToInt(){
 				var start_time, end_time, error_msg;
 				
@@ -410,114 +518,6 @@
 				if(!error_msg){
 					if(IsepicChess.utilityMisc.toInt()!==0){
 						error_msg="Error [23] no parameter";
-					}
-				}
-				
-				end_time=new Date().getTime();
-				
-				return {
-					testName : "<strong>[Function] </strong> IC.utilityMisc.occurrences()",
-					result : (error_msg || "Ok"),
-					elapsedTime : ((end_time-start_time)+" ms"),
-					passed : !error_msg
-				};
-			}
-			
-			function fnIcOccurrences(){
-				var str_base, start_time, end_time, error_msg;
-				
-				error_msg="";
-				start_time=new Date().getTime();
-				
-				//if(!error_msg){
-					str_base=" ababABA  BABabab ";
-					
-					if(IsepicChess.utilityMisc.occurrences(str_base, " ")!==4){
-						error_msg="Error [0] single space";
-					}
-				//}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(str_base, str_base)!==1){
-						error_msg="Error [1] the complete string";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(str_base, "")!==0){
-						error_msg="Error [2] empty in something";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences("", "a")!==0){
-						error_msg="Error [3] something in empty";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(str_base, "x")!==0){
-						error_msg="Error [4] not found char";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(str_base, "a")!==4){
-						error_msg="Error [5] a";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(str_base, "ba")!==2){
-						error_msg="Error [6] ba";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(str_base, "ab")!==4){
-						error_msg="Error [7] ab";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(str_base, "bab")!==2){
-						error_msg="Error [8] bab";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences("aAa", "A")!==1){
-						error_msg="Error [9] uppercase";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences("oóo", "ó")!==1){
-						error_msg="Error [10] aeiou";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences("1", 1)!==0){
-						error_msg="Error [11] non string right";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(1, "1")!==0){
-						error_msg="Error [12] non string left";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(1, 1)!==0){
-						error_msg="Error [13] non string both";
-					}
-				}
-				
-				if(!error_msg){
-					if(IsepicChess.utilityMisc.occurrences(" abc Ddd  eEfFgGhHiIII  jk ", "e|D|k|i|x")!==4){
-						error_msg="Error [14] regexp OR";
 					}
 				}
 				
