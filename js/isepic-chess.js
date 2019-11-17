@@ -136,7 +136,7 @@
 		}
 		
 		function _basicFenTest(fen){
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, current_bal, fen_board_arr, total_pieces, fen_board, total_files_in_current_rank, error_msg;
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, fen_board, total_files_in_current_rank, error_msg;
 			
 			error_msg="";
 			
@@ -193,18 +193,17 @@
 			
 			if(!error_msg){
 				for(i=0; i<2; i++){//0...1
-					total_pieces=new Array(6);
+					total_pieces={P : 0, N : 0, B : 0, R : 0, Q : 0, K : 0};
 					
-					for(j=0; j<6; j++){//0...5
-						current_bal=toBal((j+1)*getSign(!i));
-						total_pieces[j]=_occurrences(fen_board, current_bal);
+					for(j=1; j<7; j++){//1...6
+						total_pieces[toBal(j)]=_occurrences(fen_board, toBal(j*getSign(!i)));
 					}
 					
-					if(total_pieces[5]!==1){
+					if(total_pieces.K!==1){
 						error_msg="Error [5] board without exactly one "+(i ? "white" : "black")+" king";
-					}else if(total_pieces[0]>8){
+					}else if(total_pieces.P>8){
 						error_msg="Error [6] more than 8 "+(i ? "white" : "black")+" pawns";
-					}else if((Math.max(total_pieces[1]-2, 0)+Math.max(total_pieces[2]-2, 0)+Math.max(total_pieces[3]-2, 0)+Math.max(total_pieces[4]-1, 0))>(8-total_pieces[0])){
+					}else if((Math.max(total_pieces.N-2, 0)+Math.max(total_pieces.B-2, 0)+Math.max(total_pieces.R-2, 0)+Math.max(total_pieces.Q-1, 0))>(8-total_pieces.P)){
 						error_msg="Error [7] promoted pieces exceed the number of missing pawns for "+(i ? "white" : "black");
 					}
 					
@@ -754,7 +753,7 @@
 			
 			that=this;
 			
-			return that.testCollision(1, initial_qos, piece_direction, as_knight, total_squares, allow_capture, null);
+			return that.testCollision(1, initial_qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
 		}
 		
 		function _isAttacked(initial_qos, piece_direction, as_knight){
@@ -762,7 +761,7 @@
 			
 			that=this;
 			
-			return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null);
+			return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null).isAttacked;
 		}
 		
 		function _disambiguationPos(initial_qos, piece_direction, as_knight, ally_qal){
@@ -770,7 +769,7 @@
 			
 			that=this;
 			
-			return that.testCollision(3, initial_qos, piece_direction, as_knight, null, null, ally_qal);
+			return that.testCollision(3, initial_qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
 		}
 		
 		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_qal){
@@ -778,15 +777,21 @@
 			
 			that=this;
 			
+			rtn={
+				candidateMoves : [],
+				isAttacked : false,
+				disambiguationPos : null
+			};
+			
 			piece_direction=_toInt(piece_direction, 1, 8);
 			rank_change=(as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction-1];
 			file_change=(as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction-1];
 			total_squares=_toInt(as_knight ? 1 : (total_squares || 7));
 			
-			rtn=(op===2 ? false : []);
+			current_pos=[getRankPos(initial_qos), getFilePos(initial_qos)];
 			
 			for(i=0; i<total_squares; i++){//0<total_squares
-				current_pos=[(getRankPos(initial_qos)+(rank_change*(i+1))), (getFilePos(initial_qos)+(file_change*(i+1)))];
+				current_pos=[(current_pos[0]+rank_change), (current_pos[1]+file_change)];
 				
 				if(!isInsideBoard(current_pos)){
 					break;
@@ -800,33 +805,33 @@
 					if(getSign(current_val)===that.NonActive.sign){//is enemy piece
 						if(op===1){
 							if(allow_capture && current_abs_val!==_KING){
-								rtn.push(current_pos);
+								rtn.candidateMoves.push(current_pos);
 							}
 						}else if(op===2){
 							if(as_knight){
 								if(current_abs_val===_KNIGHT){
-									rtn=true;
+									rtn.isAttacked=true;
 								}
 							}else if(current_abs_val===_KING){
 								if(!i){
-									rtn=true;
+									rtn.isAttacked=true;
 								}
 							}else if(current_abs_val===_QUEEN){
-								rtn=true;
+								rtn.isAttacked=true;
 							}else if(piece_direction%2){
 								if(current_abs_val==_ROOK){
-									rtn=true;
+									rtn.isAttacked=true;
 								}
 							}else if(current_abs_val===_BISHOP){
-								rtn=true;
+								rtn.isAttacked=true;
 							}else if(!i && current_abs_val===_PAWN){
 								if(current_val===_PAWN){
 									if(piece_direction===4 || piece_direction===6){
-										rtn=true;
+										rtn.isAttacked=true;
 									}
 								}else{
 									if(piece_direction===2 || piece_direction===8){
-										rtn=true;
+										rtn.isAttacked=true;
 									}
 								}
 							}
@@ -834,7 +839,7 @@
 					}else{//is ally piece
 						if(op===3){
 							if(toAbsVal(ally_qal)===current_abs_val){
-								rtn=current_pos;
+								rtn.disambiguationPos=current_pos;
 							}
 						}
 					}
@@ -843,7 +848,7 @@
 				}
 				
 				if(op===1){
-					rtn.push(current_pos);//if capturing, this is unreachable because the break (no duplication occurs)
+					rtn.candidateMoves.push(current_pos);//if capturing, this is unreachable because the break
 				}
 			}
 			
@@ -1275,7 +1280,7 @@
 					
 					for(i=0; i<2; i++){//0...1
 						for(j=(piece_abs_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
-							if((temp=that.disambiguationPos(final_qos, j--, as_knight, piece_abs_val)).length){temp2.push(temp);}
+							if(temp=that.disambiguationPos(final_qos, j--, as_knight, piece_abs_val)){temp2.push(temp);}
 						}
 					}
 					
@@ -1366,7 +1371,7 @@
 			val=toVal(qal);
 			abs_val=toAbsVal(qal);
 			
-			rtn=["*", "p", "n", "b", "r", "q", "k"][abs_val];
+			rtn=["*", "p", "n", "b", "r", "q", "k"][abs_val];//asterisk character is dangerous: _occurrences() might use RegExp("*", "g") if not cautious
 			
 			return (val===abs_val ? rtn.toUpperCase() : rtn);
 		}
