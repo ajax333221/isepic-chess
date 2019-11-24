@@ -1672,7 +1672,7 @@
 				target.PromoteTo=null;
 				target.FromSquare=null;
 				target.IsHidden=null;
-				target.Squares={};
+				target.Squares=Object.create(null);
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
