@@ -42,6 +42,7 @@ function testDisambiguation(){
 	
 	return {
 		testName : "testDisambiguation()",
+		fromFile : "test-other.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -1198,6 +1199,7 @@ function testBasicFunctionality(){
 	
 	return {
 		testName : "testBasicFunctionality()",
+		fromFile : "test-other.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -1307,6 +1309,7 @@ function testFenPositions(){
 	
 	return {
 		testName : "testFenPositions()",
+		fromFile : "test-other.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -1322,36 +1325,6 @@ function testUtilityMisc(){
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
-		if(IsepicChess.utilityMisc.castlingChars(0)!==""){
-			error_msg="Error [48] castlingChars[0]";
-		}
-	//}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.castlingChars(2)!=="q"){
-			error_msg="Error [49] castlingChars[1]";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.castlingChars(9)!=="kq"){
-			error_msg="Error [50] castlingChars[2]";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.castlingChars(-1)!==""){
-			error_msg="Error [51] castlingChars[3]";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.castlingChars("1")!=="k"){
-			error_msg="Error [52] castlingChars[4]";
-		}
-	}
-	
-	if(!error_msg){
 		board=IsepicChess.initBoard({
 			name : board_name,
 			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
@@ -1360,7 +1333,7 @@ function testUtilityMisc(){
 		if(board===null){
 			error_msg="Error [53] failed to initBoard("+board_name+")";
 		}
-	}
+	//}
 	
 	if(!error_msg){
 		board_copy=IsepicChess.initBoard({
@@ -1386,150 +1359,6 @@ function testUtilityMisc(){
 		}
 	}
 	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("").substring(0, 9)!=="Error [0]"){
-			error_msg="Error [56] basicFenTest[0] empty string";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1").substring(0, 9)!=="Error [1]"){
-			error_msg="Error [57] basicFenTest[1] color need to be w or b";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqkq - 0 1").substring(0, 9)!=="Error [1]"){
-			error_msg="Error [58] basicFenTest[2] kqkq";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
-			error_msg="Error [59] basicFenTest[3] kqKQ";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/xppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
-			error_msg="Error [60] basicFenTest[4] wrong piece char";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("pnbqkbnr/1ppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
-			error_msg="Error [61] basicFenTest[5] pawn on 8th rank";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/1PPPPPPP/PNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
-			error_msg="Error [62] basicFenTest[6] pawn on 1st rank";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - a2 0 1").substring(0, 9)!=="Error [1]"){
-			error_msg="Error [63] basicFenTest[7] bad enpassant square not caught";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0").substring(0, 9)!=="Error [2]"){
-			error_msg="Error [64] basicFenTest[8] full move at 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 01 1").substring(0, 9)!=="Error [2]"){
-			error_msg="Error [65] basicFenTest[9] half move with 0X";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 2 02").substring(0, 9)!=="Error [2]"){
-			error_msg="Error [66] basicFenTest[10] full move with 0X";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - a 1").substring(0, 9)!=="Error [2]"){
-			error_msg="Error [67] basicFenTest[11] half move non numeric";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1 a").substring(0, 9)!=="Error [2]"){
-			error_msg="Error [68] basicFenTest[12] full move non numeric";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/44/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [3]"){
-			error_msg="Error [69] basicFenTest[13] consecutive numbers";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbn1/ppppppppr/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [4]"){
-			error_msg="Error [70] basicFenTest[14] not exactly 8 columns (9)";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbn1/3r3/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [4]"){
-			error_msg="Error [71] basicFenTest[15] not exactly 8 columns (7)";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("k7/8/8/8/8/8/8/8 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
-			error_msg="Error [72] basicFenTest[16] missing wk";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("K7/8/8/8/8/8/8/8 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
-			error_msg="Error [73] basicFenTest[17] missing bk";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("k6k/8/8/8/8/8/8/K7 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
-			error_msg="Error [74] basicFenTest[18] more than one bk";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("K6K/8/8/8/8/8/8/k7 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
-			error_msg="Error [75] basicFenTest[19] more than one wk";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
-			error_msg="Error [76] basicFenTest[20] more than 8 bp";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/P7/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
-			error_msg="Error [77] basicFenTest[21] more than 8 wp";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rrbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [7]"){
-			error_msg="Error [78] basicFenTest[22] more promoted pieces than possible (b)";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBRR w KQkq - 0 1").substring(0, 9)!=="Error [7]"){
-			error_msg="Error [79] basicFenTest[23] more promoted pieces than possible (w)";
-		}
-	}
-	
 	if(IsepicChess.selectBoard(board_name)!==null){
 		IsepicChess.removeBoard(board_name);
 	}
@@ -1542,6 +1371,7 @@ function testUtilityMisc(){
 	
 	return {
 		testName : "testUtilityMisc()",
+		fromFile : "test-other.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg

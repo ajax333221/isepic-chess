@@ -12,6 +12,8 @@ body{margin:0;padding:0;}
 #xchessboard hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
 #xchessboard,#xcontrols input{border:1px solid #ccc;}
 #xchessboard.tests{text-align:center;}
+#xchessboard.tests em{font-size:11px;}
+#xchessboard.tests td pre{margin:0;padding:0;}
 #xchessboard.tests table,#xchessboard.tests tr,#xchessboard.tests th,#xchessboard.tests td{margin:0;padding:0;}
 #xchessboard.tests table{border-collapse:collapse;text-align:center;background:#fbfbfb;margin:0 auto;}
 #xchessboard.tests th,#xchessboard.tests td{vertical-align:middle;border:1px solid #c0c0c0;padding:8px 16px;}

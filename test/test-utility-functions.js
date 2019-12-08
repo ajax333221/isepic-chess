@@ -67,7 +67,8 @@ function fnIcTrimSpaces(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "<strong>[Function] </strong> IC.utilityMisc.TrimSpaces()",
+		testName : "IC.utilityMisc.trimSpaces()",
+		fromFile : "test-utility-functions.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -113,7 +114,8 @@ function fnIcFormatName(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "<strong>[Function] </strong> IC.utilityMisc.formatName()",
+		testName : "IC.utilityMisc.formatName()",
+		fromFile : "test-utility-functions.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -222,7 +224,8 @@ function fnIcStrContains(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "<strong>[Function] </strong> IC.utilityMisc.strContains()",
+		testName : "IC.utilityMisc.strContains()",
+		fromFile : "test-utility-functions.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -330,7 +333,8 @@ function fnIcOccurrences(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "<strong>[Function] </strong> IC.utilityMisc.occurrences()",
+		testName : "IC.utilityMisc.occurrences()",
+		fromFile : "test-utility-functions.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -487,10 +491,29 @@ function fnIcToInt(){
 		}
 	}
 	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.toInt("")!==0){
+			error_msg="Error [24] empty space";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.toInt(false)!==0){
+			error_msg="Error [25] false to 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.toInt(true)!==1){
+			error_msg="Error [26] true to 1";
+		}
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "<strong>[Function] </strong> IC.utilityMisc.toInt()",
+		testName : "IC.utilityMisc.toInt()",
+		fromFile : "test-utility-functions.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
@@ -548,7 +571,240 @@ function fnIcHashCode(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "<strong>[Function] </strong> IC.utilityMisc.hashCode()",
+		testName : "IC.utilityMisc.hashCode()",
+		fromFile : "test-utility-functions.js",
+		result : (error_msg || "Ok"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
+function fnIcCastlingChars(){
+	var start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars(0)!==""){
+			error_msg="Error [0] 0 is empty_string";
+		}
+	//}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars(1)!=="k"){
+			error_msg="Error [1] 1 is k";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars(2)!=="q"){
+			error_msg="Error [2] 2 is q";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars(3)!=="kq"){
+			error_msg="Error [3] 3 is kq";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars(9)!=="kq"){
+			error_msg="Error [4] max stops at index 3 (kq)";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars(-1)!==""){
+			error_msg="Error [5] min starts at index 0 (empty_string)";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars("1")!=="k"){
+			error_msg="Error [6] string numbers to int";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars(true)!=="k"){
+			error_msg="Error [7] true = index 1 (k)";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.castlingChars()!==""){
+			error_msg="Error [8] no parameter = index 0 (empty_string)";
+		}
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.utilityMisc.castlingChars()",
+		fromFile : "test-utility-functions.js",
+		result : (error_msg || "Ok"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
+function fnIcBasicFenTest(){
+	var start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("").substring(0, 9)!=="Error [0]"){
+			error_msg="Error [0] empty string";
+		}
+	//}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1").substring(0, 9)!=="Error [1]"){
+			error_msg="Error [1] color need to be w or b";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqkq - 0 1").substring(0, 9)!=="Error [1]"){
+			error_msg="Error [2] kqkq";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
+			error_msg="Error [3] kqKQ";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/xppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
+			error_msg="Error [4] wrong piece char";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("pnbqkbnr/1ppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
+			error_msg="Error [5] pawn on 8th rank";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/1PPPPPPP/PNBQKBNR w kqKQ - 0 1").substring(0, 9)!=="Error [1]"){
+			error_msg="Error [6] pawn on 1st rank";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - a2 0 1").substring(0, 9)!=="Error [1]"){
+			error_msg="Error [7] bad enpassant square not caught";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0").substring(0, 9)!=="Error [2]"){
+			error_msg="Error [8] full move at 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 01 1").substring(0, 9)!=="Error [2]"){
+			error_msg="Error [9] half move with 0X";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 2 02").substring(0, 9)!=="Error [2]"){
+			error_msg="Error [10] full move with 0X";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - a 1").substring(0, 9)!=="Error [2]"){
+			error_msg="Error [11] half move non numeric";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1 a").substring(0, 9)!=="Error [2]"){
+			error_msg="Error [12] full move non numeric";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/44/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [3]"){
+			error_msg="Error [13] consecutive numbers";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbn1/ppppppppr/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [4]"){
+			error_msg="Error [14] not exactly 8 columns (9)";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbn1/3r3/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [4]"){
+			error_msg="Error [15] not exactly 8 columns (7)";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("k7/8/8/8/8/8/8/8 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
+			error_msg="Error [16] missing wk";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("K7/8/8/8/8/8/8/8 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
+			error_msg="Error [17] missing bk";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("k6k/8/8/8/8/8/8/K7 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
+			error_msg="Error [18] more than one bk";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("K6K/8/8/8/8/8/8/k7 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
+			error_msg="Error [19] more than one wk";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
+			error_msg="Error [20] more than 8 bp";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/P7/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
+			error_msg="Error [21] more than 8 wp";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rrbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [7]"){
+			error_msg="Error [22] more promoted pieces than possible (b)";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBRR w KQkq - 0 1").substring(0, 9)!=="Error [7]"){
+			error_msg="Error [23] more promoted pieces than possible (w)";
+		}
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.utilityMisc.basicFenTest()",
+		fromFile : "test-utility-functions.js",
 		result : (error_msg || "Ok"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg

@@ -6,14 +6,15 @@
 		<link rel="stylesheet" href="../css/default.css">
 		<script src="../js/jquery-3.3.1.min.js"></script>
 		<script src="../js/isepic-chess.js"></script>
-		<script src="./test-functions.js"></script>
+		<script src="./test-utility-functions.js"></script>
 		<script src="./test-other.js"></script>
 		<script>
 			function formatResult(obj){
 				var tr_html;
 				
 				tr_html="<tr class='"+(obj.passed ? "success_box" : "danger_box")+"'>";
-				tr_html+="<td>"+obj.testName+"</td>";
+				tr_html+="<td><pre>"+obj.testName+"</pre></td>";
+				tr_html+="<td><em>"+obj.fromFile+"</em></td>";
 				tr_html+="<td>"+obj.result+"</td>";
 				tr_html+="<td class='elapsed_time'>"+obj.elapsedTime+"</td>";
 				tr_html+="<td>"+(obj.passed ? "✓" : "×")+"</td>";
@@ -41,18 +42,24 @@
 				tests_html+="<table cellpadding='0' cellspacing='0'>";
 				tests_html+="<tr>";
 				tests_html+="<th>Test Name</th>";
+				tests_html+="<th>From</th>";
 				tests_html+="<th>Result</th>";
 				tests_html+="<th>Elapsed time</th>";
 				tests_html+="<th>Passed?</th>";
 				tests_html+="</tr>";
 				
-				//test-functions.js
+				//test-utility-functions.js
 				tests_html+=formatResult(fnIcTrimSpaces());
 				tests_html+=formatResult(fnIcFormatName());
 				tests_html+=formatResult(fnIcStrContains());
 				tests_html+=formatResult(fnIcOccurrences());
 				tests_html+=formatResult(fnIcToInt());
 				tests_html+=formatResult(fnIcHashCode());
+				tests_html+=formatResult(fnIcCastlingChars());
+				//_cloneBoardObjs(): [test-other.js > testUtilityMisc()]
+				//_getBoardTabsHTML(): [N/A]
+				//_getTableHTML(): [N/A]
+				tests_html+=formatResult(fnIcBasicFenTest());
 				
 				//test-other.js
 				tests_html+=formatResult(testDisambiguation());
