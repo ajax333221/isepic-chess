@@ -556,90 +556,6 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.toVal("b")!==-3){
-			error_msg="Error [57] toVal() b !== -3";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toVal("K")!==6){
-			error_msg="Error [58] toVal() K !== 6";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toVal("*")!==0){
-			error_msg="Error [59] toVal() * !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toVal(-5)!==-5){
-			error_msg="Error [60] toVal() -5 !== -5";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toVal("err")!==0){
-			error_msg="Error [61] toVal() err !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toVal(99)!==6){
-			error_msg="Error [62] toVal() 99 !== 6";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toVal(-99)!==-6){
-			error_msg="Error [63] toVal() -99 !== -6";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal("b")!==3){
-			error_msg="Error [64] toAbsVal() b !== 3";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal("K")!==6){
-			error_msg="Error [65] toAbsVal() K !== 6";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal("*")!==0){
-			error_msg="Error [66] toAbsVal() * !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal(-5)!==5){
-			error_msg="Error [67] toAbsVal() -5 !== 5";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal("err")!==0){
-			error_msg="Error [68] toAbsVal() err !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal(99)!==6){
-			error_msg="Error [69] toAbsVal() 99 !== 6";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal(-99)!==6){
-			error_msg="Error [70] toAbsVal() -99 !== 6";
-		}
-	}
-	
-	if(!error_msg){
 		if(IsepicChess.toBal(-3)!=="b"){
 			error_msg="Error [71] toBal() -3 !== b";
 		}
@@ -810,18 +726,6 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		if(IsepicChess.getSign("err")!==-1){
 			error_msg="Error [99] getSign() err !== -1";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toVal(-0)!==0){
-			error_msg="Error [100] toVal() -0 !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.toAbsVal(-0)!==0){
-			error_msg="Error [101] toAbsVal() -0 !== 0";
 		}
 	}
 	

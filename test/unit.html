@@ -7,6 +7,7 @@
 		<script src="../js/jquery-3.3.1.min.js"></script>
 		<script src="../js/isepic-chess.js"></script>
 		<script src="./test-utility-functions.js"></script>
+		<script src="./test-ic-functions.js"></script>
 		<script src="./test-other.js"></script>
 		<script>
 			function formatResult(obj){
@@ -49,17 +50,21 @@
 				tests_html+="</tr>";
 				
 				//test-utility-functions.js
-				tests_html+=formatResult(fnIcTrimSpaces());
-				tests_html+=formatResult(fnIcFormatName());
-				tests_html+=formatResult(fnIcStrContains());
-				tests_html+=formatResult(fnIcOccurrences());
-				tests_html+=formatResult(fnIcToInt());
-				tests_html+=formatResult(fnIcHashCode());
-				tests_html+=formatResult(fnIcCastlingChars());
+				tests_html+=formatResult(fnIcUtilityTrimSpaces());
+				tests_html+=formatResult(fnIcUtilityFormatName());
+				tests_html+=formatResult(fnIcUtilityStrContains());
+				tests_html+=formatResult(fnIcUtilityOccurrences());
+				tests_html+=formatResult(fnIcUtilityToInt());
+				tests_html+=formatResult(fnIcUtilityHashCode());
+				tests_html+=formatResult(fnIcUtilityCastlingChars());
 				//_cloneBoardObjs(): [test-other.js > testUtilityMisc()]
 				//_getBoardTabsHTML(): [N/A]
 				//_getTableHTML(): [N/A]
-				tests_html+=formatResult(fnIcBasicFenTest());
+				tests_html+=formatResult(fnIcUtilityBasicFenTest());
+				
+				//test-ic-functions.js
+				tests_html+=formatResult(fnIcToVal());
+				tests_html+=formatResult(fnIcToAbsVal());
 				
 				//test-other.js
 				tests_html+=formatResult(testDisambiguation());

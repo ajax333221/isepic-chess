@@ -1,4 +1,4 @@
-function fnIcTrimSpaces(){
+function fnIcUtilityTrimSpaces(){
 	var start_time, end_time, error_msg;
 	
 	error_msg="";
@@ -75,7 +75,7 @@ function fnIcTrimSpaces(){
 	};
 }
 
-function fnIcFormatName(){
+function fnIcUtilityFormatName(){
 	var start_time, end_time, error_msg;
 	
 	error_msg="";
@@ -122,7 +122,7 @@ function fnIcFormatName(){
 	};
 }
 
-function fnIcStrContains(){
+function fnIcUtilityStrContains(){
 	var str_base, start_time, end_time, error_msg;
 	
 	error_msg="";
@@ -232,7 +232,7 @@ function fnIcStrContains(){
 	};
 }
 
-function fnIcOccurrences(){
+function fnIcUtilityOccurrences(){
 	var str_base, start_time, end_time, error_msg;
 	
 	error_msg="";
@@ -341,7 +341,7 @@ function fnIcOccurrences(){
 	};
 }
 
-function fnIcToInt(){
+function fnIcUtilityToInt(){
 	var start_time, end_time, error_msg;
 	
 	error_msg="";
@@ -520,7 +520,7 @@ function fnIcToInt(){
 	};
 }
 
-function fnIcHashCode(){
+function fnIcUtilityHashCode(){
 	var start_time, end_time, error_msg;
 	
 	error_msg="";
@@ -579,7 +579,7 @@ function fnIcHashCode(){
 	};
 }
 
-function fnIcCastlingChars(){
+function fnIcUtilityCastlingChars(){
 	var start_time, end_time, error_msg;
 	
 	error_msg="";
@@ -650,7 +650,7 @@ function fnIcCastlingChars(){
 	};
 }
 
-function fnIcBasicFenTest(){
+function fnIcUtilityBasicFenTest(){
 	var start_time, end_time, error_msg;
 	
 	error_msg="";
