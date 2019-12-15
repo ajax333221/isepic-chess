@@ -916,20 +916,26 @@ function fnIcSameSquare(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.sameSquare("a8", [-1, 0])!==true){
-			error_msg="Error [4] a8, [-1, 0] !== true";/*mmm*/
+		if(IsepicChess.sameSquare("a8", [-99, 0])!==true){
+			error_msg="Error [4] a8, [-99, 0] !== true";/*mmm*/
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.sameSquare("a0", [8, 0])!==true){
-			error_msg="Error [5] a0, [8, 0] !== true";/*mmm*/
+		if(IsepicChess.sameSquare("b1", [99, 1])!==true){
+			error_msg="Error [5] b1, [99, 0] !== true";/*mmm*/
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.sameSquare("a0", [9, 0])!==true){
-			error_msg="Error [6] a0, [9, 0] !== true";/*mmm*/
+		if(IsepicChess.sameSquare("h1", [99, 99])!==true){
+			error_msg="Error [6] h1, [-2, 0] !== true";/*mmm*/
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.sameSquare("h8", [0, 99])!==true){
+			error_msg="Error [7] h8, [0, 99] !== true";/*mmm*/
 		}
 	}
 	

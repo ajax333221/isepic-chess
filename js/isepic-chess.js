@@ -1390,7 +1390,7 @@
 		}
 		
 		function toBos(qos){
-			return ((typeof qos)==="string" ? qos.toLowerCase() : ("abcdefgh".charAt(_toInt(getFilePos(qos), 0, 7))+""+(8-_toInt(getRankPos(qos), 0, 8))));
+			return ((typeof qos)==="string" ? qos.toLowerCase() : ("abcdefgh".charAt(_toInt(getFilePos(qos), 0, 7))+""+_toInt((8-getRankPos(qos)), 1, 8)));
 		}
 		
 		function toPos(qos){
