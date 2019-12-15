@@ -1390,11 +1390,11 @@
 		}
 		
 		function toBos(qos){
-			return ((typeof qos)==="string" ? qos.toLowerCase() : ("abcdefgh".charAt(getFilePos(qos))+""+(8-getRankPos(qos))));
+			return ((typeof qos)==="string" ? qos.toLowerCase() : ("abcdefgh".charAt(_toInt(getFilePos(qos), 0, 7))+""+(8-_toInt(getRankPos(qos), 0, 8))));
 		}
 		
 		function toPos(qos){
-			return ((typeof qos)==="string" ? [(8-(getRankBos(qos)*1)), "abcdefgh".indexOf(getFileBos(qos))] : qos);
+			return ((typeof qos)==="string" ? [_toInt((8-getRankBos(qos)), 0, 7), _toInt("abcdefgh".indexOf(getFileBos(qos)), 0, 7)] : qos);
 		}
 		
 		function getSign(zal){
@@ -1422,7 +1422,20 @@
 		}
 		
 		function sameSquare(qos1, qos2){
-			return (toBos(qos1)===toBos(qos2));
+			var qos1_type, qos2_type;
+			
+			qos1_type=(typeof qos1);
+			qos2_type=(typeof qos2);
+			
+			if(qos1_type!=="string" && qos2_type!=="string"){
+				qos1=toPos(qos1).join();
+				qos2=toPos(qos2).join();
+			}else{
+				qos1=toBos(qos1);
+				qos2=toBos(qos2);
+			}
+			
+			return (qos1===qos2);
 		}
 		
 		function removeBoard(board_name){

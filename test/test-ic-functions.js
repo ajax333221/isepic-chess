@@ -1,7 +1,3 @@
-//isInsideBoard
-//sameSquare
-//mapToBos
-//---
 //initBoard
 //---
 //getBoardCount
@@ -636,6 +632,12 @@ function fnIcGetRankPos(){
 		}
 	}
 	
+	if(!error_msg){
+		if(IsepicChess.getRankPos([true, 0])!==true){
+			error_msg="Error [6] [true, 0] !== true";
+		}
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
@@ -686,6 +688,12 @@ function fnIcGetFilePos(){
 	if(!error_msg){
 		if(IsepicChess.getFilePos([6, 3])!==3){
 			error_msg="Error [5] [6, 3] !== 3";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.getFilePos([0, true])!==true){
+			error_msg="Error [6] [0, true] !== true";
 		}
 	}
 	
@@ -742,6 +750,12 @@ function fnIcGetRankBos(){
 		}
 	}
 	
+	if(!error_msg){
+		if(IsepicChess.getRankBos("ABCxyz")!=="b"){
+			error_msg="Error [6] ABCxyz !== b";
+		}
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
@@ -795,6 +809,12 @@ function fnIcGetFileBos(){
 		}
 	}
 	
+	if(!error_msg){
+		if(IsepicChess.getFileBos("ABCxyz")!=="a"){
+			error_msg="Error [6] ABCxyz !== a";
+		}
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
@@ -805,3 +825,211 @@ function fnIcGetFileBos(){
 		passed : !error_msg
 	};
 }
+
+function fnIcIsInsideBoard(){
+	var start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		if(IsepicChess.isInsideBoard("a1")!==true){
+			error_msg="Error [0] a1 !== true";
+		}
+	//}
+	
+	if(!error_msg){
+		if(IsepicChess.isInsideBoard("a9")!==false){
+			error_msg="Error [1] a9 !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.isInsideBoard("i3")!==false){
+			error_msg="Error [2] i3 !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.isInsideBoard([7, 7])!==true){
+			error_msg="Error [3] [7, 7] !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.isInsideBoard([8, 8])!==false){
+			error_msg="Error [4] [8, 8] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.isInsideBoard([0, 9])!==false){
+			error_msg="Error [5] [0, 9] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.isInsideBoard([9, 0])!==false){
+			error_msg="Error [6] [9, 0] !== false";
+		}
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.isInsideBoard()",
+		fromFile : "test-ic-functions.js",
+		result : (error_msg || "Ok"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
+function fnIcSameSquare(){
+	var w, x, y, z, arr, start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		if(IsepicChess.sameSquare("d2", [6, 3])!==true){
+			error_msg="Error [0] d2, [6, 3] !== true";
+		}
+	//}
+	
+	if(!error_msg){
+		if(IsepicChess.sameSquare("a1", "A1")!==true){
+			error_msg="Error [1] a1, A1 !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.sameSquare("zz", [0, 0])!==false){
+			error_msg="Error [2] zz, [0, 0] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.sameSquare("z2", [6, 0])!==false){
+			error_msg="Error [3] z2, [6, 0] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.sameSquare("a8", [-1, 0])!==true){
+			error_msg="Error [4] a8, [-1, 0] !== true";/*mmm*/
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.sameSquare("a0", [8, 0])!==true){
+			error_msg="Error [5] a0, [8, 0] !== true";/*mmm*/
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.sameSquare("a0", [9, 0])!==true){
+			error_msg="Error [6] a0, [9, 0] !== true";/*mmm*/
+		}
+	}
+	
+	if(!error_msg){
+		arr=[0, 7, -1, -2, 8, 9];
+		
+		outer:
+		for(w=0; w<6; w++){
+			for(x=0; x<6; x++){
+				for(y=0; y<6; y++){
+					for(z=0; z<6; z++){
+						if(IsepicChess.sameSquare([arr[w], arr[x]], [arr[y], arr[z]])!==(arr[w]===arr[y] && arr[x]===arr[z])){
+							error_msg="Error [8] ["+arr[w]+", "+arr[x]+"], ["+arr[y]+", "+arr[z]+"] !== "+(arr[w]===arr[y] && arr[x]===arr[z]);
+							break outer;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	if(!error_msg){
+		arr=["a", "h", "x", "y", "1", "7", "0", "8"];
+		
+		outer:
+		for(w=0; w<8; w++){
+			for(x=0; x<8; x++){
+				for(y=0; y<8; y++){
+					for(z=0; z<8; z++){
+						if(IsepicChess.sameSquare((arr[w]+""+arr[x]), (arr[y]+""+arr[z]))!==((arr[w]+""+arr[x])===(arr[y]+""+arr[z]))){
+							error_msg="Error [9] "+arr[w]+""+arr[x]+", "+arr[y]+""+arr[z]+" !== "+((arr[w]+""+arr[x])===(arr[y]+""+arr[z]));
+							break outer;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.sameSquare()",
+		fromFile : "test-ic-functions.js",
+		result : (error_msg || "Ok"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
+function fnIcMapToBos(){
+	var start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		if(IsepicChess.mapToBos([[0, 7], [2, 2]]).join()!=="h8,c6"){
+			error_msg="Error [0] [[0, 7], [2, 2]] !== h8,c6";
+		}
+	//}
+	
+	if(!error_msg){
+		if(IsepicChess.mapToBos([[1, 1], "a2"]).join()!=="b7,a2"){
+			error_msg="Error [1] [[1, 1], a2] !== b7,a2";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.mapToBos("err").join()!==""){
+			error_msg="Error [2] [err] !== empty_array";
+		}
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.mapToBos()",
+		fromFile : "test-ic-functions.js",
+		result : (error_msg || "Ok"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
+/*function fnIcAAAAA(){
+	var start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.AAAAA()",
+		fromFile : "test-ic-functions.js",
+		result : (error_msg || "Ok"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}*/

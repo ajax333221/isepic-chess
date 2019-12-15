@@ -520,54 +520,6 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isInsideBoard("a1")!==true){
-			error_msg="Error [128] isInsideBoard() a1 !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.isInsideBoard("a9")!==false){
-			error_msg="Error [129] isInsideBoard() a9 !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.isInsideBoard("i3")!==false){
-			error_msg="Error [130] isInsideBoard() i3 !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.isInsideBoard([7, 7])!==true){
-			error_msg="Error [131] isInsideBoard() [7, 7] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.isInsideBoard([8, 8])!==false){
-			error_msg="Error [132] isInsideBoard() [8, 8] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.sameSquare("a1", "a1")!==true){
-			error_msg="Error [133] sameSquare() a1, a1 !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.sameSquare("d2", [6, 3])!==true){
-			error_msg="Error [134] sameSquare() d2, [6, 3] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.sameSquare([4, 5], [5, 4])!==false){
-			error_msg="Error [135] sameSquare() [4, 5], [5, 4] !== false";
-		}
-	}
-	
-	if(!error_msg){
 		if(IsepicChess.countChecks("8/k7/r7/8/8/2b5/8/K7 w - - 0 1")!==2){
 			error_msg="Error [136] countChecks() [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== 2";
 		}
@@ -702,24 +654,6 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		if(IsepicChess.isStalemate("0invalidfen0")!==false){
 			error_msg="Error [158] isStalemate() [0invalidfen0] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.mapToBos([[0, 7], [2, 2]]).join()!=="h8,c6"){
-			error_msg="Error [159] mapToBos() [[0, 7], [2, 2]] !== h8,c6";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.mapToBos([[1, 1], "a2"]).join()!=="b7,a2"){
-			error_msg="Error [160] mapToBos() [[1, 1], a2] !== b7,a2";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.mapToBos("err").join()!==""){
-			error_msg="Error [161] mapToBos() [err] !== empty_array";
 		}
 	}
 	
