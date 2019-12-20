@@ -87,7 +87,7 @@ function fnIcToVal(){
 	return {
 		testName : "IC.toVal()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -164,7 +164,7 @@ function fnIcToAbsVal(){
 	return {
 		testName : "IC.toAbsVal()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -241,7 +241,7 @@ function fnIcToBal(){
 	return {
 		testName : "IC.toBal()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -318,7 +318,7 @@ function fnIcToAbsBal(){
 	return {
 		testName : "IC.toAbsBal()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -395,7 +395,7 @@ function fnIcToPieceClass(){
 	return {
 		testName : "IC.toPieceClass()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -442,7 +442,7 @@ function fnIcToBos(){
 	return {
 		testName : "IC.toBos()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -495,7 +495,7 @@ function fnIcToPos(){
 	return {
 		testName : "IC.toPos()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -584,7 +584,7 @@ function fnIcGetSign(){
 	return {
 		testName : "IC.getSign()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -643,7 +643,7 @@ function fnIcGetRankPos(){
 	return {
 		testName : "IC.getRankPos()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -702,7 +702,7 @@ function fnIcGetFilePos(){
 	return {
 		testName : "IC.getFilePos()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -761,7 +761,7 @@ function fnIcGetRankBos(){
 	return {
 		testName : "IC.getRankBos()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -820,7 +820,7 @@ function fnIcGetFileBos(){
 	return {
 		testName : "IC.getFileBos()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -879,7 +879,7 @@ function fnIcIsInsideBoard(){
 	return {
 		testName : "IC.isInsideBoard()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -980,7 +980,7 @@ function fnIcSameSquare(){
 	return {
 		testName : "IC.sameSquare()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -1015,7 +1015,7 @@ function fnIcMapToBos(){
 	return {
 		testName : "IC.mapToBos()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -1034,7 +1034,7 @@ function fnIcMapToBos(){
 	return {
 		testName : "IC.AAAAA()",
 		fromFile : "test-ic-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};

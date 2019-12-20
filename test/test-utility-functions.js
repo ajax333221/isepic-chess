@@ -69,7 +69,7 @@ function fnIcUtilityTrimSpaces(){
 	return {
 		testName : "IC.utilityMisc.trimSpaces()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -88,7 +88,7 @@ function fnIcUtilityFormatName(){
 	//}
 	
 	if(!error_msg){
-		if(IsepicChess.utilityMisc.formatName("0�2(4) �")!=="0_2_4___"){
+		if(IsepicChess.utilityMisc.formatName("0ñ2(4) á")!=="0_2_4___"){
 			error_msg="Error [1] non alphanumeric";
 		}
 	}
@@ -106,7 +106,7 @@ function fnIcUtilityFormatName(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.utilityMisc.formatName("�")!=="_"){
+		if(IsepicChess.utilityMisc.formatName("ñ")!=="_"){
 			error_msg="Error [4] single non alphanumeric";
 		}
 	}
@@ -116,7 +116,7 @@ function fnIcUtilityFormatName(){
 	return {
 		testName : "IC.utilityMisc.formatName()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -226,7 +226,7 @@ function fnIcUtilityStrContains(){
 	return {
 		testName : "IC.utilityMisc.strContains()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -301,7 +301,7 @@ function fnIcUtilityOccurrences(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.utilityMisc.occurrences("o�o", "�")!==1){
+		if(IsepicChess.utilityMisc.occurrences("oóo", "ó")!==1){
 			error_msg="Error [10] aeiou";
 		}
 	}
@@ -335,7 +335,7 @@ function fnIcUtilityOccurrences(){
 	return {
 		testName : "IC.utilityMisc.occurrences()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -514,7 +514,7 @@ function fnIcUtilityToInt(){
 	return {
 		testName : "IC.utilityMisc.toInt()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -573,7 +573,7 @@ function fnIcUtilityHashCode(){
 	return {
 		testName : "IC.utilityMisc.hashCode()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -644,7 +644,7 @@ function fnIcUtilityCastlingChars(){
 	return {
 		testName : "IC.utilityMisc.castlingChars()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -805,7 +805,7 @@ function fnIcUtilityBasicFenTest(){
 	return {
 		testName : "IC.utilityMisc.basicFenTest()",
 		fromFile : "test-utility-functions.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};

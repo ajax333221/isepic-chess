@@ -43,7 +43,7 @@ function testDisambiguation(){
 	return {
 		testName : "testDisambiguation()",
 		fromFile : "test-other.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -672,7 +672,7 @@ function testBasicFunctionality(){
 	return {
 		testName : "testBasicFunctionality()",
 		fromFile : "test-other.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -782,7 +782,7 @@ function testFenPositions(){
 	return {
 		testName : "testFenPositions()",
 		fromFile : "test-other.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
@@ -844,7 +844,7 @@ function testUtilityMisc(){
 	return {
 		testName : "testUtilityMisc()",
 		fromFile : "test-other.js",
-		result : (error_msg || "Ok"),
+		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};

@@ -60,3 +60,13 @@ body{margin:0;padding:0;}
 #xrotate,#xnav_first,#xnav_previous,#xnav_next,#xnav_last{padding:15px;margin-left:10px;}
 #xinfoholder{margin:20px 0 0 0;padding:10px;font-size:15px;border:1px solid #a9a9a9;background:#e3e3e3;}
 #xinfoholder strong{background:#f0efff;}
+#overall_results{line-height:20px;padding:10px;font-size:18px;}
+#overall_results pre{display:inline;}
+#overall_results.with_fails{color:#721c24;}
+#overall_results.all_passed{color:#155724;}
+.icon_holder{display:inline-block;box-sizing:border-box;position:relative;height:20px;width:20px;padding:0;margin:0;}
+.icon_holder .icon_sprites{position:absolute;top:50%;background:url("./images/sprites_50x50.png") no-repeat;}
+.icon_holder .sm_icon {left:0;width:20px;height:20px;background-size:40px 40px;margin-top:-10px;}
+.icon_holder .sm_ic_correct{background-position:0 0;}
+.icon_holder .sm_ic_incorrect{background-position:-20px 0;}
+.icon_holder .sel_sm_icon{background-position-y:-20px;}

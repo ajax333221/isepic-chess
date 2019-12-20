@@ -18,34 +18,49 @@
 				tr_html+="<td><em>"+obj.fromFile+"</em></td>";
 				tr_html+="<td>"+obj.result+"</td>";
 				tr_html+="<td class='elapsed_time'>"+obj.elapsedTime+"</td>";
-				tr_html+="<td>"+(obj.passed ? "✓" : "×")+"</td>";
+				tr_html+="<td class='test_result'><span class='icon_holder'><i class='"+("icon_sprites sm_icon "+(obj.passed ? "sm_ic_correct" : "sm_ic_incorrect"))+"'></i>&nbsp;</span></td>";
 				tr_html+="</tr>";
 				
 				return tr_html;
 			}
 			
-			function updateElapsedTime(){
-				var total;
+			function updateOverallResults(){
+				var total_ok, total_bad, total_time, res_html;
 				
-				total=0;
+				total_ok=0;
+				total_bad=0;
+				total_time=0;
 				
-				$(".elapsed_time").each(function(index){
-					total+=($(this).html().split(" ")[0]*1 || 0);
+				$(".test_result .sm_ic_correct").each(function(index){
+					total_ok++;
 				});
 				
-				$("#total_time").html("Total elapsed time: "+total+" ms");
+				$(".test_result .sm_ic_incorrect").each(function(index){
+					total_bad++;
+				});
+				
+				$(".elapsed_time").each(function(index){
+					total_time+=($(this).html().split(" ")[0]*1 || 0);
+				});
+				
+				res_html="<span class='icon_holder'><i class='"+("icon_sprites sm_icon "+(total_bad ? "sm_ic_incorrect" : "sm_ic_correct"))+"'></i>&nbsp;</span>";
+				res_html+=" "+(total_bad ? (total_bad+" test"+(total_bad===1 ? "" : "s")+" failed") : ("All "+total_ok+" tests passed"));
+				res_html+=" <pre>("+total_time+" ms)</pre>";
+				
+				$("#overall_results").addClass(total_bad ? "with_fails" : "all_passed").html(res_html);
 			}
 			
 			$(function(){
 				var tests_html;
 				
 				tests_html="<div id='xchessboard' class='tests'><h3 class='inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3>";
+				tests_html+="<div id='overall_results'>...</div>";
 				tests_html+="<table cellpadding='0' cellspacing='0'>";
 				tests_html+="<tr>";
 				tests_html+="<th>Test Name</th>";
 				tests_html+="<th>From</th>";
 				tests_html+="<th>Result</th>";
-				tests_html+="<th>Elapsed time</th>";
+				tests_html+="<th>Duration</th>";
 				tests_html+="<th>Passed?</th>";
 				tests_html+="</tr>";
 				
@@ -85,10 +100,10 @@
 				tests_html+=formatResult(testFenPositions());
 				tests_html+=formatResult(testUtilityMisc());
 				
-				tests_html+="</table><pre id='total_time'>...</pre></div>";
+				tests_html+="</table></div>";
 				$("body").html(tests_html);
 				
-				updateElapsedTime();
+				updateOverallResults();
 			});
 		</script>
 	</head>
