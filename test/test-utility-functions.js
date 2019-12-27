@@ -486,26 +486,62 @@ function fnIcUtilityToInt(){
 	}
 	
 	if(!error_msg){
+		if(IsepicChess.utilityMisc.toInt(0, "x", 0)!==0){
+			error_msg="Error [23] string min converted to NaN";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.toInt(-5, "x", 5)!==-5){
+			error_msg="Error [24] incorrectly string min to 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.toInt(0, 0, "x")!==0){
+			error_msg="Error [25] string max converted to NaN";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.utilityMisc.toInt(5, -5, "x")!==5){
+			error_msg="Error [26] incorrectly string max to 0";
+		}
+	}
+	
+	if(!error_msg){
+		if((1/IsepicChess.utilityMisc.toInt(-5, -0, 5))!==Infinity){
+			error_msg="Error [27] -0 min not changed to 0";
+		}
+	}
+	
+	if(!error_msg){
+		if((1/IsepicChess.utilityMisc.toInt(5, -5, -0))!==Infinity){
+			error_msg="Error [28] -0 max not changed to 0";
+		}
+	}
+	
+	if(!error_msg){
 		if(IsepicChess.utilityMisc.toInt()!==0){
-			error_msg="Error [23] no parameter";
+			error_msg="Error [29] no parameter";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.utilityMisc.toInt("")!==0){
-			error_msg="Error [24] empty space";
+			error_msg="Error [30] empty space";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.utilityMisc.toInt(false)!==0){
-			error_msg="Error [25] false to 0";
+			error_msg="Error [31] false to 0";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.utilityMisc.toInt(true)!==1){
-			error_msg="Error [26] true to 1";
+			error_msg="Error [32] true to 1";
 		}
 	}
 	

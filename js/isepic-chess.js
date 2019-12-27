@@ -47,8 +47,12 @@
 			num=(num*1 || 0);
 			num=(num<0 ? Math.ceil(num) : Math.floor(num));
 			
-			min_val=(((min_val || min_val===0) ? min_val : -Infinity) || 0);
-			max_val=(((max_val || max_val===0) ? max_val : Infinity) || 0);
+			min_val*=1;
+			max_val*=1;
+			
+			/*NO remover 0 default, (-0 || 0) = 0*/
+			min_val=((Number.isNaN(min_val) ? -Infinity : min_val) || 0);
+			max_val=((Number.isNaN(max_val) ? Infinity : max_val) || 0);
 			
 			return Math.min(Math.max(num, min_val), max_val);
 		}
