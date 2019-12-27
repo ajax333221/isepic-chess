@@ -11,13 +11,13 @@ http://ajax333221.github.io/Isepic-Chess/
 Features
 -------------
 
-- advanced FEN validation
-- highlight legal moves / last move
-- move list navigation
-- board navigation
-- pawn promotion options
-- ~~drag-and-drop pieces~~ (currently disabled)
-- chess-font by ajax333221 ![White King](css/images/wk.png "white king")![White Queen](css/images/wq.png "white queen")![White Rook](css/images/wr.png "white rook")![White Bishop](css/images/wb.png "white bishop")![White Knight](css/images/wn.png "white knight")![White Pawn](css/images/wp.png "white pawn")![Black King](css/images/bk.png "black king")![Black Queen](css/images/bq.png "black queen")![Black Rook](css/images/br.png "black rook")![Black Bishop](css/images/bb.png "black bishop")![Black Knight](css/images/bn.png "black knight")![Black Pawn](css/images/bp.png "black pawn")
+- Advanced FEN validation
+- Highlight legal moves / last move
+- Move list navigation
+- Board navigation
+- Pawn promotion options
+- ~~Drag-and-drop pieces~~ (currently disabled)
+- Chess-font by ajax333221 ![White King](css/images/wk.png "white king")![White Queen](css/images/wq.png "white queen")![White Rook](css/images/wr.png "white rook")![White Bishop](css/images/wb.png "white bishop")![White Knight](css/images/wn.png "white knight")![White Pawn](css/images/wp.png "white pawn")![Black King](css/images/bk.png "black king")![Black Queen](css/images/bq.png "black queen")![Black Rook](css/images/br.png "black rook")![Black Bishop](css/images/bb.png "black bishop")![Black Knight](css/images/bn.png "black knight")![Black Pawn](css/images/bp.png "black pawn")
 
 Documentation
 -------------
@@ -104,10 +104,10 @@ To Do
 
 - Documentation (:wrench: 40% done)
 - PGN viewer
-- show material difference
-- move list variations
-- set-up position mode
-- create, rename and delete boards through the UI
+- Show material difference
+- Move list variations
+- Set-up position mode
+- Create, rename and delete boards through the UI
 
 Copyright and License
 -------------
