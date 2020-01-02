@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
-		var _VERSION="2.3.0";
+		var _VERSION="2.3.1";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -1902,6 +1902,7 @@
 		}
 		
 		return {
+			version : _VERSION,
 			boardExists : boardExists,
 			selectBoard : selectBoard,
 			toVal : toVal,
