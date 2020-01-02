@@ -4,6 +4,7 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
+		var _VERSION="2.3.0";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -415,25 +416,43 @@
 		}
 		
 		function _getObjInfoHTML(){
-			var that, rtn;
+			var i, j, temp, current_row, that, rtn;
 			
 			that=this;
 			
-			rtn="<strong>board_name:</strong> "+that.BoardName;
-			rtn+="<br><strong>board_is_rotated:</strong> "+that.IsRotated;
-			rtn+="<br><strong>en_passant:</strong> "+(that.EnPassantBos ? that.EnPassantBos : "-");
-			rtn+="<br><strong>active_color:</strong> "+(that.Active.isBlack ? "black" : "white");
-			rtn+="<br><strong>active_king_checks:</strong> "+that.Active.checks;
-			rtn+="<br><strong>active_king_pos:</strong> "+toBos(that.Active.kingPos);
-			rtn+="<br><strong>non_active_king_pos:</strong> "+toBos(that.NonActive.kingPos);
-			rtn+="<br><strong>white_castling:</strong> "+(_castlingChars(that.WCastling).toUpperCase() || "-");
-			rtn+="<br><strong>black_castling:</strong> "+(_castlingChars(that.BCastling) || "-");
-			rtn+="<br><strong>half_moves:</strong> "+that.HalfMove;
-			rtn+="<br><strong>full_moves:</strong> "+that.FullMove;
-			rtn+="<br><strong>current_move:</strong> "+that.CurrentMove;
-			rtn+="<br><strong>initial_fullmove:</strong> "+that.InitialFullMove;
-			rtn+="<br><strong>promote_to:</strong> "+toBal(that.PromoteTo*getSign(that.Active.isBlack));
-			rtn+="<br><strong>from_square:</strong> "+(that.FromSquare ? that.FromSquare : "-");
+			rtn="<li><strong>Selected board:</strong> <span>"+that.BoardName+"</span></li>";
+			rtn+="<li><strong>Is rotated?:</strong> <span>"+that.IsRotated+"</span></li>";
+			rtn+="<li><strong>En Passant:</strong> <span>"+(that.EnPassantBos ? that.EnPassantBos : "-")+"</span></li>";
+			rtn+="<li><strong>Active color:</strong> <span>"+(that.Active.isBlack ? "black" : "white")+"</span></li>";
+			rtn+="<li><strong>Active king checks:</strong> <span>"+that.Active.checks+"</span></li>";
+			rtn+="<li><strong>Active king square:</strong> <span>"+toBos(that.Active.kingPos)+"</span></li>";
+			rtn+="<li><strong>Non active king square:</strong> <span>"+toBos(that.NonActive.kingPos)+"</span></li>";
+			rtn+="<li><strong>White castling:</strong> <span>"+(_castlingChars(that.WCastling).toUpperCase() || "-")+"</span></li>";
+			rtn+="<li><strong>Black castling:</strong> <span>"+(_castlingChars(that.BCastling) || "-")+"</span></li>";
+			rtn+="<li><strong>Half moves:</strong> <span>"+that.HalfMove+"</span></li>";
+			rtn+="<li><strong>Full moves:</strong> <span>"+that.FullMove+"</span></li>";
+			rtn+="<li><strong>Current move:</strong> <span>"+that.CurrentMove+"</span></li>";
+			rtn+="<li><strong>Initial full move:</strong> <span>"+that.InitialFullMove+"</span></li>";
+			rtn+="<li><strong>Promote to:</strong> <span>"+toBal(that.PromoteTo*getSign(that.Active.isBlack))+"</span></li>";
+			rtn+="<li><strong>Selected square:</strong> <span>"+(that.FromSquare ? that.FromSquare : "-")+"</span></li>";
+			
+			for(i=0; i<8; i++){//0...7
+				current_row=[];
+				
+				for(j=0; j<8; j++){//0...7
+					temp=""+that.getValue([i, j]);
+					
+					if(temp.length===1){
+						temp=" "+temp;
+					}
+					
+					current_row.push("<span title='"+(toBos([i, j]).toUpperCase()+" = "+(toPieceClass(that.getValue([i, j])) || "empty"))+"'>"+temp+"</span>");
+				}
+				
+				rtn+="<li><strong>A"+(8-i)+"-H"+(8-i)+":</strong> "+current_row.join(" | ")+"</li>";
+			}
+			
+			rtn+="<li><strong>FEN:</strong> <span>"+that.Fen+"</span></li>";
 			
 			return rtn;
 		}
@@ -447,7 +466,7 @@
 				is_new_html=!$("#xchessboard").length;
 				
 				if(is_new_html){
-					$("body").append("<div id='xchessboard'><h3 class='inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='xboard'></div><div id='xcontrols'><input id='xfen' value='' type='text'><br><input id='xnav_first' value='|<' type='button'> <input id='xnav_previous' value='<' type='button'> <input id='xnav_next' value='>' type='button'> <input id='xnav_last' value='>|' type='button'><input id='xrotate' value='rotate' type='button'><select id='xpromote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='xtabs'></p><p id='xmovelist'></p></div><div id='xinfoholder'><a id='xdebug_toggle' href='#'>Debug ▲</a><p id='xobjinfo' style='display:none'></p></div></div>");
+					$("body").append("<div id='xchessboard'><h3 class='inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='xboard'></div><div id='xcontrols'><input id='xfen' value='' type='text'><br><input id='xnav_first' value='|<' type='button'> <input id='xnav_previous' value='<' type='button'> <input id='xnav_next' value='>' type='button'> <input id='xnav_last' value='>|' type='button'><input id='xrotate' value='rotate' type='button'><select id='xpromote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='xtabs'></p><p id='xmovelist'></p></div><div id='xinfoholder'><a id='xdebug_toggle' href='#'>Debug ▲</a><ul id='xobjinfo' style='display:none'></ul></div></div>");
 					
 					$("#xfen").click(function(){
 						$(this).select();
