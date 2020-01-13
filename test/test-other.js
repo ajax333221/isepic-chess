@@ -562,8 +562,8 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isCheck("0invalidfen0")!==0){//this is subject to change
-			error_msg="Error [143] isCheck() [0invalidfen0] !== 0";
+		if(IsepicChess.isCheck("0invalidfen0")!==false){
+			error_msg="Error [143] isCheck() [0invalidfen0] !== false";
 		}
 	}
 	

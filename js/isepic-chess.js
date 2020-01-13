@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
-		var _VERSION="2.3.1";
+		var _VERSION="2.3.2";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -678,11 +678,10 @@
 		function _refinedFenTest(){
 			var i, j, k, that, temp, temp2, current_sign, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
 			
+			that=this;
 			error_msg="";
 			
 			//if(!error_msg){
-				that=this;
-				
 				if((that.HalfMove-that.Active.isBlack+1)>=(that.FullMove*2)){
 					error_msg="Error [0] exceeding half moves ratio";
 				}
@@ -1262,6 +1261,8 @@
 			
 			that=this;
 			
+			/*cuidado si hago eso de this null, default rtn debe ser false*/
+			
 			return !!(that.Active.checks && that.noLegalMoves());
 		}
 		
@@ -1269,6 +1270,8 @@
 			var that;
 			
 			that=this;
+			
+			/*cuidado si hago eso de this null, default rtn debe ser false*/
 			
 			return !!(!that.Active.checks && that.noLegalMoves());
 		}
@@ -1462,22 +1465,16 @@
 		}
 		
 		function removeBoard(board_name){
-			var no_errors;
+			var rtn;
 			
-			no_errors=true;
+			rtn=false;
 			
-			//if(no_errors){
-				if(!boardExists(board_name)){
-					no_errors=false;
-					console.log("Error[removeBoard]: \""+board_name+"\" is not defined");
-				}
-			//}
-			
-			if(no_errors){
+			if(boardExists(board_name)){
 				delete _BOARDS[board_name];
+				rtn=true;
 			}
 			
-			return no_errors;
+			return rtn;
 		}
 		
 		function countChecks(fen, king_qos){
@@ -1516,7 +1513,7 @@
 		function isCheck(fen, king_qos){
 			var board, board_created, no_errors, rtn;
 			
-			rtn=0;
+			rtn=false;
 			board_created=false;
 			no_errors=true;
 			
@@ -1796,20 +1793,33 @@
 		}
 		
 		function isLegalFen(fen){
-			var board, rtn;
+			var board, board_created, no_errors, rtn;
 			
 			rtn=false;
+			board_created=false;
+			no_errors=true;
 			
-			board=initBoard({
-				name : "board_isLegalFen",
-				fen : fen,
-				isHidden : true,
-				invalidFenStop : true
-			});
+			//if(no_errors){
+				board=initBoard({
+					name : "board_isLegalFen",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
+				}
+			//}
 			
-			if(board!==null){
-				removeBoard(board.BoardName);
+			if(no_errors){
 				rtn=true;
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
 			}
 			
 			return rtn;
