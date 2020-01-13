@@ -1477,133 +1477,45 @@
 			return rtn;
 		}
 		
-		function countChecks(fen, king_qos){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=0;
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_countChecks",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=board.countChecks(king_qos);
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function isCheck(fen, king_qos){
-			var board, board_created, no_errors, rtn;
+		function isEqualBoard(left_board_name, right_board_name){
+			var left_board, no_errors, rtn;
 			
 			rtn=false;
-			board_created=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				board=initBoard({
-					name : "board_isCheck",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
+				left_board=selectBoard(left_board_name);
 				
-				if(board===null){
+				if(left_board===null){
 					no_errors=false;
-				}else{
-					board_created=true;
+					console.log("Error[isEqualBoard]: \""+left_board_name+"\" is not defined");
 				}
 			//}
 			
 			if(no_errors){
-				rtn=board.isCheck(king_qos);
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
+				rtn=left_board.isEqualBoard(right_board_name);
 			}
 			
 			return rtn;
 		}
 		
-		function legalMoves(fen, piece_qos){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=[];
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_legalMoves",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=board.legalMoves(piece_qos);
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function isLegalMove(fen, initial_qos, final_qos){
-			var board, board_created, no_errors, rtn;
+		function cloneBoard(to_board_name, from_board_name){
+			var to_board, no_errors, rtn;
 			
 			rtn=false;
-			board_created=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				board=initBoard({
-					name : "board_isLegalMove",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
+				to_board=selectBoard(to_board_name);
 				
-				if(board===null){
+				if(to_board===null){
 					no_errors=false;
-				}else{
-					board_created=true;
+					console.log("Error[cloneBoard]: \""+to_board_name+"\" is not defined");
 				}
 			//}
 			
 			if(no_errors){
-				rtn=board.isLegalMove(initial_qos, final_qos);
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
+				rtn=to_board.cloneBoardFrom(from_board_name);
 			}
 			
 			return rtn;
@@ -1748,45 +1660,133 @@
 			return rtn;
 		}
 		
-		function isEqualBoard(left_board_name, right_board_name){
-			var left_board, no_errors, rtn;
+		function countChecks(fen, king_qos){
+			var board, board_created, no_errors, rtn;
 			
-			rtn=false;
+			rtn=0;
+			board_created=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				left_board=selectBoard(left_board_name);
+				board=initBoard({
+					name : "board_countChecks",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
 				
-				if(left_board===null){
+				if(board===null){
 					no_errors=false;
-					console.log("Error[isEqualBoard]: \""+left_board_name+"\" is not defined");
+				}else{
+					board_created=true;
 				}
 			//}
 			
 			if(no_errors){
-				rtn=left_board.isEqualBoard(right_board_name);
+				rtn=board.countChecks(king_qos);
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
 			}
 			
 			return rtn;
 		}
 		
-		function cloneBoard(to_board_name, from_board_name){
-			var to_board, no_errors, rtn;
+		function isCheck(fen, king_qos){
+			var board, board_created, no_errors, rtn;
 			
 			rtn=false;
+			board_created=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				to_board=selectBoard(to_board_name);
+				board=initBoard({
+					name : "board_isCheck",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
 				
-				if(to_board===null){
+				if(board===null){
 					no_errors=false;
-					console.log("Error[cloneBoard]: \""+to_board_name+"\" is not defined");
+				}else{
+					board_created=true;
 				}
 			//}
 			
 			if(no_errors){
-				rtn=to_board.cloneBoardFrom(from_board_name);
+				rtn=board.isCheck(king_qos);
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
+			}
+			
+			return rtn;
+		}
+		
+		function legalMoves(fen, piece_qos){
+			var board, board_created, no_errors, rtn;
+			
+			rtn=[];
+			board_created=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				board=initBoard({
+					name : "board_legalMoves",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
+				}
+			//}
+			
+			if(no_errors){
+				rtn=board.legalMoves(piece_qos);
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
+			}
+			
+			return rtn;
+		}
+		
+		function isLegalMove(fen, initial_qos, final_qos){
+			var board, board_created, no_errors, rtn;
+			
+			rtn=false;
+			board_created=false;
+			no_errors=true;
+			
+			//if(no_errors){
+				board=initBoard({
+					name : "board_isLegalMove",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				if(board===null){
+					no_errors=false;
+				}else{
+					board_created=true;
+				}
+			//}
+			
+			if(no_errors){
+				rtn=board.isLegalMove(initial_qos, final_qos);
+			}
+			
+			if(board_created){
+				removeBoard(board.BoardName);
 			}
 			
 			return rtn;
@@ -1930,13 +1930,13 @@
 			isInsideBoard : isInsideBoard,
 			sameSquare : sameSquare,
 			removeBoard : removeBoard,
+			isEqualBoard : isEqualBoard,
+			cloneBoard : cloneBoard,
+			initBoard : initBoard,
 			countChecks : countChecks,
 			isCheck : isCheck,
 			legalMoves : legalMoves,
 			isLegalMove : isLegalMove,
-			initBoard : initBoard,
-			isEqualBoard : isEqualBoard,
-			cloneBoard : cloneBoard,
 			isLegalFen : isLegalFen,
 			isCheckmate : isCheckmate,
 			isStalemate : isStalemate,
