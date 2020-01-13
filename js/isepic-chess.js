@@ -1261,8 +1261,6 @@
 			
 			that=this;
 			
-			/*cuidado si hago eso de this null, default rtn debe ser false*/
-			
 			return !!(that.Active.checks && that.noLegalMoves());
 		}
 		
@@ -1270,8 +1268,6 @@
 			var that;
 			
 			that=this;
-			
-			/*cuidado si hago eso de this null, default rtn debe ser false*/
 			
 			return !!(!that.Active.checks && that.noLegalMoves());
 		}
@@ -1660,63 +1656,30 @@
 			return rtn;
 		}
 		
-		function countChecks(fen, king_qos){
-			var board, board_created, no_errors, rtn;
+		function fenApply(fen, fn_name, args){
+			var board, board_created, rtn;
 			
-			rtn=0;
-			board_created=false;
-			no_errors=true;
+			rtn=null;
 			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_countChecks",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
+			board=initBoard({
+				name : "board_fenApply",
+				fen : fen,
+				isHidden : true,
+				invalidFenStop : true
+			});
 			
-			if(no_errors){
-				rtn=board.countChecks(king_qos);
-			}
+			board_created=board!==null;
+			fn_name=_formatName(fn_name);
 			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function isCheck(fen, king_qos){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=false;
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_isCheck",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=board.isCheck(king_qos);
+			switch(fn_name){
+				case "countChecks" :
+					rtn=(board_created ? _countChecks.apply(board, args) : 0);
+					break;
+				case "isCheck" :
+					rtn=(board_created ? _isCheck.apply(board, args) : false);
+					break;
+				default :
+					console.log("Error[fenApply]: can't apply function \""+fn_name+"\" to fen");
 			}
 			
 			if(board_created){
@@ -1933,8 +1896,7 @@
 			isEqualBoard : isEqualBoard,
 			cloneBoard : cloneBoard,
 			initBoard : initBoard,
-			countChecks : countChecks,
-			isCheck : isCheck,
+			fenApply : fenApply,
 			legalMoves : legalMoves,
 			isLegalMove : isLegalMove,
 			isLegalFen : isLegalFen,

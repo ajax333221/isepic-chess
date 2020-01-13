@@ -520,50 +520,50 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.countChecks("8/k7/r7/8/8/2b5/8/K7 w - - 0 1")!==2){
-			error_msg="Error [136] countChecks() [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== 2";
+		if(IsepicChess.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "countChecks", [])!==2){
+			error_msg="Error [136] apply(countChecks) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== 2";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.countChecks("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1")!==0){
-			error_msg="Error [137] countChecks() [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== 0";
+		if(IsepicChess.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "countChecks", [])!==0){
+			error_msg="Error [137] apply(countChecks) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== 0";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.countChecks("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "f1")!==1){
-			error_msg="Error [138] countChecks() [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== 1";
+		if(IsepicChess.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "countChecks", ["f1"])!==1){
+			error_msg="Error [138] apply(countChecks) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== 1";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.countChecks("0invalidfen0")!==0){
-			error_msg="Error [139] countChecks() [0invalidfen0] !== 0";
+		if(IsepicChess.fenApply("0invalidfen0", "countChecks", [])!==0){
+			error_msg="Error [139] apply(countChecks) [0invalidfen0] !== 0";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isCheck("8/k7/r7/8/8/2b5/8/K7 w - - 0 1")!==true){
-			error_msg="Error [140] isCheck() [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== true";
+		if(IsepicChess.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck", [])!==true){
+			error_msg="Error [140] apply(isCheck) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== true";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isCheck("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1")!==false){
-			error_msg="Error [141] isCheck() [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== false";
+		if(IsepicChess.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck", [])!==false){
+			error_msg="Error [141] apply(isCheck) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== false";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isCheck("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "f1")!==true){
-			error_msg="Error [142] isCheck() [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== true";
+		if(IsepicChess.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "isCheck", ["f1"])!==true){
+			error_msg="Error [142] apply(isCheck) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== true";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isCheck("0invalidfen0")!==false){
-			error_msg="Error [143] isCheck() [0invalidfen0] !== false";
+		if(IsepicChess.fenApply("0invalidfen0", "isCheck", [])!==false){
+			error_msg="Error [143] apply(isCheck) [0invalidfen0] !== false";
 		}
 	}
 	
