@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
-		var _VERSION="2.3.2";
+		var _VERSION="2.3.3";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -1110,7 +1110,7 @@
 			var that, rtn_can_move;
 			
 			that=this;
-			rtn_can_move=isLegalMove(that.Fen, initial_qos, final_qos);
+			rtn_can_move=fenApply(that.Fen, "isLegalMove", [initial_qos, final_qos]);
 			
 			if(rtn_can_move){
 				that.makeMove(initial_qos, final_qos);
@@ -1311,7 +1311,7 @@
 						temp3="";
 						
 						for(i=0; i<len; i++){//0<len
-							if(!sameSquare(temp2[i], initial_qos) && isLegalMove(that.Fen, temp2[i], final_qos)){
+							if(!sameSquare(temp2[i], initial_qos) && fenApply(that.Fen, "isLegalMove", [temp2[i], final_qos])){
 								temp3+=toBos(temp2[i]);
 							}
 						}
@@ -1678,173 +1678,23 @@
 				case "isCheck" :
 					rtn=(board_created ? _isCheck.apply(board, args) : false);
 					break;
+				case "legalMoves" :
+					rtn=(board_created ? _legalMoves.apply(board, args) : []);
+					break;
+				case "isLegalMove" :
+					rtn=(board_created ? _isLegalMove.apply(board, args) : false);
+					break;
+				case "isLegalFen" :
+					rtn=board_created;
+					break;
+				case "isCheckmate" :
+					rtn=(board_created ? _isCheckmate.apply(board, args) : false);
+					break;
+				case "isStalemate" :
+					rtn=(board_created ? _isStalemate.apply(board, args) : false);
+					break;
 				default :
 					console.log("Error[fenApply]: can't apply function \""+fn_name+"\" to fen");
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function legalMoves(fen, piece_qos){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=[];
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_legalMoves",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=board.legalMoves(piece_qos);
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function isLegalMove(fen, initial_qos, final_qos){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=false;
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_isLegalMove",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=board.isLegalMove(initial_qos, final_qos);
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function isLegalFen(fen){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=false;
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_isLegalFen",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=true;
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function isCheckmate(fen){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=false;
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_isCheckmate",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=board.isCheckmate();
-			}
-			
-			if(board_created){
-				removeBoard(board.BoardName);
-			}
-			
-			return rtn;
-		}
-		
-		function isStalemate(fen){
-			var board, board_created, no_errors, rtn;
-			
-			rtn=false;
-			board_created=false;
-			no_errors=true;
-			
-			//if(no_errors){
-				board=initBoard({
-					name : "board_isStalemate",
-					fen : fen,
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				if(board===null){
-					no_errors=false;
-				}else{
-					board_created=true;
-				}
-			//}
-			
-			if(no_errors){
-				rtn=board.isStalemate();
 			}
 			
 			if(board_created){
@@ -1897,11 +1747,6 @@
 			cloneBoard : cloneBoard,
 			initBoard : initBoard,
 			fenApply : fenApply,
-			legalMoves : legalMoves,
-			isLegalMove : isLegalMove,
-			isLegalFen : isLegalFen,
-			isCheckmate : isCheckmate,
-			isStalemate : isStalemate,
 			getBoardCount : getBoardCount,
 			getBoardNames : getBoardNames,
 			mapToBos : mapToBos,
