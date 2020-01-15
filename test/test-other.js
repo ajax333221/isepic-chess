@@ -656,6 +656,24 @@ function testBasicFunctionality(){
 			error_msg="Error [158] apply(isStalemate) [0invalidfen0] !== false";
 		}
 	}
+
+	if(!error_msg){
+		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", ["e8"])!==-6){
+			error_msg="Error [159] apply(getValue) fen_e8 !== -6";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", [[2, 5]])!==4){
+			error_msg="Error [160] apply(getValue) fen_f6 !== 4";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "getValue", ["d6"])!==0){
+			error_msg="Error [161] apply(getValue) fen_d6 !== 0";
+		}
+	}
 	
 	if(IsepicChess.selectBoard(board_name)!==null){
 		IsepicChess.removeBoard(board_name);

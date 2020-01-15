@@ -1701,6 +1701,9 @@
 				case "isStalemate" :
 					rtn=(board_created ? _isStalemate.apply(board, args) : false);
 					break;
+				case "getValue" :
+					rtn=(board_created ? _getValue.apply(board, args) : 0);
+					break;
 				default :
 					console.log("Error[fenApply]: can't apply function \""+fn_name+"\" to fen");
 			}

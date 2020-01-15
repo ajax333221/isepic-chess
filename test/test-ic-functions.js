@@ -8,13 +8,14 @@
 //isEqualBoard
 //cloneBoard
 //---
-//countChecks [init, remove]
-//isCheck [init, remove]
-//legalMoves [init, remove]
-//isLegalMove [init, remove]
-//isLegalFen [init, remove]
-//isCheckmate [init, remove]
-//isStalemate [init, remove]
+//countChecks
+//isCheck
+//legalMoves
+//isLegalMove
+//isLegalFen
+//isCheckmate
+//isStalemate
+//getValue
 
 function fnIcToVal(){
 	var start_time, end_time, error_msg;
