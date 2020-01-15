@@ -186,7 +186,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board.moveCaller("c6", "f6");
 		
-		if(board.legalMoves("f8").join("")!=="0,40,31,52,50,6"){
+		if(board.legalMoves("f8").join("")!=="0,61,52,50,40,3"){
 			error_msg="Error [13] rook movement with capture";
 		}
 	}
@@ -568,8 +568,8 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.mapToBos(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"])).join()!=="b2,a2,d2"){
-			error_msg="Error [144] apply(legalMoves) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, c2] !== b2,a2,d2";
+		if(IsepicChess.mapToBos(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"])).join()!=="d2,b2,a2"){
+			error_msg="Error [144] apply(legalMoves) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, c2] !== d2,b2,a2";
 		}
 	}
 	

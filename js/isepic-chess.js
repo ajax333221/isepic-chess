@@ -64,7 +64,7 @@
 			hash=0;
 			val=((typeof val)==="string" ? val : "");
 			
-			for(i=0, len=val.length; i<len; i++){
+			for(i=0, len=val.length; i<len; i++){//0<len
 				hash=((hash<<5)-hash)+val.charCodeAt(i);
 				hash|=0;//to 32bit integer
 			}
@@ -94,7 +94,7 @@
 			board_list=getBoardNames();
 			rtn="<strong>Board list:</strong> ";
 			
-			for(i=0, len=board_list.length; i<len; i++){
+			for(i=0, len=board_list.length; i<len; i++){//0<len
 				rtn+=(i ? " | " : "");
 				
 				board_name=board_list[i];
@@ -878,7 +878,7 @@
 		}
 		
 		function _legalMoves(piece_qos){
-			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, piece_abs_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, no_errors, rtn;
+			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, piece_abs_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, piece_directions, no_errors, rtn;
 			
 			that=this;
 			
@@ -959,12 +959,14 @@
 						}
 					}
 				}else{//knight, bishop, rook, queen
+					piece_directions=[];
+					if(piece_abs_val!==_BISHOP){piece_directions.push(1, 3, 5, 7);}
+					if(piece_abs_val!==_ROOK){piece_directions.push(2, 4, 6, 8);}
+					
 					as_knight=(piece_abs_val===_KNIGHT);
 					
-					for(i=0; i<2; i++){//0...1
-						for(j=(piece_abs_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
-							if((temp=that.candidateMoves(piece_qos, j--, as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
-						}
+					for(i=0, len=piece_directions.length; i<len; i++){//0...1
+						if((temp=that.candidateMoves(piece_qos, piece_directions[i], as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 				}
 				
@@ -1110,7 +1112,8 @@
 			var that, rtn_can_move;
 			
 			that=this;
-			rtn_can_move=fenApply(that.Fen, "isLegalMove", [initial_qos, final_qos]);
+			
+			rtn_can_move=that.isLegalMove(initial_qos, final_qos);
 			
 			if(rtn_can_move){
 				that.makeMove(initial_qos, final_qos);
@@ -1171,6 +1174,7 @@
 				}
 			}
 			
+			//getNotation() aun sin mover la pieza actual (pero ya lo de enpassant capture y lo de la torre al enrocar)
 			pgn_move=that.getNotation(initial_qos, final_qos, piece_val, promoted_val, king_castled, non_en_passant_capture);
 			
 			that.HalfMove++;
@@ -1273,7 +1277,7 @@
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
-			var i, j, len, that, temp, temp2, temp3, piece_abs_val, initial_file_bos, ambiguity, as_knight, rtn;
+			var i, len, that, temp, temp2, temp3, piece_abs_val, initial_file_bos, ambiguity, piece_directions, as_knight, rtn;
 			
 			that=this;
 			
@@ -1298,12 +1302,15 @@
 				
 				if(piece_abs_val!==_KING){//knight, bishop, rook, queen
 					temp2=[];
+					
+					piece_directions=[];
+					if(piece_abs_val!==_BISHOP){piece_directions.push(1, 3, 5, 7);}
+					if(piece_abs_val!==_ROOK){piece_directions.push(2, 4, 6, 8);}
+					
 					as_knight=(piece_abs_val===_KNIGHT);
 					
-					for(i=0; i<2; i++){//0...1
-						for(j=(piece_abs_val-3-i ? 8 : 0)+i; --j>0; ){//(x!==4): 8,6,4,2 (x!==3): 7,5,3,1 (else): 8,6,4,2,7,5,3,1
-							if(temp=that.disambiguationPos(final_qos, j--, as_knight, piece_abs_val)){temp2.push(temp);}
-						}
+					for(i=0, len=piece_directions.length; i<len; i++){//0...1
+						if(temp=that.disambiguationPos(final_qos, piece_directions[i], as_knight, piece_abs_val)){temp2.push(temp);}
 					}
 					
 					len=temp2.length;
@@ -1311,7 +1318,8 @@
 						temp3="";
 						
 						for(i=0; i<len; i++){//0<len
-							if(!sameSquare(temp2[i], initial_qos) && fenApply(that.Fen, "isLegalMove", [temp2[i], final_qos])){
+							//imposible que isLegalMove() sea afectado por los ajustes de enroque o captura EP
+							if(!sameSquare(temp2[i], initial_qos) && that.isLegalMove(temp2[i], final_qos)){
 								temp3+=toBos(temp2[i]);
 							}
 						}
