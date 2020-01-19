@@ -291,7 +291,7 @@
 			that.Active.sign=getSign(!temp);
 			that.NonActive.sign=getSign(temp);
 			
-			/*NO hace King Pos refresh, eso lo hace refreshKingPosChecksAndFen()*/
+			/*NO intercambia Active y NonActive King Pos, eso se ajusta refreshKingPosChecksAndFen()*/
 		}
 		
 		function _toggleIsRotated(){
@@ -423,10 +423,26 @@
 			rtn="<li><strong>Selected board:</strong> <span>"+that.BoardName+"</span></li>";
 			rtn+="<li><strong>Is rotated?:</strong> <span>"+that.IsRotated+"</span></li>";
 			rtn+="<li><strong>En Passant:</strong> <span>"+(that.EnPassantBos ? that.EnPassantBos : "-")+"</span></li>";
-			rtn+="<li><strong>Active color:</strong> <span>"+(that.Active.isBlack ? "black" : "white")+"</span></li>";
-			rtn+="<li><strong>Active king checks:</strong> <span>"+that.Active.checks+"</span></li>";
-			rtn+="<li><strong>Active king square:</strong> <span>"+toBos(that.Active.kingPos)+"</span></li>";
-			rtn+="<li><strong>Non active king square:</strong> <span>"+toBos(that.NonActive.kingPos)+"</span></li>";
+			
+			rtn+="<li>";
+			rtn+="<strong>Active</strong>";
+			rtn+="<ul>";
+			rtn+="<li><strong>isBlack?:</strong> <span>"+that.Active.isBlack+"</span></li>";
+			rtn+="<li><strong>sign:</strong> <span>("+(that.Active.sign>0 ? "+" : "-")+")</span></li>";
+			rtn+="<li><strong>king square:</strong> <span>"+toBos(that.Active.kingPos)+"</span></li>";
+			rtn+="<li><strong>checks:</strong> <span>"+that.Active.checks+"</span></li>";
+			rtn+="</ul>";
+			rtn+="</li>";
+			
+			rtn+="<li>";
+			rtn+="<strong>Non Active</strong>";
+			rtn+="<ul>";
+			rtn+="<li><strong>isBlack?:</strong> <span>"+that.NonActive.isBlack+"</span></li>";
+			rtn+="<li><strong>sign:</strong> <span>("+(that.NonActive.sign>0 ? "+" : "-")+")</span></li>";
+			rtn+="<li><strong>king square:</strong> <span>"+toBos(that.NonActive.kingPos)+"</span></li>";
+			rtn+="</ul>";
+			rtn+="</li>";
+			
 			rtn+="<li><strong>White castling:</strong> <span>"+(_castlingChars(that.WCastling).toUpperCase() || "-")+"</span></li>";
 			rtn+="<li><strong>Black castling:</strong> <span>"+(_castlingChars(that.BCastling) || "-")+"</span></li>";
 			rtn+="<li><strong>Half moves:</strong> <span>"+that.HalfMove+"</span></li>";
@@ -435,6 +451,10 @@
 			rtn+="<li><strong>Initial full move:</strong> <span>"+that.InitialFullMove+"</span></li>";
 			rtn+="<li><strong>Promote to:</strong> <span>"+toBal(that.PromoteTo*getSign(that.Active.isBlack))+"</span></li>";
 			rtn+="<li><strong>Selected square:</strong> <span>"+(that.FromSquare ? that.FromSquare : "-")+"</span></li>";
+			
+			rtn+="<li>";
+			rtn+="<strong>Squares</strong>";
+			rtn+="<ul>";
 			
 			for(i=0; i<8; i++){//0...7
 				current_row=[];
@@ -451,6 +471,9 @@
 				
 				rtn+="<li><strong>A"+(8-i)+"-H"+(8-i)+":</strong> "+current_row.join(" | ")+"</li>";
 			}
+			
+			rtn+="</ul>";
+			rtn+="</li>";
 			
 			rtn+="<li><strong>FEN:</strong> <span>"+that.Fen+"</span></li>";
 			
@@ -676,7 +699,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, temp2, current_sign, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
+			var i, j, k, that, temp, current_sign, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
 			
 			that=this;
 			error_msg="";
@@ -694,9 +717,11 @@
 			}
 			
 			if(!error_msg){
+				temp=that.NonActive.kingPos;
+				
 				that.toggleActiveColor();
 				
-				if(that.isCheck(that.NonActive.kingPos)){
+				if(that.isCheck(temp)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
@@ -724,20 +749,18 @@
 					
 					for(j=0; j<8; j++){//0...7
 						min_captured_holder=((j===0 || j===7) ? [1, 3, 6, 10, 99] : [1, 2, 4, 6, 9]);
-						temp2="";
+						total_pawns_in_current_file=0;
 						
 						for(k=0; k<8; k++){//0...7
-							temp2+="#"+(that.getValue([k, j]) || "");
+							total_pawns_in_current_file+=that.getValue([k, j])===(1*getSign(!i));
 						}
-						
-						total_pawns_in_current_file=_occurrences(temp2, (i ? "#-1" : "#1"));
 						
 						if(total_pawns_in_current_file>1){
 							min_captured+=min_captured_holder[total_pawns_in_current_file-2];
 						}
 					}
 					
-					if(min_captured>(15-_occurrences(fen_board, (i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
+					if(min_captured>(15-_occurrences(fen_board, (!i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
 						error_msg="Error [4] not enough captured pieces to support the total doubled pawns";
 						break;
 					}
