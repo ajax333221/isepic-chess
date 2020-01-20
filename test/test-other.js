@@ -689,13 +689,13 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		if(JSON.stringify(IsepicChess.fenApply("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
-			error_msg="Error [163] apply(materialDifference) [fen] !== {w:[], b:[]}";
+			error_msg="Error [164] apply(materialDifference) [fen] !== {w:[], b:[]}";
 		}
 	}
 	
 	if(!error_msg){
 		if(JSON.stringify(IsepicChess.fenApply("0invalidfen0", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
-			error_msg="Error [164] apply(materialDifference) [0invalidfen0] !== {w:[], b:[]}";
+			error_msg="Error [165] apply(materialDifference) [0invalidfen0] !== {w:[], b:[]}";
 		}
 	}
 	
