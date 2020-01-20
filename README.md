@@ -54,6 +54,7 @@ Function | Parameters | Return | Description
 **fenApply**(<br>*fen*,<br>`"isCheckmate"`<br>) | <ul><li>fen (String)</li><li>`"isCheckmate"` (String)</li></ul> | Success:<ul><li>Boolean</li></ul><hr>Error:<ul><li>Boolean: `false`</li></ul> | Test for checkmate.<hr>Examples:<ul><li>`IsepicChess.fenApply("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate") //true`</li><li>`IsepicChess.fenApply("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate") //false`</li><li>`IsepicChess.fenApply("0invalidfen0", "isCheckmate") //false`</li></ul>
 **fenApply**(<br>*fen*,<br>`"isStalemate"`<br>) | <ul><li>fen (String)</li><li>`"isStalemate"` (String)</li></ul> | Success:<ul><li>Boolean</li></ul><hr>Error:<ul><li>Boolean: `false`</li></ul> | Test for stalemate.<hr>Examples:<ul><li>`IsepicChess.fenApply("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "isStalemate") //true`</li><li>`IsepicChess.fenApply("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "isStalemate") //false`</li><li>`IsepicChess.fenApply("0invalidfen0", "isStalemate") //false`</li></ul>
 **fenApply**(<br>*fen*,<br>`"getValue"`,<br>[<br>*qos*<br>]<br>) | <ul><li>fen (String)</li><li>`"getValue"` (String)</li><li>qos:<ul><li>**pieceBos** (String)</li><li>**piecePos** (Array)</li></ul></li></ul> | Success:<ul><li>**pieceVal** (Number): `-6 to 6`</li></ul><hr>Error:<ul><li>Number: `0`</li></ul> | Returns the **pieceVal** on a given `piece_qos`.<hr>Examples:<ul><li>`IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", ["e8"]) //-6`</li><li>`IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", [[2, 5]]) //4`</li><li>`IsepicChess.fenApply("0invalidfen0", "getValue", ["d6"]) //0`</li></ul>
+**fenApply**(<br>*fen*,<br>`"materialDifference"`<br>) | <ul><li>fen (String)</li><li>`"materialDifference"` (String)</li></ul> | Success:<ul><li>Object</li></ul><hr>Error:<ul><li>Object: `{w:[], b:[]}`</li></ul> | Returns the material difference.<hr>Examples:<ul><li>`IsepicChess.fenApply("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "materialDifference") //{w:[4, 4], b:[-1]}`</li><li>`IsepicChess.fenApply("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDifference") //{w:[1, 1, 3, 5], b:[-2, -2, -4]}`</li><li>`IsepicChess.fenApply("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDifference") //{w:[], b:[]}`</li><li>`IsepicChess.fenApply("0invalidfen0", "materialDifference") //{w:[], b:[]}`</li></ul>
 **getBoardCount**() | - | Number | Total count of boards in use (hidden boards are included).<hr>Examples:<ul><li>`IsepicChess.getBoardCount() //5`</li><li>`IsepicChess.getBoardCount() //0`</li></ul>
 **getBoardNames**() | - | Array | Returns a list of the board names in use (hidden boards are included).<hr>Examples:<ul><li>`IsepicChess.getBoardNames() //["main", "other", "other_copy", "hidden_board", "resume_from_fen"]`</li><li>`IsepicChess.getBoardNames() //[]`</li></ul>
 **mapToBos**(<br>*arr*<br>) | <ul><li>arr (Array)</li></ul> | Success:<ul><li>**pieceBosArray** (Array)</li></ul><hr>Error:<ul><li>Array: `[]`</li></ul> | Applies `[...].map(x => IsepicChess.toBos(x))` to an array.<br><br>If `arr` is not an Array, `[]` will be returned.<hr>Examples:<ul><li>`IsepicChess.mapToBos([[0, 7], [2, 2]]) //["h8", "c6"]`</li><li>`IsepicChess.mapToBos([[1, 1], "a2"]) //["b7", "a2"]`</li><li>`IsepicChess.mapToBos("err") //[]`</li></ul>
@@ -66,8 +67,9 @@ Function | Parameters | Return | Del? | Description
 -------- | ---------- | ------ | ---- | -----------
 getValue(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 setValue(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-isCheck(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
+materialDifference(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 countChecks(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
+isCheck(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 calculateChecks(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 toggleActiveColor(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 toggleIsRotated(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
@@ -105,7 +107,6 @@ To Do
 
 - Documentation (:wrench: 40% done)
 - PGN viewer
-- Show material difference
 - Move list variations
 - Set-up position mode
 - Create, rename and delete boards through the UI

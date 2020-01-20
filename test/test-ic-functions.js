@@ -16,6 +16,7 @@
 //isCheckmate
 //isStalemate
 //getValue
+//materialDifference
 
 function fnIcToVal(){
 	var start_time, end_time, error_msg;

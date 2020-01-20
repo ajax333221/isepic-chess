@@ -659,19 +659,43 @@ function testBasicFunctionality(){
 
 	if(!error_msg){
 		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", ["e8"])!==-6){
-			error_msg="Error [159] apply(getValue) fen_e8 !== -6";
+			error_msg="Error [159] apply(getValue) [fen_e8] !== -6";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", [[2, 5]])!==4){
-			error_msg="Error [160] apply(getValue) fen_f6 !== 4";
+			error_msg="Error [160] apply(getValue) [fen_f6] !== 4";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.fenApply("0invalidfen0", "getValue", ["d6"])!==0){
-			error_msg="Error [161] apply(getValue) fen_d6 !== 0";
+			error_msg="Error [161] apply(getValue) [fen_d6] !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "materialDifference"))!==JSON.stringify({w:[4, 4], b:[-1]})){
+			error_msg="Error [162] apply(materialDifference) [fen] !== {w:[4, 4], b:[-1]}";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[1, 1, 3, 5], b:[-2, -2, -4]})){
+			error_msg="Error [163] apply(materialDifference) [fen] !== {w:[1, 1, 3, 5], b:[-2, -2, -4]}";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
+			error_msg="Error [163] apply(materialDifference) [fen] !== {w:[], b:[]}";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("0invalidfen0", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
+			error_msg="Error [164] apply(materialDifference) [0invalidfen0] !== {w:[], b:[]}";
 		}
 	}
 	

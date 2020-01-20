@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
-		var _VERSION="2.3.3";
+		var _VERSION="2.3.4";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -239,6 +239,32 @@
 			that.Squares[toBos(qos)]=toVal(qal);
 		}
 		
+		function _materialDifference(){
+			var i, j, len, that, current_diff, fen_board, rtn;
+			
+			that=this;
+			rtn={
+				w : [],
+				b : []
+			};
+			
+			fen_board=that.Fen.split(" ")[0];
+			
+			for(i=1; i<7; i++){//1...6
+				current_diff=_occurrences(fen_board, toBal(i))-_occurrences(fen_board, toBal(-i));
+				
+				for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
+					if(current_diff>0){
+						rtn.w.push(i);
+					}else{
+						rtn.b.push(-i);
+					}
+				}
+			}
+			
+			return rtn;
+		}
+		
 		function _countChecks(king_qos){
 			var that;
 			
@@ -451,6 +477,17 @@
 			rtn+="<li><strong>Initial full move:</strong> <span>"+that.InitialFullMove+"</span></li>";
 			rtn+="<li><strong>Promote to:</strong> <span>"+toBal(that.PromoteTo*getSign(that.Active.isBlack))+"</span></li>";
 			rtn+="<li><strong>Selected square:</strong> <span>"+(that.FromSquare ? that.FromSquare : "-")+"</span></li>";
+			
+			rtn+="<li>";
+			rtn+="<strong>Material difference</strong>";
+			rtn+="<ul>";
+			
+			temp=that.materialDifference();
+			rtn+="<li><strong>white: </strong> "+(temp.w.map(x => toBal(x)).join(", ") || "-")+"</li>";
+			rtn+="<li><strong>black: </strong> "+(temp.b.map(x => toBal(x)).join(", ") || "-")+"</li>";
+			
+			rtn+="</ul>";
+			rtn+="</li>";
 			
 			rtn+="<li>";
 			rtn+="<strong>Squares</strong>";
@@ -760,7 +797,7 @@
 						}
 					}
 					
-					if(min_captured>(15-_occurrences(fen_board, (!i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
+					if(min_captured>(15-_occurrences(fen_board, (i ? "p|n|b|r|q" : "P|N|B|R|Q")))){
 						error_msg="Error [4] not enough captured pieces to support the total doubled pawns";
 						break;
 					}
@@ -1579,6 +1616,7 @@
 						BoardName : board_name,
 						getValue : _getValue,
 						setValue : _setValue,
+						materialDifference : _materialDifference,
 						countChecks : _countChecks,
 						isCheck : _isCheck,
 						calculateChecks : _calculateChecks,
@@ -1726,6 +1764,9 @@
 					break;
 				case "getValue" :
 					rtn=(board_created ? _getValue.apply(board, args) : 0);
+					break;
+				case "materialDifference" :
+					rtn=(board_created ? _materialDifference.apply(board, args) : {w:[], b:[]});
 					break;
 				default :
 					console.log("Error[fenApply]: can't apply function \""+fn_name+"\" to fen");
