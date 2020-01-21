@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "MaterialDiff", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
 		
 		//---------------- utilities
 		
@@ -77,7 +77,8 @@
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
-			to_board["MoveList"]=[];
+			to_board.MoveList=[];
+			to_board.MaterialDiff={w:[], b:[]};
 			
 			$.each(_MUTABLE_KEYS, function(i, key){
 				if((typeof from_board[key])==="object" && from_board[key]!==null){
@@ -117,24 +118,23 @@
 		}
 		
 		function _getTableHTML(is_rotated){
-			var i, j, rank_bos, label_td, rtn;
+			var i, j, len, rank_bos, rtn;
 			
-			label_td="<td class='label'></td><td class='label'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label'>")+"</td>";
 			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
-			rtn+="<tr>"+label_td+"<td class='"+("label dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td></tr>";
+			rtn+="<tr><td class='label top_border left_border'></td><td class='label top_border'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label top_border'>")+"</td><td class='"+("label top_border right_border dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td><td class='captureds' rowspan='10'></td></tr>";
 			
 			for(i=0; i<8; i++){//0...7
 				rank_bos=(is_rotated ? (i+1) : (8-i));
-				rtn+="<tr><td class='label'>"+rank_bos+"</td>";
+				rtn+="<tr><td class='label left_border'>"+rank_bos+"</td>";
 				
 				for(j=0; j<8; j++){//0...7
 					rtn+="<td class='"+(((i+j)%2 ? "b" : "w")+"s")+"' id='"+toBos(is_rotated ? [(7-i), (7-j)] : [i, j])+"'></td>";
 				}
 				
-				rtn+="<td class='label'>"+rank_bos+"</td></tr>";
+				rtn+="<td class='label right_border'>"+rank_bos+"</td></tr>";
 			}
 			
-			rtn+="<tr>"+label_td+"<td class='"+("label dot "+(is_rotated ? "b" : "w")+"side")+"'>◘</td></tr>";
+			rtn+="<tr><td class='label bottom_border left_border'></td><td class='label bottom_border'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label bottom_border'>")+"</td><td class='"+("label right_border bottom_border dot "+(is_rotated ? "b" : "w")+"side")+"'>◘</td></tr>";
 			rtn+="</table>";
 			
 			return rtn;
@@ -243,11 +243,7 @@
 			var i, j, len, that, current_diff, fen_board, rtn;
 			
 			that=this;
-			rtn={
-				w : [],
-				b : []
-			};
-			
+			rtn={w:[], b:[]};
 			fen_board=that.Fen.split(" ")[0];
 			
 			for(i=1; i<7; i++){//1...6
@@ -406,7 +402,7 @@
 		}
 		
 		function _resetPieceClasses(){
-			var i, j, that, new_class, piece_class, current_pos;
+			var i, j, that, diff_top, diff_bottom, captured_html, new_class, piece_class, current_pos;
 			
 			that=this;
 			
@@ -419,6 +415,22 @@
 					$("#"+toBos(current_pos)).attr("class", new_class);
 				}
 			}
+			
+			captured_html="";
+			diff_top=(that.IsRotated ? that.MaterialDiff.w : that.MaterialDiff.b);
+			
+			for(i=0, len=diff_top.length; i<len; i++){//0<len
+				captured_html+="<img src='"+("./css/images/"+toPieceClass(diff_top[i])+".png")+"' width='20' height='20'>";
+			}
+			
+			captured_html+="<hr>";
+			diff_bottom=(that.IsRotated ? that.MaterialDiff.b : that.MaterialDiff.w);
+			
+			for(i=0, len=diff_bottom.length; i<len; i++){//0<len
+				captured_html+="<img src='"+("./css/images/"+toPieceClass(diff_bottom[i])+".png")+"' width='20' height='20'>";
+			}
+			
+			$("#xboard .captureds").html(captured_html);
 		}
 		
 		function _getMoveListHTML(){
@@ -482,9 +494,8 @@
 			rtn+="<strong>Material difference</strong>";
 			rtn+="<ul>";
 			
-			temp=that.materialDifference();
-			rtn+="<li><strong>white: </strong> "+(temp.w.map(x => toBal(x)).join(", ") || "-")+"</li>";
-			rtn+="<li><strong>black: </strong> "+(temp.b.map(x => toBal(x)).join(", ") || "-")+"</li>";
+			rtn+="<li><strong>white: </strong> "+(that.MaterialDiff.w.map(x => toBal(x)).join(", ") || "-")+"</li>";
+			rtn+="<li><strong>black: </strong> "+(that.MaterialDiff.b.map(x => toBal(x)).join(", ") || "-")+"</li>";
 			
 			rtn+="</ul>";
 			rtn+="</li>";
@@ -733,6 +744,8 @@
 			that.Active.checks=that.countChecks();
 			
 			that.Fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-")+" "+that.HalfMove+" "+that.FullMove);
+			
+			that.MaterialDiff=that.materialDifference();
 		}
 		
 		function _refinedFenTest(){
@@ -1679,6 +1692,7 @@
 				target.MoveList=null;
 				target.CurrentMove=null;
 				target.IsRotated=null;
+				target.MaterialDiff=null;
 				target.PromoteTo=null;
 				target.FromSquare=null;
 				target.IsHidden=null;

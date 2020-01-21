@@ -16,7 +16,6 @@ body{margin:0;padding:0;}
 #xchessboard.tests table,#xchessboard.tests tr,#xchessboard.tests th,#xchessboard.tests td{margin:0;padding:0;}
 #xchessboard.tests table{border-collapse:collapse;margin:0 auto;text-align:center;background:#fbfbfb;}
 #xchessboard.tests th,#xchessboard.tests td{vertical-align:middle;border:1px solid #c0c0c0;padding:8px 16px;}
-#xboard table{border:1px solid #a9a9a9;}
 #xboard table,#xboard tr,#xboard td{margin:0;padding:0;}
 #xboard td{height:39px;width:39px;text-align:center;vertical-align:middle;background-repeat:no-repeat;background-size:75%;background-position:50% 50%;}
 #xboard .ws{background-color:#93d798;}
@@ -40,6 +39,13 @@ body{margin:0;padding:0;}
 #xboard .wq{background-image:url('./images/wq.png');}
 #xboard .wk{background-image:url('./images/wk.png');}
 #xboard .xy{background-image:none!important;}
+#xboard .top_border{border-top:1px solid #a9a9a9;}
+#xboard .right_border{border-right:1px solid #a9a9a9;}
+#xboard .bottom_border{border-bottom:1px solid #a9a9a9;}
+#xboard .left_border{border-left:1px solid #a9a9a9;}
+#xboard .captureds{width:75px;padding:0 25px 0 15px;border-left:10px solid #d9d9d9;text-align:left;background:#e0e0e0;}
+#xboard .captureds hr{margin:10px 0;}
+#xboard .captureds img{margin:2px;background:transparent;opacity:0.5;filter:alpha(opacity=50);}
 #xboard .label{height:auto;width:auto;padding:8px;font-weight:bold;color:#888;background-color:#e3e3e3;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
 #xboard .dot{color:#e3e3e3;}
 #xboard .b_color{color:#666;}

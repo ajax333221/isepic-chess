@@ -466,7 +466,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		if(board.boardHash()!==-1421636911){
+		if(board.boardHash()!==-2108058820){
 			error_msg="Error [44] wrong hash for default fen (+ isHidden prop)";
 		}
 	}
@@ -474,7 +474,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board.moveCaller("a2", "a4");
 		
-		if(board.boardHash()!==741762933){
+		if(board.boardHash()!==-1377780200){
 			error_msg="Error [45] wrong hash for board after a2-a4";
 		}
 	}
@@ -870,6 +870,21 @@ function testUtilityMisc(){
 		
 		if(board_copy.MoveList[1].PGNmove+!!board_copy.MoveList[2]+board_copy.Squares["e4"]!=="Ne4false2"){
 			error_msg="Error [55] cloneBoardObjs[0]";
+		}
+	}
+	
+	if(!error_msg){
+		board.moveCaller("f7", "f6");
+		board.moveCaller("e4", "f6");
+		board.moveCaller("g8", "f6");
+		
+		IsepicChess.utilityMisc.cloneBoardObjs(board_copy, board);
+		
+		board.moveCaller("d2", "d4");
+		board.moveCaller("c6", "d4");
+		
+		if(JSON.stringify(board.MaterialDiff)+JSON.stringify(board_copy.MaterialDiff)!=="{\"w\":[],\"b\":[-2]}{\"w\":[1],\"b\":[-2]}"){
+			error_msg="Error [56] board.MaterialDiff same as board_copy.MaterialDiff";
 		}
 	}
 	
