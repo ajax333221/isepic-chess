@@ -103,7 +103,7 @@
 				
 				if(board!==null){
 					if(board.IsHidden){
-						rtn+="<em class='redColor'>"+board_name+"</em>";
+						rtn+="<em class='disabledColor'>"+board_name+"</em>";
 					}else if(board_name===current_board){
 						rtn+="<em>"+board_name+"</em>";
 					}else{
@@ -118,7 +118,7 @@
 		}
 		
 		function _getTableHTML(is_rotated){
-			var i, j, len, rank_bos, rtn;
+			var i, j, rank_bos, rtn;
 			
 			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
 			rtn+="<tr><td class='label top_border left_border'></td><td class='label top_border'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label top_border'>")+"</td><td class='"+("label top_border right_border dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td><td class='captureds' rowspan='10'></td></tr>";
@@ -402,7 +402,7 @@
 		}
 		
 		function _resetPieceClasses(){
-			var i, j, that, diff_top, diff_bottom, captured_html, new_class, piece_class, current_pos;
+			var i, j, len, that, diff_top, diff_bottom, captured_html, new_class, piece_class, current_pos;
 			
 			that=this;
 			
@@ -489,16 +489,7 @@
 			rtn+="<li><strong>Initial full move:</strong> <span>"+that.InitialFullMove+"</span></li>";
 			rtn+="<li><strong>Promote to:</strong> <span>"+toBal(that.PromoteTo*getSign(that.Active.isBlack))+"</span></li>";
 			rtn+="<li><strong>Selected square:</strong> <span>"+(that.FromSquare ? that.FromSquare : "-")+"</span></li>";
-			
-			rtn+="<li>";
-			rtn+="<strong>Material difference</strong>";
-			rtn+="<ul>";
-			
-			rtn+="<li><strong>white: </strong> "+(that.MaterialDiff.w.map(x => toBal(x)).join(", ") || "-")+"</li>";
-			rtn+="<li><strong>black: </strong> "+(that.MaterialDiff.b.map(x => toBal(x)).join(", ") || "-")+"</li>";
-			
-			rtn+="</ul>";
-			rtn+="</li>";
+			rtn+="<li><strong>Material difference:</strong> <span>{w:["+that.MaterialDiff.w.join(", ")+"], b:["+that.MaterialDiff.b.join(", ")+"]}</span></li>";
 			
 			rtn+="<li>";
 			rtn+="<strong>Squares</strong>";

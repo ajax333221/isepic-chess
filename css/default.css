@@ -1,13 +1,13 @@
 body{margin:0;padding:0;}
 #xchessboard{min-width:500px;padding:20px;font:normal 13px Helvetica,Arial,sans-serif;color:#333;background:#eee;}
-#xchessboard a,#xchessboard a:visited{color:#4183c4;text-decoration:none;}
-#xchessboard a:hover,#xchessboard a:focus{color:#265079;text-decoration:none;}
-#xchessboard a:active{color:#63664B;}
-#xchessboard h3{margin:0 0 25px 0;padding:8px 15px;color:#696B55;background:#e3e3e3;}
+#xchessboard a,#xchessboard a:visited{color:#429e47;text-decoration:none;}
+#xchessboard a:hover,#xchessboard a:focus{color:#3fbf46;text-decoration:none;}
+#xchessboard a:active{color:#63664b;}
+#xchessboard h3{margin:0 0 25px 0;padding:8px 15px;color:#696b55;background:#e3e3e3;}
 #xchessboard h3 a{margin-left:40px;font-size:12px;}
 #xchessboard pre{display:inline;margin:0;padding:0;}
 #xchessboard .inlineb{display:inline-block;}
-#xchessboard .redColor{color:red;}
+#xchessboard .disabledColor{color:#808080;}
 #xchessboard .danger_box{color:#721c24;background:#f8d7da;}
 #xchessboard .success_box{color:#155724;background:#d4edda;}
 #xchessboard hr{margin:15px 0 0 0;padding:0;border:0;border-top:1px solid #ccc;}
@@ -52,19 +52,19 @@ body{margin:0;padding:0;}
 #xboard .w_color{color:#fefefe;}
 #xcontrols{margin-top:20px;}
 #xcontrols input{margin-top:10px;font-size:11px;background:#fafafa;cursor:pointer;border:1px solid #ccc;}
-#xcontrols input:hover{color:#496873;background:#fff;}
+#xcontrols input:hover{color:#3e6640;background:#fff;}
 #xcontrols input[type=text]{width:385px;margin-left:10px;padding:10px;}
 #xcontrols select{margin-left:10px;padding:5px 15px;}
 #xmovelist{margin:10px 0 0 0;padding:10px;font-size:18px;color:#4862a3;border:1px solid #c4cca7;background:#eef2df;}
 #xmovelist span{padding:0 0 0 2px;}
 #xmovelist .xpgn_number{padding:0;font-weight:bold;color:#555;}
 #xmovelist .xpgn_result{padding:0;color:#555;}
-#xmovelist .xpgn_active{color:#c74c1f;background:#fefe9b;}
+#xmovelist .xpgn_active{color:#222;background:#fefe9b;}
 #xmovelist .xpgn_goto{cursor:pointer;}
-#xmovelist .xpgn_goto:hover{color:#c74c1f;background:#e0e0e0;}
+#xmovelist .xpgn_goto:hover{color:#222;background:#e0e0e0;}
 #xrotate,#xnav_first,#xnav_previous,#xnav_next,#xnav_last{margin-left:10px;padding:15px;}
 #xinfoholder{margin:20px 0 0 0;padding:10px;font-size:15px;border:1px solid #b2c8cf;background:#e9f4f7;}
-#xobjinfo{margin:10px 0 0 0;padding:0 0 0 20px;font-family:monospace;white-space:pre;color:#358c48;}
+#xobjinfo{margin:10px 0 0 0;padding:0 0 0 20px;font-family:monospace;white-space:pre;color:#4a8296;}
 #xobjinfo strong{color:#735d62;}
 #overall_results{line-height:20px;padding:10px;font-size:18px;}
 #overall_results.with_fails{color:#721c24;}
