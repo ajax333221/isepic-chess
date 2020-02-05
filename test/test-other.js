@@ -1,3 +1,7 @@
+//---to do:
+//
+//en testBasicFunctionality() ver que PGNmove de checkmate sea # + lo de PGNend stalemate, win, etc
+
 function testDisambiguation(){
 	var board, board_name, start_time, end_time, error_msg;
 	
@@ -461,13 +465,13 @@ function testBasicFunctionality(){
 		});
 		
 		if(board===null){
-			error_msg="Error [43] failed to initBoard("+board_name+")";
+			error_msg="Error [42] failed to initBoard("+board_name+")";
 		}
 	}
 	
 	if(!error_msg){
 		if(board.boardHash()!==-2108058820){
-			error_msg="Error [44] wrong hash for default fen (+ isHidden prop)";
+			error_msg="Error [43] wrong hash for default fen (+ isHidden prop)";
 		}
 	}
 	
@@ -475,7 +479,7 @@ function testBasicFunctionality(){
 		board.moveCaller("a2", "a4");
 		
 		if(board.boardHash()!==-1377780200){
-			error_msg="Error [45] wrong hash for board after a2-a4";
+			error_msg="Error [44] wrong hash for board after a2-a4";
 		}
 	}
 	
@@ -483,19 +487,19 @@ function testBasicFunctionality(){
 		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
 		
 		if(!board.isEqualBoard(board_copy_name)){
-			error_msg="Error [46] wrong equal hashes";
+			error_msg="Error [45] wrong equal hashes";
 		}
 	}
 	
 	if(!error_msg){
 		if(!IsepicChess.isEqualBoard(board.BoardName, board.BoardName)){
-			error_msg="Error [47] board not showing positive equality to itself";
+			error_msg="Error [46] board not showing positive equality to itself";
 		}
 	}
 	
 	if(!error_msg){
 		if(!IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
-			error_msg="Error [48] two equal boards not showing positive equality";
+			error_msg="Error [47] two equal boards not showing positive equality";
 		}
 	}
 	
@@ -503,199 +507,19 @@ function testBasicFunctionality(){
 		board.moveCaller("a7", "a6");
 		
 		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
-			error_msg="Error [49] different boards returning positive equality";
+			error_msg="Error [48] different boards returning positive equality";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.toAbsBal("")!==IsepicChess.toBal("").toUpperCase()){
-			error_msg="Error [102] toAbsBal() !== toBal().toUpperCase()";
+			error_msg="Error [49] toAbsBal() !== toBal().toUpperCase()";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.toAbsBal("r")!==IsepicChess.toBal("r").toUpperCase()){
-			error_msg="Error [103] toAbsBal() !== toBal().toUpperCase()";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "countChecks")!==2){
-			error_msg="Error [136] apply(countChecks) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== 2";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "countChecks")!==0){
-			error_msg="Error [137] apply(countChecks) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "countChecks", ["f1"])!==1){
-			error_msg="Error [138] apply(countChecks) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== 1";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("0invalidfen0", "countChecks")!==0){
-			error_msg="Error [139] apply(countChecks) [0invalidfen0] !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck")!==true){
-			error_msg="Error [140] apply(isCheck) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck")!==false){
-			error_msg="Error [141] apply(isCheck) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "isCheck", ["f1"])!==true){
-			error_msg="Error [142] apply(isCheck) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("0invalidfen0", "isCheck")!==false){
-			error_msg="Error [143] apply(isCheck) [0invalidfen0] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.mapToBos(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"])).join()!=="d2,b2,a2"){
-			error_msg="Error [144] apply(legalMoves) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, c2] !== d2,b2,a2";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.mapToBos(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"])).join()!==""){
-			error_msg="Error [145] apply(legalMoves) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, a2] !== empty_string";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.mapToBos(IsepicChess.fenApply("0invalidfen0", "legalMoves", ["a1"])).join()!==""){
-			error_msg="Error [146] apply(legalMoves) [0invalidfen0] !== empty_string";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["c2", "a2"])!==true){
-			error_msg="Error [147] apply(isLegalMove) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, c2, a2] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["a2", "c2"])!==false){
-			error_msg="Error [148] apply(isLegalMove) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, a2, c2] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("0invalidfen0", "isLegalMove", ["a1", "a2"])!==false){
-			error_msg="Error [149] apply(isLegalMove) [0invalidfen0, a1, a2] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")!==true){
-			error_msg="Error [150] apply(isLegalFen) [8/8/8/8/8/1k6/8/1K1r4 w - - 0 1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("0invalidfen0", "isLegalFen")!==false){
-			error_msg="Error [151] apply(isLegalFen) [0invalidfen0] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalFen")!==false){
-			error_msg="Error [152] apply(isLegalFen) [rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate")!==true){
-			error_msg="Error [153] apply(isCheckmate) [8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate")!==false){
-			error_msg="Error [154] apply(isCheckmate) [8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("0invalidfen0", "isCheckmate")!==false){
-			error_msg="Error [155] apply(isCheckmate) [0invalidfen0] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "isStalemate")!==true){
-			error_msg="Error [156] apply(isStalemate) [8/8/8/8/8/1k6/1r6/K7 w - - 0 1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "isStalemate")!==false){
-			error_msg="Error [157] apply(isStalemate) [8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("0invalidfen0", "isStalemate")!==false){
-			error_msg="Error [158] apply(isStalemate) [0invalidfen0] !== false";
-		}
-	}
-
-	if(!error_msg){
-		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", ["e8"])!==-6){
-			error_msg="Error [159] apply(getValue) [fen_e8] !== -6";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", [[2, 5]])!==4){
-			error_msg="Error [160] apply(getValue) [fen_f6] !== 4";
-		}
-	}
-	
-	if(!error_msg){
-		if(IsepicChess.fenApply("0invalidfen0", "getValue", ["d6"])!==0){
-			error_msg="Error [161] apply(getValue) [fen_d6] !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(JSON.stringify(IsepicChess.fenApply("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "materialDifference"))!==JSON.stringify({w:[4, 4], b:[-1]})){
-			error_msg="Error [162] apply(materialDifference) [fen] !== {w:[4, 4], b:[-1]}";
-		}
-	}
-	
-	if(!error_msg){
-		if(JSON.stringify(IsepicChess.fenApply("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[1, 1, 3, 5], b:[-2, -2, -4]})){
-			error_msg="Error [163] apply(materialDifference) [fen] !== {w:[1, 1, 3, 5], b:[-2, -2, -4]}";
-		}
-	}
-	
-	if(!error_msg){
-		if(JSON.stringify(IsepicChess.fenApply("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
-			error_msg="Error [164] apply(materialDifference) [fen] !== {w:[], b:[]}";
-		}
-	}
-	
-	if(!error_msg){
-		if(JSON.stringify(IsepicChess.fenApply("0invalidfen0", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
-			error_msg="Error [165] apply(materialDifference) [0invalidfen0] !== {w:[], b:[]}";
+			error_msg="Error [50] toAbsBal() !== toBal().toUpperCase()";
 		}
 	}
 	
@@ -708,8 +532,6 @@ function testBasicFunctionality(){
 	}
 	
 	end_time=new Date().getTime();
-	
-	/*ver que PGNmove de checkmate sea # + lo de PGNend stalemate, win, etc*/
 	
 	return {
 		testName : "testBasicFunctionality()",
@@ -845,7 +667,7 @@ function testUtilityMisc(){
 		});
 		
 		if(board===null){
-			error_msg="Error [53] failed to initBoard("+board_name+")";
+			error_msg="Error [0] failed to initBoard("+board_name+")";
 		}
 	//}
 	
@@ -855,7 +677,7 @@ function testUtilityMisc(){
 		});
 		
 		if(board_copy===null){
-			error_msg="Error [54] failed to initBoard("+board_copy_name+")";
+			error_msg="Error [1] failed to initBoard("+board_copy_name+")";
 		}
 	}
 	
@@ -869,7 +691,7 @@ function testUtilityMisc(){
 		IsepicChess.utilityMisc.cloneBoardObjs(board_copy, board);
 		
 		if(board_copy.MoveList[1].PGNmove+!!board_copy.MoveList[2]+board_copy.Squares["e4"]!=="Ne4false2"){
-			error_msg="Error [55] cloneBoardObjs[0]";
+			error_msg="Error [2] cloneBoardObjs[0]";
 		}
 	}
 	
@@ -884,7 +706,7 @@ function testUtilityMisc(){
 		board.moveCaller("c6", "d4");
 		
 		if(JSON.stringify(board.MaterialDiff)+JSON.stringify(board_copy.MaterialDiff)!=="{\"w\":[],\"b\":[-2]}{\"w\":[1],\"b\":[-2]}"){
-			error_msg="Error [56] board.MaterialDiff same as board_copy.MaterialDiff";
+			error_msg="Error [3] board.MaterialDiff same as board_copy.MaterialDiff";
 		}
 	}
 	

@@ -1,5 +1,6 @@
+//---to do:
+//
 //initBoard
-//---
 //getBoardCount
 //getBoardNames
 //boardExists
@@ -7,16 +8,6 @@
 //removeBoard
 //isEqualBoard
 //cloneBoard
-//---
-//countChecks
-//isCheck
-//legalMoves
-//isLegalMove
-//isLegalFen
-//isCheckmate
-//isStalemate
-//getValue
-//materialDifference
 
 function fnIcToVal(){
 	var start_time, end_time, error_msg;
@@ -981,6 +972,203 @@ function fnIcSameSquare(){
 	
 	return {
 		testName : "IC.sameSquare()",
+		fromFile : "test-ic-functions.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
+function fnIcFenApply(){
+	var start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		if(IsepicChess.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "countChecks")!==2){
+			error_msg="Error [0] apply(countChecks) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== 2";
+		}
+	//}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "countChecks")!==0){
+			error_msg="Error [1] apply(countChecks) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "countChecks", ["f1"])!==1){
+			error_msg="Error [2] apply(countChecks) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== 1";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "countChecks")!==0){
+			error_msg="Error [3] apply(countChecks) [0invalidfen0] !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck")!==true){
+			error_msg="Error [4] apply(isCheck) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck")!==false){
+			error_msg="Error [5] apply(isCheck) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "isCheck", ["f1"])!==true){
+			error_msg="Error [6] apply(isCheck) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "isCheck")!==false){
+			error_msg="Error [7] apply(isCheck) [0invalidfen0] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.mapToBos(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"])).join()!=="d2,b2,a2"){
+			error_msg="Error [8] apply(legalMoves) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, c2] !== d2,b2,a2";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.mapToBos(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"])).join()!==""){
+			error_msg="Error [9] apply(legalMoves) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, a2] !== empty_string";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.mapToBos(IsepicChess.fenApply("0invalidfen0", "legalMoves", ["a1"])).join()!==""){
+			error_msg="Error [10] apply(legalMoves) [0invalidfen0] !== empty_string";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["c2", "a2"])!==true){
+			error_msg="Error [11] apply(isLegalMove) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, c2, a2] !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["a2", "c2"])!==false){
+			error_msg="Error [12] apply(isLegalMove) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, a2, c2] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "isLegalMove", ["a1", "a2"])!==false){
+			error_msg="Error [13] apply(isLegalMove) [0invalidfen0, a1, a2] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")!==true){
+			error_msg="Error [14] apply(isLegalFen) [8/8/8/8/8/1k6/8/1K1r4 w - - 0 1] !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "isLegalFen")!==false){
+			error_msg="Error [15] apply(isLegalFen) [0invalidfen0] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalFen")!==false){
+			error_msg="Error [16] apply(isLegalFen) [rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate")!==true){
+			error_msg="Error [17] apply(isCheckmate) [8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1] !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate")!==false){
+			error_msg="Error [18] apply(isCheckmate) [8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "isCheckmate")!==false){
+			error_msg="Error [19] apply(isCheckmate) [0invalidfen0] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "isStalemate")!==true){
+			error_msg="Error [20] apply(isStalemate) [8/8/8/8/8/1k6/1r6/K7 w - - 0 1] !== true";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "isStalemate")!==false){
+			error_msg="Error [21] apply(isStalemate) [8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1] !== false";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "isStalemate")!==false){
+			error_msg="Error [22] apply(isStalemate) [0invalidfen0] !== false";
+		}
+	}
+
+	if(!error_msg){
+		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", ["e8"])!==-6){
+			error_msg="Error [23] apply(getValue) [fen_e8] !== -6";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", [[2, 5]])!==4){
+			error_msg="Error [24] apply(getValue) [fen_f6] !== 4";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.fenApply("0invalidfen0", "getValue", ["d6"])!==0){
+			error_msg="Error [25] apply(getValue) [fen_d6] !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "materialDifference"))!==JSON.stringify({w:[4, 4], b:[-1]})){
+			error_msg="Error [26] apply(materialDifference) [fen] !== {w:[4, 4], b:[-1]}";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[1, 1, 3, 5], b:[-2, -2, -4]})){
+			error_msg="Error [27] apply(materialDifference) [fen] !== {w:[1, 1, 3, 5], b:[-2, -2, -4]}";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
+			error_msg="Error [28] apply(materialDifference) [fen] !== {w:[], b:[]}";
+		}
+	}
+	
+	if(!error_msg){
+		if(JSON.stringify(IsepicChess.fenApply("0invalidfen0", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
+			error_msg="Error [29] apply(materialDifference) [0invalidfen0] !== {w:[], b:[]}";
+		}
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.fenApply()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),

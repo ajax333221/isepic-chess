@@ -7,6 +7,7 @@
 		<script src="../js/jquery-3.3.1.min.js"></script>
 		<script src="../js/isepic-chess.js"></script>
 		<script src="./test-utility-functions.js"></script>
+		<script src="./test-board-functions.js"></script>
 		<script src="./test-ic-functions.js"></script>
 		<script src="./test-other.js"></script>
 		<script>
@@ -72,10 +73,10 @@
 				tests_html+=formatResult(fnIcUtilityToInt());
 				tests_html+=formatResult(fnIcUtilityHashCode());
 				tests_html+=formatResult(fnIcUtilityCastlingChars());
-				//_cloneBoardObjs(): [test-other.js > testUtilityMisc()]
-				//_getBoardTabsHTML(): [N/A]
-				//_getTableHTML(): [N/A]
 				tests_html+=formatResult(fnIcUtilityBasicFenTest());
+				
+				//test-board-functions.js
+				//...
 				
 				//test-ic-functions.js
 				tests_html+=formatResult(fnIcToVal());
@@ -92,6 +93,7 @@
 				tests_html+=formatResult(fnIcGetFileBos());
 				tests_html+=formatResult(fnIcIsInsideBoard());
 				tests_html+=formatResult(fnIcSameSquare());
+				tests_html+=formatResult(fnIcFenApply());
 				tests_html+=formatResult(fnIcMapToBos());
 				
 				//test-other.js

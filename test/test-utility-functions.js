@@ -1,3 +1,9 @@
+//---to do:
+//
+//[test-other.js > testUtilityMisc()] _cloneBoardObjs()
+//[N/A] _getBoardTabsHTML()
+//[N/A] _getTableHTML()
+
 function fnIcUtilityTrimSpaces(){
 	var start_time, end_time, error_msg;
 	
