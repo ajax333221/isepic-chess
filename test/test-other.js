@@ -366,10 +366,32 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
+		board_copy.moveCaller("d2", "b1");
+		
+		if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1,g1"){
+			error_msg="Error [33] allowing to long castle with b1 occupied";
+		}
+	}
+	
+	if(!error_msg){
+		board_copy.moveCaller("g5", "h3");
+		board_copy.moveCaller("b1", "d2");
+		board_copy.moveCaller("h3", "g5");
+		board_copy.moveCaller("d2", "f1");
+		
+		if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1,c1"){
+			error_msg="Error [34] allowing to short castle with f1 occupied";
+		}
+	}
+	
+	if(!error_msg){
+		board_copy.moveCaller("g5", "h3");
+		board_copy.moveCaller("f1", "d2");
+		board_copy.moveCaller("h3", "g5");
 		board_copy.moveCaller("g4", "e3");
 		
 		if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!==""){
-			error_msg="Error [33] castle not being prevented on d square";
+			error_msg="Error [35] allowing to long castle with d1 attacked";
 		}
 	}
 	
@@ -378,7 +400,7 @@ function testBasicFunctionality(){
 		board_copy.moveCaller("f6", "f7");
 		
 		if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f8,d8"){
-			error_msg="Error [34] black king trying to castle being at check";
+			error_msg="Error [36] allowing to castle with black king at check";
 		}
 	}
 	
@@ -390,7 +412,7 @@ function testBasicFunctionality(){
 		board_copy.moveCaller("a3", "c2");
 		
 		if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1"){
-			error_msg="Error [35] whie king trying to castle being at check";
+			error_msg="Error [37] whie king trying to castle being at check";
 		}
 	}
 	
@@ -409,7 +431,7 @@ function testBasicFunctionality(){
 		board.moveCaller("h7", "h8");
 		
 		if(board.getValue("h8")!==4){
-			error_msg="Error [36] incorrect promotion to wr";
+			error_msg="Error [38] incorrect promotion to wr";
 		}
 	}
 	
@@ -417,7 +439,7 @@ function testBasicFunctionality(){
 		board_copy.moveCaller("h7", "h8");
 		
 		if(board_copy.getValue("h8")!==3){
-			error_msg="Error [37] failed to setPromoteTo()";
+			error_msg="Error [39] failed to setPromoteTo()";
 		}
 	}
 	
@@ -425,19 +447,19 @@ function testBasicFunctionality(){
 		board_copy.moveCaller("e2", "f1");
 		
 		if(board_copy.getValue("f1")!==-3){
-			error_msg="Error [38] wrong promotion color";
+			error_msg="Error [40] wrong promotion color";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4", "d3"])){
-			error_msg="Error [39] taking enpassant results in self check";
+			error_msg="Error [41] taking enpassant results in self check";
 		}
 	}
 	
 	if(!error_msg){
 		if(!IsepicChess.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", ["d4", "e3"])){
-			error_msg="Error [40] missing option to remove check via enpassant";
+			error_msg="Error [42] missing option to remove check via enpassant";
 		}
 	}
 	
@@ -452,7 +474,7 @@ function testBasicFunctionality(){
 		board.moveCaller("h5", "g6");
 		
 		if(board.countChecks()!==2){
-			error_msg="Error [41] wrong double check to enpassant capture";
+			error_msg="Error [43] wrong double check to enpassant capture";
 		}
 	}
 	
@@ -465,21 +487,21 @@ function testBasicFunctionality(){
 		});
 		
 		if(board===null){
-			error_msg="Error [42] failed to initBoard("+board_name+")";
+			error_msg="Error [44] failed to initBoard("+board_name+")";
 		}
 	}
 	
 	if(!error_msg){
-		if(board.boardHash()!==-2108058820){
-			error_msg="Error [43] wrong hash for default fen (+ isHidden prop)";
+		if(board.boardHash()!==1173566236){
+			error_msg="Error [45] wrong hash for default fen (+ isHidden prop)";
 		}
 	}
 	
 	if(!error_msg){
 		board.moveCaller("a2", "a4");
 		
-		if(board.boardHash()!==-1377780200){
-			error_msg="Error [44] wrong hash for board after a2-a4";
+		if(board.boardHash()!==1730542328){
+			error_msg="Error [46] wrong hash for board after a2-a4";
 		}
 	}
 	
@@ -487,19 +509,19 @@ function testBasicFunctionality(){
 		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
 		
 		if(!board.isEqualBoard(board_copy_name)){
-			error_msg="Error [45] wrong equal hashes";
+			error_msg="Error [47] wrong equal hashes";
 		}
 	}
 	
 	if(!error_msg){
 		if(!IsepicChess.isEqualBoard(board.BoardName, board.BoardName)){
-			error_msg="Error [46] board not showing positive equality to itself";
+			error_msg="Error [48] board not showing positive equality to itself";
 		}
 	}
 	
 	if(!error_msg){
 		if(!IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
-			error_msg="Error [47] two equal boards not showing positive equality";
+			error_msg="Error [49] two equal boards not showing positive equality";
 		}
 	}
 	
@@ -507,19 +529,19 @@ function testBasicFunctionality(){
 		board.moveCaller("a7", "a6");
 		
 		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
-			error_msg="Error [48] different boards returning positive equality";
+			error_msg="Error [50] different boards returning positive equality";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.toAbsBal("")!==IsepicChess.toBal("").toUpperCase()){
-			error_msg="Error [49] toAbsBal() !== toBal().toUpperCase()";
+			error_msg="Error [51] toAbsBal() !== toBal().toUpperCase()";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.toAbsBal("r")!==IsepicChess.toBal("r").toUpperCase()){
-			error_msg="Error [50] toAbsBal() !== toBal().toUpperCase()";
+			error_msg="Error [52] toAbsBal() !== toBal().toUpperCase()";
 		}
 	}
 	

@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
-		var _VERSION="2.3.4";
+		var _VERSION="2.3.5";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "MaterialDiff", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheckmate", "IsStalemate", "MaterialDiff", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
 		
 		//---------------- utilities
 		
@@ -274,7 +274,7 @@
 			
 			that=this;
 			
-			return !!that.calculateChecks(king_qos, true);
+			return !!that.calculateChecks(king_qos, true);/*NO tratar de leer de cache, sea lo que sea king_qos*/
 		}
 		
 		function _calculateChecks(king_qos, early_break){
@@ -460,6 +460,8 @@
 			
 			rtn="<li><strong>Selected board:</strong> <span>"+that.BoardName+"</span></li>";
 			rtn+="<li><strong>Is rotated?:</strong> <span>"+that.IsRotated+"</span></li>";
+			rtn+="<li><strong>Is checkmate?:</strong> <span>"+that.IsCheckmate+"</span></li>";
+			rtn+="<li><strong>Is stalemate?:</strong> <span>"+that.IsStalemate+"</span></li>";
 			rtn+="<li><strong>En Passant:</strong> <span>"+(that.EnPassantBos ? that.EnPassantBos : "-")+"</span></li>";
 			
 			rtn+="<li>";
@@ -701,7 +703,7 @@
 		}
 		
 		function _refreshKingPosChecksAndFen(){
-			var i, j, that, current_pos, current_val, empty_consecutive_squares, new_fen_board;
+			var i, j, that, current_pos, current_val, empty_consecutive_squares, new_fen_board, no_legal_moves;
 			
 			that=this;
 			new_fen_board="";
@@ -732,7 +734,22 @@
 				new_fen_board+=(empty_consecutive_squares || "")+(i!==7 ? "/" : "");
 			}
 			
+			no_legal_moves=true;
+			
+			outer:
+			for(i=0; i<8; i++){//0...7
+				for(j=0; j<8; j++){//0...7
+					if(that.legalMoves([i, j]).length){
+						no_legal_moves=false;
+						break outer;
+					}
+				}
+			}
+			
 			that.Active.checks=that.countChecks();
+			
+			that.IsCheckmate=!!(that.Active.checks && no_legal_moves);
+			that.IsStalemate=!!(!that.Active.checks && no_legal_moves);
 			
 			that.Fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-")+" "+that.HalfMove+" "+that.FullMove);
 			
@@ -942,7 +959,7 @@
 		}
 		
 		function _legalMoves(piece_qos){
-			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, piece_abs_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, can_castle_current_side, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, piece_directions, no_errors, rtn;
+			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, piece_abs_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, piece_directions, no_errors, rtn;
 			
 			that=this;
 			
@@ -986,16 +1003,7 @@
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
 								if(that.candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
-									can_castle_current_side=true;
-									
-									for(j=0; j<2; j++){//0...1
-										if(that.isCheck([active_color_king_rank, (j+(i ? 2 : 5))])){//5...6 or 2...3
-											can_castle_current_side=false;
-											break;
-										}
-									}
-									
-									if(can_castle_current_side){
+									if(!that.isCheck([active_color_king_rank, (i ? 3 : 5)])){
 										pre_validated_arr_pos.push([[active_color_king_rank, (i ? 2 : 6)]]);
 									}
 								}
@@ -1288,56 +1296,20 @@
 			
 			pgn_end="";
 			
-			if(that.Active.checks){
-				if(that.isCheckmate()){
+			if(that.Active.checks){//xxxxxxxxxxxxx
+				if(that.IsCheckmate){
 					pgn_move+="#";
 					pgn_end=(active_color ? "0-1" : "1-0");
 				}else{
 					pgn_move+="+";
 				}
 			}else{
-				if(that.isStalemate()){
+				if(that.IsStalemate){
 					pgn_end="1/2-1/2";
 				}
 			}
 			
 			that.MoveList.push({Fen : that.Fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});
-		}
-		
-		function _noLegalMoves(){
-			var i, j, that, rtn;
-			
-			that=this;
-			
-			rtn=true;
-			
-			outer:
-			for(i=0; i<8; i++){//0...7
-				for(j=0; j<8; j++){//0...7
-					if(that.legalMoves([i, j]).length){
-						rtn=false;
-						break outer;
-					}
-				}
-			}
-			
-			return rtn;
-		}
-		
-		function _isCheckmate(){
-			var that;
-			
-			that=this;
-			
-			return !!(that.Active.checks && that.noLegalMoves());
-		}
-		
-		function _isStalemate(){
-			var that;
-			
-			that=this;
-			
-			return !!(!that.Active.checks && that.noLegalMoves());
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
@@ -1650,9 +1622,6 @@
 						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
 						makeMove : _makeMove,
-						noLegalMoves : _noLegalMoves,
-						isCheckmate : _isCheckmate,
-						isStalemate : _isStalemate,
 						getNotation : _getNotation
 					};
 				}
@@ -1683,6 +1652,8 @@
 				target.MoveList=null;
 				target.CurrentMove=null;
 				target.IsRotated=null;
+				target.IsCheckmate=null;
+				target.IsStalemate=null;
 				target.MaterialDiff=null;
 				target.PromoteTo=null;
 				target.FromSquare=null;
@@ -1761,12 +1732,12 @@
 				case "isLegalFen" :
 					rtn=board_created;
 					break;
-				case "isCheckmate" :
-					rtn=(board_created ? _isCheckmate.apply(board, args) : false);
+				/*case "isCheckmate" :
+					rtn=(board_created ? board_created.IsCheckmate : false);
 					break;
 				case "isStalemate" :
-					rtn=(board_created ? _isStalemate.apply(board, args) : false);
-					break;
+					rtn=(board_created ? board_created.IsStalemate : false);
+					break;*/
 				case "getValue" :
 					rtn=(board_created ? _getValue.apply(board, args) : 0);
 					break;

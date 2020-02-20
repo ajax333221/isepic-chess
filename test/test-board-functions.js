@@ -32,9 +32,9 @@
 //_cloneBoardTo
 //_moveCaller
 //_makeMove
-//_noLegalMoves
-//[### ya via fenApply() ###] _isCheckmate
-//[### ya via fenApply() ###] _isStalemate
+//(edit: ya no existe) _noLegalMoves
+//(edit: ya no sera via fenApply, sera init().var) [### ya via fenApply() ###] _isCheckmate
+//(edit: ya no sera via fenApply, sera init().var) [### ya via fenApply() ###] _isStalemate
 //_getNotation
 
 /*function fnIcAAAAA(){
