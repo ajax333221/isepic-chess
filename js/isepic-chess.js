@@ -734,6 +734,7 @@
 				new_fen_board+=(empty_consecutive_squares || "")+(i!==7 ? "/" : "");
 			}
 			
+			that.Active.checks=that.countChecks();
 			no_legal_moves=true;
 			
 			outer:
@@ -745,8 +746,6 @@
 					}
 				}
 			}
-			
-			that.Active.checks=that.countChecks();
 			
 			that.IsCheckmate=!!(that.Active.checks && no_legal_moves);
 			that.IsStalemate=!!(!that.Active.checks && no_legal_moves);
@@ -1296,7 +1295,7 @@
 			
 			pgn_end="";
 			
-			if(that.Active.checks){//xxxxxxxxxxxxx
+			if(that.Active.checks){
 				if(that.IsCheckmate){
 					pgn_move+="#";
 					pgn_end=(active_color ? "0-1" : "1-0");
@@ -1732,12 +1731,6 @@
 				case "isLegalFen" :
 					rtn=board_created;
 					break;
-				/*case "isCheckmate" :
-					rtn=(board_created ? board_created.IsCheckmate : false);
-					break;
-				case "isStalemate" :
-					rtn=(board_created ? board_created.IsStalemate : false);
-					break;*/
 				case "getValue" :
 					rtn=(board_created ? _getValue.apply(board, args) : 0);
 					break;
