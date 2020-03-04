@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var IsepicChess=(function(){
-		var _VERSION="2.3.5";
+		var _VERSION="2.3.6";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -103,11 +103,11 @@
 				
 				if(board!==null){
 					if(board.IsHidden){
-						rtn+="<em class='disabledColor'>"+board_name+"</em>";
+						rtn+="<em class='ic_disabled'>"+board_name+"</em>";
 					}else if(board_name===current_board){
 						rtn+="<em>"+board_name+"</em>";
 					}else{
-						rtn+="<a class='changeboard' data-target='"+board_name+"' href='#'>"+board_name+"</a>";
+						rtn+="<a class='ic_changeboard' data-boardname='"+board_name+"' href='#'>"+board_name+"</a>";
 					}
 				}else{
 					console.log("Warning[_getBoardTabsHTML]: \""+board_name+"\" is not defined");
@@ -118,23 +118,24 @@
 		}
 		
 		function _getTableHTML(is_rotated){
-			var i, j, rank_bos, rtn;
+			var i, j, rank_bos, current_bos, rtn;
 			
-			rtn="<table class='"+("tableb"+(is_rotated ? " rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
-			rtn+="<tr><td class='label top_border left_border'></td><td class='label top_border'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label top_border'>")+"</td><td class='"+("label top_border right_border dot "+(is_rotated ? "w" : "b")+"side")+"'>◘</td><td class='captureds' rowspan='10'></td></tr>";
+			rtn="<table class='"+("ic_tableb"+(is_rotated ? " ic_rotated" : ""))+"' cellpadding='0' cellspacing='0'>";
+			rtn+="<tr><td class='ic_label ic_top_border ic_left_border'></td><td class='ic_label ic_top_border'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='ic_label ic_top_border'>")+"</td><td class='"+("ic_label ic_top_border ic_right_border ic_dot "+(is_rotated ? "ic_wside" : "ic_bside"))+"'>◘</td><td class='ic_captureds' rowspan='10'></td></tr>";
 			
 			for(i=0; i<8; i++){//0...7
 				rank_bos=(is_rotated ? (i+1) : (8-i));
-				rtn+="<tr><td class='label left_border'>"+rank_bos+"</td>";
+				rtn+="<tr><td class='ic_label ic_left_border'>"+rank_bos+"</td>";
 				
 				for(j=0; j<8; j++){//0...7
-					rtn+="<td class='"+(((i+j)%2 ? "b" : "w")+"s")+"' id='"+toBos(is_rotated ? [(7-i), (7-j)] : [i, j])+"'></td>";
+					current_bos=toBos(is_rotated ? [(7-i), (7-j)] : [i, j]);
+					rtn+="<td id='"+("ic_id_"+current_bos)+"' class='"+((i+j)%2 ? "ic_bs" : "ic_ws")+"' data-bos='"+current_bos+"'></td>";
 				}
 				
-				rtn+="<td class='label right_border'>"+rank_bos+"</td></tr>";
+				rtn+="<td class='ic_label ic_right_border'>"+rank_bos+"</td></tr>";
 			}
 			
-			rtn+="<tr><td class='label bottom_border left_border'></td><td class='label bottom_border'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='label bottom_border'>")+"</td><td class='"+("label right_border bottom_border dot "+(is_rotated ? "b" : "w")+"side")+"'>◘</td></tr>";
+			rtn+="<tr><td class='ic_label ic_bottom_border ic_left_border'></td><td class='ic_label ic_bottom_border'>"+(is_rotated ? "hgfedcba" : "abcdefgh").split("").join("</td><td class='ic_label ic_bottom_border'>")+"</td><td class='"+("ic_label ic_right_border ic_bottom_border ic_dot "+(is_rotated ? "ic_bside" : "ic_wside"))+"'>◘</td></tr>";
 			rtn+="</table>";
 			
 			return rtn;
@@ -198,7 +199,7 @@
 			
 			if(!error_msg){
 				for(i=0; i<2; i++){//0...1
-					total_pieces={P : 0, N : 0, B : 0, R : 0, Q : 0, K : 0};
+					total_pieces={P:0, N:0, B:0, R:0, Q:0, K:0};
 					
 					for(j=1; j<7; j++){//1...6
 						total_pieces[toBal(j)]=_occurrences(fen_board, toBal(j*getSign(!i)));
@@ -357,46 +358,47 @@
 			that=this;
 			that.FromSquare="";
 			
-			$(".ws, .bs").unbind("click").click(function(){
-				var i, len, temp, need_highlight, legal_moves;
+			$(".ic_ws, .ic_bs").unbind("click").click(function(){
+				var i, len, temp, need_highlight, legal_moves, square_bos;
 				
 				if(!that.IsHidden){
+					square_bos=$(this).attr("data-bos");
 					need_highlight=true;
 					
 					if(that.FromSquare){
-						$(".highlight").removeClass("highlight");
-						$(".currpiece").removeClass("currpiece");
+						$(".ic_highlight").removeClass("ic_highlight");
+						$(".ic_currpiece").removeClass("ic_currpiece");
 						need_highlight=false;
 						
 						temp=that.FromSquare;
 						that.FromSquare="";
 						
-						if(that.moveCaller(temp, this.id)){
+						if(that.moveCaller(temp, square_bos)){
 							that.refreshBoard();
 						}else{
 							that.giveSquareMovement();
 							
-							if(!sameSquare(temp, this.id)){
+							if(!sameSquare(temp, square_bos)){
 								need_highlight=true;
 							}
 						}
 					}
 					
 					if(need_highlight){
-						legal_moves=that.legalMoves(this.id);
+						legal_moves=that.legalMoves(square_bos);
 						len=legal_moves.length;
 						
 						if(len){
-							that.FromSquare=this.id;
-							$(this).addClass("currpiece");
+							that.FromSquare=square_bos;
+							$(this).addClass("ic_currpiece");
 							
 							for(i=0; i<len; i++){//0<len
-								$("#"+toBos(legal_moves[i])).addClass("highlight");
+								$("#ic_id_"+toBos(legal_moves[i])).addClass("ic_highlight");
 							}
 						}
 					}
 					
-					$("#xobjinfo").html(that.getObjInfoHTML());
+					$("#ic_id_objinfo").html(that.getObjInfoHTML());
 				}
 			});
 		}
@@ -411,8 +413,8 @@
 					current_pos=(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
 					piece_class=toPieceClass(that.getValue(current_pos));
 					
-					new_class=(((i+j)%2 ? "b" : "w")+"s"+(piece_class ? (" "+piece_class) : ""));
-					$("#"+toBos(current_pos)).attr("class", new_class);
+					new_class=(((i+j)%2 ? "ic_bs" : "ic_ws")+(piece_class ? (" ic_"+piece_class) : ""));
+					$("#ic_id_"+toBos(current_pos)).attr("class", new_class);
 				}
 			}
 			
@@ -430,7 +432,7 @@
 				captured_html+="<img src='"+("./css/images/"+toPieceClass(diff_bottom[i])+".png")+"' width='20' height='20'>";
 			}
 			
-			$("#xboard .captureds").html(captured_html);
+			$("#ic_id_board .ic_captureds").html(captured_html);
 		}
 		
 		function _getMoveListHTML(){
@@ -443,11 +445,11 @@
 			rtn="";
 			
 			for(i=1, len=move_list.length; i<len; i++){//1<len
-				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='xpgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span id='"+("xpgn"+i)+"' class='"+("xpgn_"+(i!==that.CurrentMove ? "goto" : "active"))+"'>"+move_list[i].PGNmove+"</span>"+(move_list[i].PGNend ? (" <span class='xpgn_result'>"+move_list[i].PGNend+"</span>") : "");
+				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='ic_pgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span class='"+(i!==that.CurrentMove ? "ic_pgn_goto" : "ic_pgn_active")+"' data-index='"+i+"'>"+move_list[i].PGNmove+"</span>"+(move_list[i].PGNend ? (" <span class='ic_pgn_result'>"+move_list[i].PGNend+"</span>") : "");
 			}
 			
 			if(black_starts && rtn!==""){
-				rtn="<span class='xpgn_number'>"+that.InitialFullMove+"...</span>"+rtn;
+				rtn="<span class='ic_pgn_number'>"+that.InitialFullMove+"...</span>"+rtn;
 			}
 			
 			return rtn;
@@ -527,40 +529,40 @@
 			that=this;
 			
 			if(!that.IsHidden){
-				is_new_html=!$("#xchessboard").length;
+				is_new_html=!$("#ic_id_chessboard").length;
 				
 				if(is_new_html){
-					$("body").append("<div id='xchessboard'><h3 class='inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='xboard'></div><div id='xcontrols'><input id='xfen' value='' type='text'><br><input id='xnav_first' value='|<' type='button'> <input id='xnav_previous' value='<' type='button'> <input id='xnav_next' value='>' type='button'> <input id='xnav_last' value='>|' type='button'><input id='xrotate' value='rotate' type='button'><select id='xpromote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='xtabs'></p><p id='xmovelist'></p></div><div id='xinfoholder'><a id='xdebug_toggle' href='#'>Debug ▲</a><ul id='xobjinfo' style='display:none'></ul></div></div>");
+					$("body").append("<div id='ic_id_chessboard'><h3 class='ic_inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='ic_id_board'></div><div id='ic_id_controls'><input id='ic_id_fen' value='' type='text'><br><input id='ic_id_nav_first' value='|<' type='button'> <input id='ic_id_nav_previous' value='<' type='button'> <input id='ic_id_nav_next' value='>' type='button'> <input id='ic_id_nav_last' value='>|' type='button'><input id='ic_id_rotate' value='rotate' type='button'><select id='ic_id_promote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='ic_id_tabs'></p><p id='ic_id_movelist'></p></div><div id='ic_id_infoholder'><a id='ic_id_debug_toggle' href='#'>Debug ▲</a><ul id='ic_id_objinfo' style='display:none'></ul></div></div>");
 					
-					$("#xfen").click(function(){
+					$("#ic_id_fen").click(function(){
 						$(this).select();
 					});
 					
-					$("#xdebug_toggle").click(function(){
-						$(this).text("Debug "+($("#xobjinfo").is(":visible") ? "▲" : "▼"));
-						$("#xobjinfo").toggle();
+					$("#ic_id_debug_toggle").click(function(){
+						$(this).text("Debug "+($("#ic_id_objinfo").is(":visible") ? "▲" : "▼"));
+						$("#ic_id_objinfo").toggle();
 						return false;
 					});
 				}
 				
-				if(is_new_html || $("#xboard .tableb").hasClass("rotated")!==that.IsRotated){
-					$("#xboard").html(_getTableHTML(that.IsRotated));
+				if(is_new_html || $("#ic_id_board .ic_tableb").hasClass("ic_rotated")!==that.IsRotated){
+					$("#ic_id_board").html(_getTableHTML(that.IsRotated));
 				}
 				
-				$("#xtabs").html(_getBoardTabsHTML(that.BoardName));
+				$("#ic_id_tabs").html(_getBoardTabsHTML(that.BoardName));
 				
-				$(".changeboard").unbind("click").click(function(){
+				$(".ic_changeboard").unbind("click").click(function(){
 					var board, board_name, no_errors;
 					
 					no_errors=true;
 					
 					//if(no_errors){
-						board_name=$(this).attr("data-target");
+						board_name=$(this).attr("data-boardname");
 						board=selectBoard(board_name);
 						
 						if(board===null){
 							no_errors=false;
-							console.log("Error[.changeboard]: \""+board_name+"\" is not defined");
+							console.log("Error[.ic_changeboard]: \""+board_name+"\" is not defined");
 						}
 					//}
 					
@@ -574,64 +576,64 @@
 				/*enves de siempre unbind(), solo hacerlo si el board es diferente (cuidado no doble al mismo tampoco)*/
 				/*nota, cada refresh se hace el unbind y bind a los de ID, muy mal eso*/
 				
-				$("#xnav_first").unbind("click").click(function(){
+				$("#ic_id_nav_first").unbind("click").click(function(){
 					if(that.setCurrentMove(0, true)){
 						that.refreshBoard();
 					}
 				});
 				
-				$("#xnav_previous").unbind("click").click(function(){
+				$("#ic_id_nav_previous").unbind("click").click(function(){
 					if(that.setCurrentMove(-1, false)){
 						that.refreshBoard();
 					}
 				});
 				
-				$("#xnav_next").unbind("click").click(function(){
+				$("#ic_id_nav_next").unbind("click").click(function(){
 					if(that.setCurrentMove(1, false)){
 						that.refreshBoard();
 					}
 				});
 				
-				$("#xnav_last").unbind("click").click(function(){
+				$("#ic_id_nav_last").unbind("click").click(function(){
 					if(that.setCurrentMove(10000, true)){
 						that.refreshBoard();
 					}
 				});
 				
-				$("#xrotate").unbind("click").click(function(){
+				$("#ic_id_rotate").unbind("click").click(function(){
 					that.toggleIsRotated();
 					that.refreshBoard();
 				});
 				
-				$("#xpromote").unbind("change").change(function(){
+				$("#ic_id_promote").unbind("change").change(function(){
 					that.setPromoteTo($(this).val()*1);
-					$("#xobjinfo").html(that.getObjInfoHTML());
+					$("#ic_id_objinfo").html(that.getObjInfoHTML());
 				});
 				
 				that.resetPieceClasses();
 				
-				$(".wside, .bside").removeClass("w_color b_color");
-				$("."+(that.Active.isBlack ? "b" : "w")+"side").addClass((that.Active.isBlack ? "b" : "w")+"_color");
+				$(".ic_wside, .ic_bside").removeClass("ic_w_color ic_b_color");
+				$(that.Active.isBlack ? ".ic_bside" : ".ic_wside").addClass(that.Active.isBlack ? "ic_b_color" : "ic_w_color");
 				
-				$("#xmovelist").html(that.getMoveListHTML() || "...");
+				$("#ic_id_movelist").html(that.getMoveListHTML() || "...");
 				
-				$(".xpgn_goto").unbind("click").click(function(){
-					if(that.setCurrentMove((this.id.substring(4)*1), true)){
+				$(".ic_pgn_goto").unbind("click").click(function(){
+					if(that.setCurrentMove(($(this).attr("data-index")*1), true)){
 						that.refreshBoard();
 					}
 				});
 				
-				$("#xfen").val(that.Fen);
-				$("#xpromote").val(that.PromoteTo);
+				$("#ic_id_fen").val(that.Fen);
+				$("#ic_id_promote").val(that.PromoteTo);
 				
 				if(that.CurrentMove!==0){
-					$("#"+that.MoveList[that.CurrentMove].FromBos).addClass("lastmove");
-					$("#"+that.MoveList[that.CurrentMove].ToBos).addClass("lastmove");
+					$("#ic_id_"+that.MoveList[that.CurrentMove].FromBos).addClass("ic_lastmove");
+					$("#ic_id_"+that.MoveList[that.CurrentMove].ToBos).addClass("ic_lastmove");
 				}
 				
 				that.giveSquareMovement();
 				
-				$("#xobjinfo").html(that.getObjInfoHTML());
+				$("#ic_id_objinfo").html(that.getObjInfoHTML());
 			}
 		}
 		
