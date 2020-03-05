@@ -1,6 +1,5 @@
 //---to do:
 //
-//[test-other.js > testUtilityMisc()] _cloneBoardObjs()
 //[N/A] _getBoardTabsHTML()
 //[N/A] _getTableHTML()
 
@@ -692,6 +691,70 @@ function fnIcUtilityCastlingChars(){
 	};
 }
 
+function fnIcUtilityCloneBoardObjs(){
+	var board, board_name, board_copy, board_copy_name, start_time, end_time, error_msg;
+	
+	error_msg="";
+	board_name="board_utilCloneBoardObjs";
+	board_copy_name="board_utilCloneBoardObjs_copy";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		board=IsepicChess.initBoard({
+			name : board_name,
+			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
+		});
+		
+		if(board===null){
+			error_msg="Error [0] failed to initBoard("+board_name+")";
+		}
+	//}
+	
+	if(!error_msg){
+		board_copy=IsepicChess.initBoard({
+			name : board_copy_name
+		});
+		
+		if(board_copy===null){
+			error_msg="Error [1] failed to initBoard("+board_copy_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		board.moveCaller("c3", "e4");
+		
+		board_copy.moveCaller("g2", "g3");
+		board_copy.moveCaller("h7", "h6");
+		board_copy.moveCaller("f1", "g2");
+		board_copy.moveCaller("h6", "h5");
+		board_copy.moveCaller("g2", "e4");
+		
+		IsepicChess.utilityMisc.cloneBoardObjs(board_copy, board);
+		
+		if(board_copy.MoveList[1].PGNmove+!!board_copy.MoveList[2]+board_copy.Squares["e4"]!=="Ne4false2"){
+			error_msg="Error [2] incorrect copied values";
+		}
+	}
+	
+	if(IsepicChess.selectBoard(board_name)!==null){
+		IsepicChess.removeBoard(board_name);
+	}
+	
+	if(IsepicChess.selectBoard(board_copy_name)!==null){
+		IsepicChess.removeBoard(board_copy_name);
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.utilityMisc.cloneBoardObjs()",
+		fromFile : "test-utility-functions.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
 function fnIcUtilityBasicFenTest(){
 	var start_time, end_time, error_msg;
 	
@@ -852,3 +915,22 @@ function fnIcUtilityBasicFenTest(){
 		passed : !error_msg
 	};
 }
+
+/*function fnIcAAAAA(){
+	var start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "IC.utilityMisc.AAAAA()",
+		fromFile : "test-utility-functions.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}*/

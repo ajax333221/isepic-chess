@@ -3,7 +3,7 @@ body{
 	padding : 0;
 }
 
-#ic_id_chessboard{
+#ic_id_main{
 	min-width : 500px;
 	padding : 20px;
 	font : normal 13px Helvetica, Arial, sans-serif;
@@ -11,84 +11,84 @@ body{
 	background : #eee;
 }
 
-#ic_id_chessboard a, #ic_id_chessboard a:visited{
+#ic_id_main a, #ic_id_main a:visited{
 	color : #429e47;
 	text-decoration : none;
 }
 
-#ic_id_chessboard a:hover, #ic_id_chessboard a:focus{
+#ic_id_main a:hover, #ic_id_main a:focus{
 	color : #3fbf46;
 	text-decoration : none;
 }
 
-#ic_id_chessboard a:active{
+#ic_id_main a:active{
 	color : #63664b;
 }
 
-#ic_id_chessboard h3{
+#ic_id_main h3{
 	margin : 0 0 25px 0;
 	padding : 8px 15px;
 	color : #696b55;
 	background : #e3e3e3;
 }
 
-#ic_id_chessboard h3 a{
+#ic_id_main h3 a{
 	margin-left : 40px;
 	font-size : 12px;
 }
 
-#ic_id_chessboard pre{
+#ic_id_main pre{
 	display : inline;
 	margin : 0;
 	padding : 0;
 }
 
-#ic_id_chessboard .ic_inlineb{
+#ic_id_main .ic_inlineb{
 	display : inline-block;
 }
 
-#ic_id_chessboard .ic_disabled{
+#ic_id_main .ic_disabled{
 	color : #808080;
 }
 
-#ic_id_chessboard .ic_dangerbox{
+#ic_id_main .ic_dangerbox{
 	color : #721c24;
 	background : #f8d7da;
 }
 
-#ic_id_chessboard .ic_successbox{
+#ic_id_main .ic_successbox{
 	color : #155724;
 	background : #d4edda;
 }
 
-#ic_id_chessboard hr{
+#ic_id_main hr{
 	margin : 15px 0 0 0;
 	padding : 0;
 	border : 0;
 	border-top : 1px solid #ccc;
 }
 
-#ic_id_chessboard.ic_tests{
+#ic_id_main.ic_tests{
 	text-align : center;
 }
 
-#ic_id_chessboard.ic_tests em{
+#ic_id_main.ic_tests em{
 	font-size : 11px;
 }
 
-#ic_id_chessboard.ic_tests table, #ic_id_chessboard.ic_tests tr, #ic_id_chessboard.ic_tests th, #ic_id_chessboard.ic_tests td{
+#ic_id_main.ic_tests table, #ic_id_main.ic_tests tr, #ic_id_main.ic_tests th, #ic_id_main.ic_tests td{
 	margin : 0;
 	padding : 0;
 }
 
-#ic_id_chessboard.ic_tests table{
+#ic_id_main.ic_tests table{
 	border-collapse : collapse;
 	margin : 0 auto;
 	text-align : center;
 	background : #fbfbfb;
 }
 
-#ic_id_chessboard.ic_tests th, #ic_id_chessboard.ic_tests td{
+#ic_id_main.ic_tests th, #ic_id_main.ic_tests td{
 	vertical-align : middle;
 	border : 1px solid #c0c0c0;
 	padding : 8px 16px;

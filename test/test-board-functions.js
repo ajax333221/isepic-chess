@@ -1,5 +1,7 @@
 //---to do:
 //
+//CORREGIR IC.isEqualBoard a Board.IsEq()
+//
 //[### ya via fenApply() ###] _getValue
 //_setValue
 //[### ya via fenApply() ###] _materialDifference
@@ -27,7 +29,6 @@
 //[### ya via fenApply() ###] _legalMoves
 //[### ya via fenApply() ###] _isLegalMove
 //[@@@ x2 in "test-other.js" @@@] _boardHash
-//_isEqualBoard
 //_cloneBoardFrom
 //_cloneBoardTo
 //_moveCaller
@@ -36,6 +37,92 @@
 //(edit: ya no sera via fenApply, sera init().var) [### ya via fenApply() ###] _isCheckmate
 //(edit: ya no sera via fenApply, sera init().var) [### ya via fenApply() ###] _isStalemate
 //_getNotation
+
+function fnBoardIsEqualBoard(){
+	var board, board_name, board_copy, board_copy_name, start_time, end_time, error_msg;
+	
+	error_msg="";
+	board_name="board_isEqualB";
+	board_copy_name="board_isEqualB_copy";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		board=IsepicChess.initBoard({
+			name : board_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(board===null){
+			error_msg="Error [0] failed to initBoard("+board_name+")";
+		}
+	//}
+	
+	if(!error_msg){
+		board_copy=IsepicChess.initBoard({
+			name : board_copy_name
+		});
+		
+		if(board_copy===null){
+			error_msg="Error [1] failed to initBoard("+board_copy_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
+		if(board.isEqualBoard(board_copy_name)!==true){
+			error_msg="Error [2] wrong equal hashes";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.isEqualBoard(board.BoardName, board.BoardName)!==true){
+			error_msg="Error [3] board not showing positive equality to itself";
+		}
+	}
+	
+	if(!error_msg){
+		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)!==true){
+			error_msg="Error [4] two equal boards not showing positive equality";
+		}
+	}
+	
+	if(!error_msg){
+		board.moveCaller("a2", "a4");
+		
+		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)!==false){
+			error_msg="Error [5] different boards returning positive equality";
+		}
+	}
+	
+	if(!error_msg){
+		board_copy.moveCaller("a2", "a4");
+		
+		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)!==true){
+			error_msg="Error [6] two equal boards not showing positive equality";
+		}
+	}
+	
+	if(IsepicChess.selectBoard(board_name)!==null){
+		IsepicChess.removeBoard(board_name);
+	}
+	
+	if(IsepicChess.selectBoard(board_copy_name)!==null){
+		IsepicChess.removeBoard(board_copy_name);
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "board.isEqualBoard()",
+		fromFile : "test-board-functions.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
 
 /*function fnIcAAAAA(){
 	var start_time, end_time, error_msg;
@@ -48,7 +135,7 @@
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.AAAAA()",
+		testName : "board.AAAAA()",
 		fromFile : "test-board-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),

@@ -1,6 +1,6 @@
 //---to do:
 //
-//en testBasicFunctionality() ver que PGNmove de checkmate sea # + lo de PGNend stalemate, win, etc
+//mover cosas de aqui a sus correspondientes test
 
 function testDisambiguation(){
 	var board, board_name, start_time, end_time, error_msg;
@@ -294,6 +294,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
 		board_copy.moveCaller("e1", "e2");
 		
 		if((board_copy.WCastling+" "+board_copy.BCastling)!=="0 3"){
@@ -303,6 +304,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
 		board_copy.moveCaller("a1", "d1");
 		board_copy.moveCaller("e8", "e7");
 		
@@ -313,6 +315,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
 		board_copy.moveCaller("e5", "d7");
 		board_copy.moveCaller("e4", "g3");
 		board_copy.moveCaller("d7", "b6");
@@ -396,7 +399,8 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.utilityMisc.cloneBoardObjs(board_copy, board);
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
 		board_copy.moveCaller("f6", "f7");
 		
 		if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f8,d8"){
@@ -405,7 +409,8 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		board_copy.cloneBoardFrom(board.BoardName);
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
 		board_copy.moveCaller("b4", "b5");
 		board_copy.moveCaller("c4", "a3");
 		board_copy.moveCaller("b5", "b6");
@@ -425,7 +430,7 @@ function testBasicFunctionality(){
 			invalidFenStop : true
 		});
 		
-		board.cloneBoardTo(board_copy.BoardName);
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
 		board_copy.setPromoteTo("B");
 		
 		board.moveCaller("h7", "h8");
@@ -506,42 +511,92 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
-		
-		if(!board.isEqualBoard(board_copy_name)){
-			error_msg="Error [47] wrong equal hashes";
-		}
-	}
-	
-	if(!error_msg){
-		if(!IsepicChess.isEqualBoard(board.BoardName, board.BoardName)){
-			error_msg="Error [48] board not showing positive equality to itself";
-		}
-	}
-	
-	if(!error_msg){
-		if(!IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
-			error_msg="Error [49] two equal boards not showing positive equality";
-		}
-	}
-	
-	if(!error_msg){
-		board.moveCaller("a7", "a6");
-		
-		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)){
-			error_msg="Error [50] different boards returning positive equality";
-		}
-	}
-	
-	if(!error_msg){
 		if(IsepicChess.toAbsBal("")!==IsepicChess.toBal("").toUpperCase()){
-			error_msg="Error [51] toAbsBal() !== toBal().toUpperCase()";
+			error_msg="Error [47] toAbsBal() !== toBal().toUpperCase()";
 		}
 	}
 	
 	if(!error_msg){
 		if(IsepicChess.toAbsBal("r")!==IsepicChess.toBal("r").toUpperCase()){
-			error_msg="Error [52] toAbsBal() !== toBal().toUpperCase()";
+			error_msg="Error [48] toAbsBal() !== toBal().toUpperCase()";
+		}
+	}
+	
+	if(!error_msg){
+		board=IsepicChess.initBoard({
+			name : board_name,
+			fen : "k7/8/K7/Q7/8/8/8/8 w - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
+		board_copy.moveCaller("a5", "d8");
+		
+		if(board_copy.MoveList[1].PGNmove!=="Qd8#"){
+			error_msg="Error [49] wrong PGNmove for white checkmate Qd8#";
+		}
+	}
+	
+	if(!error_msg){
+		if(board_copy.MoveList[1].PGNend!=="1-0"){
+			error_msg="Error [50] wrong PGNend for white win 1-0";
+		}
+	}
+	
+	if(!error_msg){
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
+		board_copy.moveCaller("a5", "c7");
+		
+		if(board_copy.MoveList[1].PGNmove!=="Qc7"){
+			error_msg="Error [51] wrong PGNmove for white stalemate";
+		}
+	}
+	
+	if(!error_msg){
+		if(board_copy.MoveList[1].PGNend!=="1/2-1/2"){
+			error_msg="Error [52] wrong PGNend for white stalemate 1/2-1/2";
+		}
+	}
+	
+	if(!error_msg){
+		board=IsepicChess.initBoard({
+			name : board_name,
+			fen : "8/8/8/8/7q/7k/8/7K b - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
+		board_copy.moveCaller("h4", "e1");
+		
+		if(board_copy.MoveList[1].PGNmove!=="Qe1#"){
+			error_msg="Error [53] wrong PGNmove for black checkmate Qe1#";
+		}
+	}
+	
+	if(!error_msg){
+		if(board_copy.MoveList[1].PGNend!=="0-1"){
+			error_msg="Error [54] wrong PGNend for black win 0-1";
+		}
+	}
+	
+	if(!error_msg){
+		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		
+		board_copy.moveCaller("h4", "f2");
+		
+		if(board_copy.MoveList[1].PGNmove!=="Qf2"){
+			error_msg="Error [55] wrong PGNmove for black stalemate";
+		}
+	}
+	
+	if(!error_msg){
+		if(board_copy.MoveList[1].PGNend!=="1/2-1/2"){
+			error_msg="Error [56] wrong PGNend for black stalemate 1/2-1/2";
 		}
 	}
 	
@@ -674,79 +729,21 @@ function testFenPositions(){
 	};
 }
 
-function testUtilityMisc(){
-	var board, board_name, board_copy, board_copy_name, start_time, end_time, error_msg;
+/*function fnIcAAAAA(){
+	var start_time, end_time, error_msg;
 	
 	error_msg="";
-	board_name="board_testUtil";
-	board_copy_name="board_testUtil_copy";
 	start_time=new Date().getTime();
 	
-	//if(!error_msg){
-		board=IsepicChess.initBoard({
-			name : board_name,
-			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
-		});
-		
-		if(board===null){
-			error_msg="Error [0] failed to initBoard("+board_name+")";
-		}
-	//}
 	
-	if(!error_msg){
-		board_copy=IsepicChess.initBoard({
-			name : board_copy_name
-		});
-		
-		if(board_copy===null){
-			error_msg="Error [1] failed to initBoard("+board_copy_name+")";
-		}
-	}
-	
-	if(!error_msg){
-		board.moveCaller("c3", "e4");
-		board_copy.moveCaller("g2", "g3");
-		board_copy.moveCaller("h7", "h6");
-		board_copy.moveCaller("f1", "g2");
-		board_copy.moveCaller("h6", "h5");
-		board_copy.moveCaller("g2", "e4");
-		IsepicChess.utilityMisc.cloneBoardObjs(board_copy, board);
-		
-		if(board_copy.MoveList[1].PGNmove+!!board_copy.MoveList[2]+board_copy.Squares["e4"]!=="Ne4false2"){
-			error_msg="Error [2] cloneBoardObjs[0]";
-		}
-	}
-	
-	if(!error_msg){
-		board.moveCaller("f7", "f6");
-		board.moveCaller("e4", "f6");
-		board.moveCaller("g8", "f6");
-		
-		IsepicChess.utilityMisc.cloneBoardObjs(board_copy, board);
-		
-		board.moveCaller("d2", "d4");
-		board.moveCaller("c6", "d4");
-		
-		if(JSON.stringify(board.MaterialDiff)+JSON.stringify(board_copy.MaterialDiff)!=="{\"w\":[],\"b\":[-2]}{\"w\":[1],\"b\":[-2]}"){
-			error_msg="Error [3] board.MaterialDiff same as board_copy.MaterialDiff";
-		}
-	}
-	
-	if(IsepicChess.selectBoard(board_name)!==null){
-		IsepicChess.removeBoard(board_name);
-	}
-	
-	if(IsepicChess.selectBoard(board_copy_name)!==null){
-		IsepicChess.removeBoard(board_copy_name);
-	}
 	
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "testUtilityMisc()",
+		testName : "testAAAAA()",
 		fromFile : "test-other.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
 		passed : !error_msg
 	};
-}
+}*/

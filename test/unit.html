@@ -54,7 +54,7 @@
 			$(function(){
 				var tests_html;
 				
-				tests_html="<div id='ic_id_chessboard' class='ic_tests'><h3 class='ic_inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3>";
+				tests_html="<div id='ic_id_main' class='ic_tests'><h3 class='ic_inlineb'>Isepic-Chess.js » Unit Tests <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3>";
 				tests_html+="<div id='ic_id_overall_results'>...</div>";
 				tests_html+="<table cellpadding='0' cellspacing='0'>";
 				tests_html+="<tr>";
@@ -73,10 +73,11 @@
 				tests_html+=formatResult(fnIcUtilityToInt());
 				tests_html+=formatResult(fnIcUtilityHashCode());
 				tests_html+=formatResult(fnIcUtilityCastlingChars());
+				tests_html+=formatResult(fnIcUtilityCloneBoardObjs());
 				tests_html+=formatResult(fnIcUtilityBasicFenTest());
 				
 				//test-board-functions.js
-				//...
+				tests_html+=formatResult(fnBoardIsEqualBoard());
 				
 				//test-ic-functions.js
 				tests_html+=formatResult(fnIcToVal());
@@ -100,7 +101,6 @@
 				tests_html+=formatResult(testDisambiguation());
 				tests_html+=formatResult(testBasicFunctionality());
 				tests_html+=formatResult(testFenPositions());
-				tests_html+=formatResult(testUtilityMisc());
 				
 				tests_html+="</table></div>";
 				$("body").html(tests_html);

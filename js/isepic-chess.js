@@ -529,10 +529,10 @@
 			that=this;
 			
 			if(!that.IsHidden){
-				is_new_html=!$("#ic_id_chessboard").length;
+				is_new_html=!$("#ic_id_main").length;
 				
 				if(is_new_html){
-					$("body").append("<div id='ic_id_chessboard'><h3 class='ic_inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='ic_id_board'></div><div id='ic_id_controls'><input id='ic_id_fen' value='' type='text'><br><input id='ic_id_nav_first' value='|<' type='button'> <input id='ic_id_nav_previous' value='<' type='button'> <input id='ic_id_nav_next' value='>' type='button'> <input id='ic_id_nav_last' value='>|' type='button'><input id='ic_id_rotate' value='rotate' type='button'><select id='ic_id_promote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='ic_id_tabs'></p><p id='ic_id_movelist'></p></div><div id='ic_id_infoholder'><a id='ic_id_debug_toggle' href='#'>Debug ▲</a><ul id='ic_id_objinfo' style='display:none'></ul></div></div>");
+					$("body").append("<div id='ic_id_main'><h3 class='ic_inlineb'>Isepic-Chess.js » Demo <a href='https://github.com/ajax333221/Isepic-Chess'>View on GitHub</a></h3><div id='ic_id_board'></div><div id='ic_id_controls'><input id='ic_id_fen' value='' type='text'><br><input id='ic_id_nav_first' value='|<' type='button'> <input id='ic_id_nav_previous' value='<' type='button'> <input id='ic_id_nav_next' value='>' type='button'> <input id='ic_id_nav_last' value='>|' type='button'><input id='ic_id_rotate' value='rotate' type='button'><select id='ic_id_promote'><option value='5' selected='selected'>queen</option><option value='4'>rook</option><option value='3'>bishop</option><option value='2'>knight</option></select><hr><p id='ic_id_tabs'></p><p id='ic_id_movelist'></p></div><div id='ic_id_infoholder'><a id='ic_id_debug_toggle' href='#'>Debug ▲</a><ul id='ic_id_objinfo' style='display:none'></ul></div></div>");
 					
 					$("#ic_id_fen").click(function(){
 						$(this).select();
@@ -573,7 +573,7 @@
 					return false;
 				});
 				
-				/*enves de siempre unbind(), solo hacerlo si el board es diferente (cuidado no doble al mismo tampoco)*/
+				/*en vez de siempre unbind(), solo hacerlo si el board es diferente (cuidado no doble al mismo tampoco)*/
 				/*nota, cada refresh se hace el unbind y bind a los de ID, muy mal eso*/
 				
 				$("#ic_id_nav_first").unbind("click").click(function(){
