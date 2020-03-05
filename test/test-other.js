@@ -247,9 +247,9 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
-		if(!IsepicChess.boardExists(board_copy.BoardName)){
+		if(!IsepicChess.boardExists(board_copy_name)){
 			error_msg="Error [20] failed to cloneBoard()";
 		}
 	}
@@ -293,7 +293,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("e1", "e2");
 		
@@ -303,7 +303,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("a1", "d1");
 		board_copy.moveCaller("e8", "e7");
@@ -314,7 +314,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("e5", "d7");
 		board_copy.moveCaller("e4", "g3");
@@ -337,7 +337,7 @@ function testBasicFunctionality(){
 			invalidFenStop : true
 		});
 		
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		if(IsepicChess.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1,g1,c1"){
 			error_msg="Error [29] incorrect white castling moves";
@@ -399,7 +399,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("f6", "f7");
 		
@@ -409,7 +409,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("b4", "b5");
 		board_copy.moveCaller("c4", "a3");
@@ -430,7 +430,7 @@ function testBasicFunctionality(){
 			invalidFenStop : true
 		});
 		
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		board_copy.setPromoteTo("B");
 		
 		board.moveCaller("h7", "h8");
@@ -530,7 +530,7 @@ function testBasicFunctionality(){
 			invalidFenStop : true
 		});
 		
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("a5", "d8");
 		
@@ -546,7 +546,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("a5", "c7");
 		
@@ -569,7 +569,7 @@ function testBasicFunctionality(){
 			invalidFenStop : true
 		});
 		
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("h4", "e1");
 		
@@ -585,7 +585,7 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		board_copy.moveCaller("h4", "f2");
 		

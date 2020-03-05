@@ -70,38 +70,56 @@ function fnBoardIsEqualBoard(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy.BoardName, board.BoardName);
+		IsepicChess.cloneBoard(board_copy_name, board_name);
 		
 		if(board.isEqualBoard(board_copy_name)!==true){
-			error_msg="Error [2] wrong equal hashes";
+			error_msg="Error [2] two equal boards not showing positive equality (x to x_copy)";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isEqualBoard(board.BoardName, board.BoardName)!==true){
-			error_msg="Error [3] board not showing positive equality to itself";
+		if(board_copy.isEqualBoard(board_name)!==true){
+			error_msg="Error [3] two equal boards not showing positive equality (x_copy to x)";
 		}
 	}
 	
 	if(!error_msg){
-		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)!==true){
-			error_msg="Error [4] two equal boards not showing positive equality";
+		if(board.isEqualBoard(board_name)!==true){
+			error_msg="Error [4] board not showing positive equality to itself (x)";
+		}
+	}
+	
+	if(!error_msg){
+		if(board_copy.isEqualBoard(board_copy_name)!==true){
+			error_msg="Error [5] board not showing positive equality to itself (x_copy)";
 		}
 	}
 	
 	if(!error_msg){
 		board.moveCaller("a2", "a4");
 		
-		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)!==false){
-			error_msg="Error [5] different boards returning positive equality";
+		if(board.isEqualBoard(board_copy_name)!==false){
+			error_msg="Error [6] different boards returning positive equality (x to x_copy)";
+		}
+	}
+	
+	if(!error_msg){
+		if(board_copy.isEqualBoard(board_name)!==false){
+			error_msg="Error [7] different boards returning positive equality (x_copy to x)";
 		}
 	}
 	
 	if(!error_msg){
 		board_copy.moveCaller("a2", "a4");
 		
-		if(IsepicChess.isEqualBoard(board.BoardName, board_copy.BoardName)!==true){
-			error_msg="Error [6] two equal boards not showing positive equality";
+		if(board.isEqualBoard(board_copy_name)!==true){
+			error_msg="Error [8] two equal boards not showing positive equality (x to x_copy)";
+		}
+	}
+	
+	if(!error_msg){
+		if(board_copy.isEqualBoard(board_name)!==true){
+			error_msg="Error [9] two equal boards not showing positive equality (x_copy to x)";
 		}
 	}
 	
