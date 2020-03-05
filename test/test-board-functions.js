@@ -1,7 +1,5 @@
 //---to do:
 //
-//CORREGIR IC.isEqualBoard a Board.IsEq()
-//
 //[### ya via fenApply() ###] _getValue
 //_setValue
 //[### ya via fenApply() ###] _materialDifference
@@ -14,8 +12,8 @@
 //_setCurrentMove
 //_giveSquareMovement
 //_resetPieceClasses
-//(N/A?) _getMoveListHTML
-//(N/A?) _getObjInfoHTML
+//[N/A] _getMoveListHTML
+//[N/A] _getObjInfoHTML
 //_refreshBoard
 //_firstTimeDefaults
 //_parseValuesFromFen
@@ -28,15 +26,60 @@
 //_testCollision
 //[### ya via fenApply() ###] _legalMoves
 //[### ya via fenApply() ###] _isLegalMove
-//[@@@ x2 in "test-other.js" @@@] _boardHash
 //_cloneBoardFrom
 //_cloneBoardTo
 //_moveCaller
 //_makeMove
-//(edit: ya no existe) _noLegalMoves
-//(edit: ya no sera via fenApply, sera init().var) [### ya via fenApply() ###] _isCheckmate
-//(edit: ya no sera via fenApply, sera init().var) [### ya via fenApply() ###] _isStalemate
 //_getNotation
+
+function fnBoardBoardHash(){
+	var board, board_name, start_time, end_time, error_msg;
+	
+	error_msg="";
+	board_name="board_boardHash";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		board=IsepicChess.initBoard({
+			name : board_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(board===null){
+			error_msg="Error [0] failed to initBoard("+board_name+")";
+		}
+	//}
+	
+	if(!error_msg){
+		if(board.boardHash()!==1173566236){
+			error_msg="Error [1] wrong hash for default fen (+ isHidden prop)";
+		}
+	}
+	
+	if(!error_msg){
+		board.moveCaller("a2", "a4");
+		
+		if(board.boardHash()!==1730542328){
+			error_msg="Error [2] wrong hash for board after a2-a4";
+		}
+	}
+	
+	if(IsepicChess.selectBoard(board_name)!==null){
+		IsepicChess.removeBoard(board_name);
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "board.boardHash()",
+		fromFile : "test-board-functions.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
 
 function fnBoardIsEqualBoard(){
 	var board, board_name, board_copy, board_copy_name, start_time, end_time, error_msg;

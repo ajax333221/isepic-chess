@@ -484,33 +484,6 @@ function testBasicFunctionality(){
 	}
 	
 	if(!error_msg){
-		board=IsepicChess.initBoard({
-			name : board_name,
-			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			isHidden : true,
-			invalidFenStop : true
-		});
-		
-		if(board===null){
-			error_msg="Error [44] failed to initBoard("+board_name+")";
-		}
-	}
-	
-	if(!error_msg){
-		if(board.boardHash()!==1173566236){
-			error_msg="Error [45] wrong hash for default fen (+ isHidden prop)";
-		}
-	}
-	
-	if(!error_msg){
-		board.moveCaller("a2", "a4");
-		
-		if(board.boardHash()!==1730542328){
-			error_msg="Error [46] wrong hash for board after a2-a4";
-		}
-	}
-	
-	if(!error_msg){
 		if(IsepicChess.toAbsBal("")!==IsepicChess.toBal("").toUpperCase()){
 			error_msg="Error [47] toAbsBal() !== toBal().toUpperCase()";
 		}
