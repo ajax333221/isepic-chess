@@ -3,8 +3,8 @@
 /*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:true, curly:true, es3:true, latedef:nofunc, bitwise:false, sub:true */
 
 (function(win, $){
-	var IsepicChess=(function(){
-		var _VERSION="2.3.6";
+	var Ic=(function(){
+		var _VERSION="2.4.0";
 		var _NEXT_BOARD_ID=0;
 		var _BOARDS=Object.create(null);
 		
@@ -89,8 +89,8 @@
 			});
 		}
 		
-		function _getBoardTabsHTML(current_board){
-			var i, len, board, board_name, board_list, rtn;
+		function _getBoardTabsHTML(italic_board_name){
+			var i, len, current_board, current_board_name, board_list, rtn;
 			
 			board_list=getBoardNames();
 			rtn="<strong>Board list:</strong> ";
@@ -98,19 +98,19 @@
 			for(i=0, len=board_list.length; i<len; i++){//0<len
 				rtn+=(i ? " | " : "");
 				
-				board_name=board_list[i];
-				board=selectBoard(board_name);
+				current_board_name=board_list[i];
+				current_board=selectBoard(current_board_name);
 				
-				if(board!==null){
-					if(board.IsHidden){
-						rtn+="<em class='ic_disabled'>"+board_name+"</em>";
-					}else if(board_name===current_board){
-						rtn+="<em>"+board_name+"</em>";
+				if(current_board!==null){
+					if(current_board.IsHidden){
+						rtn+="<em class='ic_disabled'>"+current_board_name+"</em>";
+					}else if(current_board_name===italic_board_name){
+						rtn+="<em>"+current_board_name+"</em>";
 					}else{
-						rtn+="<a class='ic_changeboard' data-boardname='"+board_name+"' href='#'>"+board_name+"</a>";
+						rtn+="<a class='ic_changeboard' data-boardname='"+current_board_name+"' href='#'>"+current_board_name+"</a>";
 					}
 				}else{
-					console.log("Warning[_getBoardTabsHTML]: \""+board_name+"\" is not defined");
+					console.log("Warning[_getBoardTabsHTML]: \""+current_board_name+"\" is not defined");
 				}
 			}
 			
@@ -1109,7 +1109,7 @@
 			return _hashCode(temp);
 		}
 		
-		function _isEqualBoard(to_board_name){
+		function _isEqualBoard(to_woard){
 			var that, to_board, no_errors, rtn;
 			
 			that=this;
@@ -1118,22 +1118,22 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				to_board=selectBoard(to_board_name);
+				to_board=selectBoard(to_woard);
 				
 				if(to_board===null){
 					no_errors=false;
-					console.log("Error[_isEqualBoard]: \""+to_board_name+"\" is not defined");
+					console.log("Error[_isEqualBoard]: could not select to_board");
 				}
 			//}
 			
 			if(no_errors){
-				rtn=(that.BoardName===to_board_name || that.boardHash()===to_board.boardHash());
+				rtn=(that.BoardName===to_board.BoardName || that.boardHash()===to_board.boardHash());
 			}
 			
 			return rtn;
 		}
 		
-		function _cloneBoardFrom(from_board_name){
+		function _cloneBoardFrom(from_woard){
 			var that, from_board, no_errors;
 			
 			that=this;
@@ -1141,11 +1141,11 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				from_board=selectBoard(from_board_name);
+				from_board=selectBoard(from_woard);
 				
 				if(from_board===null){
 					no_errors=false;
-					console.log("Error[_cloneBoardFrom]: \""+from_board_name+"\" is not defined");
+					console.log("Error[_cloneBoardFrom]: could not select from_board");
 				}
 			//}
 			
@@ -1157,7 +1157,7 @@
 			return no_errors;
 		}
 		
-		function _cloneBoardTo(to_board_name){
+		function _cloneBoardTo(to_woard){
 			var that, to_board, no_errors;
 			
 			that=this;
@@ -1165,11 +1165,11 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				to_board=selectBoard(to_board_name);
+				to_board=selectBoard(to_woard);
 				
 				if(to_board===null){
 					no_errors=false;
-					console.log("Error[_cloneBoardTo]: \""+to_board_name+"\" is not defined");
+					console.log("Error[_cloneBoardTo]: could not select to_board");
 				}
 			//}
 			
@@ -1387,25 +1387,34 @@
 		
 		//---------------- ic
 		
-		function boardExists(board_name){
-			return ((typeof _BOARDS[board_name])!=="undefined");
+		function boardExists(woard){
+			return (selectBoard(woard)!==null);
 		}
 		
-		function selectBoard(board_name){
-			var no_errors, rtn;
+		function selectBoard(woard){
+			var no_errors, woard_type, rtn;
 			
 			rtn=null;
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!boardExists(board_name)){
+				woard_type=(typeof woard);
+				
+				if(woard_type==="object" && (typeof woard.BoardName)!=="string"){
 					no_errors=false;
-					console.log("Error[selectBoard]: \""+board_name+"\" is not defined");
+					console.log("Error[selectBoard]: object without BoardName key");
 				}
 			//}
 			
 			if(no_errors){
-				rtn=_BOARDS[board_name];
+				if(woard_type==="string" && (typeof _BOARDS[woard])==="undefined"){
+					no_errors=false;
+					console.log("Error[selectBoard]: board \""+woard+"\" not found");
+				}
+			}
+			
+			if(no_errors){
+				rtn=(woard_type==="object" ? woard : _BOARDS[woard]);
 			}
 			
 			return rtn;
@@ -1505,58 +1514,59 @@
 			return (qos1===qos2);
 		}
 		
-		function removeBoard(board_name){
-			var rtn;
+		function removeBoard(woard){
+			var del_board, rtn;
 			
 			rtn=false;
+			del_board=selectBoard(woard);
 			
-			if(boardExists(board_name)){
-				delete _BOARDS[board_name];
+			if(del_board!==null){
+				delete _BOARDS[del_board.BoardName];
 				rtn=true;
 			}
 			
 			return rtn;
 		}
 		
-		function isEqualBoard(left_board_name, right_board_name){
+		function isEqualBoard(left_woard, right_woard){
 			var left_board, no_errors, rtn;
 			
 			rtn=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				left_board=selectBoard(left_board_name);
+				left_board=selectBoard(left_woard);
 				
 				if(left_board===null){
 					no_errors=false;
-					console.log("Error[isEqualBoard]: \""+left_board_name+"\" is not defined");
+					console.log("Error[isEqualBoard]: could not select left_board");
 				}
 			//}
 			
 			if(no_errors){
-				rtn=left_board.isEqualBoard(right_board_name);
+				rtn=left_board.isEqualBoard(right_woard);
 			}
 			
 			return rtn;
 		}
 		
-		function cloneBoard(to_board_name, from_board_name){
+		function cloneBoard(to_woard, from_woard){
 			var to_board, no_errors, rtn;
 			
 			rtn=false;
 			no_errors=true;
 			
 			//if(no_errors){
-				to_board=selectBoard(to_board_name);
+				to_board=selectBoard(to_woard);
 				
 				if(to_board===null){
 					no_errors=false;
-					console.log("Error[cloneBoard]: \""+to_board_name+"\" is not defined");
+					console.log("Error[cloneBoard]: could not select to_board");
 				}
 			//}
 			
 			if(no_errors){
-				rtn=to_board.cloneBoardFrom(from_board_name);
+				rtn=to_board.cloneBoardFrom(from_woard);
 			}
 			
 			return rtn;
@@ -1685,7 +1695,7 @@
 					no_errors=false;
 					console.log("Error[initBoard]: \""+board_name+"\" bad postFEN");
 					
-					removeBoard(board_name);
+					removeBoard(new_board);
 				}
 			}
 			
@@ -1744,7 +1754,7 @@
 			}
 			
 			if(board_created){
-				removeBoard(board.BoardName);
+				removeBoard(board);
 			}
 			
 			return rtn;
@@ -1812,7 +1822,7 @@
 		};
 	})();
 	
-	if(!win.IsepicChess){
-		win.IsepicChess=IsepicChess;
+	if(!win.Ic){
+		win.Ic=Ic;
 	}
 })(window, jQuery);

@@ -40,7 +40,7 @@ function fnBoardBoardHash(){
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
-		board=IsepicChess.initBoard({
+		board=Ic.initBoard({
 			name : board_name,
 			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 			isHidden : true,
@@ -66,8 +66,8 @@ function fnBoardBoardHash(){
 		}
 	}
 	
-	if(IsepicChess.selectBoard(board_name)!==null){
-		IsepicChess.removeBoard(board_name);
+	if(Ic.selectBoard(board)!==null){
+		Ic.removeBoard(board);
 	}
 	
 	end_time=new Date().getTime();
@@ -90,7 +90,7 @@ function fnBoardIsEqualBoard(){
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
-		board=IsepicChess.initBoard({
+		board=Ic.initBoard({
 			name : board_name,
 			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 			isHidden : true,
@@ -103,7 +103,7 @@ function fnBoardIsEqualBoard(){
 	//}
 	
 	if(!error_msg){
-		board_copy=IsepicChess.initBoard({
+		board_copy=Ic.initBoard({
 			name : board_copy_name
 		});
 		
@@ -113,27 +113,27 @@ function fnBoardIsEqualBoard(){
 	}
 	
 	if(!error_msg){
-		IsepicChess.cloneBoard(board_copy_name, board_name);
+		Ic.cloneBoard(board_copy, board);
 		
-		if(board.isEqualBoard(board_copy_name)!==true){
+		if(board.isEqualBoard(board_copy)!==true){
 			error_msg="Error [2] two equal boards not showing positive equality (x to x_copy)";
 		}
 	}
 	
 	if(!error_msg){
-		if(board_copy.isEqualBoard(board_name)!==true){
+		if(board_copy.isEqualBoard(board)!==true){
 			error_msg="Error [3] two equal boards not showing positive equality (x_copy to x)";
 		}
 	}
 	
 	if(!error_msg){
-		if(board.isEqualBoard(board_name)!==true){
+		if(board.isEqualBoard(board)!==true){
 			error_msg="Error [4] board not showing positive equality to itself (x)";
 		}
 	}
 	
 	if(!error_msg){
-		if(board_copy.isEqualBoard(board_copy_name)!==true){
+		if(board_copy.isEqualBoard(board_copy)!==true){
 			error_msg="Error [5] board not showing positive equality to itself (x_copy)";
 		}
 	}
@@ -141,13 +141,13 @@ function fnBoardIsEqualBoard(){
 	if(!error_msg){
 		board.moveCaller("a2", "a4");
 		
-		if(board.isEqualBoard(board_copy_name)!==false){
+		if(board.isEqualBoard(board_copy)!==false){
 			error_msg="Error [6] different boards returning positive equality (x to x_copy)";
 		}
 	}
 	
 	if(!error_msg){
-		if(board_copy.isEqualBoard(board_name)!==false){
+		if(board_copy.isEqualBoard(board)!==false){
 			error_msg="Error [7] different boards returning positive equality (x_copy to x)";
 		}
 	}
@@ -155,23 +155,23 @@ function fnBoardIsEqualBoard(){
 	if(!error_msg){
 		board_copy.moveCaller("a2", "a4");
 		
-		if(board.isEqualBoard(board_copy_name)!==true){
+		if(board.isEqualBoard(board_copy)!==true){
 			error_msg="Error [8] two equal boards not showing positive equality (x to x_copy)";
 		}
 	}
 	
 	if(!error_msg){
-		if(board_copy.isEqualBoard(board_name)!==true){
+		if(board_copy.isEqualBoard(board)!==true){
 			error_msg="Error [9] two equal boards not showing positive equality (x_copy to x)";
 		}
 	}
 	
-	if(IsepicChess.selectBoard(board_name)!==null){
-		IsepicChess.removeBoard(board_name);
+	if(Ic.selectBoard(board)!==null){
+		Ic.removeBoard(board);
 	}
 	
-	if(IsepicChess.selectBoard(board_copy_name)!==null){
-		IsepicChess.removeBoard(board_copy_name);
+	if(Ic.selectBoard(board_copy)!==null){
+		Ic.removeBoard(board_copy);
 	}
 	
 	end_time=new Date().getTime();
