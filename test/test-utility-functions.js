@@ -1,5 +1,6 @@
 //---to do:
 //
+//[N/A?] _consoleLog()
 //[N/A] _getBoardTabsHTML()
 //[N/A] _getTableHTML()
 

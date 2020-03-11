@@ -4,7 +4,8 @@
 //initBoard
 //getBoardCount
 //getBoardNames
-//boardExists
+//setSilentMode
+//boardExists (+ que deje igual silent mode)
 //selectBoard
 //removeBoard
 //isEqualBoard
@@ -1005,9 +1006,13 @@ function fnIcFenApply(){
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply("0invalidfen0", "countChecks")!==0){
 			error_msg="Error [3] apply(countChecks) [0invalidfen0] !== 0";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	if(!error_msg){
@@ -1029,9 +1034,13 @@ function fnIcFenApply(){
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply("0invalidfen0", "isCheck")!==false){
 			error_msg="Error [7] apply(isCheck) [0invalidfen0] !== false";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	if(!error_msg){
@@ -1047,9 +1056,13 @@ function fnIcFenApply(){
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.mapToBos(Ic.fenApply("0invalidfen0", "legalMoves", ["a1"])).join()!==""){
 			error_msg="Error [10] apply(legalMoves) [0invalidfen0] !== empty_string";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	if(!error_msg){
@@ -1065,27 +1078,43 @@ function fnIcFenApply(){
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply("0invalidfen0", "isLegalMove", ["a1", "a2"])!==false){
 			error_msg="Error [13] apply(isLegalMove) [0invalidfen0, a1, a2] !== false";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")!==true){
 			error_msg="Error [14] apply(isLegalFen) [8/8/8/8/8/1k6/8/1K1r4 w - - 0 1] !== true";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply("0invalidfen0", "isLegalFen")!==false){
 			error_msg="Error [15] apply(isLegalFen) [0invalidfen0] !== false";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalFen")!==false){
 			error_msg="Error [16] apply(isLegalFen) [rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1] !== false";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	/*if(!error_msg){
@@ -1137,9 +1166,13 @@ function fnIcFenApply(){
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply("0invalidfen0", "getValue", ["d6"])!==0){
 			error_msg="Error [25] apply(getValue) [fen_d6] !== 0";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	if(!error_msg){
@@ -1161,9 +1194,13 @@ function fnIcFenApply(){
 	}
 	
 	if(!error_msg){
+		Ic.setSilentMode(true);
+		
 		if(JSON.stringify(Ic.fenApply("0invalidfen0", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
 			error_msg="Error [29] apply(materialDifference) [0invalidfen0] !== {w:[], b:[]}";
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	end_time=new Date().getTime();

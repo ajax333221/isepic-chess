@@ -4,8 +4,9 @@
 
 (function(win, $){
 	var Ic=(function(){
-		var _VERSION="2.4.0";
+		var _VERSION="2.4.1";
 		var _NEXT_BOARD_ID=0;
+		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
 		var _EMPTY_SQR=0;
@@ -19,6 +20,10 @@
 		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheckmate", "IsStalemate", "MaterialDiff", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
 		
 		//---------------- utilities
+		
+		function _consoleLog(msg){
+			if(!_SILENT_MODE){console.log(msg);}
+		}
 		
 		function _trimSpaces(str){
 			return (""+str).replace(/^\s+|\s+$/g, "").replace(/\s\s+/g, " ");
@@ -110,7 +115,7 @@
 						rtn+="<a class='ic_changeboard' data-boardname='"+current_board_name+"' href='#'>"+current_board_name+"</a>";
 					}
 				}else{
-					console.log("Warning[_getBoardTabsHTML]: \""+current_board_name+"\" is not defined");
+					_consoleLog("Warning[_getBoardTabsHTML]: \""+current_board_name+"\" is not defined");
 				}
 			}
 			
@@ -562,7 +567,7 @@
 						
 						if(board===null){
 							no_errors=false;
-							console.log("Error[.ic_changeboard]: \""+board_name+"\" is not defined");
+							_consoleLog("Error[.ic_changeboard]: \""+board_name+"\" is not defined");
 						}
 					//}
 					
@@ -1122,7 +1127,7 @@
 				
 				if(to_board===null){
 					no_errors=false;
-					console.log("Error[_isEqualBoard]: could not select to_board");
+					_consoleLog("Error[_isEqualBoard]: could not select to_board");
 				}
 			//}
 			
@@ -1145,7 +1150,7 @@
 				
 				if(from_board===null){
 					no_errors=false;
-					console.log("Error[_cloneBoardFrom]: could not select from_board");
+					_consoleLog("Error[_cloneBoardFrom]: could not select from_board");
 				}
 			//}
 			
@@ -1169,7 +1174,7 @@
 				
 				if(to_board===null){
 					no_errors=false;
-					console.log("Error[_cloneBoardTo]: could not select to_board");
+					_consoleLog("Error[_cloneBoardTo]: could not select to_board");
 				}
 			//}
 			
@@ -1387,8 +1392,19 @@
 		
 		//---------------- ic
 		
+		function setSilentMode(val){
+			_SILENT_MODE=!!val;
+		}
+		
 		function boardExists(woard){
-			return (selectBoard(woard)!==null);
+			var temp, rtn;
+			
+			temp=_SILENT_MODE;
+			Ic.setSilentMode(true);
+			rtn=selectBoard(woard)!==null;
+			Ic.setSilentMode(temp);
+			
+			return rtn;
 		}
 		
 		function selectBoard(woard){
@@ -1402,14 +1418,14 @@
 				
 				if(woard_type==="object" && (typeof woard.BoardName)!=="string"){
 					no_errors=false;
-					console.log("Error[selectBoard]: object without BoardName key");
+					_consoleLog("Error[selectBoard]: object without BoardName key");
 				}
 			//}
 			
 			if(no_errors){
 				if(woard_type==="string" && (typeof _BOARDS[woard])==="undefined"){
 					no_errors=false;
-					console.log("Error[selectBoard]: board \""+woard+"\" not found");
+					_consoleLog("Error[selectBoard]: board \""+woard+"\" not found");
 				}
 			}
 			
@@ -1539,7 +1555,7 @@
 				
 				if(left_board===null){
 					no_errors=false;
-					console.log("Error[isEqualBoard]: could not select left_board");
+					_consoleLog("Error[isEqualBoard]: could not select left_board");
 				}
 			//}
 			
@@ -1561,7 +1577,7 @@
 				
 				if(to_board===null){
 					no_errors=false;
-					console.log("Error[cloneBoard]: could not select to_board");
+					_consoleLog("Error[cloneBoard]: could not select to_board");
 				}
 			//}
 			
@@ -1592,7 +1608,7 @@
 				
 				if(p.invalidFenStop && !fen_was_valid){
 					no_errors=false;
-					console.log("Error[initBoard]: \""+board_name+"\" bad FEN");
+					_consoleLog("Error[initBoard]: \""+board_name+"\" bad FEN");
 				}
 			//}
 			
@@ -1681,7 +1697,7 @@
 				
 				if(new_board===null){
 					no_errors=false;
-					console.log("Error[initBoard]: \""+board_name+"\" board creation failure");
+					_consoleLog("Error[initBoard]: \""+board_name+"\" board creation failure");
 				}
 			}
 			
@@ -1693,7 +1709,7 @@
 				
 				if(p.invalidFenStop && !postfen_was_valid){
 					no_errors=false;
-					console.log("Error[initBoard]: \""+board_name+"\" bad postFEN");
+					_consoleLog("Error[initBoard]: \""+board_name+"\" bad postFEN");
 					
 					removeBoard(new_board);
 				}
@@ -1750,7 +1766,7 @@
 					rtn=(board_created ? _materialDifference.apply(board, args) : {w:[], b:[]});
 					break;
 				default :
-					console.log("Error[fenApply]: can't apply function \""+fn_name+"\" to fen");
+					_consoleLog("Error[fenApply]: can't apply function \""+fn_name+"\" to fen");
 			}
 			
 			if(board_created){
@@ -1782,6 +1798,7 @@
 		
 		return {
 			version : _VERSION,
+			setSilentMode : setSilentMode,
 			boardExists : boardExists,
 			selectBoard : selectBoard,
 			toVal : toVal,
@@ -1807,6 +1824,7 @@
 			getBoardNames : getBoardNames,
 			mapToBos : mapToBos,
 			utilityMisc : {
+				consoleLog : _consoleLog,
 				trimSpaces : _trimSpaces,
 				formatName : _formatName,
 				strContains : _strContains,

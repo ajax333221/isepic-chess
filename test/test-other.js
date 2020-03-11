@@ -685,10 +685,14 @@ function testFenPositions(){
 	start_time=new Date().getTime();
 	
 	for(i=0, len=invalid_positions.length; i<len; i++){
+		Ic.setSilentMode(true);
+		
 		if(Ic.fenApply(invalid_positions[i], "isLegalFen")){
 			error_msg="Error ["+i+"] \""+invalid_positions[i]+"\" wasn't caught";
 			break;
 		}
+		
+		Ic.setSilentMode(false);
 	}
 	
 	end_time=new Date().getTime();
