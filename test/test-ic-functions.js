@@ -80,7 +80,7 @@ function fnIcToVal(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.toVal()",
+		testName : "Ic.toVal()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -157,7 +157,7 @@ function fnIcToAbsVal(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.toAbsVal()",
+		testName : "Ic.toAbsVal()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -234,7 +234,7 @@ function fnIcToBal(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.toBal()",
+		testName : "Ic.toBal()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -311,7 +311,7 @@ function fnIcToAbsBal(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.toAbsBal()",
+		testName : "Ic.toAbsBal()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -388,7 +388,7 @@ function fnIcToPieceClass(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.toPieceClass()",
+		testName : "Ic.toPieceClass()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -435,7 +435,7 @@ function fnIcToBos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.toBos()",
+		testName : "Ic.toBos()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -488,7 +488,7 @@ function fnIcToPos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.toPos()",
+		testName : "Ic.toPos()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -577,7 +577,7 @@ function fnIcGetSign(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.getSign()",
+		testName : "Ic.getSign()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -636,7 +636,7 @@ function fnIcGetRankPos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.getRankPos()",
+		testName : "Ic.getRankPos()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -695,7 +695,7 @@ function fnIcGetFilePos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.getFilePos()",
+		testName : "Ic.getFilePos()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -754,7 +754,7 @@ function fnIcGetRankBos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.getRankBos()",
+		testName : "Ic.getRankBos()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -813,7 +813,7 @@ function fnIcGetFileBos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.getFileBos()",
+		testName : "Ic.getFileBos()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -872,7 +872,7 @@ function fnIcIsInsideBoard(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.isInsideBoard()",
+		testName : "Ic.isInsideBoard()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -973,7 +973,7 @@ function fnIcSameSquare(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.sameSquare()",
+		testName : "Ic.sameSquare()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -1206,7 +1206,7 @@ function fnIcFenApply(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.fenApply()",
+		testName : "Ic.fenApply()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -1241,7 +1241,7 @@ function fnIcMapToBos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.mapToBos()",
+		testName : "Ic.mapToBos()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -1260,7 +1260,7 @@ function fnIcMapToBos(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.AAAAA()",
+		testName : "Ic.AAAAA()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),

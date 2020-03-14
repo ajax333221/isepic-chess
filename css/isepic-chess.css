@@ -239,16 +239,16 @@ body{
 	color : #555;
 }
 
-#ic_id_movelist .ic_pgn_active{
+#ic_id_movelist .ic_pgn_current{
 	color : #222;
 	background : #fefe9b;
 }
 
-#ic_id_movelist .ic_pgn_goto{
+#ic_id_movelist .ic_pgn_link{
 	cursor : pointer;
 }
 
-#ic_id_movelist .ic_pgn_goto:hover{
+#ic_id_movelist .ic_pgn_link:hover{
 	color : #222;
 	background : #e0e0e0;
 }

@@ -73,7 +73,7 @@ function fnIcUtilityTrimSpaces(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.trimSpaces()",
+		testName : "Ic.utilityMisc.trimSpaces()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -120,7 +120,7 @@ function fnIcUtilityFormatName(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.formatName()",
+		testName : "Ic.utilityMisc.formatName()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -230,7 +230,7 @@ function fnIcUtilityStrContains(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.strContains()",
+		testName : "Ic.utilityMisc.strContains()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -339,7 +339,7 @@ function fnIcUtilityOccurrences(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.occurrences()",
+		testName : "Ic.utilityMisc.occurrences()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -554,7 +554,7 @@ function fnIcUtilityToInt(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.toInt()",
+		testName : "Ic.utilityMisc.toInt()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -613,7 +613,7 @@ function fnIcUtilityHashCode(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.hashCode()",
+		testName : "Ic.utilityMisc.hashCode()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -684,7 +684,7 @@ function fnIcUtilityCastlingChars(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.castlingChars()",
+		testName : "Ic.utilityMisc.castlingChars()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -748,7 +748,7 @@ function fnIcUtilityCloneBoardObjs(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.cloneBoardObjs()",
+		testName : "Ic.utilityMisc.cloneBoardObjs()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -909,7 +909,7 @@ function fnIcUtilityBasicFenTest(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.basicFenTest()",
+		testName : "Ic.utilityMisc.basicFenTest()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),
@@ -928,7 +928,7 @@ function fnIcUtilityBasicFenTest(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "IC.utilityMisc.AAAAA()",
+		testName : "Ic.utilityMisc.AAAAA()",
 		fromFile : "test-utility-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),

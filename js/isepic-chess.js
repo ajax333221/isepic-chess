@@ -450,7 +450,7 @@
 			rtn="";
 			
 			for(i=1, len=move_list.length; i<len; i++){//1<len
-				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='ic_pgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span class='"+(i!==that.CurrentMove ? "ic_pgn_goto" : "ic_pgn_active")+"' data-index='"+i+"'>"+move_list[i].PGNmove+"</span>"+(move_list[i].PGNend ? (" <span class='ic_pgn_result'>"+move_list[i].PGNend+"</span>") : "");
+				rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='ic_pgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span class='"+(i!==that.CurrentMove ? "ic_pgn_link" : "ic_pgn_current")+"' data-index='"+i+"'>"+move_list[i].PGNmove+"</span>"+(move_list[i].PGNend ? (" <span class='ic_pgn_result'>"+move_list[i].PGNend+"</span>") : "");
 			}
 			
 			if(black_starts && rtn!==""){
@@ -622,8 +622,14 @@
 				
 				$("#ic_id_movelist").html(that.getMoveListHTML() || "...");
 				
-				$(".ic_pgn_goto").unbind("click").click(function(){
-					if(that.setCurrentMove(($(this).attr("data-index")*1), true)){
+				$(".ic_pgn_link").unbind("click").click(function(){
+					var data_val, diff, is_goto;
+					
+					data_val=($(this).attr("data-index")*1);
+					diff=(data_val-that.CurrentMove);
+					is_goto=(Math.abs(diff)!==1);
+					
+					if(that.setCurrentMove((is_goto ? data_val : diff), is_goto)){
 						that.refreshBoard();
 					}
 				});
@@ -1390,6 +1396,37 @@
 			return rtn;
 		}
 		
+		function _animatePiece(elm, parent, duration){
+			var temp, old_offset, new_offset;
+			
+			elm=$(elm);
+			
+			parent=$(parent);
+			old_offset=elm.offset();
+			
+			elm.appendTo(parent);
+			new_offset=elm.offset();
+			
+			temp=elm.clone().removeAttr("id").appendTo("body");
+			
+			temp.css({
+				"position" : "absolute",
+				"left" : old_offset.left,
+				"top" : old_offset.top,
+				"zIndex" : 1000
+			});
+			
+			elm.hide();
+			
+			temp.animate({
+				"top" : new_offset.top,
+				"left" : new_offset.left
+			}, (duration || "slow"), function(){
+				elm.show();
+				temp.remove();
+			});
+		}
+		
 		//---------------- ic
 		
 		function setSilentMode(val){
@@ -1649,7 +1686,8 @@
 						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
 						makeMove : _makeMove,
-						getNotation : _getNotation
+						getNotation : _getNotation,
+						animatePiece : _animatePiece
 					};
 				}
 				
