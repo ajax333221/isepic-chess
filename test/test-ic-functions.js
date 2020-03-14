@@ -7,7 +7,7 @@
 //setSilentMode
 //boardExists (+ que deje igual silent mode)
 //selectBoard
-//removeBoard
+//removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
 //isEqualBoard
 //cloneBoard
 

@@ -379,7 +379,7 @@
 						that.FromSquare="";
 						
 						if(that.moveCaller(temp, square_bos)){
-							that.refreshBoard();
+							that.refreshBoard(1);
 						}else{
 							that.giveSquareMovement();
 							
@@ -528,7 +528,7 @@
 			return rtn;
 		}
 		
-		function _refreshBoard(){
+		function _refreshBoard(animate_move){
 			var that, is_new_html;
 			
 			that=this;
@@ -572,7 +572,7 @@
 					//}
 					
 					if(no_errors){
-						board.refreshBoard();
+						board.refreshBoard(0);
 					}
 					
 					return false;
@@ -582,32 +582,40 @@
 				/*nota, cada refresh se hace el unbind y bind a los de ID, muy mal eso*/
 				
 				$("#ic_id_nav_first").unbind("click").click(function(){
-					if(that.setCurrentMove(0, true)){
-						that.refreshBoard();
+					var is_goto;
+					
+					is_goto=(that.CurrentMove!==1);
+					
+					if(that.setCurrentMove((is_goto ? 0 : -1), is_goto)){
+						that.refreshBoard(is_goto ? 0 : -1);
 					}
 				});
 				
 				$("#ic_id_nav_previous").unbind("click").click(function(){
 					if(that.setCurrentMove(-1, false)){
-						that.refreshBoard();
+						that.refreshBoard(-1);
 					}
 				});
 				
 				$("#ic_id_nav_next").unbind("click").click(function(){
 					if(that.setCurrentMove(1, false)){
-						that.refreshBoard();
+						that.refreshBoard(1);
 					}
 				});
 				
 				$("#ic_id_nav_last").unbind("click").click(function(){
-					if(that.setCurrentMove(10000, true)){
-						that.refreshBoard();
+					var is_goto;
+					
+					is_goto=(that.CurrentMove!==(that.MoveList.length-2));
+					
+					if(that.setCurrentMove((is_goto ? 10000 : 1), is_goto)){
+						that.refreshBoard(is_goto ? 0 : 1);
 					}
 				});
 				
 				$("#ic_id_rotate").unbind("click").click(function(){
 					that.toggleIsRotated();
-					that.refreshBoard();
+					that.refreshBoard(0);
 				});
 				
 				$("#ic_id_promote").unbind("change").change(function(){
@@ -615,6 +623,7 @@
 					$("#ic_id_objinfo").html(that.getObjInfoHTML());
 				});
 				
+				//animate_move
 				that.resetPieceClasses();
 				
 				$(".ic_wside, .ic_bside").removeClass("ic_w_color ic_b_color");
@@ -630,7 +639,7 @@
 					is_goto=(Math.abs(diff)!==1);
 					
 					if(that.setCurrentMove((is_goto ? data_val : diff), is_goto)){
-						that.refreshBoard();
+						that.refreshBoard(is_goto ? 0 : diff);
 					}
 				});
 				
@@ -654,7 +663,7 @@
 			that=this;
 			
 			that.InitialFullMove=that.FullMove;
-			that.MoveList=[{Fen : that.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : ""}];
+			that.MoveList=[{Fen : that.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", PieceVal : 0, KingCastled : 0}];
 			that.CurrentMove=0;
 			that.setPromoteTo(promote_qal);
 			that.IsRotated=!!rotate_board;
@@ -1162,7 +1171,7 @@
 			
 			if(no_errors){
 				_cloneBoardObjs(that, from_board);
-				/*algun refreshBoard(); pero problemas con hidden*/
+				/*algun refreshBoard(0); pero problemas con hidden*/
 			}
 			
 			return no_errors;
@@ -1186,7 +1195,7 @@
 			
 			if(no_errors){
 				_cloneBoardObjs(to_board, that);
-				/*algun refreshBoard(); pero problemas con hidden*/
+				/*algun refreshBoard(0); pero problemas con hidden*/
 			}
 			
 			return no_errors;
@@ -1321,7 +1330,7 @@
 				}
 			}
 			
-			that.MoveList.push({Fen : that.Fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : toBos(initial_qos), ToBos : toBos(final_qos)});
+			that.MoveList.push({Fen : that.Fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : toBos(initial_qos), ToBos : toBos(final_qos), PieceVal : piece_val, KingCastled : king_castled});
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
@@ -1453,11 +1462,18 @@
 			//if(no_errors){
 				woard_type=(typeof woard);
 				
+				if(woard_type==="undefined"){
+					no_errors=false;
+					_consoleLog("Error[selectBoard]: undefined variable");
+				}
+			//}
+			
+			if(no_errors){
 				if(woard_type==="object" && (typeof woard.BoardName)!=="string"){
 					no_errors=false;
 					_consoleLog("Error[selectBoard]: object without BoardName key");
 				}
-			//}
+			}
 			
 			if(no_errors){
 				if(woard_type==="string" && (typeof _BOARDS[woard])==="undefined"){
@@ -1760,7 +1776,7 @@
 				}
 				
 				rtn=new_board;
-				new_board.refreshBoard();
+				new_board.refreshBoard(0);
 			}
 			
 			return rtn;

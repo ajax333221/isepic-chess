@@ -53,7 +53,7 @@ function fnBoardBoardHash(){
 	//}
 	
 	if(!error_msg){
-		if(board.boardHash()!==1173566236){
+		if(board.boardHash()!==-1063026620){
 			error_msg="Error [1] wrong hash for default fen (+ isHidden prop)";
 		}
 	}
@@ -61,7 +61,7 @@ function fnBoardBoardHash(){
 	if(!error_msg){
 		board.moveCaller("a2", "a4");
 		
-		if(board.boardHash()!==1730542328){
+		if(board.boardHash()!==81489257){
 			error_msg="Error [2] wrong hash for board after a2-a4";
 		}
 	}
