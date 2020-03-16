@@ -478,7 +478,7 @@ function testBasicFunctionality(){
 		
 		board.moveCaller("h5", "g6");
 		
-		if(board.countChecks()!==2){
+		if(board.Active.checks!==2){
 			error_msg="Error [43] wrong double check to enpassant capture";
 		}
 	}

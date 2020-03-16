@@ -988,38 +988,10 @@ function fnIcFenApply(){
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
-		if(Ic.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "countChecks")!==2){
-			error_msg="Error [0] apply(countChecks) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== 2";
-		}
-	//}
-	
-	if(!error_msg){
-		if(Ic.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "countChecks")!==0){
-			error_msg="Error [1] apply(countChecks) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== 0";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "countChecks", ["f1"])!==1){
-			error_msg="Error [2] apply(countChecks) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== 1";
-		}
-	}
-	
-	if(!error_msg){
-		Ic.setSilentMode(true);
-		
-		if(Ic.fenApply("0invalidfen0", "countChecks")!==0){
-			error_msg="Error [3] apply(countChecks) [0invalidfen0] !== 0";
-		}
-		
-		Ic.setSilentMode(false);
-	}
-	
-	if(!error_msg){
 		if(Ic.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck")!==true){
 			error_msg="Error [4] apply(isCheck) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== true";
 		}
-	}
+	//}
 	
 	if(!error_msg){
 		if(Ic.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck")!==false){

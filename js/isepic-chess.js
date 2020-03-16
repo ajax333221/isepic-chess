@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var Ic=(function(){
-		var _VERSION="2.4.1";
+		var _VERSION="2.4.2";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -310,14 +310,6 @@
 			}
 			
 			return rtn;
-		}
-		
-		function _countChecks(king_qos){
-			var that;
-			
-			that=this;
-			
-			return that.calculateChecks(king_qos, false);
 		}
 		
 		function _isCheck(king_qos){
@@ -811,7 +803,7 @@
 				new_fen_board+=(empty_consecutive_squares || "")+(i!==7 ? "/" : "");
 			}
 			
-			that.Active.checks=that.countChecks();
+			that.Active.checks=that.calculateChecks("", false);
 			no_legal_moves=true;
 			
 			outer:
@@ -1697,7 +1689,6 @@
 						getValue : _getValue,
 						setValue : _setValue,
 						materialDifference : _materialDifference,
-						countChecks : _countChecks,
 						isCheck : _isCheck,
 						calculateChecks : _calculateChecks,
 						toggleActiveColor : _toggleActiveColor,
@@ -1821,9 +1812,6 @@
 			fn_name=_formatName(fn_name);
 			
 			switch(fn_name){
-				case "countChecks" :
-					rtn=(board_created ? _countChecks.apply(board, args) : 0);
-					break;
 				case "isCheck" :
 					rtn=(board_created ? _isCheck.apply(board, args) : false);
 					break;
