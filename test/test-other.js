@@ -146,7 +146,7 @@ function testBasicFunctionality(){
 		board.moveCaller("f7", "g6");
 		
 		if(board.Active.checks!==2){
-			error_msg="Error [7] 2 active checks via discovered check";
+			error_msg="Error [7] two active checks via discovered check";
 		}
 	}
 	

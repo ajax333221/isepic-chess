@@ -17,7 +17,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheckmate", "IsStalemate", "MaterialDiff", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "MaterialDiff", "PromoteTo", "FromSquare", "IsHidden", "Squares"];
 		
 		//---------------- utilities
 		
@@ -499,6 +499,7 @@
 			
 			rtn="<li><strong>Selected board:</strong> <span>"+that.BoardName+"</span></li>";
 			rtn+="<li><strong>Is rotated?:</strong> <span>"+that.IsRotated+"</span></li>";
+			rtn+="<li><strong>Is check?:</strong> <span>"+that.IsCheck+"</span></li>";
 			rtn+="<li><strong>Is checkmate?:</strong> <span>"+that.IsCheckmate+"</span></li>";
 			rtn+="<li><strong>Is stalemate?:</strong> <span>"+that.IsStalemate+"</span></li>";
 			rtn+="<li><strong>En Passant:</strong> <span>"+(that.EnPassantBos ? that.EnPassantBos : "-")+"</span></li>";
@@ -519,6 +520,7 @@
 			rtn+="<li><strong>isBlack?:</strong> <span>"+that.NonActive.isBlack+"</span></li>";
 			rtn+="<li><strong>sign:</strong> <span>("+(that.NonActive.sign>0 ? "+" : "-")+")</span></li>";
 			rtn+="<li><strong>king square:</strong> <span>"+toBos(that.NonActive.kingPos)+"</span></li>";
+			rtn+="<li><strong>checks:</strong> <span>"+that.NonActive.checks+"</span></li>";
 			rtn+="</ul>";
 			rtn+="</li>";
 			
@@ -796,6 +798,7 @@
 			}
 			
 			that.Active.checks=that.calculateChecks(null, false);
+			that.NonActive.checks=0;
 			no_legal_moves=true;
 			
 			outer:
@@ -808,8 +811,9 @@
 				}
 			}
 			
-			that.IsCheckmate=!!(that.Active.checks && no_legal_moves);
-			that.IsStalemate=!!(!that.Active.checks && no_legal_moves);
+			that.IsCheck=!!that.Active.checks;
+			that.IsCheckmate=(that.IsCheck && no_legal_moves);
+			that.IsStalemate=(!that.IsCheck && no_legal_moves);
 			
 			that.Fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-")+" "+that.HalfMove+" "+that.FullMove);
 			
@@ -1059,7 +1063,7 @@
 					
 					active_castling_availity=(active_color ? that.BCastling : that.WCastling);
 					
-					if(active_castling_availity && !that.Active.checks){
+					if(active_castling_availity && !that.IsCheck){
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
 								if(that.candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
@@ -1356,7 +1360,7 @@
 			
 			pgn_end="";
 			
-			if(that.Active.checks){
+			if(that.IsCheck){
 				if(that.IsCheckmate){
 					pgn_move+="#";
 					pgn_end=(active_color ? "0-1" : "1-0");
@@ -1724,8 +1728,8 @@
 				target.NonActive={
 					isBlack : null,
 					sign : null,
-					kingPos : null
-					//checks
+					kingPos : null,
+					checks : null
 				};
 				
 				target.Fen=null;
@@ -1738,6 +1742,7 @@
 				target.MoveList=null;
 				target.CurrentMove=null;
 				target.IsRotated=null;
+				target.IsCheck=null;
 				target.IsCheckmate=null;
 				target.IsStalemate=null;
 				target.MaterialDiff=null;
