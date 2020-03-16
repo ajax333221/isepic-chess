@@ -312,14 +312,6 @@
 			return rtn;
 		}
 		
-		function _isCheck(king_qos){
-			var that;
-			
-			that=this;
-			
-			return !!that.calculateChecks(king_qos, true);/*NO tratar de leer de cache, sea lo que sea king_qos*/
-		}
-		
 		function _calculateChecks(king_qos, early_break){
 			var i, j, that, as_knight, rtn_total_checks;
 			
@@ -803,7 +795,7 @@
 				new_fen_board+=(empty_consecutive_squares || "")+(i!==7 ? "/" : "");
 			}
 			
-			that.Active.checks=that.calculateChecks("", false);
+			that.Active.checks=that.calculateChecks(null, false);
 			no_legal_moves=true;
 			
 			outer:
@@ -847,7 +839,7 @@
 				
 				that.toggleActiveColor();
 				
-				if(that.isCheck(temp)){
+				if(that.calculateChecks(temp, true)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
@@ -1071,7 +1063,7 @@
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
 								if(that.candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
-									if(!that.isCheck([active_color_king_rank, (i ? 3 : 5)])){
+									if(!that.calculateChecks([active_color_king_rank, (i ? 3 : 5)], true)){
 										pre_validated_arr_pos.push([[active_color_king_rank, (i ? 2 : 6)]]);
 									}
 								}
@@ -1128,7 +1120,7 @@
 							}
 						}
 						
-						if(!that.isCheck(is_king ? current_pos : "")){
+						if(!that.calculateChecks((is_king ? current_pos : null), true)){
 							rtn.push(current_pos);
 						}
 						
@@ -1689,7 +1681,6 @@
 						getValue : _getValue,
 						setValue : _setValue,
 						materialDifference : _materialDifference,
-						isCheck : _isCheck,
 						calculateChecks : _calculateChecks,
 						toggleActiveColor : _toggleActiveColor,
 						toggleIsRotated : _toggleIsRotated,
@@ -1812,9 +1803,6 @@
 			fn_name=_formatName(fn_name);
 			
 			switch(fn_name){
-				case "isCheck" :
-					rtn=(board_created ? _isCheck.apply(board, args) : false);
-					break;
 				case "legalMoves" :
 					rtn=(board_created ? _legalMoves.apply(board, args) : []);
 					break;

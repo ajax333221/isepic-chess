@@ -1,5 +1,4 @@
 //---to do:
-//Mover fenApply() -> isCheckmate() y isStalemate() a otro lado por b.IsXyz
 //
 //initBoard
 //getBoardCount
@@ -988,38 +987,10 @@ function fnIcFenApply(){
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
-		if(Ic.fenApply("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck")!==true){
-			error_msg="Error [4] apply(isCheck) [8/k7/r7/8/8/2b5/8/K7 w - - 0 1] !== true";
-		}
-	//}
-	
-	if(!error_msg){
-		if(Ic.fenApply("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck")!==false){
-			error_msg="Error [5] apply(isCheck) [8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.fenApply("r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1", "isCheck", ["f1"])!==true){
-			error_msg="Error [6] apply(isCheck) [r3k2r/8/8/8/8/3b4/8/R3K2R w KQkq - 0 1, f1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		Ic.setSilentMode(true);
-		
-		if(Ic.fenApply("0invalidfen0", "isCheck")!==false){
-			error_msg="Error [7] apply(isCheck) [0invalidfen0] !== false";
-		}
-		
-		Ic.setSilentMode(false);
-	}
-	
-	if(!error_msg){
 		if(Ic.mapToBos(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"])).join()!=="d2,b2,a2"){
 			error_msg="Error [8] apply(legalMoves) [8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1, c2] !== d2,b2,a2";
 		}
-	}
+	//}
 	
 	if(!error_msg){
 		if(Ic.mapToBos(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"])).join()!==""){
@@ -1088,42 +1059,6 @@ function fnIcFenApply(){
 		
 		Ic.setSilentMode(false);
 	}
-	
-	/*if(!error_msg){
-		if(Ic.fenApply("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate")!==true){
-			error_msg="Error [17] apply(isCheckmate) [8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.fenApply("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate")!==false){
-			error_msg="Error [18] apply(isCheckmate) [8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.fenApply("0invalidfen0", "isCheckmate")!==false){
-			error_msg="Error [19] apply(isCheckmate) [0invalidfen0] !== false";
-		}
-	}*/
-	
-	/*if(!error_msg){
-		if(Ic.fenApply("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "isStalemate")!==true){
-			error_msg="Error [20] apply(isStalemate) [8/8/8/8/8/1k6/1r6/K7 w - - 0 1] !== true";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.fenApply("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "isStalemate")!==false){
-			error_msg="Error [21] apply(isStalemate) [8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1] !== false";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.fenApply("0invalidfen0", "isStalemate")!==false){
-			error_msg="Error [22] apply(isStalemate) [0invalidfen0] !== false";
-		}
-	}*/
 	
 	if(!error_msg){
 		if(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", ["e8"])!==-6){

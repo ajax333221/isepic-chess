@@ -3,7 +3,6 @@
 //[### ya via fenApply() ###] _getValue
 //_setValue
 //[### ya via fenApply() ###] _materialDifference
-//[### ya via fenApply() ###] _isCheck
 //_calculateChecks
 //_toggleActiveColor // + hacer con fen W to move, luego otro fen B to move pero toggle y comparar por fen. . + otro test de toggle x2 = mismo hash
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
