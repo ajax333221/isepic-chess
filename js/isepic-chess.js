@@ -95,70 +95,47 @@
 		}
 		
 		function _animatePiece(from_bos, to_bos, initial_val, final_val, is_reversed){
-			var temp, cache_html, piece_elm, from_square, to_square, piece_class, old_offset, new_offset;
+			var temp, piece_elm, from_square, to_square, initial_class, final_class, old_offset, new_offset;
 			
-			//seleccionar referencias TO y FROM
+			$(".ic_piece_holder").finish();
+			
 			from_square=$("#ic_id_"+from_bos);
 			to_square=$("#ic_id_"+to_bos);
 			
-			//guardar OLD_OFFSET y NEW_OFFSET
 			old_offset=from_square.children(".ic_piece_holder").offset();
 			new_offset=to_square.children(".ic_piece_holder").offset();
 			
-			//calcular class del la PIEZA_A_ANIMAR
-			piece_class=toPieceClass((initial_val!==final_val && is_reversed) ? final_val : initial_val);
-			piece_class=(piece_class ? (" ic_"+piece_class) : "");
+			/*pass initial_class and final_class to animatePiece() and remove is_reversed?*/
+			initial_class=toPieceClass((initial_val!==final_val && is_reversed) ? final_val : initial_val);
+			initial_class=(initial_class ? (" ic_"+initial_class) : "");
+			final_class=initial_class;
 			
-			//guardar CACHE el html de FROM
-			cache_html=from_square.html();
+			if(initial_val!==final_val && !is_reversed){
+				final_class=toPieceClass(final_val);
+				final_class=(final_class ? (" ic_"+final_class) : "");
+			}
 			
-			//reescribir html FROM con la PIEZA_A_ANIMAR
-			from_square.html("<div class='"+("ic_piece_holder"+piece_class)+"'></div>");
+			to_square.html("<div class='"+("ic_piece_holder"+initial_class)+"'></div>");
+			piece_elm=to_square.children(".ic_piece_holder");
 			
-			//seleccionar referencia PIEZA_A_ANIMAR
-			piece_elm=from_square.children(".ic_piece_holder");
-			
-			//borrar html de TO
-			//y mover PIEZA_A_ANIMAR a TO
-			to_square.html("");
-			piece_elm.appendTo(to_square);
-			
-			//crear COPIA_ANIMADA libremente en board
 			temp=piece_elm.clone().appendTo("#ic_id_board");
 			
-			//mover COPIA_ANIMADA a la posicion OLD_OFFSET
+			piece_elm.hide().attr("class", ("ic_piece_holder"+final_class));
+			
 			temp.css({
 				"position" : "absolute",
 				"left" : old_offset.left,
 				"top" : old_offset.top,
 				"zIndex" : 1000
-			});
-			
-			//ocultar PIEZA_A_ANIMAR (que se encuentra en TO)
-			piece_elm.hide();
-			
-			//animar COPIA_ANIMADA a la posicion NEW_OFFSET
-			//al terminar, hace:
-			//--- muestra PIEZA_A_ANIMAR (que se encuentra en TO)
-			//--- retaurar html FROM con el cache original
-			//--- if(ocupa PIEZA_A_ANIMAR transformar final?)
-			//--- --- transforma final PIEZA_A_ANIMAR cambiandole la class
-			//--- remueve COPIA_ANIMADA
-			temp.animate({
+			}).animate({
 				"top" : new_offset.top,
 				"left" : new_offset.left
-			}, 1200, function(){
-				piece_elm.show();
-				from_square.html(cache_html);
-				
-				if(initial_val!==final_val && !is_reversed){//mover a success animation?
-					piece_class=toPieceClass(final_val);
-					piece_class=(piece_class ? (" ic_"+piece_class) : "");
-					
-					piece_elm.attr("class", ("ic_piece_holder"+piece_class));
+			}, {
+				duration : 300,
+				always : function(){
+					piece_elm.show();
+					temp.remove();
 				}
-				
-				temp.remove();
 			});
 		}
 		
