@@ -1,6 +1,7 @@
 //---to do:
 //
 //[N/A?] _consoleLog()
+//[N/A?] _animatePiece()
 //[N/A] _getBoardTabsHTML()
 //[N/A] _getTableHTML()
 

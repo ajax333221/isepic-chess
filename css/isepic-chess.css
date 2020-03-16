@@ -104,6 +104,13 @@ body{
 	width : 39px;
 	text-align : center;
 	vertical-align : middle;
+}
+
+#ic_id_board .ic_piece_holder{
+	margin : 0;
+	padding : 0;
+	height : 39px;
+	width : 39px;
 	background-repeat : no-repeat;
 	background-size : 75%;
 	background-position : 50% 50%;

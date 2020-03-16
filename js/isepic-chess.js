@@ -94,6 +94,74 @@
 			});
 		}
 		
+		function _animatePiece(from_bos, to_bos, initial_val, final_val, is_reversed){
+			var temp, cache_html, piece_elm, from_square, to_square, piece_class, old_offset, new_offset;
+			
+			//seleccionar referencias TO y FROM
+			from_square=$("#ic_id_"+from_bos);
+			to_square=$("#ic_id_"+to_bos);
+			
+			//guardar OLD_OFFSET y NEW_OFFSET
+			old_offset=from_square.children(".ic_piece_holder").offset();
+			new_offset=to_square.children(".ic_piece_holder").offset();
+			
+			//calcular class del la PIEZA_A_ANIMAR
+			piece_class=toPieceClass((initial_val!==final_val && is_reversed) ? final_val : initial_val);
+			piece_class=(piece_class ? (" ic_"+piece_class) : "");
+			
+			//guardar CACHE el html de FROM
+			cache_html=from_square.html();
+			
+			//reescribir html FROM con la PIEZA_A_ANIMAR
+			from_square.html("<div class='"+("ic_piece_holder"+piece_class)+"'></div>");
+			
+			//seleccionar referencia PIEZA_A_ANIMAR
+			piece_elm=from_square.children(".ic_piece_holder");
+			
+			//borrar html de TO
+			//y mover PIEZA_A_ANIMAR a TO
+			to_square.html("");
+			piece_elm.appendTo(to_square);
+			
+			//crear COPIA_ANIMADA libremente en board
+			temp=piece_elm.clone().appendTo("#ic_id_board");
+			
+			//mover COPIA_ANIMADA a la posicion OLD_OFFSET
+			temp.css({
+				"position" : "absolute",
+				"left" : old_offset.left,
+				"top" : old_offset.top,
+				"zIndex" : 1000
+			});
+			
+			//ocultar PIEZA_A_ANIMAR (que se encuentra en TO)
+			piece_elm.hide();
+			
+			//animar COPIA_ANIMADA a la posicion NEW_OFFSET
+			//al terminar, hace:
+			//--- muestra PIEZA_A_ANIMAR (que se encuentra en TO)
+			//--- retaurar html FROM con el cache original
+			//--- if(ocupa PIEZA_A_ANIMAR transformar final?)
+			//--- --- transforma final PIEZA_A_ANIMAR cambiandole la class
+			//--- remueve COPIA_ANIMADA
+			temp.animate({
+				"top" : new_offset.top,
+				"left" : new_offset.left
+			}, 1200, function(){
+				piece_elm.show();
+				from_square.html(cache_html);
+				
+				if(initial_val!==final_val && !is_reversed){//mover a success animation?
+					piece_class=toPieceClass(final_val);
+					piece_class=(piece_class ? (" ic_"+piece_class) : "");
+					
+					piece_elm.attr("class", ("ic_piece_holder"+piece_class));
+				}
+				
+				temp.remove();
+			});
+		}
+		
 		function _getBoardTabsHTML(italic_board_name){
 			var i, len, current_board, current_board_name, board_list, rtn;
 			
@@ -134,7 +202,7 @@
 				
 				for(j=0; j<8; j++){//0...7
 					current_bos=toBos(is_rotated ? [(7-i), (7-j)] : [i, j]);
-					rtn+="<td id='"+("ic_id_"+current_bos)+"' class='"+((i+j)%2 ? "ic_bs" : "ic_ws")+"' data-bos='"+current_bos+"'></td>";
+					rtn+="<td id='"+("ic_id_"+current_bos)+"' class='"+((i+j)%2 ? "ic_bs" : "ic_ws")+"' data-bos='"+current_bos+"'><div class='ic_piece_holder'></div></td>";
 				}
 				
 				rtn+="<td class='ic_label ic_right_border'>"+rank_bos+"</td></tr>";
@@ -416,10 +484,13 @@
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
 					current_pos=(that.IsRotated ? [(7-i), (7-j)] : [i, j]);
-					piece_class=toPieceClass(that.getValue(current_pos));
+					new_class=((i+j)%2 ? "ic_bs" : "ic_ws");
 					
-					new_class=(((i+j)%2 ? "ic_bs" : "ic_ws")+(piece_class ? (" ic_"+piece_class) : ""));
-					$("#ic_id_"+toBos(current_pos)).attr("class", new_class);
+					//si prev next exclude, pasar blank square (ni si quiera poner un piece holder)
+					piece_class=toPieceClass(that.getValue(current_pos));
+					piece_class=(piece_class ? (" ic_"+piece_class) : "");
+					
+					$("#ic_id_"+toBos(current_pos)).attr("class", new_class).html("<div class='"+("ic_piece_holder"+piece_class)+"'></div>");
 				}
 			}
 			
@@ -529,7 +600,7 @@
 		}
 		
 		function _refreshBoard(animate_move){
-			var that, is_new_html;
+			var that, temp, is_new_html;
 			
 			that=this;
 			
@@ -623,8 +694,15 @@
 					$("#ic_id_objinfo").html(that.getObjInfoHTML());
 				});
 				
-				//animate_move
 				that.resetPieceClasses();
+				
+				if(animate_move===1){
+					temp=that.MoveList[that.CurrentMove];
+					_animatePiece(temp.FromBos, temp.ToBos, temp.InitialVal, temp.FinalVal, false);
+				}else if(animate_move===-1){
+					temp=that.MoveList[that.CurrentMove+1];
+					_animatePiece(temp.ToBos, temp.FromBos, temp.FinalVal, temp.InitialVal, true);
+				}
 				
 				$(".ic_wside, .ic_bside").removeClass("ic_w_color ic_b_color");
 				$(that.Active.isBlack ? ".ic_bside" : ".ic_wside").addClass(that.Active.isBlack ? "ic_b_color" : "ic_w_color");
@@ -663,7 +741,7 @@
 			that=this;
 			
 			that.InitialFullMove=that.FullMove;
-			that.MoveList=[{Fen : that.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", PieceVal : 0, KingCastled : 0}];
+			that.MoveList=[{Fen : that.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 			that.CurrentMove=0;
 			that.setPromoteTo(promote_qal);
 			that.IsRotated=!!rotate_board;
@@ -1330,7 +1408,7 @@
 				}
 			}
 			
-			that.MoveList.push({Fen : that.Fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : toBos(initial_qos), ToBos : toBos(final_qos), PieceVal : piece_val, KingCastled : king_castled});
+			that.MoveList.push({Fen : that.Fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : toBos(initial_qos), ToBos : toBos(final_qos), InitialVal : piece_val, FinalVal : (promoted_val || piece_val), KingCastled : king_castled});
 		}
 		
 		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
@@ -1403,37 +1481,6 @@
 			}
 			
 			return rtn;
-		}
-		
-		function _animatePiece(elm, parent, duration){
-			var temp, old_offset, new_offset;
-			
-			elm=$(elm);
-			
-			parent=$(parent);
-			old_offset=elm.offset();
-			
-			elm.appendTo(parent);
-			new_offset=elm.offset();
-			
-			temp=elm.clone().removeAttr("id").appendTo("body");
-			
-			temp.css({
-				"position" : "absolute",
-				"left" : old_offset.left,
-				"top" : old_offset.top,
-				"zIndex" : 1000
-			});
-			
-			elm.hide();
-			
-			temp.animate({
-				"top" : new_offset.top,
-				"left" : new_offset.left
-			}, (duration || "slow"), function(){
-				elm.show();
-				temp.remove();
-			});
 		}
 		
 		//---------------- ic
@@ -1702,8 +1749,7 @@
 						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
 						makeMove : _makeMove,
-						getNotation : _getNotation,
-						animatePiece : _animatePiece
+						getNotation : _getNotation
 					};
 				}
 				
@@ -1887,6 +1933,7 @@
 				hashCode : _hashCode,
 				castlingChars : _castlingChars,
 				cloneBoardObjs : _cloneBoardObjs,
+				animatePiece : _animatePiece,
 				getBoardTabsHTML : _getBoardTabsHTML,
 				getTableHTML : _getTableHTML,
 				basicFenTest : _basicFenTest

@@ -101,7 +101,7 @@ getNotation(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction**
 To Do
 -------------
 
-- Documentation (:wrench: 40% done)
+- Documentation (:wrench: 60% done)
 - PGN viewer
 - Move list variations
 - Set-up position mode
