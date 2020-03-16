@@ -16,6 +16,8 @@ Features
 - Move list navigation
 - Board navigation
 - Pawn promotion options
+- Visual material difference
+- Piece displacement animation
 - ~~Drag-and-drop pieces~~ (currently disabled)
 - Chess-font by ajax333221 ![White King](css/images/wk.png "white king")![White Queen](css/images/wq.png "white queen")![White Rook](css/images/wr.png "white rook")![White Bishop](css/images/wb.png "white bishop")![White Knight](css/images/wn.png "white knight")![White Pawn](css/images/wp.png "white pawn")![Black King](css/images/bk.png "black king")![Black Queen](css/images/bq.png "black queen")![Black Rook](css/images/br.png "black rook")![Black Bishop](css/images/bb.png "black bishop")![Black Knight](css/images/bn.png "black knight")![Black Pawn](css/images/bp.png "black pawn")
 
