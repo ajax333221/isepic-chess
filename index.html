@@ -8,7 +8,7 @@
 		<script src="./js/isepic-chess.js"></script>
 		<script>
 			$(function(){
-				var main_board, other_board, oc_board, h_board, rff_board;
+				var main_board, other_board, oc_board, h_board, rff_board, castle_board;
 				
 				Ic.setSilentMode(false);
 				
@@ -42,6 +42,23 @@
 					name : "resume_from_fen",
 					fen : "r5k1/pp3ppp/7n/8/2P2P1K/3P1q2/P1PBb2P/R5QR b - - 3 22"
 				});
+				
+				//testing castle animation, will remove this later
+				castle_board=Ic.initBoard({
+					name : "castling_animation",
+					fen : "r3k2r/7q/8/8/8/8/7Q/R3K2R w KQkq - 0 1"
+				});
+				
+				//testing moves for animation, will remove this later
+				main_board.moveCaller("a2", "a4");
+				main_board.moveCaller("b7", "b5");
+				main_board.moveCaller("a4", "b5");
+				main_board.moveCaller("a7", "a6");
+				main_board.moveCaller("b5", "a6");
+				main_board.moveCaller("c8", "b7");
+				main_board.moveCaller("a6", "b7");
+				main_board.moveCaller("c7", "c6");
+				main_board.moveCaller("b7", "a8");
 				
 				other_board.moveCaller("f2", "f4");
 				Ic.selectBoard("other").moveCaller("e7", "e6");

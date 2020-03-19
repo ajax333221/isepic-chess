@@ -94,8 +94,8 @@
 			});
 		}
 		
-		function _animatePiece(from_bos, to_bos, initial_val, final_val, is_reversed){
-			var temp, piece_elm, from_square, to_square, initial_class, final_class, old_offset, new_offset;
+		function _animatePiece(from_bos, to_bos, initial_class, final_class){
+			var temp, piece_elm, from_square, to_square, old_offset, new_offset;
 			
 			$(".ic_piece_holder").finish();
 			
@@ -105,22 +105,12 @@
 			old_offset=from_square.children(".ic_piece_holder").offset();
 			new_offset=to_square.children(".ic_piece_holder").offset();
 			
-			/*pass initial_class and final_class to animatePiece() and remove is_reversed?*/
-			initial_class=toPieceClass((initial_val!==final_val && is_reversed) ? final_val : initial_val);
-			initial_class=(initial_class ? (" ic_"+initial_class) : "");
-			final_class=initial_class;
-			
-			if(initial_val!==final_val && !is_reversed){
-				final_class=toPieceClass(final_val);
-				final_class=(final_class ? (" ic_"+final_class) : "");
-			}
-			
 			to_square.html("<div class='"+("ic_piece_holder"+initial_class)+"'></div>");
 			piece_elm=to_square.children(".ic_piece_holder");
 			
 			temp=piece_elm.clone().appendTo("#ic_id_board");
 			
-			piece_elm.hide().attr("class", ("ic_piece_holder"+final_class));
+			piece_elm.hide().attr("class", ("ic_piece_holder"+(final_class || initial_class)));
 			
 			temp.css({
 				"position" : "absolute",
@@ -563,7 +553,7 @@
 		}
 		
 		function _refreshBoard(animate_move){
-			var that, temp, is_new_html;
+			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, initial_class, final_class, is_new_html;
 			
 			that=this;
 			
@@ -659,12 +649,28 @@
 				
 				that.resetPieceClasses();
 				
-				if(animate_move===1){
-					temp=that.MoveList[that.CurrentMove];
-					_animatePiece(temp.FromBos, temp.ToBos, temp.InitialVal, temp.FinalVal, false);
-				}else if(animate_move===-1){
-					temp=that.MoveList[that.CurrentMove+1];
-					_animatePiece(temp.ToBos, temp.FromBos, temp.FinalVal, temp.InitialVal, true);
+				if(animate_move){
+					is_reversed=(animate_move===-1);
+					
+					if((that.CurrentMove!==0 || is_reversed) && (that.CurrentMove!==(that.MoveList.length-1) || !is_reversed)){
+						temp=that.MoveList[that.CurrentMove+is_reversed];
+						
+						initial_val=(is_reversed ? temp.FinalVal : temp.InitialVal);
+						final_val=(is_reversed ? temp.InitialVal : temp.FinalVal);
+						from_bos=(is_reversed ? temp.ToBos : temp.FromBos);
+						to_bos=(is_reversed ? temp.FromBos : temp.ToBos);
+						
+						initial_class=toPieceClass((initial_val!==final_val && is_reversed) ? final_val : initial_val);
+						initial_class=(initial_class ? (" ic_"+initial_class) : "");
+						final_class=initial_class;
+						
+						if(initial_val!==final_val && !is_reversed){
+							final_class=toPieceClass(final_val);
+							final_class=(final_class ? (" ic_"+final_class) : "");
+						}
+						
+						_animatePiece(from_bos, to_bos, initial_class, final_class);
+					}
 				}
 				
 				$(".ic_wside, .ic_bside").removeClass("ic_w_color ic_b_color");
