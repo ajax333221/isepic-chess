@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var Ic=(function(){
-		var _VERSION="2.4.2";
+		var _VERSION="2.4.3";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -94,10 +94,12 @@
 			});
 		}
 		
-		function _animatePiece(from_bos, to_bos, initial_class, final_class){
+		function _animatePiece(from_bos, to_bos, piece_class, promotion_class, stop_animations){
 			var temp, piece_elm, from_square, to_square, old_offset, new_offset;
 			
-			$(".ic_piece_holder").finish();
+			if(stop_animations){
+				$(".ic_piece_holder").finish();
+			}
 			
 			from_square=$("#ic_id_"+from_bos);
 			to_square=$("#ic_id_"+to_bos);
@@ -105,12 +107,12 @@
 			old_offset=from_square.children(".ic_piece_holder").offset();
 			new_offset=to_square.children(".ic_piece_holder").offset();
 			
-			to_square.html("<div class='"+("ic_piece_holder"+initial_class)+"'></div>");
+			to_square.html("<div class='"+("ic_piece_holder"+piece_class)+"'></div>");
 			piece_elm=to_square.children(".ic_piece_holder");
 			
 			temp=piece_elm.clone().appendTo("#ic_id_board");
 			
-			piece_elm.hide().attr("class", ("ic_piece_holder"+(final_class || initial_class)));
+			piece_elm.hide().attr("class", ("ic_piece_holder"+(promotion_class || piece_class)));
 			
 			temp.css({
 				"position" : "absolute",
@@ -553,7 +555,7 @@
 		}
 		
 		function _refreshBoard(animate_move){
-			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, initial_class, final_class, is_new_html;
+			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, piece_class, promotion_class, is_new_html;
 			
 			that=this;
 			
@@ -660,16 +662,27 @@
 						from_bos=(is_reversed ? temp.ToBos : temp.FromBos);
 						to_bos=(is_reversed ? temp.FromBos : temp.ToBos);
 						
-						initial_class=toPieceClass((initial_val!==final_val && is_reversed) ? final_val : initial_val);
-						initial_class=(initial_class ? (" ic_"+initial_class) : "");
-						final_class=initial_class;
+						piece_class=toPieceClass(is_reversed ? final_val : initial_val);
+						piece_class=(piece_class ? (" ic_"+piece_class) : "");
 						
-						if(initial_val!==final_val && !is_reversed){
-							final_class=toPieceClass(final_val);
-							final_class=(final_class ? (" ic_"+final_class) : "");
+						promotion_class=toPieceClass((initial_val!==final_val && !is_reversed) ? final_val : 0);
+						promotion_class=(promotion_class ? (" ic_"+promotion_class) : "");
+						
+						_animatePiece(from_bos, to_bos, piece_class, promotion_class, true);
+						
+						if(temp.KingCastled){
+							from_bos=toBos([getRankPos(temp.ToBos), (temp.KingCastled===1 ? 7 : 0)]);
+							to_bos=toBos([getRankPos(temp.ToBos), (temp.KingCastled===1 ? 5 : 3)]);
+							
+							piece_class=toPieceClass(_ROOK*getSign(getRankPos(temp.ToBos)===0));
+							piece_class=(piece_class ? (" ic_"+piece_class) : "");
+							
+							if(is_reversed){
+								_animatePiece(to_bos, from_bos, piece_class);
+							}else{
+								_animatePiece(from_bos, to_bos, piece_class);
+							}
 						}
-						
-						_animatePiece(from_bos, to_bos, initial_class, final_class);
 					}
 				}
 				
@@ -903,11 +916,11 @@
 						current_sign=getSign(!i);
 						current_king_rank=(i ? 7 : 0);
 						
-						if(that.getValue([current_king_rank, 4])!==(current_sign*_KING)){
+						if(that.getValue([current_king_rank, 4])!==(_KING*current_sign)){
 							error_msg="Error [5] "+(i ? "white" : "black")+" castling ability without king in original position";
-						}else if(current_castling_availity!==2 && that.getValue([current_king_rank, 7])!==(current_sign*_ROOK)){
+						}else if(current_castling_availity!==2 && that.getValue([current_king_rank, 7])!==(_ROOK*current_sign)){
 							error_msg="Error [6] "+(i ? "white" : "black")+" short castling ability with missing H-file rook";
-						}else if(current_castling_availity!==1 && that.getValue([current_king_rank, 0])!==(current_sign*_ROOK)){
+						}else if(current_castling_availity!==1 && that.getValue([current_king_rank, 0])!==(_ROOK*current_sign)){
 							error_msg="Error [7] "+(i ? "white" : "black")+" long castling ability with missing A-file rook";
 						}
 					}
@@ -1271,7 +1284,7 @@
 			
 			active_color=that.Active.isBlack;
 			active_sign=that.Active.sign;
-			active_color_rook=(active_sign*_ROOK);
+			active_color_rook=(_ROOK*active_sign);
 			
 			pawn_moved=false;
 			new_en_passant_bos="";
