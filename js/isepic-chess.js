@@ -94,12 +94,8 @@
 			});
 		}
 		
-		function _animatePiece(from_bos, to_bos, piece_class, promotion_class, stop_animations){
+		function _animatePiece(from_bos, to_bos, piece_class, promotion_class){
 			var temp, piece_elm, from_square, to_square, old_offset, new_offset;
-			
-			if(stop_animations){
-				$(".ic_piece_holder").finish();
-			}
 			
 			from_square=$("#ic_id_"+from_bos);
 			to_square=$("#ic_id_"+to_bos);
@@ -580,6 +576,7 @@
 					$("#ic_id_board").html(_getTableHTML(that.IsRotated));
 				}
 				
+				$(".ic_piece_holder").finish();
 				$("#ic_id_tabs").html(_getBoardTabsHTML(that.BoardName));
 				
 				$(".ic_changeboard").unbind("click").click(function(){
@@ -668,7 +665,7 @@
 						promotion_class=toPieceClass((initial_val!==final_val && !is_reversed) ? final_val : 0);
 						promotion_class=(promotion_class ? (" ic_"+promotion_class) : "");
 						
-						_animatePiece(from_bos, to_bos, piece_class, promotion_class, true);
+						_animatePiece(from_bos, to_bos, piece_class, promotion_class);
 						
 						if(temp.KingCastled){
 							from_bos=toBos([getRankPos(temp.ToBos), (temp.KingCastled===1 ? 7 : 0)]);
