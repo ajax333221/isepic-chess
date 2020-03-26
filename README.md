@@ -88,6 +88,7 @@ disambiguationPos(...) | :wrench: | :wrench: | ? | :wrench: ... **under construc
 testCollision(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 isLegalMove(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 legalMoves(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
+ascii(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 boardHash(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 isEqualBoard(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 cloneBoardFrom(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
