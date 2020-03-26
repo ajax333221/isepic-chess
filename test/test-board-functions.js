@@ -24,6 +24,7 @@
 //_testCollision
 //[### ya via fenApply() ###] _legalMoves
 //[### ya via fenApply() ###] _isLegalMove
+//_ascii
 //_cloneBoardFrom
 //_cloneBoardTo
 //_moveCaller

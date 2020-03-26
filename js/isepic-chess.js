@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var Ic=(function(){
-		var _VERSION="2.4.3";
+		var _VERSION="2.4.4";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1175,6 +1175,31 @@
 			return rtn;
 		}
 		
+		function _ascii(is_rotated){
+			var i, j, that, temp, bottom_label, rtn;
+			
+			that=this;
+			rtn="   +------------------------+\n";
+			bottom_label="";
+			
+			for(i=0; i<8; i++){//0...7
+				temp=(is_rotated ? (7-i) : i);
+				bottom_label+="  "+getFileBos([0, temp]);
+				rtn+=" "+getRankBos([temp, 0])+" |";
+				
+				for(j=0; j<8; j++){//0...7
+					rtn+=" "+toBal(that.getValue(is_rotated ? [(7-i), (7-j)] : [i, j])).replace("*", ".")+" ";
+				}
+				
+				rtn+="|\n";
+			}
+			
+			rtn+="   +------------------------+\n";
+			rtn+="   "+bottom_label+"\n";
+			
+			return rtn;
+		}
+		
 		function _boardHash(){
 			var that, temp;
 			
@@ -1722,6 +1747,7 @@
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
 						legalMoves : _legalMoves,
+						ascii : _ascii,
 						boardHash : _boardHash,
 						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
