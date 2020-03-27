@@ -8,10 +8,6 @@
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
 //_setPromoteTo
 //_setCurrentMove
-//_giveSquareMovement
-//_resetPieceClasses
-//[N/A] _getMoveListHTML
-//[N/A] _getObjInfoHTML
 //_refreshBoard
 //_firstTimeDefaults
 //_parseValuesFromFen

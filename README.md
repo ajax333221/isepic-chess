@@ -72,10 +72,6 @@ toggleActiveColor(...) | :wrench: | :wrench: | ? | :wrench: ... **under construc
 toggleIsRotated(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 setPromoteTo(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 setCurrentMove(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-giveSquareMovement(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-resetPieceClasses(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-getMoveListHTML(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-getObjInfoHTML(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 refreshBoard(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 firstTimeDefaults(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 parseValuesFromFen(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:

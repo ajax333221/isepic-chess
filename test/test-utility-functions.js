@@ -1,9 +1,6 @@
 //---to do:
 //
 //[N/A?] _consoleLog()
-//[N/A?] _animatePiece()
-//[N/A] _getBoardTabsHTML()
-//[N/A] _getTableHTML()
 
 function fnIcUtilityTrimSpaces(){
 	var start_time, end_time, error_msg;
