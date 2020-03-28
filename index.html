@@ -3,9 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Isepic Chess - Demo</title>
-		<link rel="stylesheet" href="./css/isepic-chess.css">
+		
+		<link rel="stylesheet" href="./css/isepic-chess-ui.css">
+		
 		<script src="./js/jquery-3.3.1.min.js"></script>
 		<script src="./js/isepic-chess.js"></script>
+		<script src="./js/isepic-chess-ui.js"></script>
+		
 		<script>
 			$(function(){
 				var main_board, other_board, oc_board, h_board, rff_board;
@@ -48,17 +52,13 @@
 				other_board.moveCaller([6, 6], [4, 6]);//[6, 6]="g2", [4, 6]="g4"
 				Ic.selectBoard(other_board).moveCaller("d8", "h4");
 				other_board.setCurrentMove(-1, false);//go to previous move "2.g4"
-				//other_board.refreshBoard();//...only one visual refresh is needed
 				
 				oc_board.cloneBoardFrom(other_board);
-				//oc_board.refreshBoard();//...only one visual refresh is needed
 				
 				rff_board.toggleIsRotated();
-				//rff_board.refreshBoard();//...only one visual refresh is needed
 				
-				main_board.refreshBoard();//visual refresh
-				
-				console.log(Ic.mapToBos(main_board.legalMoves("b1")));//["c3", "a3"]
+				Ic.utilityMisc.consoleLog(main_board.ascii());//text diagram board
+				IcUi.refreshBoard.apply(main_board, [0]);
 			});
 		</script>
 	</head>
