@@ -74,9 +74,6 @@ setCurrentMove(...) | :wrench: | :wrench: | ? | :wrench: ... **under constructio
 readFen(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 refreshKingPosChecksAndFen(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 refinedFenTest(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-candidateMoves(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-isAttacked(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-disambiguationPos(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 testCollision(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 isLegalMove(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 legalMoves(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
@@ -86,7 +83,6 @@ isEqualBoard(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction*
 cloneBoardFrom(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 cloneBoardTo(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 moveCaller(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-getNotation(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 
 To Do
 -------------

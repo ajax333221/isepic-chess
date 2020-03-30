@@ -10,9 +10,6 @@
 //_readFen
 //_refreshKingPosChecksAndFen
 //_refinedFenTest
-//_candidateMoves
-//_isAttacked
-//_disambiguationPos
 //_testCollision
 //[### ya via fenApply() ###] _legalMoves
 //[### ya via fenApply() ###] _isLegalMove
@@ -20,7 +17,6 @@
 //_cloneBoardFrom
 //_cloneBoardTo
 //_moveCaller
-//_getNotation
 
 function fnBoardBoardHash(){
 	var board, board_name, start_time, end_time, error_msg;

@@ -219,6 +219,11 @@
 			var i, j, that, as_knight, rtn_total_checks;
 			
 			that=this;
+			
+			function _isAttacked(initial_qos, piece_direction, as_knight){
+				return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null).isAttacked;
+			}
+			
 			rtn_total_checks=0;
 			king_qos=(king_qos || that.Active.kingPos);
 			
@@ -227,7 +232,7 @@
 				as_knight=!!i;
 				
 				for(j=1; j<9; j++){//1...8
-					if(that.isAttacked(king_qos, j, as_knight)){
+					if(_isAttacked(king_qos, j, as_knight)){
 						rtn_total_checks++;
 						
 						if(early_break){
@@ -477,30 +482,6 @@
 			return error_msg;
 		}
 		
-		function _candidateMoves(initial_qos, piece_direction, as_knight, total_squares, allow_capture){
-			var that;
-			
-			that=this;
-			
-			return that.testCollision(1, initial_qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
-		}
-		
-		function _isAttacked(initial_qos, piece_direction, as_knight){
-			var that;
-			
-			that=this;
-			
-			return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null).isAttacked;
-		}
-		
-		function _disambiguationPos(initial_qos, piece_direction, as_knight, ally_qal){
-			var that;
-			
-			that=this;
-			
-			return that.testCollision(3, initial_qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
-		}
-		
 		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_qal){
 			var i, that, current_pos, current_val, current_abs_val, rank_change, file_change, rtn;
 			
@@ -589,6 +570,10 @@
 			
 			that=this;
 			
+			function _candidateMoves(initial_qos, piece_direction, as_knight, total_squares, allow_capture){
+				return that.testCollision(1, initial_qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
+			}
+			
 			rtn=[];
 			no_errors=true;
 			
@@ -620,7 +605,7 @@
 				
 				if(is_king){//king
 					for(i=1; i<9; i++){//1...8
-						if((temp=that.candidateMoves(piece_qos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
+						if((temp=_candidateMoves(piece_qos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 					
 					active_castling_availity=(active_color ? that.BCastling : that.WCastling);
@@ -628,7 +613,7 @@
 					if(active_castling_availity && !that.IsCheck){
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
-								if(that.candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
+								if(_candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
 									if(!that.calculateChecks([active_color_king_rank, (i ? 3 : 5)], true)){
 										pre_validated_arr_pos.push([[active_color_king_rank, (i ? 2 : 6)]]);
 									}
@@ -639,7 +624,7 @@
 				}else if(piece_abs_val===_PAWN){
 					piece_rank=getRankPos(piece_qos);
 					
-					if((temp=that.candidateMoves(piece_qos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
+					if((temp=_candidateMoves(piece_qos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
 					
 					for(i=0; i<2; i++){//0...1
 						current_adjacent_file=(getFilePos(piece_qos)+(i ? 1 : -1));
@@ -664,7 +649,7 @@
 					as_knight=(piece_abs_val===_KNIGHT);
 					
 					for(i=0, len=piece_directions.length; i<len; i++){//0...1
-						if((temp=that.candidateMoves(piece_qos, piece_directions[i], as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
+						if((temp=_candidateMoves(piece_qos, piece_directions[i], as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 				}
 				
@@ -836,6 +821,10 @@
 			
 			that=this;
 			
+			function _disambiguationPos(initial_qos, piece_direction, as_knight, ally_qal){
+				return that.testCollision(3, initial_qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
+			}
+			
 			rtn_can_move=that.isLegalMove(initial_qos, final_qos);
 			
 			if(rtn_can_move){
@@ -886,8 +875,75 @@
 					}
 				}
 				
-				//getNotation() aun sin mover la pieza actual (pero ya lo de enpassant capture y lo de la torre al enrocar)
-				pgn_move=that.getNotation(initial_qos, final_qos, piece_val, promoted_val, king_castled, non_en_passant_capture);
+				//aun sin mover la pieza actual (pero ya lo de enpassant capture y lo de la torre al enrocar)
+				pgn_move=(function(){
+					var i, len, temp, temp2, temp3, initial_file_bos, ambiguity, piece_directions, as_knight, rtn;
+					
+					rtn="";
+					initial_file_bos=getFileBos(initial_qos);
+					
+					if(king_castled){//castling king
+						rtn+=(king_castled!==1 ? "O-O-O" : "O-O");
+					}else if(piece_abs_val===_PAWN){
+						if(initial_file_bos!==getFileBos(final_qos)){
+							rtn+=(initial_file_bos+"x");
+						}
+						
+						rtn+=toBos(final_qos);
+						
+						if(promoted_val){
+							rtn+="="+toAbsBal(promoted_val);
+						}
+					}else{//knight, bishop, rook, queen, non-castling king
+						rtn+=toAbsBal(piece_val);
+						
+						if(piece_abs_val!==_KING){//knight, bishop, rook, queen
+							temp2=[];
+							
+							piece_directions=[];
+							if(piece_abs_val!==_BISHOP){piece_directions.push(1, 3, 5, 7);}
+							if(piece_abs_val!==_ROOK){piece_directions.push(2, 4, 6, 8);}
+							
+							as_knight=(piece_abs_val===_KNIGHT);
+							
+							for(i=0, len=piece_directions.length; i<len; i++){//0...1
+								if(temp=_disambiguationPos(final_qos, piece_directions[i], as_knight, piece_abs_val)){temp2.push(temp);}
+							}
+							
+							len=temp2.length;
+							if(len>1){
+								temp3="";
+								
+								for(i=0; i<len; i++){//0<len
+									//imposible que isLegalMove() sea afectado por los ajustes de enroque o captura EP
+									if(!sameSquare(temp2[i], initial_qos) && that.isLegalMove(temp2[i], final_qos)){
+										temp3+=toBos(temp2[i]);
+									}
+								}
+								
+								if(temp3){
+									ambiguity=(_strContains(temp3, initial_file_bos)+(_strContains(temp3, getRankBos(initial_qos))*2));
+									
+									if(ambiguity!==1){//0,2,3
+										rtn+=initial_file_bos;
+									}
+									
+									if(ambiguity && ambiguity!==2){//1,3
+										rtn+=getRankBos(initial_qos);
+									}
+								}
+							}
+						}
+						
+						if(non_en_passant_capture){
+							rtn+="x";
+						}
+						
+						rtn+=toBos(final_qos);
+					}
+					
+					return rtn;
+				})();
 				
 				that.HalfMove++;
 				if(pawn_moved || non_en_passant_capture){
@@ -957,78 +1013,6 @@
 			}
 			
 			return rtn_can_move;
-		}
-		
-		function _getNotation(initial_qos, final_qos, piece_qal, promoted_qal, king_castled, non_en_passant_capture){
-			var i, len, that, temp, temp2, temp3, piece_abs_val, initial_file_bos, ambiguity, piece_directions, as_knight, rtn;
-			
-			that=this;
-			
-			rtn="";
-			piece_abs_val=toAbsVal(piece_qal);
-			initial_file_bos=getFileBos(initial_qos);
-			
-			if(king_castled){//castling king
-				rtn+=(king_castled!==1 ? "O-O-O" : "O-O");
-			}else if(piece_abs_val===_PAWN){
-				if(initial_file_bos!==getFileBos(final_qos)){
-					rtn+=(initial_file_bos+"x");
-				}
-				
-				rtn+=toBos(final_qos);
-				
-				if(promoted_qal){
-					rtn+="="+toAbsBal(promoted_qal);
-				}
-			}else{//knight, bishop, rook, queen, non-castling king
-				rtn+=toAbsBal(piece_qal);
-				
-				if(piece_abs_val!==_KING){//knight, bishop, rook, queen
-					temp2=[];
-					
-					piece_directions=[];
-					if(piece_abs_val!==_BISHOP){piece_directions.push(1, 3, 5, 7);}
-					if(piece_abs_val!==_ROOK){piece_directions.push(2, 4, 6, 8);}
-					
-					as_knight=(piece_abs_val===_KNIGHT);
-					
-					for(i=0, len=piece_directions.length; i<len; i++){//0...1
-						if(temp=that.disambiguationPos(final_qos, piece_directions[i], as_knight, piece_abs_val)){temp2.push(temp);}
-					}
-					
-					len=temp2.length;
-					if(len>1){
-						temp3="";
-						
-						for(i=0; i<len; i++){//0<len
-							//imposible que isLegalMove() sea afectado por los ajustes de enroque o captura EP
-							if(!sameSquare(temp2[i], initial_qos) && that.isLegalMove(temp2[i], final_qos)){
-								temp3+=toBos(temp2[i]);
-							}
-						}
-						
-						if(temp3){
-							ambiguity=(_strContains(temp3, initial_file_bos)+(_strContains(temp3, getRankBos(initial_qos))*2));
-							
-							if(ambiguity!==1){//0,2,3
-								rtn+=initial_file_bos;
-							}
-							
-							if(ambiguity && ambiguity!==2){//1,3
-								rtn+=getRankBos(initial_qos);
-							}
-						}
-					}
-				}
-				
-				if(non_en_passant_capture){
-					rtn+="x";
-				}
-				
-				rtn+=toBos(final_qos);
-			}
-			
-			return rtn;
 		}
 		
 		//---------------- ic
@@ -1275,9 +1259,6 @@
 						readFen : _readFen,
 						refreshKingPosChecksAndFen : _refreshKingPosChecksAndFen,
 						refinedFenTest : _refinedFenTest,
-						candidateMoves : _candidateMoves,
-						isAttacked : _isAttacked,
-						disambiguationPos : _disambiguationPos,
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
 						legalMoves : _legalMoves,
@@ -1286,8 +1267,7 @@
 						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
-						moveCaller : _moveCaller,
-						getNotation : _getNotation
+						moveCaller : _moveCaller
 					};
 				}
 				
