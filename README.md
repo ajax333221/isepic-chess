@@ -68,12 +68,9 @@ getValue(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ..
 setValue(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 materialDifference(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 calculateChecks(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-toggleActiveColor(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 toggleIsRotated(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 setPromoteTo(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 setCurrentMove(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-firstTimeDefaults(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-parseValuesFromFen(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 readFen(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 refreshKingPosChecksAndFen(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 refinedFenTest(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
@@ -89,7 +86,6 @@ isEqualBoard(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction*
 cloneBoardFrom(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 cloneBoardTo(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 moveCaller(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
-makeMove(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 getNotation(...) | :wrench: | :wrench: | ? | :wrench: ... **under construction** ... :wrench:
 
 To Do
