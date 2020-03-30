@@ -1,10 +1,10 @@
 /** Copyright (c) 2012 Ajax Isepic (ajax333221) Licensed MIT */
 
-/*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:true, curly:true, es3:true, latedef:nofunc, bitwise:false, sub:true */
+/*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, es3:true, latedef:nofunc, bitwise:false, sub:true */
 
-(function(win, $){
+(function(win){
 	var Ic=(function(){
-		var _VERSION="2.5.2";
+		var _VERSION="2.6.0";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -94,10 +94,11 @@
 				
 				//["Active", "NonActive", "Squares"] constant len, hard values only (strings/numbers) inside direct children
 				//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
-				//["MaterialDiff"] constant len, references (arrays/objects) inside direct children
+				//["MaterialDiff"] constant len, references (arrays) inside direct children
 				if((typeof from_prop)==="object" && from_prop!==null){
 					if(current_key==="MaterialDiff"){
-						$.extend(true, to_prop, from_prop);
+						to_prop.w=from_prop.w.slice(0);
+						to_prop.b=from_prop.b.slice(0);
 					}else{
 						sub_keys=Object.keys(from_prop);
 						
@@ -106,7 +107,7 @@
 						}
 					}
 				}else{
-					to_board[current_key]=from_prop;
+					to_board[current_key]=from_board[current_key];//can't use to_prop, it's not a reference here
 				}
 			}
 		}
@@ -1471,4 +1472,4 @@
 	if(!win.Ic){
 		win.Ic=Ic;
 	}
-})(window, jQuery);
+})(window);
