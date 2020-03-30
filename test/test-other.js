@@ -339,7 +339,7 @@ function testBasicFunctionality(){
 		
 		Ic.cloneBoard(board_copy, board);
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1,g1,c1"){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!=="f1,d1,g1,c1"){
 			error_msg="Error [29] incorrect white castling moves";
 		}
 	}
@@ -347,7 +347,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board_copy.moveCaller("b4", "b5");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f8,d8,g8,c8"){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!=="f8,d8,g8,c8"){
 			error_msg="Error [30] incorrect black castling moves";
 		}
 	}
@@ -355,7 +355,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board_copy.moveCaller("c4", "d2");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="d1,c1"){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!=="d1,c1"){
 			error_msg="Error [31] long castle incorrectly prevented by attack on b square";
 		}
 	}
@@ -363,7 +363,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board_copy.moveCaller("d6", "e7");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!==""){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!==""){
 			error_msg="Error [32] castle not being prevented via first square";
 		}
 	}
@@ -371,7 +371,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board_copy.moveCaller("d2", "b1");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1,g1"){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!=="f1,d1,g1"){
 			error_msg="Error [33] allowing to long castle with b1 occupied";
 		}
 	}
@@ -382,7 +382,7 @@ function testBasicFunctionality(){
 		board_copy.moveCaller("h3", "g5");
 		board_copy.moveCaller("d2", "f1");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1,c1"){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!=="f1,d1,c1"){
 			error_msg="Error [34] allowing to short castle with f1 occupied";
 		}
 	}
@@ -393,7 +393,7 @@ function testBasicFunctionality(){
 		board_copy.moveCaller("h3", "g5");
 		board_copy.moveCaller("g4", "e3");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!==""){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!==""){
 			error_msg="Error [35] allowing to long castle with d1 attacked";
 		}
 	}
@@ -403,7 +403,7 @@ function testBasicFunctionality(){
 		
 		board_copy.moveCaller("f6", "f7");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f8,d8"){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!=="f8,d8"){
 			error_msg="Error [36] allowing to castle with black king at check";
 		}
 	}
@@ -416,7 +416,7 @@ function testBasicFunctionality(){
 		board_copy.moveCaller("b5", "b6");
 		board_copy.moveCaller("a3", "c2");
 		
-		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingPos)).join()!=="f1,d1"){
+		if(Ic.mapToBos(board_copy.legalMoves(board_copy.Active.kingBos)).join()!=="f1,d1"){
 			error_msg="Error [37] whie king trying to castle being at check";
 		}
 	}

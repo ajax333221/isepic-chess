@@ -1,7 +1,6 @@
 //---to do:
 //
 //initBoard
-//getBoardCount
 //getBoardNames
 //setSilentMode
 //boardExists (+ que deje igual silent mode)

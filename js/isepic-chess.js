@@ -4,7 +4,7 @@
 
 (function(win, $){
 	var Ic=(function(){
-		var _VERSION="2.5.1";
+		var _VERSION="2.5.2";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -82,16 +82,33 @@
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
+			var i, j, len, len2, current_key, sub_keys, to_prop, from_prop;
+			
 			to_board.MoveList=[];
 			to_board.MaterialDiff={w:[], b:[]};
 			
-			$.each(_MUTABLE_KEYS, function(i, key){
-				if((typeof from_board[key])==="object" && from_board[key]!==null){
-					$.extend(true, to_board[key], from_board[key]);
+			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
+				current_key=_MUTABLE_KEYS[i];
+				to_prop=to_board[current_key];
+				from_prop=from_board[current_key];
+				
+				//["Active", "NonActive", "Squares"] constant len, hard values only (strings/numbers) inside direct children
+				//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
+				//["MaterialDiff"] constant len, references (arrays/objects) inside direct children
+				if((typeof from_prop)==="object" && from_prop!==null){
+					if(current_key==="MaterialDiff"){
+						$.extend(true, to_prop, from_prop);
+					}else{
+						sub_keys=Object.keys(from_prop);
+						
+						for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
+							to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
+						}
+					}
 				}else{
-					to_board[key]=from_board[key];
+					to_board[current_key]=from_prop;
 				}
-			});
+			}
 		}
 		
 		function _basicFenTest(fen){
@@ -225,7 +242,7 @@
 			}
 			
 			rtn_total_checks=0;
-			king_qos=(king_qos || that.Active.kingPos);
+			king_qos=(king_qos || that.Active.kingBos);
 			
 			outer:
 			for(i=0; i<2; i++){//0...1
@@ -323,10 +340,10 @@
 			that.HalfMove=((fen_parts[4]*1) || 0);
 			that.FullMove=((fen_parts[5]*1) || 1);
 			
-			that.refreshKingPosChecksAndFen();
+			that.updateKingsChecksFenMatdiff();
 		}
 		
-		function _refreshKingPosChecksAndFen(){
+		function _updateKingsChecksFenMatdiff(){
 			var i, j, that, current_pos, current_val, empty_consecutive_squares, new_fen_board, no_legal_moves;
 			
 			that=this;
@@ -342,9 +359,9 @@
 					if(current_val){
 						if(toAbsVal(current_val)===_KING){
 							if(that.Active.isBlack===(current_val<0)){
-								that.Active.kingPos=current_pos;
+								that.Active.kingBos=toBos(current_pos);
 							}else{
-								that.NonActive.kingPos=current_pos;
+								that.NonActive.kingBos=toBos(current_pos);
 							}
 						}
 						
@@ -407,7 +424,7 @@
 				that.Active.sign=getSign(!temp);
 				that.NonActive.sign=getSign(temp);
 				
-				if(that.calculateChecks(that.NonActive.kingPos, true)){
+				if(that.calculateChecks(that.NonActive.kingBos, true)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
@@ -732,14 +749,14 @@
 		}
 		
 		function _boardHash(){
-			var that, temp;
+			var i, len, that, temp;
 			
 			that=this;
 			temp="";
 			
-			$.each(_MUTABLE_KEYS, function(i, key){
-				temp+=JSON.stringify(that[key]);
-			});
+			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
+				temp+=JSON.stringify(that[_MUTABLE_KEYS[i]]);
+			}
 			
 			return _hashCode(temp);
 		}
@@ -986,7 +1003,7 @@
 				that.Active.sign=getSign(!temp);
 				that.NonActive.sign=getSign(temp);
 				
-				that.refreshKingPosChecksAndFen();
+				that.updateKingsChecksFenMatdiff();
 				
 				that.CurrentMove++;
 				
@@ -1257,7 +1274,7 @@
 						setPromoteTo : _setPromoteTo,
 						setCurrentMove : _setCurrentMove,
 						readFen : _readFen,
-						refreshKingPosChecksAndFen : _refreshKingPosChecksAndFen,
+						updateKingsChecksFenMatdiff : _updateKingsChecksFenMatdiff,
 						refinedFenTest : _refinedFenTest,
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
@@ -1276,14 +1293,14 @@
 				target.Active={
 					isBlack : null,
 					sign : null,
-					kingPos : null,
+					kingBos : null,
 					checks : null
 				};
 				
 				target.NonActive={
 					isBlack : null,
 					sign : null,
-					kingPos : null,
+					kingBos : null,
 					checks : null
 				};
 				
@@ -1402,24 +1419,12 @@
 			return rtn;
 		}
 		
-		function getBoardCount(){
-			return Object.keys(_BOARDS).length;
-		}
-		
 		function getBoardNames(){
-			var rtn;
-			
-			rtn=[];
-			
-			$.each(_BOARDS, function(i, board){
-				rtn.push(i);
-			});
-			
-			return rtn;
+			return Object.keys(_BOARDS);
 		}
 		
 		function mapToBos(arr){
-			return ($.isArray(arr) ? arr.map(x => toBos(x)) : []);
+			return (Object.prototype.toString.call(arr)==="[object Array]" ? arr.map(x => toBos(x)) : []);
 		}
 		
 		return {
@@ -1446,7 +1451,6 @@
 			cloneBoard : cloneBoard,
 			initBoard : initBoard,
 			fenApply : fenApply,
-			getBoardCount : getBoardCount,
 			getBoardNames : getBoardNames,
 			mapToBos : mapToBos,
 			utilityMisc : {

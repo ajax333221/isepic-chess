@@ -59,7 +59,7 @@
 				rtn+="<ul>";
 				rtn+="<li><strong>isBlack?:</strong> <span>"+that.Active.isBlack+"</span></li>";
 				rtn+="<li><strong>sign:</strong> <span>("+(that.Active.sign>0 ? "+" : "-")+")</span></li>";
-				rtn+="<li><strong>king square:</strong> <span>"+Ic.toBos(that.Active.kingPos)+"</span></li>";
+				rtn+="<li><strong>king square:</strong> <span>"+Ic.toBos(that.Active.kingBos)+"</span></li>";
 				rtn+="<li><strong>checks:</strong> <span>"+that.Active.checks+"</span></li>";
 				rtn+="</ul>";
 				rtn+="</li>";
@@ -69,7 +69,7 @@
 				rtn+="<ul>";
 				rtn+="<li><strong>isBlack?:</strong> <span>"+that.NonActive.isBlack+"</span></li>";
 				rtn+="<li><strong>sign:</strong> <span>("+(that.NonActive.sign>0 ? "+" : "-")+")</span></li>";
-				rtn+="<li><strong>king square:</strong> <span>"+Ic.toBos(that.NonActive.kingPos)+"</span></li>";
+				rtn+="<li><strong>king square:</strong> <span>"+Ic.toBos(that.NonActive.kingBos)+"</span></li>";
 				rtn+="<li><strong>checks:</strong> <span>"+that.NonActive.checks+"</span></li>";
 				rtn+="</ul>";
 				rtn+="</li>";
