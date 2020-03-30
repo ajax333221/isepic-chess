@@ -1,4 +1,4 @@
-/** Copyright (c) 2012 Ajax Isepic (ajax333221) Licensed MIT */
+/** Copyright (c) 2020 Ajax Isepic (ajax333221) Licensed MIT */
 
 /*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, es3:true, latedef:nofunc, bitwise:false, sub:true */
 
