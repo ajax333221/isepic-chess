@@ -3,7 +3,7 @@ isepic-chess.js
 
 Ic.js is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN position validation, storing SAN moves, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
 
-**Note:** everything visual (HTML board, move animations, etc) is now developed separately at isepic-chess-ui.js (GitHub repo), this means the core library no longer depends on jQuery and can be used efficiently as a stand-alone command-line.
+**Note:** everything visual (HTML board, move animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery and can be used as a stand-alone command-line.
 
 Demo
 -------------
@@ -14,14 +14,14 @@ Features
 -------------
 
 - Advanced FEN validation
-- Highlight legal moves / last move
-- Move list navigation
-- Board navigation
+- Get legal moves
+- Material difference
+- Multiple boards at once
 - Pawn promotion options
-- Visual material difference
-- Piece displacement animation
-- ~~Drag-and-drop pieces~~ (currently disabled)
-- Chess-font by ajax333221 ![White King](css/images/wk.png "white king")![White Queen](css/images/wq.png "white queen")![White Rook](css/images/wr.png "white rook")![White Bishop](css/images/wb.png "white bishop")![White Knight](css/images/wn.png "white knight")![White Pawn](css/images/wp.png "white pawn")![Black King](css/images/bk.png "black king")![Black Queen](css/images/bq.png "black queen")![Black Rook](css/images/br.png "black rook")![Black Bishop](css/images/bb.png "black bishop")![Black Knight](css/images/bn.png "black knight")![Black Pawn](css/images/bp.png "black pawn")
+- Checkmate / Stalemate
+- Store SAN moves
+- ASCII diagram
+- Extense parameter-flexibility
 
 Documentation
 -------------
@@ -89,7 +89,7 @@ To Do
 -------------
 
 - Documentation (:wrench: 60% done)
-- Draws by: threefold repetition, 50-move rule, insufficient material
+- Draws by threefold repetition, 50-move rule, insufficient material
 - PGN parser
 - Nested move list variations
 
