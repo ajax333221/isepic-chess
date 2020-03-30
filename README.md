@@ -3,6 +3,8 @@ Isepic-Chess.js
 
 Isepic-Chess.js is a chess utility library written in JavaScript, it provides basic features like legal moves calculation, move list navigation, FEN position validation, etc. (see: [Features](https://github.com/ajax333221/Isepic-Chess#features)). It uses jQuery for DOM manipulation and object clonning/traversing.
 
+In the near future, only *isepic-chess-ui.js* will use jQuery, but at the moment they both depend on it (there are some jQuery leftovers on *isepic-chess.js* that will get removed soon, it is at the top of the [priority list](https://github.com/ajax333221/Isepic-Chess#to-do)).
+
 Demo
 -------------
 
@@ -88,6 +90,7 @@ To Do
 -------------
 
 - Documentation (:wrench: 60% done)
+- Remove jQuery dependency from *isepic-chess.js*
 - PGN viewer
 - Move list variations
 - Set-up position mode
