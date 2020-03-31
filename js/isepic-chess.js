@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.6.0";
+		var _VERSION="2.6.1";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
