@@ -8,7 +8,7 @@ Ic.js is a chess utility library written in JavaScript, it provides features lik
 Demo
 -------------
 
-http://ajax333221.github.io/isepic-chess/
+https://ajax333221.github.io/isepic-chess/
 
 Features
 -------------
