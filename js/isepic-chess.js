@@ -1265,7 +1265,7 @@
 			if(no_errors){
 				if(!boardExists(board_name)){
 					_BOARDS[board_name]={
-						id : _NEXT_BOARD_ID++,
+						BoardId : _NEXT_BOARD_ID++,
 						BoardName : board_name,
 						getValue : _getValue,
 						setValue : _setValue,
