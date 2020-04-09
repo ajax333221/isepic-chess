@@ -18,6 +18,7 @@
     "type": "git",
     "url": "git://github.com/ajax333221/isepic-chess.git"
   },
+  "dependencies": {},
   "bugs": "https://github.com/ajax333221/isepic-chess/issues",
   "private": true,
   "license": "MIT"
