@@ -119,6 +119,7 @@ isEqualBoard(...) | :wrench: | :wrench: | :wrench: ... **under construction** ..
 cloneBoardFrom(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 cloneBoardTo(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 moveCaller(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
+refreshBoard(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 
 To Do
 -------------

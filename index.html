@@ -53,12 +53,13 @@
 				Ic.selectBoard(other_board).moveCaller("d8", "h4");
 				other_board.setCurrentMove(-1, false);//go to previous move "2.g4"
 				
-				oc_board.cloneBoardFrom(other_board);
+				oc_board.cloneBoardFrom(other_board);//alternatively -> other_board.cloneBoardTo(oc_board);
 				
 				rff_board.toggleIsRotated();
 				
 				Ic.utilityMisc.consoleLog(main_board.ascii());//text diagram board
-				IcUi.refreshBoard.apply(main_board, [0]);
+				
+				main_board.refreshBoard();//if the UI is not included, this line will be silently ignored
 			});
 		</script>
 	</head>

@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.6.1";
+		var _VERSION="2.6.2";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -804,7 +804,8 @@
 			
 			if(no_errors){
 				_cloneBoardObjs(that, from_board);
-				/*algun IcUi.refreshBoard(0); pero problemas con hidden*/
+				
+				//that.refreshBoard(); not without autorefresh
 			}
 			
 			return no_errors;
@@ -828,7 +829,8 @@
 			
 			if(no_errors){
 				_cloneBoardObjs(to_board, that);
-				/*algun IcUi.refreshBoard(0); pero problemas con hidden*/
+				
+				//to_board.refreshBoard(); not without autorefresh
 			}
 			
 			return no_errors;
@@ -1031,6 +1033,16 @@
 			}
 			
 			return rtn_can_move;
+		}
+		
+		function _refreshBoard(animate_move){
+			var that;
+			
+			that=this;
+			
+			if(win.IcUi && win.IcUi.refreshBoard){
+				IcUi.refreshBoard.apply(that, [animate_move]);
+			}
 		}
 		
 		//---------------- ic
@@ -1285,7 +1297,8 @@
 						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
-						moveCaller : _moveCaller
+						moveCaller : _moveCaller,
+						refreshBoard : _refreshBoard
 					};
 				}
 				
@@ -1372,7 +1385,7 @@
 				
 				rtn=new_board;
 				
-				/*if(win.IcUi && win.IcUi.refreshBoard){win.IcUi.refreshBoard.apply(new_board, [0]);}*/
+				//new_board.refreshBoard(); not without autorefresh
 			}
 			
 			return rtn;
