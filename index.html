@@ -17,33 +17,33 @@
 				Ic.setSilentMode(false);
 				
 				main_board=Ic.initBoard({
-					name : "main"
+					boardName : "main"
 				});
 				
 				//you can rotate the board with "isRotated : true" (optional, default false)
 				//and change the pawn promotion value "promoteTo" to "n", "b", "r", "q" (optional, default "q")
 				other_board=Ic.initBoard({
-					name : "other",
+					boardName : "other",
 					isRotated : true,
 					promoteTo : "b"
 				});
 				
 				//you can initialize a board without assigning to any variable
 				//and create a reference later on with Ic.selectBoard()
-				Ic.initBoard({name : "other_copy"});
+				Ic.initBoard({boardName : "other_copy"});
 				oc_board=Ic.selectBoard("other_copy");
 				
 				//if you don't want a board to accidentally perform any DOM interactions
 				//consider using "isHidden : true" (optional, default false)
 				h_board=Ic.initBoard({
-					name : "hidden_board",
+					boardName : "hidden_board",
 					isHidden : true
 				});
 				
 				//John William Schulten vs Paul Morphy, New York (1857)
 				//you can start a board from a fen position too
 				rff_board=Ic.initBoard({
-					name : "resume_from_fen",
+					boardName : "resume_from_fen",
 					fen : "r5k1/pp3ppp/7n/8/2P2P1K/3P1q2/P1PBb2P/R5QR b - - 3 22"
 				});
 				

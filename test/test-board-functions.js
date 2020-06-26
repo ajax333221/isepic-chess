@@ -17,6 +17,7 @@
 //_cloneBoardFrom
 //_cloneBoardTo
 //_moveCaller
+//_refreshBoard (ponerle ui y sin ui o que?)
 
 function fnBoardBoardHash(){
 	var board, board_name, start_time, end_time, error_msg;
@@ -27,7 +28,7 @@ function fnBoardBoardHash(){
 	
 	//if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 			isHidden : true,
 			invalidFenStop : true
@@ -77,7 +78,7 @@ function fnBoardIsEqualBoard(){
 	
 	//if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 			isHidden : true,
 			invalidFenStop : true
@@ -90,7 +91,7 @@ function fnBoardIsEqualBoard(){
 	
 	if(!error_msg){
 		board_copy=Ic.initBoard({
-			name : board_copy_name
+			boardName : board_copy_name
 		});
 		
 		if(board_copy===null){

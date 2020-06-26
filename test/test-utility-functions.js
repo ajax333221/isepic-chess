@@ -700,7 +700,7 @@ function fnIcUtilityCloneBoardObjs(){
 	
 	//if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
 		});
 		
@@ -711,7 +711,7 @@ function fnIcUtilityCloneBoardObjs(){
 	
 	if(!error_msg){
 		board_copy=Ic.initBoard({
-			name : board_copy_name
+			boardName : board_copy_name
 		});
 		
 		if(board_copy===null){

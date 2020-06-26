@@ -11,7 +11,7 @@ function testDisambiguation(){
 	
 	//if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "6k1/8/8/2B1B3/8/2BKB2r/8/8 w - - 0 1",
 			isHidden : true,
 			invalidFenStop : true
@@ -63,7 +63,7 @@ function testBasicFunctionality(){
 	
 	//if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 			isRotated : true,
 			isHidden : true,
@@ -225,7 +225,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "r3k2r/pppq1ppp/2npb3/2b1N3/2B1n3/2NPB3/PPPQ1PPP/R3K2R w KQkq - 4 9",
 			isHidden : true,
 			invalidFenStop : true
@@ -238,7 +238,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		board_copy=Ic.initBoard({
-			name : board_copy_name
+			boardName : board_copy_name
 		});
 		
 		if(board_copy===null){
@@ -331,7 +331,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "r3k2r/4p3/3B1P2/2NpN1N1/1Pn1n1n1/3b1p2/4P3/R3K2R w KQkq - 0 1",
 			isHidden : true,
 			invalidFenStop : true
@@ -423,7 +423,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "8/1k1PPPPP/8/8/8/8/1K1ppppp/5R2 w - - 0 1",
 			isHidden : true,
 			promoteTo : 4,
@@ -470,7 +470,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "8/8/7k/6pP/5BKR/8/8/8 w - g6 0 1",
 			isHidden : true,
 			invalidFenStop : true
@@ -497,7 +497,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "k7/8/K7/Q7/8/8/8/8 w - - 0 1",
 			isHidden : true,
 			invalidFenStop : true
@@ -536,7 +536,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		board=Ic.initBoard({
-			name : board_name,
+			boardName : board_name,
 			fen : "8/8/8/8/7q/7k/8/7K b - - 0 1",
 			isHidden : true,
 			invalidFenStop : true

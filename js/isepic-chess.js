@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.6.2";
+		var _VERSION="2.6.3";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1085,9 +1085,13 @@
 			}
 			
 			if(no_errors){
-				if(woard_type==="string" && (typeof _BOARDS[woard])==="undefined"){
-					no_errors=false;
-					_consoleLog("Error[selectBoard]: board \""+woard+"\" not found");
+				if(woard_type==="string"){
+					woard=_formatName(woard);
+					
+					if((typeof _BOARDS[woard])==="undefined"){
+						no_errors=false;
+						_consoleLog("Error[selectBoard]: board \""+woard+"\" not found");
+					}
 				}
 			}
 			
@@ -1250,7 +1254,7 @@
 			return rtn;
 		}
 		
-		function initBoard(p){//{name, fen, isRotated, isHidden, promoteTo, invalidFenStop}
+		function initBoard(p){//{boardName, fen, isRotated, isHidden, promoteTo, invalidFenStop}
 			var i, j, target, board_name, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
 			
 			rtn=null;
@@ -1260,11 +1264,11 @@
 				pre_fen=_trimSpaces(p.fen);
 				
 				p.invalidFenStop=(p.invalidFenStop===true);
-				p.name=(((typeof p.name)==="string" && _trimSpaces(p.name).length) ? _formatName(p.name) : ("board_"+new Date().getTime()));
+				p.boardName=(((typeof p.boardName)==="string" && _trimSpaces(p.boardName).length) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
 				p.isRotated=(p.isRotated===true);
 				p.isHidden=(p.isHidden===true);
 				p.promoteTo=toVal(p.promoteTo);
-				board_name=p.name;
+				board_name=p.boardName;
 				
 				fen_was_valid=((typeof p.fen)==="string" && !_basicFenTest(pre_fen));
 				
@@ -1277,7 +1281,6 @@
 			if(no_errors){
 				if(!boardExists(board_name)){
 					_BOARDS[board_name]={
-						BoardId : _NEXT_BOARD_ID++,
 						BoardName : board_name,
 						getValue : _getValue,
 						setValue : _setValue,
@@ -1397,7 +1400,7 @@
 			rtn=null;
 			
 			board=initBoard({
-				name : "board_fenApply",
+				boardName : "board_fenApply",
 				fen : fen,
 				isHidden : true,
 				invalidFenStop : true
