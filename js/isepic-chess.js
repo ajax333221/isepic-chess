@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.6.3";
+		var _VERSION="2.6.4";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -730,6 +730,8 @@
 			that=this;
 			rtn="   +------------------------+\n";
 			bottom_label="";
+			
+			is_rotated=((typeof is_rotated)==="boolean" ? is_rotated : that.IsRotated);
 			
 			for(i=0; i<8; i++){//0...7
 				temp=(is_rotated ? (7-i) : i);
