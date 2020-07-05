@@ -40,38 +40,68 @@ function fnIcToVal(){
 	}
 	
 	if(!error_msg){
+		if(Ic.toVal("bq")!==-5){
+			error_msg="Error [4] bq !== -5";
+		}
+	}
+	
+	if(!error_msg){
 		if(Ic.toVal("err")!==0){
-			error_msg="Error [4] err !== 0";
+			error_msg="Error [5] err !== 0";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toVal(99)!==6){
-			error_msg="Error [5] 99 !== 6";
+			error_msg="Error [6] 99 !== 6";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toVal(-99)!==-6){
-			error_msg="Error [6] -99 !== -6";
+			error_msg="Error [7] -99 !== -6";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toVal(-0)!==0){
-			error_msg="Error [7] -0 !== 0";
+			error_msg="Error [8] -0 !== 0";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toVal("5")!==0){
-			error_msg="Error [8] 5 !== 0";
+			error_msg="Error [9] 5 !== 0";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toVal("-5")!==0){
-			error_msg="Error [9] -5 !== 0";
+			error_msg="Error [10] -5 !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toVal("xx")!==0){
+			error_msg="Error [11] xx !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toVal("XP")!==1){
+			error_msg="Error [12] XP !== 1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toVal("BX")!==3){
+			error_msg="Error [13] BX !== 3";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toVal("BP")!==-1){
+			error_msg="Error [14] BP !== -1";
 		}
 	}
 	
@@ -117,38 +147,68 @@ function fnIcToAbsVal(){
 	}
 	
 	if(!error_msg){
+		if(Ic.toAbsVal("bq")!==5){
+			error_msg="Error [4] bq !== 5";
+		}
+	}
+	
+	if(!error_msg){
 		if(Ic.toAbsVal("err")!==0){
-			error_msg="Error [4] err !== 0";
+			error_msg="Error [5] err !== 0";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsVal(99)!==6){
-			error_msg="Error [5] 99 !== 6";
+			error_msg="Error [6] 99 !== 6";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsVal(-99)!==6){
-			error_msg="Error [6] -99 !== 6";
+			error_msg="Error [7] -99 !== 6";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsVal(-0)!==0){
-			error_msg="Error [7] -0 !== 0";
+			error_msg="Error [8] -0 !== 0";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsVal("5")!==0){
-			error_msg="Error [8] 5 !== 0";
+			error_msg="Error [9] 5 !== 0";
 		}
 	}
 
 	if(!error_msg){
 		if(Ic.toAbsVal("-5")!==0){
-			error_msg="Error [9] -5 !== 0";
+			error_msg="Error [10] -5 !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsVal("xx")!==0){
+			error_msg="Error [11] xx !== 0";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsVal("XP")!==1){
+			error_msg="Error [12] XP !== 1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsVal("BX")!==3){
+			error_msg="Error [13] BX !== 3";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsVal("BP")!==1){
+			error_msg="Error [14] BP !== 1";
 		}
 	}
 	
@@ -194,38 +254,68 @@ function fnIcToBal(){
 	}
 	
 	if(!error_msg){
+		if(Ic.toBal("bq")!=="q"){
+			error_msg="Error [4] bq !== q";
+		}
+	}
+	
+	if(!error_msg){
 		if(Ic.toBal("err")!=="*"){
-			error_msg="Error [4] err !== *";
+			error_msg="Error [5] err !== *";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toBal(99)!=="K"){
-			error_msg="Error [5] 99 !== K";
+			error_msg="Error [6] 99 !== K";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toBal(-99)!=="k"){
-			error_msg="Error [6] -99 !== k";
+			error_msg="Error [7] -99 !== k";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toBal(-0)!=="*"){
-			error_msg="Error [7] -0 !== *";
+			error_msg="Error [8] -0 !== *";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toBal("5")!=="*"){
-			error_msg="Error [8] 5 !== *";
+			error_msg="Error [9] 5 !== *";
 		}
 	}
 
 	if(!error_msg){
 		if(Ic.toBal("-5")!=="*"){
-			error_msg="Error [9] -5 !== *";
+			error_msg="Error [10] -5 !== *";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toBal("xx")!=="*"){
+			error_msg="Error [11] xx !== *";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toBal("XP")!=="P"){
+			error_msg="Error [12] XP !== P";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toBal("BX")!=="B"){
+			error_msg="Error [13] BX !== B";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toBal("BP")!=="p"){
+			error_msg="Error [14] BP !== p";
 		}
 	}
 	
@@ -271,38 +361,68 @@ function fnIcToAbsBal(){
 	}
 	
 	if(!error_msg){
+		if(Ic.toAbsBal("bq")!=="Q"){
+			error_msg="Error [4] bq !== Q";
+		}
+	}
+	
+	if(!error_msg){
 		if(Ic.toAbsBal("err")!=="*"){
-			error_msg="Error [4] err !== *";
+			error_msg="Error [5] err !== *";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsBal(99)!=="K"){
-			error_msg="Error [5] 99 !== K";
+			error_msg="Error [6] 99 !== K";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsBal(-99)!=="K"){
-			error_msg="Error [6] -99 !== K";
+			error_msg="Error [7] -99 !== K";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsBal(-0)!=="*"){
-			error_msg="Error [7] -0 !== *";
+			error_msg="Error [8] -0 !== *";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toAbsBal("5")!=="*"){
-			error_msg="Error [8] 5 !== *";
+			error_msg="Error [9] 5 !== *";
 		}
 	}
 
 	if(!error_msg){
 		if(Ic.toAbsBal("-5")!=="*"){
-			error_msg="Error [9] -5 !== *";
+			error_msg="Error [10] -5 !== *";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsBal("xx")!=="*"){
+			error_msg="Error [11] xx !== *";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsBal("XP")!=="P"){
+			error_msg="Error [12] XP !== P";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsBal("BX")!=="B"){
+			error_msg="Error [13] BX !== B";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsBal("BP")!=="P"){
+			error_msg="Error [14] BP !== P";
 		}
 	}
 	
@@ -348,38 +468,68 @@ function fnIcToPieceClass(){
 	}
 	
 	if(!error_msg){
+		if(Ic.toPieceClass("bq")!=="bq"){
+			error_msg="Error [4] bq !== bq";
+		}
+	}
+	
+	if(!error_msg){
 		if(Ic.toPieceClass("err")!==""){
-			error_msg="Error [4] err !== empty_string";
+			error_msg="Error [5] err !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toPieceClass(99)!=="wk"){
-			error_msg="Error [5] 99 !== wk";
+			error_msg="Error [6] 99 !== wk";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toPieceClass(-99)!=="bk"){
-			error_msg="Error [6] -99 !== bk";
+			error_msg="Error [7] -99 !== bk";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toPieceClass(-0)!==""){
-			error_msg="Error [7] -0 !== empty_string";
+			error_msg="Error [8] -0 !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toPieceClass("5")!==""){
-			error_msg="Error [8] 5 !== empty_string";
+			error_msg="Error [9] 5 !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.toPieceClass("-5")!==""){
-			error_msg="Error [9] -5 !== empty_string";
+			error_msg="Error [10] -5 !== empty_string";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toPieceClass("xx")!==""){
+			error_msg="Error [11] xx !== empty_string";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toPieceClass("XP")!=="wp"){
+			error_msg="Error [12] XP !== wp";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toPieceClass("BX")!=="wb"){
+			error_msg="Error [13] BX !== wb";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toPieceClass("BP")!=="bp"){
+			error_msg="Error [14] BP !== bp";
 		}
 	}
 	
@@ -513,62 +663,116 @@ function fnIcGetSign(){
 	}
 	
 	if(!error_msg){
+		if(Ic.getSign(-5)!==-1){
+			error_msg="Error [2] -5 !== -1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign(5)!==1){
+			error_msg="Error [3] 5 !== 1";
+		}
+	}
+	
+	if(!error_msg){
 		if(Ic.getSign(true)!==-1){
-			error_msg="Error [2] true !== -1";
+			error_msg="Error [4] true !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign(false)!==1){
-			error_msg="Error [3] false !== 1";
+			error_msg="Error [5] false !== 1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign("bq")!==-1){
+			error_msg="Error [6] bq !== -1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign("wq")!==1){
+			error_msg="Error [7] wq !== 1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("err")!==-1){
-			error_msg="Error [4] err !== -1";
+			error_msg="Error [8] err !== -1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign("xx")!==-1){
+			error_msg="Error [9] xx !== -1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign("wx")!==-1){
+			error_msg="Error [10] wx !== -1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign("bx")!==-1){//because toVal("bx") is "b"
+			error_msg="Error [11] bx !== -1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign("WX")!==-1){
+			error_msg="Error [12] WX !== -1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign("BX")!==1){//because toVal("BX") is "B"
+			error_msg="Error [13] BX !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("")!==-1){
-			error_msg="Error [5] empty_string !== -1";
+			error_msg="Error [14] empty_string !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign(" ")!==-1){
-			error_msg="Error [6] white_space !== -1";
+			error_msg="Error [15] white_space !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("z")!==-1){
-			error_msg="Error [7] z !== -1";
+			error_msg="Error [16] z !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("Z")!==-1){
-			error_msg="Error [8] Z !== -1";
+			error_msg="Error [17] Z !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign(null)!==-1){
-			error_msg="Error [9] null !== -1";
+			error_msg="Error [18] null !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("5")!==-1){
-			error_msg="Error [10] 5 !== -1";
+			error_msg="Error [19] 5 !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("-5")!==-1){
-			error_msg="Error [11] -5 !== -1";
+			error_msg="Error [20] -5 !== -1";
 		}
 	}
 	

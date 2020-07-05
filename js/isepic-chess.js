@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.6.4";
+		var _VERSION="2.6.5";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1105,14 +1105,23 @@
 		}
 		
 		function toVal(qal){
-			var rtn, temp;
+			var temp, pc_exec, piece_char, rtn;
 			
 			if((typeof qal)==="string"){
-				qal=(qal.replace(/[^pnbrqk]/gi, "") || "*");
-				temp=qal.toLowerCase();
+				qal=_trimSpaces(qal);
 				
-				if(qal.length===1){
-					rtn=("*pnbrqk".indexOf(temp)*getSign(qal===temp));//sometimes is -0 but no worries
+				pc_exec=/^([wb])([pnbrqk])$/.exec(qal.toLowerCase());
+				
+				if(!!pc_exec){
+					rtn=("*pnbrqk".indexOf(pc_exec[2])*getSign(pc_exec[1]==="b"));
+				}else{
+					piece_char=(qal.replace(/[^pnbrqk]/gi, "") || "*");
+					
+					if(piece_char.length===1){
+						temp=piece_char.toLowerCase();
+						
+						rtn=("*pnbrqk".indexOf(temp)*getSign(piece_char===temp));//negative zero is handled by _toInt()
+					}
 				}
 			}else{
 				rtn=qal;
@@ -1126,7 +1135,7 @@
 		}
 		
 		function toBal(qal){
-			var rtn, val, abs_val;
+			var val, abs_val, rtn;
 			
 			val=toVal(qal);
 			abs_val=toAbsVal(qal);
