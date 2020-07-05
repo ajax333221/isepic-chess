@@ -711,68 +711,62 @@ function fnIcGetSign(){
 	}
 	
 	if(!error_msg){
-		if(Ic.getSign("wx")!==-1){
-			error_msg="Error [10] wx !== -1";
+		if(Ic.getSign("XP")!==1){
+			error_msg="Error [10] XP !== 1";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.getSign("bx")!==-1){//because toVal("bx") is "b"
-			error_msg="Error [11] bx !== -1";
+		if(Ic.getSign("BX")!==1){
+			error_msg="Error [11] BX !== 1";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.getSign("WX")!==-1){
-			error_msg="Error [12] WX !== -1";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.getSign("BX")!==1){//because toVal("BX") is "B"
-			error_msg="Error [13] BX !== -1";
+		if(Ic.getSign("BP")!==-1){
+			error_msg="Error [12] BP !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("")!==-1){
-			error_msg="Error [14] empty_string !== -1";
+			error_msg="Error [13] empty_string !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign(" ")!==-1){
-			error_msg="Error [15] white_space !== -1";
+			error_msg="Error [14] white_space !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("z")!==-1){
-			error_msg="Error [16] z !== -1";
+			error_msg="Error [15] z !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("Z")!==-1){
-			error_msg="Error [17] Z !== -1";
+			error_msg="Error [16] Z !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign(null)!==-1){
-			error_msg="Error [18] null !== -1";
+			error_msg="Error [17] null !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("5")!==-1){
-			error_msg="Error [19] 5 !== -1";
+			error_msg="Error [18] 5 !== -1";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.getSign("-5")!==-1){
-			error_msg="Error [20] -5 !== -1";
+			error_msg="Error [19] -5 !== -1";
 		}
 	}
 	
