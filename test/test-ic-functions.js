@@ -8,6 +8,7 @@
 //removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
 //isEqualBoard
 //cloneBoard
+//fenGet (pero solo invalid board, properties, etc)
 
 function fnIcToVal(){
 	var start_time, end_time, error_msg;
@@ -1274,34 +1275,6 @@ function fnIcFenApply(){
 		
 		if(Ic.fenApply("0invalidfen0", "getValue", ["d6"])!==0){
 			error_msg="Error [25] apply(getValue) [fen_d6] !== 0";
-		}
-		
-		Ic.setSilentMode(false);
-	}
-	
-	if(!error_msg){
-		if(JSON.stringify(Ic.fenApply("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "materialDifference"))!==JSON.stringify({w:[4, 4], b:[-1]})){
-			error_msg="Error [26] apply(materialDifference) [fen] !== {w:[4, 4], b:[-1]}";
-		}
-	}
-	
-	if(!error_msg){
-		if(JSON.stringify(Ic.fenApply("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[1, 1, 3, 5], b:[-2, -2, -4]})){
-			error_msg="Error [27] apply(materialDifference) [fen] !== {w:[1, 1, 3, 5], b:[-2, -2, -4]}";
-		}
-	}
-	
-	if(!error_msg){
-		if(JSON.stringify(Ic.fenApply("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
-			error_msg="Error [28] apply(materialDifference) [fen] !== {w:[], b:[]}";
-		}
-	}
-	
-	if(!error_msg){
-		Ic.setSilentMode(true);
-		
-		if(JSON.stringify(Ic.fenApply("0invalidfen0", "materialDifference"))!==JSON.stringify({w:[], b:[]})){
-			error_msg="Error [29] apply(materialDifference) [0invalidfen0] !== {w:[], b:[]}";
 		}
 		
 		Ic.setSilentMode(false);

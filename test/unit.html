@@ -12,6 +12,7 @@
 		
 		<script src="./test-utility-functions.js"></script>
 		<script src="./test-board-functions.js"></script>
+		<script src="./test-board-properties.js"></script>
 		<script src="./test-ic-functions.js"></script>
 		<script src="./test-other.js"></script>
 		
@@ -86,6 +87,13 @@
 				//test-board-functions.js
 				tests_html+=formatResult(fnBoardBoardHash());
 				tests_html+=formatResult(fnBoardIsEqualBoard());
+				
+				//test-board-properties.js
+				tests_html+=formatResult(fnBoardActive());
+				tests_html+=formatResult(fnBoardMaterialDiff());
+				tests_html+=formatResult(fnBoardIsCheck());
+				tests_html+=formatResult(fnBoardIsCheckmate());
+				tests_html+=formatResult(fnBoardIsStalemate());
 				
 				//test-ic-functions.js
 				tests_html+=formatResult(fnIcToVal());

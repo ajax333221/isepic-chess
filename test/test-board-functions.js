@@ -2,7 +2,6 @@
 //
 //[### ya via fenApply() ###] _getValue
 //_setValue
-//[### ya via fenApply() ###] _materialDifference
 //_calculateChecks
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
 //_setPromoteTo

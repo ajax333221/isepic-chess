@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.6.5";
+		var _VERSION="2.6.6";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -211,28 +211,6 @@
 			that.Squares[toBos(qos)]=toVal(qal);
 		}
 		
-		function _materialDifference(){
-			var i, j, len, that, current_diff, fen_board, rtn;
-			
-			that=this;
-			rtn={w:[], b:[]};
-			fen_board=that.Fen.split(" ")[0];
-			
-			for(i=1; i<7; i++){//1...6
-				current_diff=_occurrences(fen_board, toBal(i))-_occurrences(fen_board, toBal(-i));
-				
-				for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
-					if(current_diff>0){
-						rtn.w.push(i);
-					}else{
-						rtn.b.push(-i);
-					}
-				}
-			}
-			
-			return rtn;
-		}
-		
 		function _calculateChecks(king_qos, early_break){
 			var i, j, that, as_knight, rtn_total_checks;
 			
@@ -348,6 +326,28 @@
 			var i, j, that, current_pos, current_val, empty_consecutive_squares, new_fen_board, no_legal_moves;
 			
 			that=this;
+			
+			function _materialDifference(){
+				var i, j, len, current_diff, fen_board, rtn;
+				
+				rtn={w:[], b:[]};
+				fen_board=that.Fen.split(" ")[0];
+				
+				for(i=1; i<7; i++){//1...6
+					current_diff=_occurrences(fen_board, toBal(i))-_occurrences(fen_board, toBal(-i));
+					
+					for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
+						if(current_diff>0){
+							rtn.w.push(i);
+						}else{
+							rtn.b.push(-i);
+						}
+					}
+				}
+				
+				return rtn;
+			}
+			
 			new_fen_board="";
 			
 			for(i=0; i<8; i++){//0...7
@@ -396,7 +396,7 @@
 			
 			that.Fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-")+" "+that.HalfMove+" "+that.FullMove);
 			
-			that.MaterialDiff=that.materialDifference();
+			that.MaterialDiff=_materialDifference();
 		}
 		
 		function _refinedFenTest(){
@@ -1295,7 +1295,6 @@
 						BoardName : board_name,
 						getValue : _getValue,
 						setValue : _setValue,
-						materialDifference : _materialDifference,
 						calculateChecks : _calculateChecks,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
@@ -1433,11 +1432,77 @@
 				case "getValue" :
 					rtn=(board_created ? _getValue.apply(board, args) : 0);
 					break;
-				case "materialDifference" :
-					rtn=(board_created ? _materialDifference.apply(board, args) : {w:[], b:[]});
-					break;
 				default :
-					_consoleLog("Error[fenApply]: can't apply function \""+fn_name+"\" to fen");
+					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
+			}
+			
+			if(board_created){
+				removeBoard(board);
+			}
+			
+			return rtn;
+		}
+		
+		function fenGet(fen, props){
+			var i, j, len, len2, board, board_created, current_key, invalid_key, no_errors, pre_rtn, rtn;
+			
+			rtn=null;
+			no_errors=true;
+			
+			//if(no_errors){
+				board=initBoard({
+					boardName : "board_fenGet",
+					fen : fen,
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				board_created=board!==null;
+				
+				if(!board_created){
+					no_errors=false;
+					_consoleLog("Error[fenGet]: invalid FEN");
+				}
+			//}
+			
+			if(no_errors){
+				props=(((typeof props)==="string" && _trimSpaces(props).length) ? props.split(",") : []);
+				pre_rtn=Object.create(null);
+				
+				for(i=0, len=props.length; i<len; i++){//0<len
+					current_key=_formatName(props[i]);
+					
+					if(current_key && (typeof pre_rtn[current_key])==="undefined"){
+						invalid_key=true;
+						
+						for(j=0, len2=_MUTABLE_KEYS.length; j<len2; j++){//0<len2
+							if(current_key===_MUTABLE_KEYS[j]){
+								invalid_key=false;
+								pre_rtn[current_key]=board[current_key];
+								
+								break;
+							}
+						}
+						
+						if(invalid_key){
+							no_errors=false;
+							_consoleLog("Error[fenGet]: invalid property name \""+current_key+"\"");
+							
+							break;
+						}
+					}
+				}
+			}
+			
+			if(no_errors){
+				if(!Object.keys(pre_rtn).length){
+					no_errors=false;
+					_consoleLog("Error[fenGet]: empty property list");
+				}
+			}
+			
+			if(no_errors){
+				rtn=pre_rtn;
 			}
 			
 			if(board_created){
@@ -1479,6 +1544,7 @@
 			cloneBoard : cloneBoard,
 			initBoard : initBoard,
 			fenApply : fenApply,
+			fenGet : fenGet,
 			getBoardNames : getBoardNames,
 			mapToBos : mapToBos,
 			utilityMisc : {
