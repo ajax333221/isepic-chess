@@ -1,6 +1,28 @@
 //---to do:
 //
-//...
+//ver si algo ya se hizo en test other
+//
+//Active.isBlack
+//Active.sign
+//Active.kingBos
+//NonActive.isBlack
+//NonActive.sign
+//NonActive.kingBos
+//NonActive.checks (que sea 0)
+//Fen
+//WCastling
+//BCastling
+//EnPassantBos
+//HalfMove
+//FullMove
+//InitialFullMove (siempre igual que full move)
+//MoveList (va ser default)
+//CurrentMove (va ser default)
+//IsRotated (va ser default)
+//PromoteTo (va ser default)
+//FromSquare (va ser default)
+//IsHidden (va ser default)
+//Squares
 
 function fnBoardActive(){
 	var start_time, end_time, error_msg;
