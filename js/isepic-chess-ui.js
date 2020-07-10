@@ -4,7 +4,7 @@
 
 (function(win, $, Ic){
 	var IcUi=(function(){
-		var _VERSION="1.0.2";
+		var _VERSION="1.0.3";
 		
 		function refreshBoard(animate_move){
 			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, piece_class, promotion_class, is_new_html;
@@ -92,13 +92,13 @@
 					current_row=[];
 					
 					for(j=0; j<8; j++){//0...7
-						temp=""+that.getSquareVal([i, j]);
+						temp=""+that.getSquare([i, j]).val;
 						
 						if(temp.length===1){
 							temp=" "+temp;
 						}
 						
-						current_row.push("<span title='"+(Ic.toBos([i, j]).toUpperCase()+" = "+(Ic.toPieceClass(that.getSquareVal([i, j])) || "empty"))+"'>"+temp+"</span>");
+						current_row.push("<span title='"+(Ic.toBos([i, j]).toUpperCase()+" = "+(that.getSquare([i, j]).pieceClass || "empty"))+"'>"+temp+"</span>");
 					}
 					
 					rtn+="<li><strong>A"+(8-i)+"-H"+(8-i)+":</strong> "+current_row.join(" | ")+"</li>";
@@ -301,7 +301,7 @@
 							new_class=((i+j)%2 ? "ic_bs" : "ic_ws");
 							
 							//si prev next exclude, pasar blank square (ni si quiera poner un piece holder)
-							piece_class=Ic.toPieceClass(that.getSquareVal(current_pos));
+							piece_class=that.getSquare(current_pos).pieceClass;
 							piece_class=(piece_class ? (" ic_"+piece_class) : "");
 							
 							$("#ic_id_"+Ic.toBos(current_pos)).attr("class", new_class).html("<div class='"+("ic_piece_holder"+piece_class)+"'></div>");

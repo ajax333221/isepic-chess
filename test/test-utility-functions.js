@@ -1,5 +1,9 @@
 //---to do:
 //
+//se ocupara en clone? (en uso) to_board.MaterialDiff={w:[], b:[]};
+//se ocupara el slice? (en uso) to_prop[sub_keys[j]].pos=from_prop[sub_keys[j]].pos.slice(0);
+//se ocupara en clone? (no existe) to_prop[sub_keys[j]]=Object.create(null);
+//
 //[N/A?] _consoleLog()
 
 function fnIcUtilityTrimSpaces(){
@@ -730,7 +734,7 @@ function fnIcUtilityCloneBoardObjs(){
 		
 		Ic.utilityMisc.cloneBoardObjs(board_copy, board);
 		
-		if(board_copy.MoveList[1].PGNmove+!!board_copy.MoveList[2]+board_copy.Squares["e4"]!=="Ne4false2"){
+		if(board_copy.MoveList[1].PGNmove+!!board_copy.MoveList[2]+board_copy.Squares["e4"].val!=="Ne4false2"){
 			error_msg="Error [2] incorrect copied values";
 		}
 	}

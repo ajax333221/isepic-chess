@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.0";
+		var _VERSION="2.7.1";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -85,14 +85,15 @@
 			var i, j, len, len2, current_key, sub_keys, to_prop, from_prop;
 			
 			to_board.MoveList=[];
-			to_board.MaterialDiff={w:[], b:[]};
+			to_board.MaterialDiff={w:[], b:[]};//ver si ocupa
 			
 			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
 				current_key=_MUTABLE_KEYS[i];
 				to_prop=to_board[current_key];
 				from_prop=from_board[current_key];
 				
-				//["Active", "NonActive", "Squares"] constant len, hard values only (strings/numbers) inside direct children
+				//["Squares"] constant len, objects with arrays inside
+				//["Active", "NonActive"] constant len, hard values only (strings/numbers) inside direct children
 				//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
 				//["MaterialDiff"] constant len, references (arrays) inside direct children
 				if((typeof from_prop)==="object" && from_prop!==null){
@@ -103,7 +104,19 @@
 						sub_keys=Object.keys(from_prop);
 						
 						for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
-							to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
+							if(current_key==="Squares"){
+								//ver si ocupa un object reset
+								
+								to_prop[sub_keys[j]].pos=from_prop[sub_keys[j]].pos.slice(0);//justificar slice
+								to_prop[sub_keys[j]].bos=from_prop[sub_keys[j]].bos;
+								to_prop[sub_keys[j]].bal=from_prop[sub_keys[j]].bal;
+								to_prop[sub_keys[j]].absBal=from_prop[sub_keys[j]].absBal;
+								to_prop[sub_keys[j]].val=from_prop[sub_keys[j]].val;
+								to_prop[sub_keys[j]].absVal=from_prop[sub_keys[j]].absVal;
+								to_prop[sub_keys[j]].pieceClass=from_prop[sub_keys[j]].pieceClass;
+							}else{
+								to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
+							}
 						}
 					}
 				}else{
@@ -195,7 +208,7 @@
 		
 		//---------------- board
 		
-		function _getSquareVal(qos){
+		function _getSquare(qos){
 			var that;
 			
 			that=this;
@@ -203,12 +216,21 @@
 			return that.Squares[toBos(qos)];
 		}
 		
-		function _setSquareVal(qos, qal){
-			var that;
+		function _setSquareVal(sqr){
+			var that, sqr_bos, sqr_val;
 			
 			that=this;
 			
-			that.Squares[toBos(qos)]=toVal(qal);
+			sqr_bos=toBos(sqr.qos);
+			sqr_val=toVal(sqr.qal);
+			
+			that.Squares[sqr_bos].pos=toPos(sqr_bos);
+			that.Squares[sqr_bos].bos=sqr_bos;
+			that.Squares[sqr_bos].bal=toBal(sqr_val);
+			that.Squares[sqr_bos].absBal=toAbsBal(sqr_val);
+			that.Squares[sqr_bos].val=sqr_val;
+			that.Squares[sqr_bos].absVal=toAbsVal(sqr_val);
+			that.Squares[sqr_bos].pieceClass=toPieceClass(sqr_val);
 		}
 		
 		function _calculateChecks(king_qos, early_break){
@@ -283,7 +305,10 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					that.setSquareVal([i, j], _EMPTY_SQR);
+					that.setSquareVal({
+						qos : [i, j],
+						qal : _EMPTY_SQR
+					});
 				}
 			}
 			
@@ -298,7 +323,10 @@
 					skip_files=(current_char*1);
 					
 					if(!skip_files){
-						that.setSquareVal([i, current_file], toVal(current_char));
+						that.setSquareVal({
+							qos : [i, current_file],
+							qal : toVal(current_char)
+						});//no ocupa toVal?
 					}
 					
 					current_file+=(skip_files || 1);
@@ -355,18 +383,18 @@
 				
 				for(j=0; j<8; j++){//0...7
 					current_pos=[i, j];
-					current_val=that.getSquareVal(current_pos);
+					current_val=that.getSquare(current_pos).val;
 					
 					if(current_val){
-						if(toAbsVal(current_val)===_KING){
-							if(that.Active.isBlack===(current_val<0)){
+						if(toAbsVal(current_val)===_KING){//square
+							if(that.Active.isBlack===(current_val<0)){//square?? algo nuevo con signo??
 								that.Active.kingBos=toBos(current_pos);
 							}else{
 								that.NonActive.kingBos=toBos(current_pos);
 							}
 						}
 						
-						new_fen_board+=(empty_consecutive_squares || "")+toBal(current_val);
+						new_fen_board+=(empty_consecutive_squares || "")+toBal(current_val);//square
 						empty_consecutive_squares=-1;
 					}
 					
@@ -442,7 +470,7 @@
 					en_passant_rank=getRankPos(that.EnPassantBos);
 					en_passant_file=getFilePos(that.EnPassantBos);
 					
-					if(that.HalfMove || that.getSquareVal(that.EnPassantBos) || en_passant_rank!==(that.Active.isBlack ? 5 : 2) || that.getSquareVal([(en_passant_rank+temp), en_passant_file]) || that.getSquareVal([(en_passant_rank-temp), en_passant_file])!==temp){
+					if(that.HalfMove || that.getSquare(that.EnPassantBos).val || en_passant_rank!==(that.Active.isBlack ? 5 : 2) || that.getSquare([(en_passant_rank+temp), en_passant_file]).val || that.getSquare([(en_passant_rank-temp), en_passant_file]).val!==temp){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -459,7 +487,7 @@
 						total_pawns_in_current_file=0;
 						
 						for(k=0; k<8; k++){//0...7
-							total_pawns_in_current_file+=that.getSquareVal([k, j])===(1*getSign(!i));
+							total_pawns_in_current_file+=that.getSquare([k, j]).val===(1*getSign(!i));
 						}
 						
 						if(total_pawns_in_current_file>1){
@@ -482,11 +510,11 @@
 						current_sign=getSign(!i);
 						current_king_rank=(i ? 7 : 0);
 						
-						if(that.getSquareVal([current_king_rank, 4])!==(_KING*current_sign)){
+						if(that.getSquare([current_king_rank, 4]).val!==(_KING*current_sign)){
 							error_msg="Error [5] "+(i ? "white" : "black")+" castling ability without king in original position";
-						}else if(current_castling_availity!==2 && that.getSquareVal([current_king_rank, 7])!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==2 && that.getSquare([current_king_rank, 7]).val!==(_ROOK*current_sign)){
 							error_msg="Error [6] "+(i ? "white" : "black")+" short castling ability with missing H-file rook";
-						}else if(current_castling_availity!==1 && that.getSquareVal([current_king_rank, 0])!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==1 && that.getSquare([current_king_rank, 0]).val!==(_ROOK*current_sign)){
 							error_msg="Error [7] "+(i ? "white" : "black")+" long castling ability with missing A-file rook";
 						}
 					}
@@ -525,10 +553,10 @@
 					break;
 				}
 				
-				current_val=that.getSquareVal(current_pos);
+				current_val=that.getSquare(current_pos).val;
 				
 				if(current_val){
-					current_abs_val=toAbsVal(current_val);
+					current_abs_val=toAbsVal(current_val);//square
 					
 					if(getSign(current_val)===that.NonActive.sign){//is enemy piece
 						if(op===1){
@@ -605,7 +633,7 @@
 				active_color=that.Active.isBlack;
 				non_active_sign=that.NonActive.sign;
 				
-				piece_val=that.getSquareVal(piece_qos);
+				piece_val=that.getSquare(piece_qos).val;//hacer square, para getSign
 				
 				if(!piece_val || getSign(piece_val)===non_active_sign){//is empty square or enemy piece
 					no_errors=false;
@@ -649,7 +677,7 @@
 						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
 						
 						if(isInsideBoard(current_diagonal_pawn_pos)){
-							temp2=that.getSquareVal(current_diagonal_pawn_pos);
+							temp2=that.getSquare(current_diagonal_pawn_pos).val;
 							
 							if(temp2 && getSign(temp2)===non_active_sign && toAbsVal(temp2)!==_KING){
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
@@ -675,17 +703,27 @@
 					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
 						current_pos=pre_validated_arr_pos[i][j];
 						
-						temp=that.getSquareVal(current_pos);
-						temp2=that.getSquareVal(piece_qos);
+						temp=that.getSquare(current_pos).val;
+						temp2=that.getSquare(piece_qos).val;
 						
-						that.setSquareVal(current_pos, piece_val);
-						that.setSquareVal(piece_qos, _EMPTY_SQR);
+						that.setSquareVal({
+							qos : current_pos,
+							qal : piece_val
+						});
+						
+						that.setSquareVal({
+							qos : piece_qos,
+							qal : _EMPTY_SQR
+						});
 						
 						if(en_passant_capturable_bos){
-							temp3=that.getSquareVal(en_passant_capturable_bos);
+							temp3=that.getSquare(en_passant_capturable_bos).val;
 							
 							if(sameSquare(current_pos, that.EnPassantBos)){
-								that.setSquareVal(en_passant_capturable_bos, _EMPTY_SQR);
+								that.setSquareVal({
+									qos : en_passant_capturable_bos,
+									qal : _EMPTY_SQR
+								});
 							}
 						}
 						
@@ -693,11 +731,21 @@
 							rtn.push(current_pos);
 						}
 						
-						that.setSquareVal(current_pos, temp);
-						that.setSquareVal(piece_qos, temp2);
+						that.setSquareVal({
+							qos : current_pos,
+							qal : temp
+						});
+						
+						that.setSquareVal({
+							qos : piece_qos,
+							qal : temp2
+						});
 						
 						if(en_passant_capturable_bos){
-							that.setSquareVal(en_passant_capturable_bos, temp3);
+							that.setSquareVal({
+								qos : en_passant_capturable_bos,
+								qal : temp3
+							});
 						}
 					}
 				}
@@ -739,7 +787,7 @@
 				rtn+=" "+getRankBos([temp, 0])+" |";
 				
 				for(j=0; j<8; j++){//0...7
-					rtn+=" "+toBal(that.getSquareVal(is_rotated ? [(7-i), (7-j)] : [i, j])).replace("*", ".")+" ";
+					rtn+=" "+that.getSquare(is_rotated ? [(7-i), (7-j)] : [i, j]).bal.replace("*", ".")+" ";
 				}
 				
 				rtn+="|\n";
@@ -858,7 +906,7 @@
 				new_en_passant_bos="";
 				promoted_val=0;
 				king_castled=0;
-				non_en_passant_capture=that.getSquareVal(final_qos);
+				non_en_passant_capture=that.getSquare(final_qos).val;
 				
 				new_active_castling_availity=(active_color ? that.BCastling : that.WCastling);
 				new_non_active_castling_availity=(active_color ? that.WCastling : that.BCastling);
@@ -866,8 +914,8 @@
 				to_promotion_rank=(getRankPos(final_qos)===(active_color ? 7 : 0));
 				active_color_king_rank=(active_color ? 0 : 7);
 				
-				piece_val=that.getSquareVal(initial_qos);
-				piece_abs_val=toAbsVal(piece_val);
+				piece_val=that.getSquare(initial_qos).val;
+				piece_abs_val=toAbsVal(piece_val);//de un square
 				
 				if(piece_abs_val===_KING){
 					if(new_active_castling_availity){
@@ -876,13 +924,27 @@
 						if(getFilePos(final_qos)===6){//short
 							king_castled=1;
 							
-							that.setSquareVal([active_color_king_rank, 5], active_color_rook);
-							that.setSquareVal([active_color_king_rank, 7], _EMPTY_SQR);
+							that.setSquareVal({
+								qos : [active_color_king_rank, 5],
+								qal : active_color_rook
+							});
+							
+							that.setSquareVal({
+								qos : [active_color_king_rank, 7],
+								qal : _EMPTY_SQR
+							});
 						}else if(getFilePos(final_qos)===2){//long
 							king_castled=2;
 							
-							that.setSquareVal([active_color_king_rank, 3], active_color_rook);
-							that.setSquareVal([active_color_king_rank, 0], _EMPTY_SQR);
+							that.setSquareVal({
+								qos : [active_color_king_rank, 3],
+								qal : active_color_rook
+							});
+							
+							that.setSquareVal({
+								qos : [active_color_king_rank, 0],
+								qal : _EMPTY_SQR
+							});
 						}
 					}
 				}else if(piece_abs_val===_PAWN){
@@ -891,7 +953,10 @@
 					if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpassant
 						new_en_passant_bos=(getFileBos(final_qos)+""+(active_color ? 6 : 3));
 					}else if(sameSquare(final_qos, that.EnPassantBos)){//enpassant capture
-						that.setSquareVal(((getFileBos(final_qos)+""+(active_color ? 4 : 5))), _EMPTY_SQR);
+						that.setSquareVal({
+							qos : ((getFileBos(final_qos)+""+(active_color ? 4 : 5))),
+							qal : _EMPTY_SQR
+						});
 					}else if(to_promotion_rank){//promotion
 						promoted_val=(that.PromoteTo*active_sign);
 					}
@@ -999,8 +1064,15 @@
 				
 				that.EnPassantBos=new_en_passant_bos;
 				
-				that.setSquareVal(final_qos, (promoted_val || piece_val));
-				that.setSquareVal(initial_qos, _EMPTY_SQR);
+				that.setSquareVal({
+					qos : final_qos,
+					qal : (promoted_val || piece_val)
+				});
+				
+				that.setSquareVal({
+					qos : initial_qos,
+					qal : _EMPTY_SQR
+				});
 				
 				temp=that.Active.isBlack;
 				that.Active.isBlack=!temp;
@@ -1266,7 +1338,7 @@
 		}
 		
 		function initBoard(p){//{boardName, fen, isRotated, isHidden, promoteTo, invalidFenStop}
-			var i, j, target, board_name, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
+			var i, j, target, board_name, current_bos, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
 			
 			rtn=null;
 			no_errors=true;
@@ -1293,7 +1365,7 @@
 				if(!boardExists(board_name)){
 					_BOARDS[board_name]={
 						BoardName : board_name,
-						getSquareVal : _getSquareVal,
+						getSquare : _getSquare,
 						setSquareVal : _setSquareVal,
 						calculateChecks : _calculateChecks,
 						toggleIsRotated : _toggleIsRotated,
@@ -1352,7 +1424,18 @@
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
-						target.setSquareVal([i, j], null);
+						current_bos=toBos([i, j]);
+						
+						target.Squares[current_bos]=Object.create(null);
+						
+						target.Squares[current_bos].pos=null;
+						target.Squares[current_bos].bos=null;
+						target.Squares[current_bos].bal=null;
+						target.Squares[current_bos].absBal=null;
+						target.Squares[current_bos].val=null;
+						target.Squares[current_bos].absVal=null;
+						target.Squares[current_bos].pieceClass=null;
+						//is promotion square, rankP B? etc
 					}
 				}
 				
@@ -1429,8 +1512,8 @@
 				case "isLegalFen" :
 					rtn=board_created;
 					break;
-				case "getSquareVal" :
-					rtn=(board_created ? _getSquareVal.apply(board, args) : 0);
+				case "getSquare" :
+					rtn=(board_created ? _getSquare.apply(board, args) : null);
 					break;
 				default :
 					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
