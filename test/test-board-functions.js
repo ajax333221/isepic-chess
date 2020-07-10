@@ -1,7 +1,7 @@
 //---to do:
 //
-//[### ya via fenApply() ###] _getValue
-//_setValue
+//[### ya via fenApply() ###] _getSquareVal
+//_setSquareVal
 //_calculateChecks
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
 //_setPromoteTo

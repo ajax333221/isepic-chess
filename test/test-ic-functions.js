@@ -1259,22 +1259,22 @@ function fnIcFenApply(){
 	}
 	
 	if(!error_msg){
-		if(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", ["e8"])!==-6){
-			error_msg="Error [23] apply(getValue) [fen_e8] !== -6";
+		if(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquareVal", ["e8"])!==-6){
+			error_msg="Error [23] apply(getSquareVal) [fen_e8] !== -6";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getValue", [[2, 5]])!==4){
-			error_msg="Error [24] apply(getValue) [fen_f6] !== 4";
+		if(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquareVal", [[2, 5]])!==4){
+			error_msg="Error [24] apply(getSquareVal) [fen_f6] !== 4";
 		}
 	}
 	
 	if(!error_msg){
 		Ic.setSilentMode(true);
 		
-		if(Ic.fenApply("0invalidfen0", "getValue", ["d6"])!==0){
-			error_msg="Error [25] apply(getValue) [fen_d6] !== 0";
+		if(Ic.fenApply("0invalidfen0", "getSquareVal", ["d6"])!==0){
+			error_msg="Error [25] apply(getSquareVal) [fen_d6] !== 0";
 		}
 		
 		Ic.setSilentMode(false);

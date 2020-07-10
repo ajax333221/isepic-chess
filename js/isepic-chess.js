@@ -195,7 +195,7 @@
 		
 		//---------------- board
 		
-		function _getValue(qos){
+		function _getSquareVal(qos){
 			var that;
 			
 			that=this;
@@ -203,7 +203,7 @@
 			return that.Squares[toBos(qos)];
 		}
 		
-		function _setValue(qos, qal){
+		function _setSquareVal(qos, qal){
 			var that;
 			
 			that=this;
@@ -283,7 +283,7 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					that.setValue([i, j], _EMPTY_SQR);
+					that.setSquareVal([i, j], _EMPTY_SQR);
 				}
 			}
 			
@@ -298,7 +298,7 @@
 					skip_files=(current_char*1);
 					
 					if(!skip_files){
-						that.setValue([i, current_file], toVal(current_char));
+						that.setSquareVal([i, current_file], toVal(current_char));
 					}
 					
 					current_file+=(skip_files || 1);
@@ -355,7 +355,7 @@
 				
 				for(j=0; j<8; j++){//0...7
 					current_pos=[i, j];
-					current_val=that.getValue(current_pos);
+					current_val=that.getSquareVal(current_pos);
 					
 					if(current_val){
 						if(toAbsVal(current_val)===_KING){
@@ -442,7 +442,7 @@
 					en_passant_rank=getRankPos(that.EnPassantBos);
 					en_passant_file=getFilePos(that.EnPassantBos);
 					
-					if(that.HalfMove || that.getValue(that.EnPassantBos) || en_passant_rank!==(that.Active.isBlack ? 5 : 2) || that.getValue([(en_passant_rank+temp), en_passant_file]) || that.getValue([(en_passant_rank-temp), en_passant_file])!==temp){
+					if(that.HalfMove || that.getSquareVal(that.EnPassantBos) || en_passant_rank!==(that.Active.isBlack ? 5 : 2) || that.getSquareVal([(en_passant_rank+temp), en_passant_file]) || that.getSquareVal([(en_passant_rank-temp), en_passant_file])!==temp){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -459,7 +459,7 @@
 						total_pawns_in_current_file=0;
 						
 						for(k=0; k<8; k++){//0...7
-							total_pawns_in_current_file+=that.getValue([k, j])===(1*getSign(!i));
+							total_pawns_in_current_file+=that.getSquareVal([k, j])===(1*getSign(!i));
 						}
 						
 						if(total_pawns_in_current_file>1){
@@ -482,11 +482,11 @@
 						current_sign=getSign(!i);
 						current_king_rank=(i ? 7 : 0);
 						
-						if(that.getValue([current_king_rank, 4])!==(_KING*current_sign)){
+						if(that.getSquareVal([current_king_rank, 4])!==(_KING*current_sign)){
 							error_msg="Error [5] "+(i ? "white" : "black")+" castling ability without king in original position";
-						}else if(current_castling_availity!==2 && that.getValue([current_king_rank, 7])!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==2 && that.getSquareVal([current_king_rank, 7])!==(_ROOK*current_sign)){
 							error_msg="Error [6] "+(i ? "white" : "black")+" short castling ability with missing H-file rook";
-						}else if(current_castling_availity!==1 && that.getValue([current_king_rank, 0])!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==1 && that.getSquareVal([current_king_rank, 0])!==(_ROOK*current_sign)){
 							error_msg="Error [7] "+(i ? "white" : "black")+" long castling ability with missing A-file rook";
 						}
 					}
@@ -525,7 +525,7 @@
 					break;
 				}
 				
-				current_val=that.getValue(current_pos);
+				current_val=that.getSquareVal(current_pos);
 				
 				if(current_val){
 					current_abs_val=toAbsVal(current_val);
@@ -605,7 +605,7 @@
 				active_color=that.Active.isBlack;
 				non_active_sign=that.NonActive.sign;
 				
-				piece_val=that.getValue(piece_qos);
+				piece_val=that.getSquareVal(piece_qos);
 				
 				if(!piece_val || getSign(piece_val)===non_active_sign){//is empty square or enemy piece
 					no_errors=false;
@@ -649,7 +649,7 @@
 						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
 						
 						if(isInsideBoard(current_diagonal_pawn_pos)){
-							temp2=that.getValue(current_diagonal_pawn_pos);
+							temp2=that.getSquareVal(current_diagonal_pawn_pos);
 							
 							if(temp2 && getSign(temp2)===non_active_sign && toAbsVal(temp2)!==_KING){
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
@@ -675,17 +675,17 @@
 					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
 						current_pos=pre_validated_arr_pos[i][j];
 						
-						temp=that.getValue(current_pos);
-						temp2=that.getValue(piece_qos);
+						temp=that.getSquareVal(current_pos);
+						temp2=that.getSquareVal(piece_qos);
 						
-						that.setValue(current_pos, piece_val);
-						that.setValue(piece_qos, _EMPTY_SQR);
+						that.setSquareVal(current_pos, piece_val);
+						that.setSquareVal(piece_qos, _EMPTY_SQR);
 						
 						if(en_passant_capturable_bos){
-							temp3=that.getValue(en_passant_capturable_bos);
+							temp3=that.getSquareVal(en_passant_capturable_bos);
 							
 							if(sameSquare(current_pos, that.EnPassantBos)){
-								that.setValue(en_passant_capturable_bos, _EMPTY_SQR);
+								that.setSquareVal(en_passant_capturable_bos, _EMPTY_SQR);
 							}
 						}
 						
@@ -693,11 +693,11 @@
 							rtn.push(current_pos);
 						}
 						
-						that.setValue(current_pos, temp);
-						that.setValue(piece_qos, temp2);
+						that.setSquareVal(current_pos, temp);
+						that.setSquareVal(piece_qos, temp2);
 						
 						if(en_passant_capturable_bos){
-							that.setValue(en_passant_capturable_bos, temp3);
+							that.setSquareVal(en_passant_capturable_bos, temp3);
 						}
 					}
 				}
@@ -739,7 +739,7 @@
 				rtn+=" "+getRankBos([temp, 0])+" |";
 				
 				for(j=0; j<8; j++){//0...7
-					rtn+=" "+toBal(that.getValue(is_rotated ? [(7-i), (7-j)] : [i, j])).replace("*", ".")+" ";
+					rtn+=" "+toBal(that.getSquareVal(is_rotated ? [(7-i), (7-j)] : [i, j])).replace("*", ".")+" ";
 				}
 				
 				rtn+="|\n";
@@ -858,7 +858,7 @@
 				new_en_passant_bos="";
 				promoted_val=0;
 				king_castled=0;
-				non_en_passant_capture=that.getValue(final_qos);
+				non_en_passant_capture=that.getSquareVal(final_qos);
 				
 				new_active_castling_availity=(active_color ? that.BCastling : that.WCastling);
 				new_non_active_castling_availity=(active_color ? that.WCastling : that.BCastling);
@@ -866,7 +866,7 @@
 				to_promotion_rank=(getRankPos(final_qos)===(active_color ? 7 : 0));
 				active_color_king_rank=(active_color ? 0 : 7);
 				
-				piece_val=that.getValue(initial_qos);
+				piece_val=that.getSquareVal(initial_qos);
 				piece_abs_val=toAbsVal(piece_val);
 				
 				if(piece_abs_val===_KING){
@@ -876,13 +876,13 @@
 						if(getFilePos(final_qos)===6){//short
 							king_castled=1;
 							
-							that.setValue([active_color_king_rank, 5], active_color_rook);
-							that.setValue([active_color_king_rank, 7], _EMPTY_SQR);
+							that.setSquareVal([active_color_king_rank, 5], active_color_rook);
+							that.setSquareVal([active_color_king_rank, 7], _EMPTY_SQR);
 						}else if(getFilePos(final_qos)===2){//long
 							king_castled=2;
 							
-							that.setValue([active_color_king_rank, 3], active_color_rook);
-							that.setValue([active_color_king_rank, 0], _EMPTY_SQR);
+							that.setSquareVal([active_color_king_rank, 3], active_color_rook);
+							that.setSquareVal([active_color_king_rank, 0], _EMPTY_SQR);
 						}
 					}
 				}else if(piece_abs_val===_PAWN){
@@ -891,7 +891,7 @@
 					if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpassant
 						new_en_passant_bos=(getFileBos(final_qos)+""+(active_color ? 6 : 3));
 					}else if(sameSquare(final_qos, that.EnPassantBos)){//enpassant capture
-						that.setValue(((getFileBos(final_qos)+""+(active_color ? 4 : 5))), _EMPTY_SQR);
+						that.setSquareVal(((getFileBos(final_qos)+""+(active_color ? 4 : 5))), _EMPTY_SQR);
 					}else if(to_promotion_rank){//promotion
 						promoted_val=(that.PromoteTo*active_sign);
 					}
@@ -999,8 +999,8 @@
 				
 				that.EnPassantBos=new_en_passant_bos;
 				
-				that.setValue(final_qos, (promoted_val || piece_val));
-				that.setValue(initial_qos, _EMPTY_SQR);
+				that.setSquareVal(final_qos, (promoted_val || piece_val));
+				that.setSquareVal(initial_qos, _EMPTY_SQR);
 				
 				temp=that.Active.isBlack;
 				that.Active.isBlack=!temp;
@@ -1293,8 +1293,8 @@
 				if(!boardExists(board_name)){
 					_BOARDS[board_name]={
 						BoardName : board_name,
-						getValue : _getValue,
-						setValue : _setValue,
+						getSquareVal : _getSquareVal,
+						setSquareVal : _setSquareVal,
 						calculateChecks : _calculateChecks,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
@@ -1352,7 +1352,7 @@
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
-						target.setValue([i, j], null);
+						target.setSquareVal([i, j], null);
 					}
 				}
 				
@@ -1429,8 +1429,8 @@
 				case "isLegalFen" :
 					rtn=board_created;
 					break;
-				case "getValue" :
-					rtn=(board_created ? _getValue.apply(board, args) : 0);
+				case "getSquareVal" :
+					rtn=(board_created ? _getSquareVal.apply(board, args) : 0);
 					break;
 				default :
 					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
