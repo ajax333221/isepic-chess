@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.2";
+		var _VERSION="2.7.3";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -92,7 +92,7 @@
 				to_prop=to_board[current_key];
 				from_prop=from_board[current_key];
 				
-				//["Squares"] constant len, objects with arrays inside
+				//["Squares"] constant len, objects with hard values
 				//["Active", "NonActive"] constant len, hard values only (strings/numbers) inside direct children
 				//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
 				//["MaterialDiff"] constant len, references (arrays) inside direct children
@@ -107,13 +107,12 @@
 							if(current_key==="Squares"){
 								//ver si ocupa un object reset
 								
-								to_prop[sub_keys[j]].pos=from_prop[sub_keys[j]].pos.slice(0);//justificar slice
-								to_prop[sub_keys[j]].bos=from_prop[sub_keys[j]].bos;
 								to_prop[sub_keys[j]].bal=from_prop[sub_keys[j]].bal;
 								to_prop[sub_keys[j]].absBal=from_prop[sub_keys[j]].absBal;
 								to_prop[sub_keys[j]].val=from_prop[sub_keys[j]].val;
 								to_prop[sub_keys[j]].absVal=from_prop[sub_keys[j]].absVal;
-								to_prop[sub_keys[j]].pieceClass=from_prop[sub_keys[j]].pieceClass;
+								to_prop[sub_keys[j]].className=from_prop[sub_keys[j]].className;
+								to_prop[sub_keys[j]].sign=from_prop[sub_keys[j]].sign;
 							}else{
 								to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
 							}
@@ -224,13 +223,12 @@
 			sqr_bos=toBos(sqr.qos);
 			sqr_val=toVal(sqr.qal);
 			
-			that.Squares[sqr_bos].pos=toPos(sqr_bos);
-			that.Squares[sqr_bos].bos=sqr_bos;
 			that.Squares[sqr_bos].bal=toBal(sqr_val);
 			that.Squares[sqr_bos].absBal=toAbsBal(sqr_val);
 			that.Squares[sqr_bos].val=sqr_val;
 			that.Squares[sqr_bos].absVal=toAbsVal(sqr_val);
-			that.Squares[sqr_bos].pieceClass=toPieceClass(sqr_val);
+			that.Squares[sqr_bos].className=toClassName(sqr_val);
+			that.Squares[sqr_bos].sign=getSign(sqr_val);
 		}
 		
 		function _calculateChecks(king_qos, early_break){
@@ -1221,7 +1219,7 @@
 			return toBal(toAbsVal(qal));
 		}
 		
-		function toPieceClass(qal){
+		function toClassName(qal){
 			var piece_bal, piece_lc_bal;
 			
 			piece_bal=toBal(qal);
@@ -1428,14 +1426,22 @@
 						
 						target.Squares[current_bos]=Object.create(null);
 						
-						target.Squares[current_bos].pos=null;
-						target.Squares[current_bos].bos=null;
+						//static
+						target.Squares[current_bos].pos=[i, j];
+						target.Squares[current_bos].bos=current_bos;
+						target.Squares[current_bos].rankPos=getRankPos(current_bos);
+						target.Squares[current_bos].filePos=getFilePos(current_bos);
+						target.Squares[current_bos].rankBos=getRankBos(current_bos);
+						target.Squares[current_bos].fileBos=getFileBos(current_bos);
+						//isPromotion square, isWhiteProm, isWenpass, etc
+						
+						//mutable
 						target.Squares[current_bos].bal=null;
 						target.Squares[current_bos].absBal=null;
 						target.Squares[current_bos].val=null;
 						target.Squares[current_bos].absVal=null;
-						target.Squares[current_bos].pieceClass=null;
-						//is promotion square, rankP B? etc
+						target.Squares[current_bos].className=null;
+						target.Squares[current_bos].sign=null;
 					}
 				}
 				
@@ -1612,7 +1618,7 @@
 			toAbsVal : toAbsVal,
 			toBal : toBal,
 			toAbsBal : toAbsBal,
-			toPieceClass : toPieceClass,
+			toClassName : toClassName,
 			toBos : toBos,
 			toPos : toPos,
 			getSign : getSign,

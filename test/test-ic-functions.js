@@ -438,98 +438,98 @@ function fnIcToAbsBal(){
 	};
 }
 
-function fnIcToPieceClass(){
+function fnIcToClassName(){
 	var start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
-		if(Ic.toPieceClass("b")!=="bb"){
+		if(Ic.toClassName("b")!=="bb"){
 			error_msg="Error [0] b !== bb";
 		}
 	//}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("K")!=="wk"){
+		if(Ic.toClassName("K")!=="wk"){
 			error_msg="Error [1] K !== wk";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("*")!==""){
+		if(Ic.toClassName("*")!==""){
 			error_msg="Error [2] * !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass(-5)!=="bq"){
+		if(Ic.toClassName(-5)!=="bq"){
 			error_msg="Error [3] -5 !== bq";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("bq")!=="bq"){
+		if(Ic.toClassName("bq")!=="bq"){
 			error_msg="Error [4] bq !== bq";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("err")!==""){
+		if(Ic.toClassName("err")!==""){
 			error_msg="Error [5] err !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass(99)!=="wk"){
+		if(Ic.toClassName(99)!=="wk"){
 			error_msg="Error [6] 99 !== wk";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass(-99)!=="bk"){
+		if(Ic.toClassName(-99)!=="bk"){
 			error_msg="Error [7] -99 !== bk";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass(-0)!==""){
+		if(Ic.toClassName(-0)!==""){
 			error_msg="Error [8] -0 !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("5")!==""){
+		if(Ic.toClassName("5")!==""){
 			error_msg="Error [9] 5 !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("-5")!==""){
+		if(Ic.toClassName("-5")!==""){
 			error_msg="Error [10] -5 !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("xx")!==""){
+		if(Ic.toClassName("xx")!==""){
 			error_msg="Error [11] xx !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("XP")!=="wp"){
+		if(Ic.toClassName("XP")!=="wp"){
 			error_msg="Error [12] XP !== wp";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("BX")!=="wb"){
+		if(Ic.toClassName("BX")!=="wb"){
 			error_msg="Error [13] BX !== wb";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toPieceClass("BP")!=="bp"){
+		if(Ic.toClassName("BP")!=="bp"){
 			error_msg="Error [14] BP !== bp";
 		}
 	}
@@ -537,7 +537,7 @@ function fnIcToPieceClass(){
 	end_time=new Date().getTime();
 	
 	return {
-		testName : "Ic.toPieceClass()",
+		testName : "Ic.toClassName()",
 		fromFile : "test-ic-functions.js",
 		result : (error_msg || "✓"),
 		elapsedTime : ((end_time-start_time)+" ms"),

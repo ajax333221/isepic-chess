@@ -4,7 +4,7 @@
 
 (function(win, $, Ic){
 	var IcUi=(function(){
-		var _VERSION="1.0.3";
+		var _VERSION="1.0.4";
 		
 		function refreshBoard(animate_move){
 			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, piece_class, promotion_class, is_new_html;
@@ -98,7 +98,7 @@
 							temp=" "+temp;
 						}
 						
-						current_row.push("<span title='"+(Ic.toBos([i, j]).toUpperCase()+" = "+(that.getSquare([i, j]).pieceClass || "empty"))+"'>"+temp+"</span>");
+						current_row.push("<span title='"+(Ic.toBos([i, j]).toUpperCase()+" = "+(that.getSquare([i, j]).className || "empty"))+"'>"+temp+"</span>");
 					}
 					
 					rtn+="<li><strong>A"+(8-i)+"-H"+(8-i)+":</strong> "+current_row.join(" | ")+"</li>";
@@ -301,7 +301,7 @@
 							new_class=((i+j)%2 ? "ic_bs" : "ic_ws");
 							
 							//si prev next exclude, pasar blank square (ni si quiera poner un piece holder)
-							piece_class=that.getSquare(current_pos).pieceClass;
+							piece_class=that.getSquare(current_pos).className;
 							piece_class=(piece_class ? (" ic_"+piece_class) : "");
 							
 							$("#ic_id_"+Ic.toBos(current_pos)).attr("class", new_class).html("<div class='"+("ic_piece_holder"+piece_class)+"'></div>");
@@ -312,14 +312,14 @@
 					diff_top=(that.IsRotated ? that.MaterialDiff.w : that.MaterialDiff.b);
 					
 					for(i=0, len=diff_top.length; i<len; i++){//0<len
-						captured_html+="<img src='"+("./css/images/"+Ic.toPieceClass(diff_top[i])+".png")+"' width='20' height='20'>";
+						captured_html+="<img src='"+("./css/images/"+Ic.toClassName(diff_top[i])+".png")+"' width='20' height='20'>";
 					}
 					
 					captured_html+="<hr>";
 					diff_bottom=(that.IsRotated ? that.MaterialDiff.b : that.MaterialDiff.w);
 					
 					for(i=0, len=diff_bottom.length; i<len; i++){//0<len
-						captured_html+="<img src='"+("./css/images/"+Ic.toPieceClass(diff_bottom[i])+".png")+"' width='20' height='20'>";
+						captured_html+="<img src='"+("./css/images/"+Ic.toClassName(diff_bottom[i])+".png")+"' width='20' height='20'>";
 					}
 					
 					$("#ic_id_board .ic_captureds").html(captured_html);
@@ -336,10 +336,10 @@
 						from_bos=(is_reversed ? temp.ToBos : temp.FromBos);
 						to_bos=(is_reversed ? temp.FromBos : temp.ToBos);
 						
-						piece_class=Ic.toPieceClass(is_reversed ? final_val : initial_val);
+						piece_class=Ic.toClassName(is_reversed ? final_val : initial_val);
 						piece_class=(piece_class ? (" ic_"+piece_class) : "");
 						
-						promotion_class=Ic.toPieceClass((initial_val!==final_val && !is_reversed) ? final_val : 0);
+						promotion_class=Ic.toClassName((initial_val!==final_val && !is_reversed) ? final_val : 0);
 						promotion_class=(promotion_class ? (" ic_"+promotion_class) : "");
 						
 						_animatePiece(from_bos, to_bos, piece_class, promotion_class);
@@ -348,7 +348,7 @@
 							from_bos=Ic.toBos([Ic.getRankPos(temp.ToBos), (temp.KingCastled===1 ? 7 : 0)]);
 							to_bos=Ic.toBos([Ic.getRankPos(temp.ToBos), (temp.KingCastled===1 ? 5 : 3)]);
 							
-							piece_class=Ic.toPieceClass(Ic.toAbsVal("r")*Ic.getSign(Ic.getRankPos(temp.ToBos)===0));
+							piece_class=Ic.toClassName(Ic.toAbsVal("r")*Ic.getSign(Ic.getRankPos(temp.ToBos)===0));
 							piece_class=(piece_class ? (" ic_"+piece_class) : "");
 							
 							if(is_reversed){
