@@ -4,8 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.3";
-		var _NEXT_BOARD_ID=0;
+		var _VERSION="2.7.4";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -207,12 +206,14 @@
 		
 		//---------------- board
 		
-		function _getSquare(qos){
-			var that;
+		function _getSquare(sqr){
+			var that, pre_validated_pos;
 			
 			that=this;
 			
-			return that.Squares[toBos(qos)];
+			pre_validated_pos=[(getRankPos(sqr.qos)+_toInt(sqr.rankShift)), (getFilePos(sqr.qos)+_toInt(sqr.fileShift))];
+			
+			return (isInsideBoard(pre_validated_pos) ? that.Squares[toBos(pre_validated_pos)] : null);
 		}
 		
 		function _setSquare(sqr){
@@ -323,8 +324,8 @@
 					if(!skip_files){
 						that.setSquare({
 							qos : [i, current_file],
-							qal : toVal(current_char)
-						});//no ocupa toVal?
+							qal : current_char
+						});
 					}
 					
 					current_file+=(skip_files || 1);
@@ -349,7 +350,7 @@
 		}
 		
 		function _updateKingsChecksFenMatdiff(){
-			var i, j, that, current_pos, current_val, empty_consecutive_squares, new_fen_board, no_legal_moves;
+			var i, j, that, current_square, consecutive_empty_squares, new_fen_board, no_legal_moves;
 			
 			that=this;
 			
@@ -377,29 +378,30 @@
 			new_fen_board="";
 			
 			for(i=0; i<8; i++){//0...7
-				empty_consecutive_squares=0;
+				consecutive_empty_squares=0;
 				
 				for(j=0; j<8; j++){//0...7
-					current_pos=[i, j];
-					current_val=that.getSquare(current_pos).val;
+					current_square=that.getSquare({
+						qos : [i, j]
+					});
 					
-					if(current_val){
-						if(toAbsVal(current_val)===_KING){//square
-							if(that.Active.isBlack===(current_val<0)){//square?? algo nuevo con signo??
-								that.Active.kingBos=toBos(current_pos);
+					if(current_square.val){
+						if(current_square.absVal===_KING){
+							if(getSign(that.Active.isBlack)===current_square.sign){
+								that.Active.kingBos=current_square.bos;
 							}else{
-								that.NonActive.kingBos=toBos(current_pos);
+								that.NonActive.kingBos=current_square.bos;
 							}
 						}
 						
-						new_fen_board+=(empty_consecutive_squares || "")+toBal(current_val);//square
-						empty_consecutive_squares=-1;
+						new_fen_board+=(consecutive_empty_squares || "")+current_square.bal;
+						consecutive_empty_squares=-1;
 					}
 					
-					empty_consecutive_squares++;
+					consecutive_empty_squares++;
 				}
 				
-				new_fen_board+=(empty_consecutive_squares || "")+(i!==7 ? "/" : "");
+				new_fen_board+=(consecutive_empty_squares || "")+(i!==7 ? "/" : "");
 			}
 			
 			that.Active.checks=that.calculateChecks(null, false);
@@ -426,7 +428,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, current_sign, current_castling_availity, current_king_rank, en_passant_rank, en_passant_file, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
+			var i, j, k, that, temp, current_sign, current_castling_availity, current_king_rank, current_val, en_passant_square, behind_ep_val, infront_ep_val, e_val, a_val, h_val, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
 			
 			that=this;
 			error_msg="";
@@ -465,10 +467,21 @@
 				if(that.EnPassantBos){
 					temp=that.NonActive.sign;
 					
-					en_passant_rank=getRankPos(that.EnPassantBos);
-					en_passant_file=getFilePos(that.EnPassantBos);
+					en_passant_square=that.getSquare({
+						qos : that.EnPassantBos
+					});
 					
-					if(that.HalfMove || that.getSquare(that.EnPassantBos).val || en_passant_rank!==(that.Active.isBlack ? 5 : 2) || that.getSquare([(en_passant_rank+temp), en_passant_file]).val || that.getSquare([(en_passant_rank-temp), en_passant_file]).val!==temp){
+					behind_ep_val=that.getSquare({
+						qos : that.EnPassantBos,
+						rankShift : temp
+					}).val;
+					
+					infront_ep_val=that.getSquare({
+						qos : that.EnPassantBos,
+						rankShift : -temp
+					}).val;
+					
+					if(that.HalfMove || en_passant_square.val || en_passant_square.rankPos!==(that.Active.isBlack ? 5 : 2) || behind_ep_val || infront_ep_val!==temp){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -485,7 +498,11 @@
 						total_pawns_in_current_file=0;
 						
 						for(k=0; k<8; k++){//0...7
-							total_pawns_in_current_file+=that.getSquare([k, j]).val===(1*getSign(!i));
+							current_val=that.getSquare({
+								qos : [k, j]
+							}).val;
+							
+							total_pawns_in_current_file+=current_val===(_PAWN*getSign(!i));
 						}
 						
 						if(total_pawns_in_current_file>1){
@@ -508,11 +525,23 @@
 						current_sign=getSign(!i);
 						current_king_rank=(i ? 7 : 0);
 						
-						if(that.getSquare([current_king_rank, 4]).val!==(_KING*current_sign)){
+						e_val=that.getSquare({
+							qos : [current_king_rank, 4]
+						}).val;
+						
+						a_val=that.getSquare({
+							qos : [current_king_rank, 0]
+						}).val;
+						
+						h_val=that.getSquare({
+							qos : [current_king_rank, 7]
+						}).val;
+						
+						if(e_val!==(_KING*current_sign)){
 							error_msg="Error [5] "+(i ? "white" : "black")+" castling ability without king in original position";
-						}else if(current_castling_availity!==2 && that.getSquare([current_king_rank, 7]).val!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==2 && h_val!==(_ROOK*current_sign)){
 							error_msg="Error [6] "+(i ? "white" : "black")+" short castling ability with missing H-file rook";
-						}else if(current_castling_availity!==1 && that.getSquare([current_king_rank, 0]).val!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==1 && a_val!==(_ROOK*current_sign)){
 							error_msg="Error [7] "+(i ? "white" : "black")+" long castling ability with missing A-file rook";
 						}
 					}
@@ -527,7 +556,7 @@
 		}
 		
 		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_qal){
-			var i, that, current_pos, current_val, current_abs_val, rank_change, file_change, rtn;
+			var i, that, current_square, rank_change, file_change, rtn;
 			
 			that=this;
 			
@@ -542,44 +571,42 @@
 			file_change=(as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction-1];
 			total_squares=_toInt(as_knight ? 1 : (total_squares || 7));
 			
-			current_pos=[getRankPos(initial_qos), getFilePos(initial_qos)];
-			
 			for(i=0; i<total_squares; i++){//0<total_squares
-				current_pos=[(current_pos[0]+rank_change), (current_pos[1]+file_change)];
+				current_square=that.getSquare({
+					qos : initial_qos,
+					rankShift : (rank_change*(i+1)),
+					fileShift : (file_change*(i+1))
+				});
 				
-				if(!isInsideBoard(current_pos)){
+				if(current_square===null){
 					break;
 				}
 				
-				current_val=that.getSquare(current_pos).val;
-				
-				if(current_val){
-					current_abs_val=toAbsVal(current_val);//square
-					
-					if(getSign(current_val)===that.NonActive.sign){//is enemy piece
+				if(current_square.val){
+					if(getSign(current_square.val)===that.NonActive.sign){//is enemy piece
 						if(op===1){
-							if(allow_capture && current_abs_val!==_KING){
-								rtn.candidateMoves.push(current_pos);
+							if(allow_capture && current_square.absVal!==_KING){
+								rtn.candidateMoves.push(current_square.pos);
 							}
 						}else if(op===2){
 							if(as_knight){
-								if(current_abs_val===_KNIGHT){
+								if(current_square.absVal===_KNIGHT){
 									rtn.isAttacked=true;
 								}
-							}else if(current_abs_val===_KING){
+							}else if(current_square.absVal===_KING){
 								if(!i){
 									rtn.isAttacked=true;
 								}
-							}else if(current_abs_val===_QUEEN){
+							}else if(current_square.absVal===_QUEEN){
 								rtn.isAttacked=true;
 							}else if(piece_direction%2){
-								if(current_abs_val==_ROOK){
+								if(current_square.absVal==_ROOK){
 									rtn.isAttacked=true;
 								}
-							}else if(current_abs_val===_BISHOP){
+							}else if(current_square.absVal===_BISHOP){
 								rtn.isAttacked=true;
-							}else if(!i && current_abs_val===_PAWN){
-								if(current_val===_PAWN){
+							}else if(!i && current_square.absVal===_PAWN){
+								if(current_square.val===_PAWN){
 									if(piece_direction===4 || piece_direction===6){
 										rtn.isAttacked=true;
 									}
@@ -592,8 +619,8 @@
 						}
 					}else{//is ally piece
 						if(op===3){
-							if(toAbsVal(ally_qal)===current_abs_val){
-								rtn.disambiguationPos=current_pos;
+							if(toAbsVal(ally_qal)===current_square.absVal){
+								rtn.disambiguationPos=current_square.pos;
 							}
 						}
 					}
@@ -602,15 +629,15 @@
 				}
 				
 				if(op===1){
-					rtn.candidateMoves.push(current_pos);//if capturing, this is unreachable because the break
+					rtn.candidateMoves.push(current_square.pos);//if capturing, this is unreachable because the break
 				}
 			}
 			
 			return rtn;
 		}
 		
-		function _legalMoves(piece_qos){
-			var i, j, len, len2, that, temp, temp2, temp3, active_color, non_active_sign, current_adjacent_file, piece_val, piece_abs_val, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, piece_rank, active_castling_availity, piece_directions, no_errors, rtn;
+		function _legalMoves(target_qos){//square 2020 aaa
+			var i, j, len, len2, that, temp, temp2, temp3, target_square, active_color, non_active_sign, current_adjacent_file, current_pos, current_diagonal_pawn_pos, pre_validated_arr_pos, active_color_king_rank, is_king, as_knight, en_passant_capturable_bos, active_castling_availity, piece_directions, no_errors, rtn;
 			
 			that=this;
 			
@@ -622,7 +649,11 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!isInsideBoard(piece_qos)){
+				target_square=that.getSquare({
+					qos : target_qos
+				});
+				
+				if(target_square===null){
 					no_errors=false;
 				}
 			//}
@@ -631,9 +662,7 @@
 				active_color=that.Active.isBlack;
 				non_active_sign=that.NonActive.sign;
 				
-				piece_val=that.getSquare(piece_qos).val;//hacer square, para getSign
-				
-				if(!piece_val || getSign(piece_val)===non_active_sign){//is empty square or enemy piece
+				if(!target_square.val || target_square.sign===non_active_sign){//is empty square or enemy piece
 					no_errors=false;
 				}
 			}
@@ -642,14 +671,13 @@
 				pre_validated_arr_pos=[];
 				
 				en_passant_capturable_bos="";
-				piece_abs_val=toAbsVal(piece_val);
 				
-				is_king=(piece_abs_val===_KING);
+				is_king=(target_square.absVal===_KING);
 				active_color_king_rank=(active_color ? 0 : 7);
 				
 				if(is_king){//king
 					for(i=1; i<9; i++){//1...8
-						if((temp=_candidateMoves(piece_qos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
+						if((temp=_candidateMoves(target_qos, i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 					
 					active_castling_availity=(active_color ? that.BCastling : that.WCastling);
@@ -657,7 +685,7 @@
 					if(active_castling_availity && !that.IsCheck){
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
-								if(_candidateMoves(piece_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
+								if(_candidateMoves(target_qos, (i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
 									if(!that.calculateChecks([active_color_king_rank, (i ? 3 : 5)], true)){
 										pre_validated_arr_pos.push([[active_color_king_rank, (i ? 2 : 6)]]);
 									}
@@ -665,35 +693,35 @@
 							}
 						}
 					}
-				}else if(piece_abs_val===_PAWN){
-					piece_rank=getRankPos(piece_qos);
-					
-					if((temp=_candidateMoves(piece_qos, (active_color ? 5 : 1), false, (piece_rank===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
+				}else if(target_square.absVal===_PAWN){
+					if((temp=_candidateMoves(target_qos, (active_color ? 5 : 1), false, (target_square.rankPos===(active_color_king_rank+non_active_sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
 					
 					for(i=0; i<2; i++){//0...1
-						current_adjacent_file=(getFilePos(piece_qos)+(i ? 1 : -1));
-						current_diagonal_pawn_pos=[(piece_rank+non_active_sign), current_adjacent_file];
+						current_adjacent_file=(target_square.filePos+(i ? 1 : -1));
+						current_diagonal_pawn_pos=[(target_square.rankPos+non_active_sign), current_adjacent_file];
 						
 						if(isInsideBoard(current_diagonal_pawn_pos)){
-							temp2=that.getSquare(current_diagonal_pawn_pos).val;
+							temp2=that.getSquare({
+								qos : current_diagonal_pawn_pos
+							}).val;//square MOVER AFUERA, revisar vs null, file Shift
 							
 							if(temp2 && getSign(temp2)===non_active_sign && toAbsVal(temp2)!==_KING){
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
 							}else if(sameSquare(current_diagonal_pawn_pos, that.EnPassantBos)){
-								en_passant_capturable_bos=toBos([piece_rank, current_adjacent_file]);
+								en_passant_capturable_bos=toBos([target_square.rankPos, current_adjacent_file]);
 								pre_validated_arr_pos.push([current_diagonal_pawn_pos]);
 							}
 						}
 					}
 				}else{//knight, bishop, rook, queen
 					piece_directions=[];
-					if(piece_abs_val!==_BISHOP){piece_directions.push(1, 3, 5, 7);}
-					if(piece_abs_val!==_ROOK){piece_directions.push(2, 4, 6, 8);}
+					if(target_square.absVal!==_BISHOP){piece_directions.push(1, 3, 5, 7);}
+					if(target_square.absVal!==_ROOK){piece_directions.push(2, 4, 6, 8);}
 					
-					as_knight=(piece_abs_val===_KNIGHT);
+					as_knight=(target_square.absVal===_KNIGHT);
 					
 					for(i=0, len=piece_directions.length; i<len; i++){//0...1
-						if((temp=_candidateMoves(piece_qos, piece_directions[i], as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
+						if((temp=_candidateMoves(target_qos, piece_directions[i], as_knight, null, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 				}
 				
@@ -701,21 +729,28 @@
 					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
 						current_pos=pre_validated_arr_pos[i][j];
 						
-						temp=that.getSquare(current_pos).val;
-						temp2=that.getSquare(piece_qos).val;
+						temp=that.getSquare({
+							qos : current_pos
+						}).val;//?square
+						
+						temp2=that.getSquare({
+							qos : target_qos
+						}).val;//?square
 						
 						that.setSquare({
 							qos : current_pos,
-							qal : piece_val
+							qal : target_square.val
 						});
 						
 						that.setSquare({
-							qos : piece_qos,
+							qos : target_qos,
 							qal : _EMPTY_SQR
 						});
 						
 						if(en_passant_capturable_bos){
-							temp3=that.getSquare(en_passant_capturable_bos).val;
+							temp3=that.getSquare({
+								qos : en_passant_capturable_bos
+							}).val;//?square
 							
 							if(sameSquare(current_pos, that.EnPassantBos)){
 								that.setSquare({
@@ -735,7 +770,7 @@
 						});
 						
 						that.setSquare({
-							qos : piece_qos,
+							qos : target_qos,
 							qal : temp2
 						});
 						
@@ -771,7 +806,7 @@
 		}
 		
 		function _ascii(is_rotated){
-			var i, j, that, temp, bottom_label, rtn;
+			var i, j, that, temp, current_bal, bottom_label, rtn;
 			
 			that=this;
 			rtn="   +------------------------+\n";
@@ -785,7 +820,11 @@
 				rtn+=" "+getRankBos([temp, 0])+" |";
 				
 				for(j=0; j<8; j++){//0...7
-					rtn+=" "+that.getSquare(is_rotated ? [(7-i), (7-j)] : [i, j]).bal.replace("*", ".")+" ";
+					current_bal=that.getSquare({
+						qos : (is_rotated ? [(7-i), (7-j)] : [i, j])
+					}).bal;
+					
+					rtn+=" "+current_bal.replace("*", ".")+" ";
 				}
 				
 				rtn+="|\n";
@@ -904,7 +943,9 @@
 				new_en_passant_bos="";
 				promoted_val=0;
 				king_castled=0;
-				non_en_passant_capture=that.getSquare(final_qos).val;
+				non_en_passant_capture=that.getSquare({
+					qos : final_qos
+				}).val;//final va a ser un square
 				
 				new_active_castling_availity=(active_color ? that.BCastling : that.WCastling);
 				new_non_active_castling_availity=(active_color ? that.WCastling : that.BCastling);
@@ -912,7 +953,10 @@
 				to_promotion_rank=(getRankPos(final_qos)===(active_color ? 7 : 0));
 				active_color_king_rank=(active_color ? 0 : 7);
 				
-				piece_val=that.getSquare(initial_qos).val;
+				piece_val=that.getSquare({
+					qos : initial_qos
+				}).val;//initial va a ser un square
+				
 				piece_abs_val=toAbsVal(piece_val);//de un square
 				
 				if(piece_abs_val===_KING){
@@ -1519,7 +1563,7 @@
 					rtn=board_created;
 					break;
 				case "getSquare" :
-					rtn=(board_created ? _getSquare.apply(board, args) : null);
+					rtn=(board_created ? _getSquare.apply(board, [{qos : args[0]}]) : null);//2020 temporal FIX
 					break;
 				default :
 					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");

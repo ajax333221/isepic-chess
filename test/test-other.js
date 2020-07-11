@@ -435,7 +435,7 @@ function testBasicFunctionality(){
 		
 		board.moveCaller("h7", "h8");
 		
-		if(board.getSquare("h8").val!==4){
+		if(board.getSquare({qos : "h8"}).val!==4){
 			error_msg="Error [38] incorrect promotion to wr";
 		}
 	}
@@ -443,7 +443,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board_copy.moveCaller("h7", "h8");
 		
-		if(board_copy.getSquare("h8").val!==3){
+		if(board_copy.getSquare({qos : "h8"}).val!==3){
 			error_msg="Error [39] failed to setPromoteTo()";
 		}
 	}
@@ -451,7 +451,7 @@ function testBasicFunctionality(){
 	if(!error_msg){
 		board_copy.moveCaller("e2", "f1");
 		
-		if(board_copy.getSquare("f1").val!==-3){
+		if(board_copy.getSquare({qos : "f1"}).val!==-3){
 			error_msg="Error [40] wrong promotion color";
 		}
 	}
