@@ -1,7 +1,7 @@
 //---to do:
 //
 //(x) [### ya via fenApply() ###] _getSquare EDIT_2020: ya no, ahora solo da el Square
-//_setSquareVal
+//_setSquare
 //_calculateChecks
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
 //_setPromoteTo

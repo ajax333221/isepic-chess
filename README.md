@@ -99,7 +99,7 @@ Boards created by `Ic.initBoard()` have the following available methods.
 Function | Parameters | Return | Description
 -------- | ---------- | ------ | -----------
 getSquare(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
-setSquareVal(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
+setSquare(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 calculateChecks(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 toggleIsRotated(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 setPromoteTo(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:

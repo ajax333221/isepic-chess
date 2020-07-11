@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.1";
+		var _VERSION="2.7.2";
 		var _NEXT_BOARD_ID=0;
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -216,7 +216,7 @@
 			return that.Squares[toBos(qos)];
 		}
 		
-		function _setSquareVal(sqr){
+		function _setSquare(sqr){
 			var that, sqr_bos, sqr_val;
 			
 			that=this;
@@ -305,7 +305,7 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					that.setSquareVal({
+					that.setSquare({
 						qos : [i, j],
 						qal : _EMPTY_SQR
 					});
@@ -323,7 +323,7 @@
 					skip_files=(current_char*1);
 					
 					if(!skip_files){
-						that.setSquareVal({
+						that.setSquare({
 							qos : [i, current_file],
 							qal : toVal(current_char)
 						});//no ocupa toVal?
@@ -706,12 +706,12 @@
 						temp=that.getSquare(current_pos).val;
 						temp2=that.getSquare(piece_qos).val;
 						
-						that.setSquareVal({
+						that.setSquare({
 							qos : current_pos,
 							qal : piece_val
 						});
 						
-						that.setSquareVal({
+						that.setSquare({
 							qos : piece_qos,
 							qal : _EMPTY_SQR
 						});
@@ -720,7 +720,7 @@
 							temp3=that.getSquare(en_passant_capturable_bos).val;
 							
 							if(sameSquare(current_pos, that.EnPassantBos)){
-								that.setSquareVal({
+								that.setSquare({
 									qos : en_passant_capturable_bos,
 									qal : _EMPTY_SQR
 								});
@@ -731,18 +731,18 @@
 							rtn.push(current_pos);
 						}
 						
-						that.setSquareVal({
+						that.setSquare({
 							qos : current_pos,
 							qal : temp
 						});
 						
-						that.setSquareVal({
+						that.setSquare({
 							qos : piece_qos,
 							qal : temp2
 						});
 						
 						if(en_passant_capturable_bos){
-							that.setSquareVal({
+							that.setSquare({
 								qos : en_passant_capturable_bos,
 								qal : temp3
 							});
@@ -924,24 +924,24 @@
 						if(getFilePos(final_qos)===6){//short
 							king_castled=1;
 							
-							that.setSquareVal({
+							that.setSquare({
 								qos : [active_color_king_rank, 5],
 								qal : active_color_rook
 							});
 							
-							that.setSquareVal({
+							that.setSquare({
 								qos : [active_color_king_rank, 7],
 								qal : _EMPTY_SQR
 							});
 						}else if(getFilePos(final_qos)===2){//long
 							king_castled=2;
 							
-							that.setSquareVal({
+							that.setSquare({
 								qos : [active_color_king_rank, 3],
 								qal : active_color_rook
 							});
 							
-							that.setSquareVal({
+							that.setSquare({
 								qos : [active_color_king_rank, 0],
 								qal : _EMPTY_SQR
 							});
@@ -953,7 +953,7 @@
 					if(Math.abs(getRankPos(initial_qos)-getRankPos(final_qos))>1){//new enpassant
 						new_en_passant_bos=(getFileBos(final_qos)+""+(active_color ? 6 : 3));
 					}else if(sameSquare(final_qos, that.EnPassantBos)){//enpassant capture
-						that.setSquareVal({
+						that.setSquare({
 							qos : ((getFileBos(final_qos)+""+(active_color ? 4 : 5))),
 							qal : _EMPTY_SQR
 						});
@@ -1064,12 +1064,12 @@
 				
 				that.EnPassantBos=new_en_passant_bos;
 				
-				that.setSquareVal({
+				that.setSquare({
 					qos : final_qos,
 					qal : (promoted_val || piece_val)
 				});
 				
-				that.setSquareVal({
+				that.setSquare({
 					qos : initial_qos,
 					qal : _EMPTY_SQR
 				});
@@ -1366,7 +1366,7 @@
 					_BOARDS[board_name]={
 						BoardName : board_name,
 						getSquare : _getSquare,
-						setSquareVal : _setSquareVal,
+						setSquare : _setSquare,
 						calculateChecks : _calculateChecks,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
