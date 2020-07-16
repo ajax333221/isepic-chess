@@ -685,13 +685,10 @@
 			
 			if(no_errors){//is inside board + is ally piece
 				pre_validated_arr_pos=[];
-				
 				en_passant_capturable_square=null;
-				
-				is_king_cache=(target_square.isKing);//needs to be cached from start before changes
 				active_king_original_rank=(that.Active.isBlack ? 0 : 7);
 				
-				if(is_king_cache){//king
+				if(target_square.isKing){
 					for(i=1; i<9; i++){//1...8
 						if((temp=_candidateMoves(i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
 					}
@@ -743,6 +740,7 @@
 				}
 				
 				target_val_cache=target_square.val;
+				is_king_cache=(target_square.isKing);
 				
 				if(en_passant_capturable_square!==null){
 					en_passant_capturable_val_cache=en_passant_capturable_square.val;
@@ -844,7 +842,7 @@
 					rtn+=" "+current_square.bal.replace("*", ".")+" ";
 					rtn+=(j===7 ? "|\n" : "");
 					
-					bottom_label+=(i===j ? "  "+current_square.fileBos : "");
+					bottom_label+=(i===j ? ("  "+current_square.fileBos) : "");
 				}
 			}
 			
@@ -942,7 +940,7 @@
 			return no_errors;
 		}
 		
-		function _moveCaller(initial_qos, final_qos){//square 2020 aaa
+		function _moveCaller(initial_qos, final_qos){
 			var that, temp, initial_val_cache, initial_abs_val_cache, initial_abs_bal_cache, final_val_cache, initial_square, final_square, active_king_original_rank, pawn_moved, promoted_val, active_color_rook, new_en_passant_bos, new_active_castling_availity, new_non_active_castling_availity, king_castled, to_promotion_rank, pgn_move, pgn_end, rtn_can_move;
 			
 			that=this;
