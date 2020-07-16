@@ -1,6 +1,6 @@
 /** Copyright (c) 2020 Ajax Isepic (ajax333221) Licensed MIT */
 
-/*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:true, curly:true, es3:true, latedef:nofunc, bitwise:false, sub:true */
+/*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:true, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
 
 (function(win, $, Ic){
 	var IcUi=(function(){

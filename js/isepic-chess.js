@@ -1,6 +1,6 @@
 /** Copyright (c) 2020 Ajax Isepic (ajax333221) Licensed MIT */
 
-/*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, es3:true, latedef:nofunc, bitwise:false, sub:true */
+/*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
 
 (function(win){
 	var Ic=(function(){
@@ -403,9 +403,9 @@
 						qos : [i, j]
 					});
 					
-					if(current_square.val){
-						if(current_square.absVal===_KING){
-							if(that.Active.sign===current_square.sign){
+					if(!current_square.isEmptySquare){
+						if(current_square.isKing){
+							if(current_square.sign===that.Active.sign){
 								that.Active.kingBos=current_square.bos;
 							}else{
 								that.NonActive.kingBos=current_square.bos;
@@ -446,7 +446,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, current_sign, current_castling_availity, current_king_rank, current_val, en_passant_square, behind_ep_val, infront_ep_val, e_val, a_val, h_val, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
+			var i, j, k, that, temp, current_sign, current_castling_availity, current_king_rank, current_val, en_passant_square, behind_ep_is_empty, infront_ep_val, e_val, a_val, h_val, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
 			
 			that=this;
 			
@@ -490,17 +490,17 @@
 						qos : that.EnPassantBos
 					});
 					
-					behind_ep_val=that.getSquare({
+					behind_ep_is_empty=that.getSquare({
 						qos : that.EnPassantBos,
 						rankShift : temp
-					}).val;
+					}).isEmptySquare;
 					
 					infront_ep_val=that.getSquare({
 						qos : that.EnPassantBos,
 						rankShift : -temp
 					}).val;
 					
-					if(that.HalfMove || en_passant_square.val || en_passant_square.rankPos!==(that.Active.isBlack ? 5 : 2) || behind_ep_val || infront_ep_val!==temp){
+					if(that.HalfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(that.Active.isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==temp){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -601,31 +601,31 @@
 					break;
 				}
 				
-				if(current_square.val){
+				if(!current_square.isEmptySquare){
 					if(current_square.sign===that.NonActive.sign){//is enemy piece
 						if(op===1){
-							if(allow_capture && current_square.absVal!==_KING){
+							if(allow_capture && !current_square.isKing){
 								rtn.candidateMoves.push(current_square.pos);
 							}
 						}else if(op===2){
 							if(as_knight){
-								if(current_square.absVal===_KNIGHT){
+								if(current_square.isKnight){
 									rtn.isAttacked=true;
 								}
-							}else if(current_square.absVal===_KING){
+							}else if(current_square.isKing){
 								if(!i){
 									rtn.isAttacked=true;
 								}
-							}else if(current_square.absVal===_QUEEN){
+							}else if(current_square.isQueen){
 								rtn.isAttacked=true;
 							}else if(piece_direction%2){
-								if(current_square.absVal==_ROOK){
+								if(current_square.isRook){
 									rtn.isAttacked=true;
 								}
-							}else if(current_square.absVal===_BISHOP){
+							}else if(current_square.isBishop){
 								rtn.isAttacked=true;
-							}else if(!i && current_square.absVal===_PAWN){
-								if(current_square.val===_PAWN){
+							}else if(!i && current_square.isPawn){
+								if(current_square.sign>0){
 									if(piece_direction===4 || piece_direction===6){
 										rtn.isAttacked=true;
 									}
@@ -638,7 +638,7 @@
 						}
 					}else{//is ally piece
 						if(op===3){
-							if(toAbsVal(ally_qal)===current_square.absVal){
+							if(current_square.absVal===toAbsVal(ally_qal)){
 								rtn.disambiguationPos=current_square.pos;
 							}
 						}
@@ -678,7 +678,7 @@
 			//}
 			
 			if(no_errors){
-				if(!target_square.val || target_square.sign===that.NonActive.sign){//is empty square or enemy piece
+				if(target_square.isEmptySquare || target_square.sign===that.NonActive.sign){
 					no_errors=false;
 				}
 			}
@@ -720,7 +720,7 @@
 						});
 						
 						if(current_diagonal_square!==null){
-							if(current_diagonal_square.val && current_diagonal_square.sign===that.NonActive.sign && !current_diagonal_square.isKing){
+							if(!current_diagonal_square.isEmptySquare && current_diagonal_square.sign===that.NonActive.sign && !current_diagonal_square.isKing){
 								pre_validated_arr_pos.push([current_diagonal_square.pos]);
 							}else if(sameSquare(current_diagonal_square.bos, that.EnPassantBos)){
 								en_passant_capturable_square=that.getSquare({
