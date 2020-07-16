@@ -20,7 +20,7 @@
 //CurrentMove (va ser default)
 //IsRotated (va ser default)
 //PromoteTo (va ser default)
-//FromSquare (va ser default)
+//SelectedBos (va ser default)
 //IsHidden (va ser default)
 //Squares
 

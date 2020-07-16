@@ -4,7 +4,7 @@
 
 (function(win, $, Ic){
 	var IcUi=(function(){
-		var _VERSION="1.0.5";
+		var _VERSION="1.0.6";
 		
 		function refreshBoard(animate_move){
 			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, piece_class, promotion_class, is_new_html;
@@ -52,7 +52,7 @@
 				rtn+="<li><strong>Is check?:</strong> <span>"+that.IsCheck+"</span></li>";
 				rtn+="<li><strong>Is checkmate?:</strong> <span>"+that.IsCheckmate+"</span></li>";
 				rtn+="<li><strong>Is stalemate?:</strong> <span>"+that.IsStalemate+"</span></li>";
-				rtn+="<li><strong>En Passant:</strong> <span>"+(that.EnPassantBos ? that.EnPassantBos : "-")+"</span></li>";
+				rtn+="<li><strong>En Passant square:</strong> <span>"+(that.EnPassantBos || "-")+"</span></li>";
 				
 				rtn+="<li>";
 				rtn+="<strong>Active</strong>";
@@ -81,7 +81,7 @@
 				rtn+="<li><strong>Current move:</strong> <span>"+that.CurrentMove+"</span></li>";
 				rtn+="<li><strong>Initial full move:</strong> <span>"+that.InitialFullMove+"</span></li>";
 				rtn+="<li><strong>Promote to:</strong> <span>"+Ic.toBal(that.PromoteTo*Ic.getSign(that.Active.isBlack))+"</span></li>";
-				rtn+="<li><strong>Selected square:</strong> <span>"+(that.FromSquare ? that.FromSquare : "-")+"</span></li>";
+				rtn+="<li><strong>Selected square:</strong> <span>"+(that.SelectedBos || "-")+"</span></li>";
 				rtn+="<li><strong>Material difference:</strong> <span>{w:["+that.MaterialDiff.w.join(", ")+"], b:["+that.MaterialDiff.b.join(", ")+"]}</span></li>";
 				
 				rtn+="<li>";
@@ -160,37 +160,36 @@
 				}
 				
 				$(".ic_ws, .ic_bs").unbind("click").click(function(){
-					var i, len, temp, need_highlight, legal_moves, square_bos;
+					var i, len, current_bos, need_highlight, legal_moves;
 					
 					need_highlight=true;
-					square_bos=$(this).attr("data-bos");
-					temp=that.FromSquare;
+					current_bos=$(this).attr("data-bos");
 					
-					if(temp){
+					if(that.SelectedBos){
 						$(".ic_highlight").removeClass("ic_highlight");
 						$(".ic_currpiece").removeClass("ic_currpiece");
 						
-						if(Ic.sameSquare(temp, square_bos)){
-							that.FromSquare="";
+						if(Ic.sameSquare(that.SelectedBos, current_bos)){
+							that.SelectedBos="";
 							$("#ic_id_objinfo").html(_getObjInfoHTML());
 							need_highlight=false;
 						}else{
-							if(that.moveCaller(temp, square_bos)){
+							if(that.moveCaller(that.SelectedBos, current_bos)){
 								refreshBoard.apply(that, [1]);
 								need_highlight=false;
 							}else{
-								that.FromSquare="";
+								that.SelectedBos="";
 								need_highlight=true;
 							}
 						}
 					}
 					
 					if(need_highlight){
-						legal_moves=that.legalMoves(square_bos);
+						legal_moves=that.legalMoves(current_bos);
 						len=legal_moves.length;
 						
 						if(len){
-							that.FromSquare=square_bos;
+							that.SelectedBos=current_bos;
 							$(this).addClass("ic_currpiece");
 							
 							for(i=0; i<len; i++){//0<len
@@ -292,12 +291,12 @@
 				});
 				
 				$("#ic_id_promote").unbind("change").change(function(){
-					that.setPromoteTo($(this).val()*1);
+					that.setPromoteTo($(this).val());
 					$("#ic_id_objinfo").html(_getObjInfoHTML());
 				});
 				
 				(function(){//reset piece classes
-					var i, j, len, diff_top, diff_bottom, captured_html, new_class, square_class, current_square;
+					var i, j, len, current_square, current_diff, captured_html, new_class, square_class;
 					
 					for(i=0; i<8; i++){//0...7
 						for(j=0; j<8; j++){//0...7
@@ -316,17 +315,14 @@
 					}
 					
 					captured_html="";
-					diff_top=(that.IsRotated ? that.MaterialDiff.w : that.MaterialDiff.b);
 					
-					for(i=0, len=diff_top.length; i<len; i++){//0<len
-						captured_html+="<img src='"+("./css/images/"+Ic.toClassName(diff_top[i])+".png")+"' width='20' height='20'>";
-					}
-					
-					captured_html+="<hr>";
-					diff_bottom=(that.IsRotated ? that.MaterialDiff.b : that.MaterialDiff.w);
-					
-					for(i=0, len=diff_bottom.length; i<len; i++){//0<len
-						captured_html+="<img src='"+("./css/images/"+Ic.toClassName(diff_bottom[i])+".png")+"' width='20' height='20'>";
+					for(i=0; i<2; i++){//0...1
+						current_diff=(that.IsRotated===!i ? that.MaterialDiff.w : that.MaterialDiff.b);
+						captured_html+=(i ? "<hr>" : "");
+						
+						for(j=0, len=current_diff.length; j<len; j++){//0<len
+							captured_html+="<img src='"+("./css/images/"+Ic.toClassName(current_diff[j])+".png")+"' width='20' height='20'>";
+						}
 					}
 					
 					$("#ic_id_board .ic_captureds").html(captured_html);
@@ -379,7 +375,10 @@
 					rtn="";
 					
 					for(i=1, len=move_list.length; i<len; i++){//1<len
-						rtn+=(i!==1 ? " " : "")+((black_starts*1)!==(i%2) ? ("<span class='ic_pgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "")+"<span class='"+(i!==that.CurrentMove ? "ic_pgn_link" : "ic_pgn_current")+"' data-index='"+i+"'>"+move_list[i].PGNmove+"</span>"+(move_list[i].PGNend ? (" <span class='ic_pgn_result'>"+move_list[i].PGNend+"</span>") : "");
+						rtn+=(i!==1 ? " " : "");
+						rtn+=(black_starts===!(i%2) ? ("<span class='ic_pgn_number'>"+(that.InitialFullMove+Math.floor((i+black_starts-1)/2))+".</span>") : "");
+						rtn+="<span class='"+(i!==that.CurrentMove ? "ic_pgn_link" : "ic_pgn_current")+"' data-index='"+i+"'>"+move_list[i].PGNmove+"</span>";
+						rtn+=(move_list[i].PGNend ? (" <span class='ic_pgn_result'>"+move_list[i].PGNend+"</span>") : "");
 					}
 					
 					if(black_starts && rtn!==""){
@@ -392,7 +391,7 @@
 				$(".ic_pgn_link").unbind("click").click(function(){
 					var data_val, diff, is_goto;
 					
-					data_val=($(this).attr("data-index")*1);
+					data_val=Ic.utilityMisc.toInt($(this).attr("data-index"));
 					diff=(data_val-that.CurrentMove);
 					is_goto=(Math.abs(diff)!==1);
 					
@@ -409,7 +408,7 @@
 					$("#ic_id_"+that.MoveList[that.CurrentMove].ToBos).addClass("ic_lastmove");
 				}
 				
-				that.FromSquare="";
+				that.SelectedBos="";
 				
 				$("#ic_id_objinfo").html(_getObjInfoHTML());
 			}
