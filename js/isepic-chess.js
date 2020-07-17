@@ -1112,7 +1112,7 @@
 							}
 						}
 						
-						if(final_cached_square.val){
+						if(!final_cached_square.isEmptySquare){
 							rtn+="x";
 						}
 						
