@@ -1,6 +1,6 @@
 //---to do:
 //
-//(x) [### ya via fenApply() ###] _getSquare EDIT_2020: ya no, ahora solo da el Square
+//[### ya via fenApply() ###] _getSquare, arreglar el temp fix y aparte agregar NEW isUnreferenced
 //_setSquare
 //_calculateChecks
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
