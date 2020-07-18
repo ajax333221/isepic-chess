@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.6";
+		var _VERSION="2.7.7";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -1326,7 +1326,7 @@
 		}
 		
 		function toPos(qos){
-			return ((typeof qos)==="string" ? [_toInt((8-getRankBos(qos)), 0, 7), _toInt("abcdefgh".indexOf(getFileBos(qos)), 0, 7)] : qos);
+			return ((typeof qos)==="string" ? [_toInt((8-getRankBos(qos)), 0, 7), _toInt("abcdefgh".indexOf(getFileBos(qos)), 0, 7)] : [qos[0], qos[1]]);
 		}
 		
 		function getSign(zal){
@@ -1377,7 +1377,9 @@
 			del_board=selectBoard(woard);
 			
 			if(del_board!==null){
+				_BOARDS[del_board.BoardName]=null;
 				delete _BOARDS[del_board.BoardName];
+				
 				rtn=true;
 			}
 			

@@ -707,16 +707,41 @@ function testFenPositions(){
 }
 
 function testSpecificCases(){
-	var start_time, end_time, error_msg;
+	var temp, board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
-		if(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).length!==2){
-			error_msg="Error [0] enpassant capture applied to other non enpassant moves";
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(board===null){
+			error_msg="Error [0] failed to initBoard("+board_name+")";
 		}
 	//}
+	
+	if(!error_msg){
+		temp=Ic.toPos(board.Squares["a2"].pos);
+		
+		if((temp===Ic.toPos(board.Squares["a2"].pos).sort())!==false){
+			error_msg="Error [1] Ic.toPos() returns a reference";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).length!==2){
+			error_msg="Error [2] enpassant capture applied to other non enpassant moves";
+		}
+	}
+	
+	if(Ic.selectBoard(board)!==null){
+		Ic.removeBoard(board);
+	}
 	
 	end_time=new Date().getTime();
 	
