@@ -4,6 +4,8 @@
 //se ocupara el slice? (en uso) to_prop[sub_keys[j]].pos=from_prop[sub_keys[j]].pos.slice(0);
 //se ocupara en clone? (no existe) to_prop[sub_keys[j]]=Object.create(null);
 //
+//_isObject
+//
 //[N/A?] _consoleLog()
 
 function fnIcUtilityTrimSpaces(){
