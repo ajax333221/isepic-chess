@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.7";
+		var _VERSION="2.7.8";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -22,6 +22,10 @@
 		
 		function _consoleLog(msg){
 			if(!_SILENT_MODE){console.log(msg);}
+		}
+		
+		function _isObject(obj){
+			return ((typeof obj)==="object" && obj!==null);
 		}
 		
 		function _trimSpaces(str){
@@ -95,7 +99,7 @@
 				//["Active", "NonActive"] constant len, hard values only (strings/numbers) inside direct children
 				//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
 				//["MaterialDiff"] constant len, references (arrays) inside direct children
-				if((typeof from_prop)==="object" && from_prop!==null){
+				if(_isObject(from_prop)){
 					if(current_key==="MaterialDiff"){
 						to_prop.w=from_prop.w.slice(0);
 						to_prop.b=from_prop.b.slice(0);
@@ -213,8 +217,8 @@
 		
 		//---------------- board
 		
-		function _getSquare(sqr){
-			var that, pre_validated_pos, rtn;
+		function _getSquare(qos, p){
+			var that, temp_bos, pre_validated_pos, rtn;
 			
 			that=this;
 			
@@ -226,12 +230,12 @@
 				if(is_unreferenced){
 					temp=Object.create(null);
 					
-					temp.pos=toPos(my_square.bos);
+					temp.pos=toPos(my_square.pos);//unreference
 					temp.bos=my_square.bos;
-					temp.rankPos=getRankPos(my_square.bos);
-					temp.filePos=getFilePos(my_square.bos);
-					temp.rankBos=getRankBos(my_square.bos);
-					temp.fileBos=getFileBos(my_square.bos);
+					temp.rankPos=getRankPos(my_square.pos);
+					temp.filePos=getFilePos(my_square.pos);
+					temp.rankBos=getRankBos(my_square.pos);
+					temp.fileBos=getFileBos(my_square.pos);
 					
 					temp.bal=my_square.bal;
 					temp.absBal=my_square.absBal;
@@ -254,38 +258,57 @@
 			}
 			
 			rtn=null;
+			p=(_isObject(p) ? p : {});
 			
-			pre_validated_pos=[(getRankPos(sqr.qos)+_toInt(sqr.rankShift)), (getFilePos(sqr.qos)+_toInt(sqr.fileShift))];
+			temp_bos="";
 			
-			if(isInsideBoard(pre_validated_pos)){
-				rtn=_squareHelper(that.Squares[toBos(pre_validated_pos)], sqr.isUnreferenced);
+			if(_isObject(qos) && (typeof qos.bos)==="string"){
+				temp_bos=qos.bos;
+			}else if(qos){
+				pre_validated_pos=[(getRankPos(qos)+_toInt(p.rankShift)), (getFilePos(qos)+_toInt(p.fileShift))];
+				
+				if(isInsideBoard(pre_validated_pos)){
+					temp_bos=toBos(pre_validated_pos);
+				}
+			}
+			
+			if(temp_bos){
+				rtn=_squareHelper(that.Squares[temp_bos], p.isUnreferenced);
 			}
 			
 			return rtn;
 		}
 		
-		function _setSquare(sqr){
-			var that, sqr_bos, sqr_val, sqr_abs_val;
+		function _setSquare(qos, new_qal){
+			var that, sqr, sqr_val, sqr_abs_val, rtn_set;
 			
 			that=this;
 			
-			sqr_bos=toBos(sqr.qos);
-			sqr_val=toVal(sqr.qal);
-			sqr_abs_val=toAbsVal(sqr_val);
+			rtn_set=false;
+			sqr=that.getSquare(qos);
 			
-			that.Squares[sqr_bos].bal=toBal(sqr_val);
-			that.Squares[sqr_bos].absBal=toAbsBal(sqr_val);
-			that.Squares[sqr_bos].val=sqr_val;
-			that.Squares[sqr_bos].absVal=sqr_abs_val;
-			that.Squares[sqr_bos].className=toClassName(sqr_val);
-			that.Squares[sqr_bos].sign=getSign(sqr_val);
-			that.Squares[sqr_bos].isEmptySquare=(sqr_abs_val===_EMPTY_SQR);
-			that.Squares[sqr_bos].isPawn=(sqr_abs_val===_PAWN);
-			that.Squares[sqr_bos].isKnight=(sqr_abs_val===_KNIGHT);
-			that.Squares[sqr_bos].isBishop=(sqr_abs_val===_BISHOP);
-			that.Squares[sqr_bos].isRook=(sqr_abs_val===_ROOK);
-			that.Squares[sqr_bos].isQueen=(sqr_abs_val===_QUEEN);
-			that.Squares[sqr_bos].isKing=(sqr_abs_val===_KING);
+			if(sqr!==null){
+				rtn_set=true;
+				
+				sqr_val=toVal(new_qal);
+				sqr_abs_val=toAbsVal(sqr_val);
+				
+				sqr.bal=toBal(sqr_val);
+				sqr.absBal=toAbsBal(sqr_val);
+				sqr.val=sqr_val;
+				sqr.absVal=sqr_abs_val;
+				sqr.className=toClassName(sqr_val);
+				sqr.sign=getSign(sqr_val);
+				sqr.isEmptySquare=(sqr_abs_val===_EMPTY_SQR);
+				sqr.isPawn=(sqr_abs_val===_PAWN);
+				sqr.isKnight=(sqr_abs_val===_KNIGHT);
+				sqr.isBishop=(sqr_abs_val===_BISHOP);
+				sqr.isRook=(sqr_abs_val===_ROOK);
+				sqr.isQueen=(sqr_abs_val===_QUEEN);
+				sqr.isKing=(sqr_abs_val===_KING);
+			}
+			
+			return rtn_set;
 		}
 		
 		function _calculateChecks(king_qos, early_break){
@@ -363,10 +386,7 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					that.setSquare({
-						qos : [i, j],
-						qal : _EMPTY_SQR
-					});
+					that.setSquare([i, j], _EMPTY_SQR);
 				}
 			}
 			
@@ -381,10 +401,7 @@
 					skip_files=(current_char*1);
 					
 					if(!skip_files){
-						that.setSquare({
-							qos : [i, current_file],
-							qal : current_char
-						});
+						that.setSquare([i, current_file], current_char);
 					}
 					
 					current_file+=(skip_files || 1);
@@ -440,9 +457,7 @@
 				consecutive_empty_squares=0;
 				
 				for(j=0; j<8; j++){//0...7
-					current_square=that.getSquare({
-						qos : [i, j]
-					});
+					current_square=that.getSquare([i, j]);
 					
 					if(!current_square.isEmptySquare){
 						if(current_square.isKing){
@@ -487,7 +502,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, current_sign, current_castling_availity, current_king_rank, current_val, en_passant_square, behind_ep_is_empty, infront_ep_val, e_val, a_val, h_val, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
+			var i, j, k, that, temp, current_sign, current_castling_availity, current_king_rank, current_val, en_passant_square, behind_ep_is_empty, infront_ep_val, fen_board, total_pawns_in_current_file, min_captured, min_captured_holder, error_msg;
 			
 			that=this;
 			
@@ -527,19 +542,9 @@
 				if(that.EnPassantBos){
 					temp=that.NonActive.sign;
 					
-					en_passant_square=that.getSquare({
-						qos : that.EnPassantBos
-					});
-					
-					behind_ep_is_empty=that.getSquare({
-						qos : that.EnPassantBos,
-						rankShift : temp
-					}).isEmptySquare;
-					
-					infront_ep_val=that.getSquare({
-						qos : that.EnPassantBos,
-						rankShift : -temp
-					}).val;
+					en_passant_square=that.getSquare(that.EnPassantBos);
+					behind_ep_is_empty=that.getSquare(that.EnPassantBos, {rankShift : temp}).isEmptySquare;
+					infront_ep_val=that.getSquare(that.EnPassantBos, {rankShift : -temp}).val;
 					
 					if(that.HalfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(that.Active.isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==temp){
 						error_msg="Error [3] bad en-passant";
@@ -558,9 +563,7 @@
 						total_pawns_in_current_file=0;
 						
 						for(k=0; k<8; k++){//0...7
-							current_val=that.getSquare({
-								qos : [k, j]
-							}).val;
+							current_val=that.getSquare([k, j]).val;
 							
 							total_pawns_in_current_file+=(current_val===(_PAWN*getSign(!i)));
 						}
@@ -585,23 +588,11 @@
 						current_sign=getSign(!i);
 						current_king_rank=(i ? 7 : 0);
 						
-						e_val=that.getSquare({
-							qos : [current_king_rank, 4]
-						}).val;
-						
-						a_val=that.getSquare({
-							qos : [current_king_rank, 0]
-						}).val;
-						
-						h_val=that.getSquare({
-							qos : [current_king_rank, 7]
-						}).val;
-						
-						if(e_val!==(_KING*current_sign)){
+						if(that.getSquare([current_king_rank, 4]).val!==(_KING*current_sign)){
 							error_msg="Error [5] "+(i ? "white" : "black")+" castling ability without king in original position";
-						}else if(current_castling_availity!==2 && h_val!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==2 && that.getSquare([current_king_rank, 7]).val!==(_ROOK*current_sign)){
 							error_msg="Error [6] "+(i ? "white" : "black")+" short castling ability with missing H-file rook";
-						}else if(current_castling_availity!==1 && a_val!==(_ROOK*current_sign)){
+						}else if(current_castling_availity!==1 && that.getSquare([current_king_rank, 0]).val!==(_ROOK*current_sign)){
 							error_msg="Error [7] "+(i ? "white" : "black")+" long castling ability with missing A-file rook";
 						}
 					}
@@ -632,8 +623,7 @@
 			total_squares=_toInt(as_knight ? 1 : (total_squares || 7));
 			
 			for(i=0; i<total_squares; i++){//0<total_squares
-				current_square=that.getSquare({
-					qos : initial_qos,
+				current_square=that.getSquare(initial_qos, {
 					rankShift : (rank_change*(i+1)),
 					fileShift : (file_change*(i+1))
 				});
@@ -709,10 +699,7 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				target_cached_square=that.getSquare({
-					qos : target_qos,
-					isUnreferenced : true
-				});
+				target_cached_square=that.getSquare(target_qos, {isUnreferenced : true});
 				
 				if(target_cached_square===null){
 					no_errors=false;
@@ -752,8 +739,7 @@
 					if((temp=_candidateMoves((that.Active.isBlack ? 5 : 1), false, (target_cached_square.rankPos===(active_king_original_rank+that.NonActive.sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
 					
 					for(i=0; i<2; i++){//0...1
-						current_diagonal_square=that.getSquare({
-							qos : target_qos,
+						current_diagonal_square=that.getSquare(target_qos, {
 							rankShift : that.NonActive.sign,
 							fileShift : (i ? 1 : -1)
 						});
@@ -762,8 +748,7 @@
 							if(!current_diagonal_square.isEmptySquare && current_diagonal_square.sign===that.NonActive.sign && !current_diagonal_square.isKing){
 								pre_validated_arr_pos.push([current_diagonal_square.pos]);
 							}else if(sameSquare(current_diagonal_square.bos, that.EnPassantBos)){
-								en_passant_capturable_cached_square=that.getSquare({
-									qos : current_diagonal_square.pos,
+								en_passant_capturable_cached_square=that.getSquare(current_diagonal_square.pos, {
 									rankShift : that.Active.sign,
 									isUnreferenced : true
 								});
@@ -784,27 +769,14 @@
 				
 				for(i=0, len=pre_validated_arr_pos.length; i<len; i++){//0<len
 					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
-						current_cached_square=that.getSquare({
-							qos : pre_validated_arr_pos[i][j],
-							isUnreferenced : true
-						});
+						current_cached_square=that.getSquare(pre_validated_arr_pos[i][j], {isUnreferenced : true});
 						
-						that.setSquare({
-							qos : current_cached_square.pos,
-							qal : target_cached_square.val
-						});
-						
-						that.setSquare({
-							qos : target_qos,
-							qal : _EMPTY_SQR
-						});
+						that.setSquare(current_cached_square.pos, target_cached_square.val);
+						that.setSquare(target_qos, _EMPTY_SQR);
 						
 						if(en_passant_capturable_cached_square!==null){
 							if(sameSquare(current_cached_square.bos, that.EnPassantBos)){
-								that.setSquare({
-									qos : en_passant_capturable_cached_square.pos,
-									qal : _EMPTY_SQR
-								});
+								that.setSquare(en_passant_capturable_cached_square.pos, _EMPTY_SQR);
 							}
 						}
 						
@@ -812,21 +784,11 @@
 							rtn.push(current_cached_square.pos);
 						}
 						
-						that.setSquare({
-							qos : current_cached_square.pos,
-							qal : current_cached_square.val
-						});
-						
-						that.setSquare({
-							qos : target_qos,
-							qal : target_cached_square.val
-						});
+						that.setSquare(current_cached_square.pos, current_cached_square.val);
+						that.setSquare(target_qos, target_cached_square.val);
 						
 						if(en_passant_capturable_cached_square!==null){
-							that.setSquare({
-								qos : en_passant_capturable_cached_square.pos,
-								qal : en_passant_capturable_cached_square.val
-							});
+							that.setSquare(en_passant_capturable_cached_square.pos, en_passant_capturable_cached_square.val);
 						}
 					}
 				}
@@ -842,9 +804,7 @@
 			
 			rtn=false;
 			
-			final_square=that.getSquare({
-				qos : final_qos
-			});
+			final_square=that.getSquare(final_qos);
 			
 			if(final_square!==null){
 				moves=that.legalMoves(initial_qos);
@@ -869,9 +829,7 @@
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					current_square=that.getSquare({
-						qos : (is_rotated ? [(7-i), (7-j)] : [i, j])
-					});
+					current_square=that.getSquare(is_rotated ? [(7-i), (7-j)] : [i, j]);
 					
 					rtn+=(j ? "" : (" "+current_square.rankBos+" |"));
 					rtn+=" "+current_square.bal.replace("*", ".")+" ";
@@ -987,15 +945,8 @@
 			rtn_can_move=that.isLegalMove(initial_qos, final_qos);
 			
 			if(rtn_can_move){
-				initial_cached_square=that.getSquare({
-					qos : initial_qos,
-					isUnreferenced : true
-				});
-				
-				final_cached_square=that.getSquare({
-					qos : final_qos,
-					isUnreferenced : true
-				});
+				initial_cached_square=that.getSquare(initial_qos, {isUnreferenced : true});
+				final_cached_square=that.getSquare(final_qos, {isUnreferenced : true});
 				
 				active_color_rook=(_ROOK*that.Active.sign);
 				
@@ -1017,27 +968,13 @@
 						if(final_cached_square.filePos===6){//short
 							king_castled=1;
 							
-							that.setSquare({
-								qos : [active_king_original_rank, 5],
-								qal : active_color_rook
-							});
-							
-							that.setSquare({
-								qos : [active_king_original_rank, 7],
-								qal : _EMPTY_SQR
-							});
+							that.setSquare([active_king_original_rank, 5], active_color_rook);
+							that.setSquare([active_king_original_rank, 7], _EMPTY_SQR);
 						}else if(final_cached_square.filePos===2){//long
 							king_castled=2;
 							
-							that.setSquare({
-								qos : [active_king_original_rank, 3],
-								qal : active_color_rook
-							});
-							
-							that.setSquare({
-								qos : [active_king_original_rank, 0],
-								qal : _EMPTY_SQR
-							});
+							that.setSquare([active_king_original_rank, 3], active_color_rook);
+							that.setSquare([active_king_original_rank, 0], _EMPTY_SQR);
 						}
 					}
 				}else if(initial_cached_square.isPawn){
@@ -1046,10 +983,7 @@
 					if(Math.abs(initial_cached_square.rankPos-final_cached_square.rankPos)>1){//new enpassant
 						new_en_passant_bos=(final_cached_square.fileBos+""+(that.Active.isBlack ? 6 : 3));
 					}else if(sameSquare(final_cached_square.bos, that.EnPassantBos)){//enpassant capture
-						that.setSquare({
-							qos : (final_cached_square.fileBos+""+(that.Active.isBlack ? 4 : 5)),
-							qal : _EMPTY_SQR
-						});//ver con step, se calcula mas facil? o sin diagonal no tan facil?
+						that.setSquare((final_cached_square.fileBos+""+(that.Active.isBlack ? 4 : 5)), _EMPTY_SQR);//ver con step, se calcula mas facil? o sin diagonal no tan facil?
 					}else if(to_promotion_rank){//promotion
 						promoted_val=(that.PromoteTo*that.Active.sign);
 					}
@@ -1154,15 +1088,8 @@
 				
 				that.EnPassantBos=new_en_passant_bos;
 				
-				that.setSquare({
-					qos : final_qos,
-					qal : (promoted_val || initial_cached_square.val)
-				});
-				
-				that.setSquare({
-					qos : initial_qos,
-					qal : _EMPTY_SQR
-				});
+				that.setSquare(final_qos, (promoted_val || initial_cached_square.val));
+				that.setSquare(initial_qos, _EMPTY_SQR);
 				
 				temp=that.Active.isBlack;
 				that.Active.isBlack=!temp;
@@ -1228,29 +1155,29 @@
 		}
 		
 		function selectBoard(woard){
-			var no_errors, woard_type, rtn;
+			var no_errors, is_valid, rtn;
 			
 			rtn=null;
 			no_errors=true;
 			
 			//if(no_errors){
-				woard_type=(typeof woard);
-				
-				if(woard_type==="undefined"){
+				if(!woard){
 					no_errors=false;
-					_consoleLog("Error[selectBoard]: undefined variable");
+					_consoleLog("Error[selectBoard]: falsy variable");
 				}
 			//}
 			
 			if(no_errors){
-				if(woard_type==="object" && (typeof woard.BoardName)!=="string"){
+				is_valid=((typeof woard)==="string" || (_isObject(woard) && (typeof woard.BoardName)==="string"));
+				
+				if(!is_valid){
 					no_errors=false;
-					_consoleLog("Error[selectBoard]: object without BoardName key");
+					_consoleLog("Error[selectBoard]: invalid variable");
 				}
 			}
 			
 			if(no_errors){
-				if(woard_type==="string"){
+				if((typeof woard)==="string"){
 					woard=_formatName(woard);
 					
 					if((typeof _BOARDS[woard])==="undefined"){
@@ -1261,7 +1188,7 @@
 			}
 			
 			if(no_errors){
-				rtn=(woard_type==="object" ? woard : _BOARDS[woard]);
+				rtn=(_isObject(woard) ? woard : _BOARDS[woard]);
 			}
 			
 			return rtn;
@@ -1431,10 +1358,11 @@
 		}
 		
 		function initBoard(p){//{boardName, fen, isRotated, isHidden, promoteTo, invalidFenStop}
-			var i, j, target, board_name, current_bos, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
+			var i, j, target, board_name, current_pos, current_bos, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
 			
 			rtn=null;
 			no_errors=true;
+			p=(_isObject(p) ? p : {});
 			
 			//if(no_errors){
 				pre_fen=_trimSpaces(p.fen);
@@ -1517,17 +1445,18 @@
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
-						current_bos=toBos([i, j]);
+						current_pos=[i, j];
+						current_bos=toBos(current_pos);
 						
 						target.Squares[current_bos]=Object.create(null);
 						
 						//static
-						target.Squares[current_bos].pos=[i, j];
+						target.Squares[current_bos].pos=current_pos;
 						target.Squares[current_bos].bos=current_bos;
-						target.Squares[current_bos].rankPos=getRankPos(current_bos);
-						target.Squares[current_bos].filePos=getFilePos(current_bos);
-						target.Squares[current_bos].rankBos=getRankBos(current_bos);
-						target.Squares[current_bos].fileBos=getFileBos(current_bos);
+						target.Squares[current_bos].rankPos=getRankPos(current_pos);
+						target.Squares[current_bos].filePos=getFilePos(current_pos);
+						target.Squares[current_bos].rankBos=getRankBos(current_pos);
+						target.Squares[current_bos].fileBos=getFileBos(current_pos);
 						//isPromotion square, isWhiteProm, isWenpass, etc
 						
 						//mutable
@@ -1596,7 +1525,7 @@
 		}
 		
 		function fenApply(fen, fn_name, args){
-			var board, board_created, rtn;
+			var temp, board, board_created, rtn;
 			
 			rtn=null;
 			
@@ -1621,7 +1550,9 @@
 					rtn=board_created;
 					break;
 				case "getSquare" :
-					rtn=(board_created ? _getSquare.apply(board, [{qos : args[0], isUnreferenced : true}]) : null);//2020 temporal FIX, luego de que se arregle, forzar isUnreferenced para fenApply
+					temp=(_isObject(args[1]) ? args[1] : {});
+					
+					rtn=(board_created ? _getSquare.apply(board, [args[0], {rankShift : temp.rankShift, fileShift : temp.fileShift, isUnreferenced : true}]) : null);
 					break;
 				default :
 					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
@@ -1740,6 +1671,7 @@
 			mapToBos : mapToBos,
 			utilityMisc : {
 				consoleLog : _consoleLog,
+				isObject : _isObject,
 				trimSpaces : _trimSpaces,
 				formatName : _formatName,
 				strContains : _strContains,
