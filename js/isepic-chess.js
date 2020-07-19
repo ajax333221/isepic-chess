@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.8";
+		var _VERSION="2.7.9";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -1253,7 +1253,19 @@
 		}
 		
 		function toPos(qos){
-			return ((typeof qos)==="string" ? [_toInt((8-getRankBos(qos)), 0, 7), _toInt("abcdefgh".indexOf(getFileBos(qos)), 0, 7)] : [qos[0], qos[1]]);
+			var rtn;
+			
+			rtn=[0, 0];
+			
+			if(qos && (typeof qos)==="string"){
+				rtn=[_toInt((8-getRankBos(qos)), 0, 7), _toInt("abcdefgh".indexOf(getFileBos(qos)), 0, 7)];
+			}else if(Object.prototype.toString.call(qos)==="[object Array]" && qos.length===2){
+				rtn=[qos[0], qos[1]];
+			}else if(_isObject(qos) && (typeof qos.bos)==="string"){
+				rtn=qos.pos;
+			}
+			
+			return rtn;
 		}
 		
 		function getSign(zal){
@@ -1277,7 +1289,7 @@
 		}
 		
 		function isInsideBoard(qos){
-			return (toBos(toPos(qos))===toBos(qos) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
+			return (qos!==null && toBos(toPos(qos))===toBos(qos) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
 		}
 		
 		function sameSquare(qos1, qos2){
