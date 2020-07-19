@@ -259,7 +259,7 @@
 			
 			rtn=null;
 			p=(_isObject(p) ? p : {});
-			console.log(p);
+			
 			temp_bos="";
 			
 			if(_isObject(qos) && (typeof qos.bos)==="string"){
