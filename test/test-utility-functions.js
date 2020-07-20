@@ -5,6 +5,8 @@
 //se ocupara en clone? (no existe) to_prop[sub_keys[j]]=Object.create(null);
 //
 //_isObject
+//_formatStrToBos
+//_formatArrToPos
 //
 //[N/A?] _consoleLog()
 

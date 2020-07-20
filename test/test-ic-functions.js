@@ -825,8 +825,8 @@ function fnIcGetRankPos(){
 	}
 	
 	if(!error_msg){
-		if(Ic.getRankPos([true, 0])!==true){
-			error_msg="Error [6] [true, 0] !== true";
+		if(Ic.getRankPos([true, 0])!==1){
+			error_msg="Error [6] [true, 0] !== 1";//mm ok
 		}
 	}
 	
@@ -884,8 +884,8 @@ function fnIcGetFilePos(){
 	}
 	
 	if(!error_msg){
-		if(Ic.getFilePos([0, true])!==true){
-			error_msg="Error [6] [0, true] !== true";
+		if(Ic.getFilePos([0, true])!==1){
+			error_msg="Error [6] [0, true] !== 1";//mm ok
 		}
 	}
 	
@@ -943,8 +943,8 @@ function fnIcGetRankBos(){
 	}
 	
 	if(!error_msg){
-		if(Ic.getRankBos("ABCxyz")!=="b"){
-			error_msg="Error [6] ABCxyz !== b";
+		if(Ic.getRankBos("ABCxyz")!==null){
+			error_msg="Error [6] ABCxyz !== null";
 		}
 	}
 	
@@ -1002,8 +1002,8 @@ function fnIcGetFileBos(){
 	}
 	
 	if(!error_msg){
-		if(Ic.getFileBos("ABCxyz")!=="a"){
-			error_msg="Error [6] ABCxyz !== a";
+		if(Ic.getFileBos("ABCxyz")!==null){
+			error_msg="Error [6] ABCxyz !== null";
 		}
 	}
 	
@@ -1108,57 +1108,54 @@ function fnIcSameSquare(){
 	}
 	
 	if(!error_msg){
-		if(Ic.sameSquare("a8", [-99, 0])!==true){
-			error_msg="Error [4] a8, [-99, 0] !== true";/*mmm*/
+		if(Ic.sameSquare("a8", [-99, 0])!==false){
+			error_msg="Error [4] a8, [-99, 0] !== false";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.sameSquare("b1", [99, 1])!==true){
-			error_msg="Error [5] b1, [99, 0] !== true";/*mmm*/
+		if(Ic.sameSquare("b1", [99, 1])!==false){
+			error_msg="Error [5] b1, [99, 1] !== false";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.sameSquare("h1", [99, 99])!==true){
-			error_msg="Error [6] h1, [-2, 0] !== true";/*mmm*/
+		if(Ic.sameSquare("h1", [99, 99])!==false){
+			error_msg="Error [6] h1, [99, 99] !== false";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.sameSquare("h8", [0, 99])!==true){
-			error_msg="Error [7] h8, [0, 99] !== true";/*mmm*/
+		if(Ic.sameSquare("h8", [0, 99])!==false){
+			error_msg="Error [7] h8, [0, 99] !== false";
 		}
 	}
 	
 	if(!error_msg){
-		arr=[0, 7, -1, -2, 8, 9];
-		
-		outer:
-		for(w=0; w<6; w++){
-			for(x=0; x<6; x++){
-				for(y=0; y<6; y++){
-					for(z=0; z<6; z++){
-						if(Ic.sameSquare([arr[w], arr[x]], [arr[y], arr[z]])!==(arr[w]===arr[y] && arr[x]===arr[z])){
-							error_msg="Error [8] ["+arr[w]+", "+arr[x]+"], ["+arr[y]+", "+arr[z]+"] !== "+(arr[w]===arr[y] && arr[x]===arr[z]);
-							break outer;
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	if(!error_msg){
-		arr=["a", "h", "x", "y", "1", "7", "0", "8"];
+		arr=[0, 1, 2, 3, 4, 5, 6, 7];
 		
 		outer:
 		for(w=0; w<8; w++){
 			for(x=0; x<8; x++){
 				for(y=0; y<8; y++){
 					for(z=0; z<8; z++){
-						if(Ic.sameSquare((arr[w]+""+arr[x]), (arr[y]+""+arr[z]))!==((arr[w]+""+arr[x])===(arr[y]+""+arr[z]))){
-							error_msg="Error [9] "+arr[w]+""+arr[x]+", "+arr[y]+""+arr[z]+" !== "+((arr[w]+""+arr[x])===(arr[y]+""+arr[z]));
+						if(Ic.sameSquare([arr[w], arr[x]], [arr[y], arr[z]])!==(arr[w]===arr[y] && arr[x]===arr[z])){
+							error_msg="Error [8] pos, pos ("+arr[w]+", "+arr[x]+" ,"+arr[y]+", "+arr[z]+")";
+							break outer;
+						}
+						
+						if(Ic.sameSquare(Ic.toBos([arr[w], arr[x]]), [arr[y], arr[z]])!==(arr[w]===arr[y] && arr[x]===arr[z])){
+							error_msg="Error [8] bos, pos ("+arr[w]+", "+arr[x]+" ,"+arr[y]+", "+arr[z]+")";
+							break outer;
+						}
+						
+						if(Ic.sameSquare([arr[w], arr[x]], Ic.toBos([arr[y], arr[z]]))!==(arr[w]===arr[y] && arr[x]===arr[z])){
+							error_msg="Error [8] pos, bos ("+arr[w]+", "+arr[x]+" ,"+arr[y]+", "+arr[z]+")";
+							break outer;
+						}
+						
+						if(Ic.sameSquare(Ic.toBos([arr[w], arr[x]]), Ic.toBos([arr[y], arr[z]]))!==(arr[w]===arr[y] && arr[x]===arr[z])){
+							error_msg="Error [8] bos, bos ("+arr[w]+", "+arr[x]+" ,"+arr[y]+", "+arr[z]+")";
 							break outer;
 						}
 					}

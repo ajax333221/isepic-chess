@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.9";
+		var _VERSION="2.7.10";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -34,6 +34,37 @@
 		
 		function _formatName(str){
 			return _trimSpaces(""+str).replace(/[^a-z0-9]/gi, "_");
+		}
+		
+		function _formatStrToBos(str){
+			var rtn;
+			
+			rtn=null;
+			
+			if(str && (typeof str)==="string"){
+				if(RegExp(/^([a-h][1-8])$/, "gi").test(str)){
+					rtn=str.toLowerCase();
+				}
+			}
+			
+			return rtn;
+		}
+		
+		function _formatArrToPos(arr){
+			var rank_pos, file_pos, rtn;
+			
+			rtn=null;
+			
+			if(Object.prototype.toString.call(arr)==="[object Array]" && arr.length===2){
+				rank_pos=_toInt(arr[0]);
+				file_pos=_toInt(arr[1]);
+				
+				if((rank_pos<=7 && rank_pos>=0) && (file_pos<=7 && file_pos>=0)){
+					rtn=[rank_pos, file_pos];
+				}
+			}
+			
+			return rtn;
 		}
 		
 		function _strContains(str, str_to_find){
@@ -218,7 +249,7 @@
 		//---------------- board
 		
 		function _getSquare(qos, p){
-			var that, temp_bos, pre_validated_pos, rtn;
+			var that, pre_validated_pos, rtn;
 			
 			that=this;
 			
@@ -260,20 +291,12 @@
 			rtn=null;
 			p=(_isObject(p) ? p : {});
 			
-			temp_bos="";
-			
-			if(_isObject(qos) && (typeof qos.bos)==="string"){
-				temp_bos=qos.bos;
-			}else if(qos){
+			if(toBos(qos)){
 				pre_validated_pos=[(getRankPos(qos)+_toInt(p.rankShift)), (getFilePos(qos)+_toInt(p.fileShift))];
 				
 				if(isInsideBoard(pre_validated_pos)){
-					temp_bos=toBos(pre_validated_pos);
+					rtn=_squareHelper(that.Squares[toBos(pre_validated_pos)], p.isUnreferenced);
 				}
-			}
-			
-			if(temp_bos){
-				rtn=_squareHelper(that.Squares[temp_bos], p.isUnreferenced);
 			}
 			
 			return rtn;
@@ -1249,20 +1272,40 @@
 		}
 		
 		function toBos(qos){
-			return ((typeof qos)==="string" ? qos.toLowerCase() : ("abcdefgh".charAt(_toInt(getFilePos(qos), 0, 7))+""+_toInt((8-getRankPos(qos)), 1, 8)));
+			var rtn;
+			
+			rtn=null;
+			
+			if((typeof qos)==="string"){
+				rtn=_formatStrToBos(qos);
+			}else if(Object.prototype.toString.call(qos)==="[object Array]"){
+				qos=_formatArrToPos(qos);
+				
+				if(qos!==null){
+					rtn=("abcdefgh".charAt(_toInt(qos[1], 0, 7))+""+_toInt((8-qos[0]), 1, 8));
+				}
+			}else if(_isObject(qos) && (typeof qos.bos)==="string"){
+				rtn=_formatStrToBos(qos.bos);
+			}
+			
+			return rtn;
 		}
 		
 		function toPos(qos){
 			var rtn;
 			
-			rtn=[0, 0];
+			rtn=null;
 			
-			if(qos && (typeof qos)==="string"){
-				rtn=[_toInt((8-getRankBos(qos)), 0, 7), _toInt("abcdefgh".indexOf(getFileBos(qos)), 0, 7)];
-			}else if(Object.prototype.toString.call(qos)==="[object Array]" && qos.length===2){
-				rtn=[qos[0], qos[1]];
+			if((typeof qos)==="string"){
+				qos=_formatStrToBos(qos);
+				
+				if(qos!==null){
+					rtn=[_toInt((8-qos.charAt(1)), 0, 7), _toInt("abcdefgh".indexOf(qos.charAt(0)), 0, 7)];
+				}
+			}else if(Object.prototype.toString.call(qos)==="[object Array]"){
+				rtn=_formatArrToPos(qos);
 			}else if(_isObject(qos) && (typeof qos.bos)==="string"){
-				rtn=qos.pos;
+				rtn=_formatArrToPos(qos);
 			}
 			
 			return rtn;
@@ -1273,40 +1316,74 @@
 		}
 		
 		function getRankPos(qos){
-			return toPos(qos)[0];
+			var pos, rtn;
+			
+			rtn=null;
+			pos=toPos(qos);
+			
+			if(pos!==null){
+				rtn=pos[0];
+			}
+			
+			return rtn;
 		}
 		
 		function getFilePos(qos){
-			return toPos(qos)[1];
+			var pos, rtn;
+			
+			rtn=null;
+			pos=toPos(qos);
+			
+			if(pos!==null){
+				rtn=pos[1];
+			}
+			
+			return rtn;
 		}
 		
 		function getRankBos(qos){
-			return toBos(qos).charAt(1);
+			var bos, rtn;
+			
+			rtn=null;
+			bos=toBos(qos);
+			
+			if(bos!==null){
+				rtn=bos.charAt(1);
+			}
+			
+			return rtn;
 		}
 		
 		function getFileBos(qos){
-			return toBos(qos).charAt(0);
+			var bos, rtn;
+			
+			rtn=null;
+			bos=toBos(qos);
+			
+			if(bos!==null){
+				rtn=bos.charAt(0);
+			}
+			
+			return rtn;
 		}
 		
 		function isInsideBoard(qos){
-			return (qos!==null && toBos(toPos(qos))===toBos(qos) && (getRankPos(qos)<=7 && getRankPos(qos)>=0) && (getFilePos(qos)<=7 && getFilePos(qos)>=0));
+			return (toPos(qos)!==null);
 		}
 		
 		function sameSquare(qos1, qos2){
-			var qos1_type, qos2_type;
+			var rtn;
 			
-			qos1_type=(typeof qos1);
-			qos2_type=(typeof qos2);
+			rtn=false;
 			
-			if(qos1_type!=="string" && qos2_type!=="string"){
-				qos1=toPos(qos1).join();
-				qos2=toPos(qos2).join();
-			}else{
-				qos1=toBos(qos1);
-				qos2=toBos(qos2);
+			qos1=toBos(qos1);
+			qos2=toBos(qos2);
+			
+			if(qos1!==null && qos2!==null){
+				rtn=(qos1===qos2);
 			}
 			
-			return (qos1===qos2);
+			return rtn;
 		}
 		
 		function removeBoard(woard){
@@ -1686,6 +1763,8 @@
 				isObject : _isObject,
 				trimSpaces : _trimSpaces,
 				formatName : _formatName,
+				formatBos : _formatStrToBos,
+				formatPos : _formatArrToPos,
 				strContains : _strContains,
 				occurrences : _occurrences,
 				toInt : _toInt,
