@@ -249,7 +249,7 @@
 		//---------------- board
 		
 		function _getSquare(qos, p){
-			var that, pre_validated_pos, rtn;
+			var that, temp_pos, pre_validated_pos, rtn;
 			
 			that=this;
 			
@@ -290,9 +290,10 @@
 			
 			rtn=null;
 			p=(_isObject(p) ? p : {});
+			temp_pos=toPos(qos);
 			
-			if(toBos(qos)){
-				pre_validated_pos=[(getRankPos(qos)+_toInt(p.rankShift)), (getFilePos(qos)+_toInt(p.fileShift))];
+			if(temp_pos!==null){
+				pre_validated_pos=[(temp_pos[0]+_toInt(p.rankShift)), (temp_pos[1]+_toInt(p.fileShift))];
 				
 				if(isInsideBoard(pre_validated_pos)){
 					rtn=_squareHelper(that.Squares[toBos(pre_validated_pos)], p.isUnreferenced);
