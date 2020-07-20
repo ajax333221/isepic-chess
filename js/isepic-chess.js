@@ -1277,14 +1277,14 @@
 			
 			rtn=null;
 			
-			if((typeof qos)==="string"){
-				rtn=_formatStrToBos(qos);
-			}else if(Object.prototype.toString.call(qos)==="[object Array]"){
+			if(Object.prototype.toString.call(qos)==="[object Array]"){
 				qos=_formatArrToPos(qos);
 				
 				if(qos!==null){
-					rtn=("abcdefgh".charAt(_toInt(qos[1], 0, 7))+""+_toInt((8-qos[0]), 1, 8));
+					rtn=("abcdefgh".charAt(qos[1])+""+(8-qos[0]));
 				}
+			}else if((typeof qos)==="string"){
+				rtn=_formatStrToBos(qos);
 			}else if(_isObject(qos) && (typeof qos.bos)==="string"){
 				rtn=_formatStrToBos(qos.bos);
 			}
@@ -1301,12 +1301,12 @@
 				qos=_formatStrToBos(qos);
 				
 				if(qos!==null){
-					rtn=[_toInt((8-qos.charAt(1)), 0, 7), _toInt("abcdefgh".indexOf(qos.charAt(0)), 0, 7)];
+					rtn=[(8-_toInt(qos.charAt(1), 1, 8)), _toInt("abcdefgh".indexOf(qos.charAt(0)), 0, 7)];
 				}
 			}else if(Object.prototype.toString.call(qos)==="[object Array]"){
 				rtn=_formatArrToPos(qos);
 			}else if(_isObject(qos) && (typeof qos.bos)==="string"){
-				rtn=_formatArrToPos(qos);
+				rtn=_formatArrToPos(qos.pos);
 			}
 			
 			return rtn;
