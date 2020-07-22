@@ -1409,8 +1409,8 @@ function fnIcFenApply(){
 	if(!error_msg){
 		Ic.setSilentMode(true);
 		
-		if(Ic.fenApply("0invalidfen0", "isLegalMove", ["a1", "a2"])!==false){
-			error_msg="Error [6] apply(isLegalMove) [0invalidfen0, a1, a2] !== false";
+		if(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2", "a3"])!==false){
+			error_msg="Error [6] apply(isLegalMove) [0invalidfen0, a2, a3] !== false";
 		}
 		
 		Ic.setSilentMode(false);
@@ -1467,8 +1467,8 @@ function fnIcFenApply(){
 	if(!error_msg){
 		Ic.setSilentMode(true);
 		
-		if(Ic.fenApply("0invalidfen0", "getSquare", ["d6"])!==null){
-			error_msg="Error [13] apply(getSquare) [0invalidfen0, d6] !== null";
+		if(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])!==null){
+			error_msg="Error [13] apply(getSquare) [0invalidfen0, a2] !== null";
 		}
 		
 		Ic.setSilentMode(false);

@@ -746,6 +746,12 @@ function testSpecificCases(){
 		}
 	}
 	
+	if(!error_msg){
+		if(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).length!==2){
+			error_msg="Error [3] enpassant capture applied to other non enpassant moves";
+		}
+	}
+	
 	if(Ic.selectBoard(board)!==null){
 		Ic.removeBoard(board);
 	}
