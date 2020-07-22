@@ -707,7 +707,7 @@ function testFenPositions(){
 }
 
 function testSpecificCases(){
-	var temp, board, board_name, start_time, end_time, error_msg;
+	var temp, temp2, board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -734,8 +734,15 @@ function testSpecificCases(){
 	}
 	
 	if(!error_msg){
-		if(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).length!==2){
-			error_msg="Error [2] enpassant capture applied to other non enpassant moves";
+		temp=board.getSquare("b2", {isUnreferenced : false});
+		temp2=board.getSquare("b2", {isUnreferenced : true});
+		
+		board.moveCaller("b2", "b3");
+		board.moveCaller("h7", "h6");
+		board.moveCaller("c1", "b2");
+		
+		if((temp.isBishop+","+temp2.isPawn)!=="true,true"){
+			error_msg="Error [2] b.getSquare() isUnreferenced not working";
 		}
 	}
 	
