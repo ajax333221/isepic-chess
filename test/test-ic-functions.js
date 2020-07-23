@@ -546,7 +546,7 @@ function fnIcToClassName(){
 }
 
 function fnIcToBos(){
-	var i, arr, start_time, end_time, error_msg;
+	var i, len, arr, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -628,7 +628,7 @@ function fnIcToBos(){
 }
 
 function fnIcToPos(){
-	var i, arr, start_time, end_time, error_msg;
+	var i, len, arr, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -847,7 +847,7 @@ function fnIcGetSign(){
 }
 
 function fnIcGetRankPos(){
-	var i, arr, start_time, end_time, error_msg;
+	var i, len, arr, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -929,7 +929,7 @@ function fnIcGetRankPos(){
 }
 
 function fnIcGetFilePos(){
-	var i, arr, start_time, end_time, error_msg;
+	var i, len, arr, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -1011,7 +1011,7 @@ function fnIcGetFilePos(){
 }
 
 function fnIcGetRankBos(){
-	var i, arr, start_time, end_time, error_msg;
+	var i, len, arr, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -1093,7 +1093,7 @@ function fnIcGetRankBos(){
 }
 
 function fnIcGetFileBos(){
-	var i, arr, start_time, end_time, error_msg;
+	var i, len, arr, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -1175,7 +1175,7 @@ function fnIcGetFileBos(){
 }
 
 function fnIcIsInsideBoard(){
-	var i, arr, start_time, end_time, error_msg;
+	var start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -1222,17 +1222,6 @@ function fnIcIsInsideBoard(){
 		}
 	}
 	
-	if(!error_msg){
-		arr=[[true, true], [true, false], [false, true], [false, false]];
-		
-		for(i=0, len=arr.length; i<len; i++){//0<len
-			if(Ic.isInsideBoard(arr[i])!==true){
-				error_msg="Error [7] arr["+i+"] !== true";//mm ok
-				break;
-			}
-		}
-	}
-	
 	end_time=new Date().getTime();
 	
 	return {
@@ -1245,7 +1234,7 @@ function fnIcIsInsideBoard(){
 }
 
 function fnIcSameSquare(){
-	var w, x, y, z, arr, start_time, end_time, error_msg;
+	var i, w, x, y, z, len, arr, arr2, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -1338,14 +1327,26 @@ function fnIcSameSquare(){
 	}
 	
 	if(!error_msg){
+		arr=[[true, true], [true, false], [false, true], [false, false]];
+		arr2=[[1, 1], [1, 0], [0, 1], [0, 0]];
+		
+		for(i=0, len=arr.length; i<len; i++){//0<len
+			if(Ic.sameSquare(arr[i], arr2[i])!==true){
+				error_msg="Error [10] arr["+i+"] and arr2["+i+"] !== true";//mm ok
+				break;
+			}
+		}
+	}
+	
+	if(!error_msg){
 		if(Ic.sameSquare(null, null)!==false){
-			error_msg="Error [10] null, null !== false";
+			error_msg="Error [11] null, null !== false";
 		}
 	}
 	
 	if(!error_msg){
 		if(Ic.sameSquare(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["c3"]), "c3")!==true){
-			error_msg="Error [11] square(c3), c3 !== true";
+			error_msg="Error [12] square(c3), c3 !== true";
 		}
 	}
 	
