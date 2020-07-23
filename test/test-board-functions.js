@@ -33,7 +33,7 @@ function fnBoardBoardHash(){
 			invalidFenStop : true
 		});
 		
-		if(board===null){
+		if(Ic.boardExists(board)!==true){
 			error_msg="Error [0] failed to initBoard("+board_name+")";
 		}
 	//}
@@ -52,7 +52,7 @@ function fnBoardBoardHash(){
 		}
 	}
 	
-	if(Ic.selectBoard(board)!==null){
+	if(Ic.boardExists(board)){
 		Ic.removeBoard(board);
 	}
 	
@@ -83,7 +83,7 @@ function fnBoardIsEqualBoard(){
 			invalidFenStop : true
 		});
 		
-		if(board===null){
+		if(Ic.boardExists(board)!==true){
 			error_msg="Error [0] failed to initBoard("+board_name+")";
 		}
 	//}
@@ -93,7 +93,7 @@ function fnBoardIsEqualBoard(){
 			boardName : board_copy_name
 		});
 		
-		if(board_copy===null){
+		if(Ic.boardExists(board_copy)!==true){
 			error_msg="Error [1] failed to initBoard("+board_copy_name+")";
 		}
 	}
@@ -152,11 +152,11 @@ function fnBoardIsEqualBoard(){
 		}
 	}
 	
-	if(Ic.selectBoard(board)!==null){
+	if(Ic.boardExists(board)){
 		Ic.removeBoard(board);
 	}
 	
-	if(Ic.selectBoard(board_copy)!==null){
+	if(Ic.boardExists(board_copy)){
 		Ic.removeBoard(board_copy);
 	}
 	

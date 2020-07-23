@@ -569,7 +569,7 @@ function fnIcUtilityToInt(){
 }
 
 function fnIcUtilityHashCode(){
-	var start_time, end_time, error_msg;
+	var i, len, arr, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -587,32 +587,19 @@ function fnIcUtilityHashCode(){
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.hashCode("")!==0){
-			error_msg="Error [2] empty string";
+		if(Ic.utilityMisc.hashCode(" ")!==32){
+			error_msg="Error [2] whitespace";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.hashCode(" ")===0){
-			error_msg="Error [3] whitespace";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.utilityMisc.hashCode()!==0){
-			error_msg="Error [4] non-strings default to empty string";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.utilityMisc.hashCode(9)!==0){
-			error_msg="Error [5] non-strings default to empty string";
-		}
-	}
-	
-	if(!error_msg){
-		if(Ic.utilityMisc.hashCode(true)!==0){
-			error_msg="Error [6] non-strings default to empty string";
+		arr=["", false, true, , 0, 1, 8, null, ("x"*9), Infinity, -Infinity, {}, [], [1], [1, 1, 1]];
+		
+		for(i=0, len=arr.length; i<len; i++){//0<len
+			if(Ic.utilityMisc.hashCode(arr[i])!==0){
+				error_msg="Error [3] arr["+i+"] !== 0";
+				break;
+			}
 		}
 	}
 	
@@ -677,7 +664,7 @@ function fnIcUtilityCastlingChars(){
 	
 	if(!error_msg){
 		if(Ic.utilityMisc.castlingChars(true)!=="k"){
-			error_msg="Error [7] true = index 1 (k)";
+			error_msg="Error [7] true = index 1 (k)";//mm ok
 		}
 	}
 	
@@ -712,7 +699,7 @@ function fnIcUtilityCloneBoardObjs(){
 			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
 		});
 		
-		if(board===null){
+		if(Ic.boardExists(board)!==true){
 			error_msg="Error [0] failed to initBoard("+board_name+")";
 		}
 	//}
@@ -722,7 +709,7 @@ function fnIcUtilityCloneBoardObjs(){
 			boardName : board_copy_name
 		});
 		
-		if(board_copy===null){
+		if(Ic.boardExists(board_copy)!==true){
 			error_msg="Error [1] failed to initBoard("+board_copy_name+")";
 		}
 	}
@@ -743,11 +730,11 @@ function fnIcUtilityCloneBoardObjs(){
 		}
 	}
 	
-	if(Ic.selectBoard(board)!==null){
+	if(Ic.boardExists(board)){
 		Ic.removeBoard(board);
 	}
 	
-	if(Ic.selectBoard(board_copy)!==null){
+	if(Ic.boardExists(board_copy)){
 		Ic.removeBoard(board_copy);
 	}
 	

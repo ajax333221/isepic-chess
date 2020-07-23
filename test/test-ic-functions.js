@@ -606,7 +606,7 @@ function fnIcToBos(){
 	}
 	
 	if(!error_msg){
-		arr=["", false, true, , 0, 1, null, ("a"*1), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
+		arr=["", false, true, , 0, 1, 8, null, ("x"*9), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			if(Ic.toBos(arr[i])!==null){
@@ -688,7 +688,7 @@ function fnIcToPos(){
 	}
 	
 	if(!error_msg){
-		arr=["", false, true, , 0, 1, null, ("a"*1), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
+		arr=["", false, true, , 0, 1, 8, null, ("x"*9), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			if(Ic.toPos(arr[i])!==null){
@@ -907,7 +907,7 @@ function fnIcGetRankPos(){
 	}
 	
 	if(!error_msg){
-		arr=["", false, true, , 0, 1, null, ("a"*1), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
+		arr=["", false, true, , 0, 1, 8, null, ("x"*9), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			if(Ic.getRankPos(arr[i])!==null){
@@ -989,7 +989,7 @@ function fnIcGetFilePos(){
 	}
 	
 	if(!error_msg){
-		arr=["", false, true, , 0, 1, null, ("a"*1), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
+		arr=["", false, true, , 0, 1, 8, null, ("x"*9), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			if(Ic.getFilePos(arr[i])!==null){
@@ -1071,7 +1071,7 @@ function fnIcGetRankBos(){
 	}
 	
 	if(!error_msg){
-		arr=["", false, true, , 0, 1, null, ("a"*1), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
+		arr=["", false, true, , 0, 1, 8, null, ("x"*9), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			if(Ic.getRankBos(arr[i])!==null){
@@ -1153,7 +1153,7 @@ function fnIcGetFileBos(){
 	}
 	
 	if(!error_msg){
-		arr=["", false, true, , 0, 1, null, ("a"*1), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
+		arr=["", false, true, , 0, 1, 8, null, ("x"*9), Infinity, -Infinity, {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz"];
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			if(Ic.getFileBos(arr[i])!==null){

@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.10";
+		var _VERSION="2.7.11";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -894,7 +894,7 @@
 			//if(no_errors){
 				to_board=selectBoard(to_woard);
 				
-				if(to_board===null){
+				if(!boardExists(to_board)){
 					no_errors=false;
 					_consoleLog("Error[_isEqualBoard]: could not select to_board");
 				}
@@ -917,7 +917,7 @@
 			//if(no_errors){
 				from_board=selectBoard(from_woard);
 				
-				if(from_board===null){
+				if(!boardExists(from_board)){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardFrom]: could not select from_board");
 				}
@@ -942,7 +942,7 @@
 			//if(no_errors){
 				to_board=selectBoard(to_woard);
 				
-				if(to_board===null){
+				if(!boardExists(to_board)){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardTo]: could not select to_board");
 				}
@@ -1171,9 +1171,9 @@
 			
 			temp=_SILENT_MODE;
 			
-			Ic.setSilentMode(true);
+			setSilentMode(true);
 			rtn=(selectBoard(woard)!==null);
-			Ic.setSilentMode(temp);
+			setSilentMode(temp);
 			
 			return rtn;
 		}
@@ -1388,14 +1388,17 @@
 		}
 		
 		function removeBoard(woard){
-			var del_board, rtn;
+			var del_board, del_board_name_cache, rtn;
 			
 			rtn=false;
 			del_board=selectBoard(woard);
 			
-			if(del_board!==null){
-				_BOARDS[del_board.BoardName]=null;
-				delete _BOARDS[del_board.BoardName];
+			if(boardExists(del_board)){
+				del_board_name_cache=del_board.BoardName;
+				del_board=null;
+				
+				_BOARDS[del_board_name_cache]=null;
+				delete _BOARDS[del_board_name_cache];
 				
 				rtn=true;
 			}
@@ -1412,7 +1415,7 @@
 			//if(no_errors){
 				left_board=selectBoard(left_woard);
 				
-				if(left_board===null){
+				if(!boardExists(left_board)){
 					no_errors=false;
 					_consoleLog("Error[isEqualBoard]: could not select left_board");
 				}
@@ -1434,7 +1437,7 @@
 			//if(no_errors){
 				to_board=selectBoard(to_woard);
 				
-				if(to_board===null){
+				if(!boardExists(to_board)){
 					no_errors=false;
 					_consoleLog("Error[cloneBoard]: could not select to_board");
 				}
@@ -1568,7 +1571,7 @@
 				
 				new_board=selectBoard(board_name);
 				
-				if(new_board===null){
+				if(!boardExists(new_board)){
 					no_errors=false;
 					_consoleLog("Error[initBoard]: \""+board_name+"\" board creation failure");
 				}
@@ -1626,7 +1629,7 @@
 				invalidFenStop : true
 			});
 			
-			board_created=(board!==null);
+			board_created=boardExists(board);
 			fn_name=_formatName(fn_name);
 			
 			switch(fn_name){
@@ -1669,7 +1672,7 @@
 					invalidFenStop : true
 				});
 				
-				board_created=(board!==null);
+				board_created=boardExists(board);
 				
 				if(!board_created){
 					no_errors=false;
