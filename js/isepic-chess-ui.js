@@ -4,7 +4,7 @@
 
 (function(win, $, Ic){
 	var IcUi=(function(){
-		var _VERSION="1.0.8";
+		var _VERSION="1.0.9";
 		
 		function refreshBoard(animate_move){
 			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, piece_class, promotion_class, is_new_html;
@@ -202,27 +202,25 @@
 				$(".ic_piece_holder").finish();
 				
 				$("#ic_id_tabs").html((function(){
-					var i, len, current_board, current_board_name, board_list, rtn;
+					var i, len, current_board, board_list, rtn;
 					
 					board_list=Ic.getBoardNames();
 					rtn="<strong>Board list:</strong> ";
 					
 					for(i=0, len=board_list.length; i<len; i++){//0<len
 						rtn+=(i ? " | " : "");
+						current_board=Ic.selectBoard(board_list[i]);
 						
-						current_board_name=board_list[i];
-						current_board=Ic.selectBoard(current_board_name);
-						
-						if(current_board!==null){
+						if(Ic.boardExists(current_board)){
 							if(current_board.IsHidden){
-								rtn+="<em class='ic_disabled'>"+current_board_name+"</em>";
-							}else if(current_board_name===that.BoardName){
-								rtn+="<em>"+current_board_name+"</em>";
+								rtn+="<em class='ic_disabled'>"+current_board.BoardName+"</em>";
+							}else if(current_board.BoardName===that.BoardName){
+								rtn+="<em>"+current_board.BoardName+"</em>";
 							}else{
-								rtn+="<a class='ic_changeboard' data-boardname='"+current_board_name+"' href='#'>"+current_board_name+"</a>";
+								rtn+="<a class='ic_changeboard' data-boardname='"+current_board.BoardName+"' href='#'>"+current_board.BoardName+"</a>";
 							}
 						}else{
-							Ic.utilityMisc.consoleLog("Warning[_getBoardTabsHTML]: \""+current_board_name+"\" is not defined");
+							Ic.utilityMisc.consoleLog("Warning[_getBoardTabsHTML]: \""+current_board.BoardName+"\" is not defined");
 						}
 					}
 					
@@ -230,17 +228,16 @@
 				})());
 				
 				$(".ic_changeboard").unbind("click").click(function(){
-					var board, board_name, no_errors;
+					var board, no_errors;
 					
 					no_errors=true;
 					
 					//if(no_errors){
-						board_name=$(this).attr("data-boardname");
-						board=Ic.selectBoard(board_name);
+						board=Ic.selectBoard($(this).attr("data-boardname"));
 						
-						if(board===null){
+						if(!Ic.boardExists(board)){
 							no_errors=false;
-							Ic.utilityMisc.consoleLog("Error[.ic_changeboard]: \""+board_name+"\" is not defined");
+							Ic.utilityMisc.consoleLog("Error[.ic_changeboard]: \""+board.BoardName+"\" is not defined");
 						}
 					//}
 					
