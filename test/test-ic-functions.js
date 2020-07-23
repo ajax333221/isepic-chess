@@ -1546,14 +1546,14 @@ function fnIcMapToBos(){
 	}
 	
 	if(!error_msg){
-		if(Ic.mapToBos("err").join()!==""){
-			error_msg="Error [2] [err] !== empty_array";
+		if(Ic.mapToBos([[4, 3], "d4", Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["d4"])]).join()!=="d4,d4,d4"){
+			error_msg="Error [2] [[4, 3], d4, square(d4)] !== d4,d4,d4";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.mapToBos([[4, 3], "d4", Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["d4"])]).join()!=="d4,d4,d4"){
-			error_msg="Error [3] [[4, 3], d4, square(d4)] !== d4,d4,d4";
+		if(Ic.mapToBos("err").join()!==""){
+			error_msg="Error [3] [err] !== empty_array";
 		}
 	}
 	
