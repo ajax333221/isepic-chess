@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.11";
+		var _VERSION="2.7.12";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -28,12 +28,41 @@
 			return ((typeof obj)==="object" && obj!==null);
 		}
 		
+		function _isArray(arr){
+			return (Object.prototype.toString.call(arr)==="[object Array]");
+		}
+		
+		function _isSquare(obj){
+			return (_isObject(obj) && (typeof obj.bos)==="string");
+		}
+		
+		function _isBoard(obj){
+			return (_isObject(obj) && (typeof obj.BoardName)==="string");
+		}
+		
 		function _trimSpaces(str){
 			return (""+str).replace(/^\s+|\s+$/g, "").replace(/\s\s+/g, " ");
 		}
 		
 		function _formatName(str){
 			return _trimSpaces(""+str).replace(/[^a-z0-9]/gi, "_");
+		}
+		
+		function _formatStrToVal(str){
+			var temp, pc_exec, rtn;
+			
+			rtn=0;
+			str=_trimSpaces(str);
+			pc_exec=/^([wb])([pnbrqk])$/.exec(str.toLowerCase());
+			
+			if(!!pc_exec){
+				rtn=("*pnbrqk".indexOf(pc_exec[2])*getSign(pc_exec[1]==="b"));
+			}else if(RegExp(/^([pnbrqk])$/, "gi").test(str)){
+				temp=str.toLowerCase();
+				rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
+			}
+			
+			return _toInt(rtn);//_toInt() removes sign on negative zero
 		}
 		
 		function _formatStrToBos(str){
@@ -55,7 +84,7 @@
 			
 			rtn=null;
 			
-			if(Object.prototype.toString.call(arr)==="[object Array]" && arr.length===2){
+			if(_isArray(arr) && arr.length===2){
 				rank_pos=_toInt(arr[0]);
 				file_pos=_toInt(arr[1]);
 				
@@ -76,7 +105,7 @@
 			
 			rtn=0;
 			
-			if((typeof str)==="string" && (typeof str_rgxp)==="string" && str_rgxp!==""){
+			if((typeof str)==="string" && (typeof str_rgxp)==="string" && str_rgxp){
 				rtn=(str.match(RegExp(str_rgxp, "g")) || []).length;
 			}
 			
@@ -1192,7 +1221,7 @@
 			//}
 			
 			if(no_errors){
-				is_valid=((typeof woard)==="string" || (_isObject(woard) && (typeof woard.BoardName)==="string"));
+				is_valid=((typeof woard)==="string" || _isBoard(woard));
 				
 				if(!is_valid){
 					no_errors=false;
@@ -1219,29 +1248,19 @@
 		}
 		
 		function toVal(qal){
-			var temp, pc_exec, piece_char, rtn;
+			var rtn;
+			
+			rtn=0;
 			
 			if((typeof qal)==="string"){
-				qal=_trimSpaces(qal);
-				
-				pc_exec=/^([wb])([pnbrqk])$/.exec(qal.toLowerCase());
-				
-				if(!!pc_exec){
-					rtn=("*pnbrqk".indexOf(pc_exec[2])*getSign(pc_exec[1]==="b"));
-				}else{
-					piece_char=(qal.replace(/[^pnbrqk]/gi, "") || "*");
-					
-					if(piece_char.length===1){
-						temp=piece_char.toLowerCase();
-						
-						rtn=("*pnbrqk".indexOf(temp)*getSign(piece_char===temp));//negative zero is handled by _toInt()
-					}
-				}
-			}else{
-				rtn=qal;
+				rtn=_formatStrToVal(qal);
+			}else if((typeof qal)==="number"){
+				rtn=_toInt(qal, -6, 6);
+			}else if(_isSquare(qal)){
+				rtn=_toInt(qal.val, -6, 6);
 			}
 			
-			return _toInt(rtn, -6, 6);
+			return rtn;
 		}
 		
 		function toAbsVal(qal){
@@ -1277,7 +1296,7 @@
 			
 			rtn=null;
 			
-			if(Object.prototype.toString.call(qos)==="[object Array]"){
+			if(_isArray(qos)){
 				qos=_formatArrToPos(qos);
 				
 				if(qos!==null){
@@ -1285,7 +1304,7 @@
 				}
 			}else if((typeof qos)==="string"){
 				rtn=_formatStrToBos(qos);
-			}else if(_isObject(qos) && (typeof qos.bos)==="string"){
+			}else if(_isSquare(qos)){
 				rtn=_formatStrToBos(qos.bos);
 			}
 			
@@ -1303,9 +1322,9 @@
 				if(qos!==null){
 					rtn=[(8-_toInt(qos.charAt(1), 1, 8)), _toInt("abcdefgh".indexOf(qos.charAt(0)), 0, 7)];
 				}
-			}else if(Object.prototype.toString.call(qos)==="[object Array]"){
+			}else if(_isArray(qos)){
 				rtn=_formatArrToPos(qos);
-			}else if(_isObject(qos) && (typeof qos.bos)==="string"){
+			}else if(_isSquare(qos)){
 				rtn=_formatArrToPos(qos.pos);
 			}
 			
@@ -1732,7 +1751,7 @@
 		}
 		
 		function mapToBos(arr){
-			return (Object.prototype.toString.call(arr)==="[object Array]" ? arr.map(x => toBos(x)) : []);
+			return (_isArray(arr) ? arr.map(x => toBos(x)) : []);
 		}
 		
 		return {
@@ -1765,8 +1784,12 @@
 			utilityMisc : {
 				consoleLog : _consoleLog,
 				isObject : _isObject,
+				isArray : _isArray,
+				isSquare : _isSquare,
+				isBoard : _isBoard,
 				trimSpaces : _trimSpaces,
 				formatName : _formatName,
+				formatStrToVal : _formatStrToVal,
 				formatStrToBos : _formatStrToBos,
 				formatArrToPos : _formatArrToPos,
 				strContains : _strContains,

@@ -5,6 +5,10 @@
 //se ocupara en clone? (no existe) to_prop[sub_keys[j]]=Object.create(null);
 //
 //_isObject
+//_isArray
+//_isSquare
+//_isBoard
+//_formatStrToVal
 //_formatStrToBos
 //_formatArrToPos
 //

@@ -4,7 +4,7 @@
 
 (function(win, $, Ic){
 	var IcUi=(function(){
-		var _VERSION="1.0.9";
+		var _VERSION="1.0.10";
 		
 		function refreshBoard(animate_move){
 			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, piece_class, promotion_class, is_new_html;
@@ -373,7 +373,7 @@
 						rtn+=(move_list[i].PGNend ? (" <span class='ic_pgn_result'>"+move_list[i].PGNend+"</span>") : "");
 					}
 					
-					if(black_starts && rtn!==""){
+					if(black_starts && rtn){
 						rtn="<span class='ic_pgn_number'>"+that.InitialFullMove+"...</span>"+rtn;
 					}
 					

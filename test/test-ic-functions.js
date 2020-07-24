@@ -89,20 +89,20 @@ function fnIcToVal(){
 	}
 	
 	if(!error_msg){
-		if(Ic.toVal("XP")!==1){
-			error_msg="Error [12] XP !== 1";
+		if(Ic.toVal("XQ")!==0){
+			error_msg="Error [12] XQ !== 0";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toVal("BX")!==3){
-			error_msg="Error [13] BX !== 3";
+		if(Ic.toVal("BX")!==0){
+			error_msg="Error [13] BX !== 0";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toVal("BP")!==-1){
-			error_msg="Error [14] BP !== -1";
+		if(Ic.toVal("BQ")!==-5){
+			error_msg="Error [14] BQ !== -5";
 		}
 	}
 	
@@ -196,20 +196,20 @@ function fnIcToAbsVal(){
 	}
 	
 	if(!error_msg){
-		if(Ic.toAbsVal("XP")!==1){
-			error_msg="Error [12] XP !== 1";
+		if(Ic.toAbsVal("XQ")!==0){
+			error_msg="Error [12] XQ !== 0";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toAbsVal("BX")!==3){
-			error_msg="Error [13] BX !== 3";
+		if(Ic.toAbsVal("BX")!==0){
+			error_msg="Error [13] BX !== 0";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toAbsVal("BP")!==1){
-			error_msg="Error [14] BP !== 1";
+		if(Ic.toAbsVal("BQ")!==5){
+			error_msg="Error [14] BQ !== 5";
 		}
 	}
 	
@@ -303,20 +303,20 @@ function fnIcToBal(){
 	}
 	
 	if(!error_msg){
-		if(Ic.toBal("XP")!=="P"){
-			error_msg="Error [12] XP !== P";
+		if(Ic.toBal("XQ")!=="*"){
+			error_msg="Error [12] XQ !== *";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toBal("BX")!=="B"){
-			error_msg="Error [13] BX !== B";
+		if(Ic.toBal("BX")!=="*"){
+			error_msg="Error [13] BX !== *";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toBal("BP")!=="p"){
-			error_msg="Error [14] BP !== p";
+		if(Ic.toBal("BQ")!=="q"){
+			error_msg="Error [14] BQ !== q";
 		}
 	}
 	
@@ -410,20 +410,20 @@ function fnIcToAbsBal(){
 	}
 	
 	if(!error_msg){
-		if(Ic.toAbsBal("XP")!=="P"){
-			error_msg="Error [12] XP !== P";
+		if(Ic.toAbsBal("XQ")!=="*"){
+			error_msg="Error [12] XQ !== *";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toAbsBal("BX")!=="B"){
-			error_msg="Error [13] BX !== B";
+		if(Ic.toAbsBal("BX")!=="*"){
+			error_msg="Error [13] BX !== *";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toAbsBal("BP")!=="P"){
-			error_msg="Error [14] BP !== P";
+		if(Ic.toAbsBal("BQ")!=="Q"){
+			error_msg="Error [14] BQ !== Q";
 		}
 	}
 	
@@ -517,20 +517,20 @@ function fnIcToClassName(){
 	}
 	
 	if(!error_msg){
-		if(Ic.toClassName("XP")!=="wp"){
-			error_msg="Error [12] XP !== wp";
+		if(Ic.toClassName("XQ")!==""){
+			error_msg="Error [12] XQ !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toClassName("BX")!=="wb"){
-			error_msg="Error [13] BX !== wb";
+		if(Ic.toClassName("BX")!==""){
+			error_msg="Error [13] BX !== empty_string";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.toClassName("BP")!=="bp"){
-			error_msg="Error [14] BP !== bp";
+		if(Ic.toClassName("BQ")!=="bq"){
+			error_msg="Error [14] BQ !== bq";
 		}
 	}
 	
@@ -776,20 +776,20 @@ function fnIcGetSign(){
 	}
 	
 	if(!error_msg){
-		if(Ic.getSign("XP")!==1){
-			error_msg="Error [10] XP !== 1";
+		if(Ic.getSign("XQ")!==-1){
+			error_msg="Error [10] XQ !== -1";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.getSign("BX")!==1){
-			error_msg="Error [11] BX !== 1";
+		if(Ic.getSign("BX")!==-1){
+			error_msg="Error [11] BX !== -1";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.getSign("BP")!==-1){
-			error_msg="Error [12] BP !== -1";
+		if(Ic.getSign("BQ")!==-1){
+			error_msg="Error [12] BQ !== -1";
 		}
 	}
 	

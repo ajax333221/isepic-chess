@@ -752,6 +752,12 @@ function testSpecificCases(){
 		}
 	}
 	
+	if(!error_msg){
+		if(Ic.toVal([5])!==0){
+			error_msg="Error [4] array in Ic.toVal() should default to 0";
+		}
+	}
+	
 	if(Ic.boardExists(board)){
 		Ic.removeBoard(board);
 	}
