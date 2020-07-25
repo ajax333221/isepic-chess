@@ -11,9 +11,10 @@
 //fenGet (pero solo invalid board, properties, etc)
 
 function fnIcToVal(){
-	var start_time, end_time, error_msg;
+	var board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
+	board_name="board_toVal";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -106,6 +107,29 @@ function fnIcToVal(){
 		}
 	}
 	
+	if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [15] failed to initBoard("+board_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toVal(board.Squares["c8"])!==-6){
+			error_msg="Error [16] square(c8) !== -6";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
@@ -118,9 +142,10 @@ function fnIcToVal(){
 }
 
 function fnIcToAbsVal(){
-	var start_time, end_time, error_msg;
+	var board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
+	board_name="board_toAbsVal";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -213,6 +238,29 @@ function fnIcToAbsVal(){
 		}
 	}
 	
+	if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [15] failed to initBoard("+board_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsVal(board.Squares["c8"])!==6){
+			error_msg="Error [16] square(c8) !== 6";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
@@ -225,9 +273,10 @@ function fnIcToAbsVal(){
 }
 
 function fnIcToBal(){
-	var start_time, end_time, error_msg;
+	var board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
+	board_name="board_toBal";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -320,6 +369,29 @@ function fnIcToBal(){
 		}
 	}
 	
+	if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [15] failed to initBoard("+board_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toBal(board.Squares["c8"])!=="k"){
+			error_msg="Error [16] square(c8) !== k";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
@@ -332,9 +404,10 @@ function fnIcToBal(){
 }
 
 function fnIcToAbsBal(){
-	var start_time, end_time, error_msg;
+	var board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
+	board_name="board_toAbsBal";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -427,6 +500,29 @@ function fnIcToAbsBal(){
 		}
 	}
 	
+	if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [15] failed to initBoard("+board_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toAbsBal(board.Squares["c8"])!=="K"){
+			error_msg="Error [16] square(c8) !== K";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
+	}
+	
 	end_time=new Date().getTime();
 	
 	return {
@@ -439,9 +535,10 @@ function fnIcToAbsBal(){
 }
 
 function fnIcToClassName(){
-	var start_time, end_time, error_msg;
+	var board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
+	board_name="board_toClassName";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -532,6 +629,29 @@ function fnIcToClassName(){
 		if(Ic.toClassName("BQ")!=="bq"){
 			error_msg="Error [14] BQ !== bq";
 		}
+	}
+	
+	if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [15] failed to initBoard("+board_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.toClassName(board.Squares["c8"])!=="bk"){
+			error_msg="Error [16] square(c8) !== bk";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
 	}
 	
 	end_time=new Date().getTime();
@@ -710,9 +830,10 @@ function fnIcToPos(){
 }
 
 function fnIcGetSign(){
-	var start_time, end_time, error_msg;
+	var board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
+	board_name="board_getSign";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -833,6 +954,35 @@ function fnIcGetSign(){
 		if(Ic.getSign("-5")!==-1){
 			error_msg="Error [19] -5 !== -1";
 		}
+	}
+	
+	if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [20] failed to initBoard("+board_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign(board.Squares["e5"])!==1){
+			error_msg="Error [21] square(e5) !== 1";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.getSign(board.Squares["d4"])!==-1){
+			error_msg="Error [22] square(d4) !== -1";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
 	}
 	
 	end_time=new Date().getTime();
