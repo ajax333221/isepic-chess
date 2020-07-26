@@ -93,7 +93,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		if(JSON.stringify(board.MoveList)!=="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"PGNend\":\"\",\"FromBos\":\"\",\"ToBos\":\"\",\"InitialVal\":0,\"FinalVal\":0,\"KingCastled\":0},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"PGNend\":\"\",\"FromBos\":\"e2\",\"ToBos\":\"e4\",\"InitialVal\":1,\"FinalVal\":1,\"KingCastled\":0},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"PGNend\":\"\",\"FromBos\":\"f7\",\"ToBos\":\"f5\",\"InitialVal\":-1,\"FinalVal\":-1,\"KingCastled\":0},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"PGNend\":\"\",\"FromBos\":\"d1\",\"ToBos\":\"h5\",\"InitialVal\":5,\"FinalVal\":5,\"KingCastled\":0}]"){
-			error_msg=JSON.stringify(board.MoveList);
+			error_msg="Error [3] movelist format, enpassant, clocks";
 		}
 	}
 	

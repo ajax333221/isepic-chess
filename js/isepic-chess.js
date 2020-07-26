@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.8.0";
+		var _VERSION="2.8.1";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -479,7 +479,7 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, that, temp, current_square, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves;
+			var i, j, that, current_square, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves;
 			
 			that=this;
 			
@@ -559,9 +559,7 @@
 				times_found=1;
 				
 				for(i=(that.CurrentMove-1); i>=0; i--){//(len-1)...0
-					temp=that.MoveList[i].Fen.split(" ").slice(0, 4).join(" ");
-					
-					if(temp===clockless_fen){
+					if(that.MoveList[i].Fen.split(" ").slice(0, 4).join(" ")===clockless_fen){
 						times_found++;
 						
 						if(times_found>2){
