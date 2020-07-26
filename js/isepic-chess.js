@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.7.12";
+		var _VERSION="2.8.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- utilities
 		
@@ -119,7 +119,7 @@
 			min_val*=1;
 			max_val*=1;
 			
-			/*NO remover 0 default, (-0 || 0) = 0*/
+			/*NO remove default 0, (-0 || 0) = 0*/
 			min_val=((Number.isNaN(min_val) ? -Infinity : min_val) || 0);
 			max_val=((Number.isNaN(max_val) ? Infinity : max_val) || 0);
 			
@@ -461,25 +461,25 @@
 				}
 			}
 			
+			that.WCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
+			that.BCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
+			
+			that.EnPassantBos=fen_parts[3].replace("-", "");
+			
 			temp=(fen_parts[1]==="b");
 			that.Active.isBlack=temp;
 			that.NonActive.isBlack=!temp;
 			that.Active.sign=getSign(temp);
 			that.NonActive.sign=getSign(!temp);
 			
-			that.WCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
-			that.BCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
-			
-			that.EnPassantBos=fen_parts[3].replace("-", "");
-			
 			that.HalfMove=((fen_parts[4]*1) || 0);
 			that.FullMove=((fen_parts[5]*1) || 1);
 			
-			that.updateKingsChecksFenMatdiff();
+			that.updateFenAndMisc();
 		}
 		
-		function _updateKingsChecksFenMatdiff(){
-			var i, j, that, current_square, consecutive_empty_squares, new_fen_board, no_legal_moves;
+		function _updateFenAndMisc(){
+			var i, j, that, temp, current_square, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves;
 			
 			that=this;
 			
@@ -549,7 +549,30 @@
 			that.IsCheckmate=(that.IsCheck && no_legal_moves);
 			that.IsStalemate=(!that.IsCheck && no_legal_moves);
 			
-			that.Fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-")+" "+that.HalfMove+" "+that.FullMove);
+			clockless_fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-"));
+			
+			that.Fen=(clockless_fen+" "+that.HalfMove+" "+that.FullMove);
+			
+			that.IsThreefold=false;
+			
+			if(that.CurrentMove>7){
+				times_found=1;
+				
+				for(i=(that.CurrentMove-1); i>=0; i--){//(len-1)...0
+					temp=that.MoveList[i].Fen.split(" ").slice(0, 4).join(" ");
+					
+					if(temp===clockless_fen){
+						times_found++;
+						
+						if(times_found>2){
+							that.IsThreefold=true;
+							break;
+						}
+					}
+				}
+			}
+			
+			that.IsFiftyMove=(that.HalfMove>=100);
 			
 			that.MaterialDiff=_materialDifference();
 		}
@@ -815,7 +838,7 @@
 					if(!target_cached_square.isBishop){piece_directions.push(1, 3, 5, 7);}
 					if(!target_cached_square.isRook){piece_directions.push(2, 4, 6, 8);}
 					
-					for(i=0, len=piece_directions.length; i<len; i++){//0...1
+					for(i=0, len=piece_directions.length; i<len; i++){//0<len
 						if((temp=_candidateMoves(piece_directions[i], target_cached_square.isKnight, null, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 				}
@@ -1109,15 +1132,6 @@
 					return rtn;
 				})();
 				
-				that.HalfMove++;
-				if(pawn_moved || final_cached_square.val){
-					that.HalfMove=0;
-				}
-				
-				if(that.Active.isBlack){
-					that.FullMove++;
-				}
-				
 				//test for rook move (original square)
 				if(new_active_castling_availity && initial_cached_square.isRook && initial_cached_square.rankPos===active_king_original_rank){
 					if(initial_cached_square.filePos===7 && new_active_castling_availity!==2){//short
@@ -1150,9 +1164,18 @@
 				that.Active.sign=getSign(!temp);
 				that.NonActive.sign=getSign(temp);
 				
-				that.updateKingsChecksFenMatdiff();
+				that.HalfMove++;
+				if(pawn_moved || final_cached_square.val){
+					that.HalfMove=0;
+				}
+				
+				if(that.NonActive.isBlack){
+					that.FullMove++;
+				}
 				
 				that.CurrentMove++;
+				
+				that.updateFenAndMisc();
 				
 				if(that.CurrentMove!==that.MoveList.length){
 					that.MoveList=that.MoveList.slice(0, that.CurrentMove);/*start variation instead of overwrite*/
@@ -1505,7 +1528,7 @@
 						setPromoteTo : _setPromoteTo,
 						setCurrentMove : _setCurrentMove,
 						readFen : _readFen,
-						updateKingsChecksFenMatdiff : _updateKingsChecksFenMatdiff,
+						updateFenAndMisc : _updateFenAndMisc,
 						refinedFenTest : _refinedFenTest,
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
@@ -1549,6 +1572,8 @@
 				target.IsCheck=null;
 				target.IsCheckmate=null;
 				target.IsStalemate=null;
+				target.IsThreefold=null;
+				target.IsFiftyMove=null;
 				target.MaterialDiff=null;
 				target.PromoteTo=null;
 				target.SelectedBos=null;
@@ -1592,16 +1617,16 @@
 				
 				if(!boardExists(new_board)){
 					no_errors=false;
-					_consoleLog("Error[initBoard]: \""+board_name+"\" board creation failure");
+					_consoleLog("Error[initBoard]: \""+board_name+"\" board selection failure");
 				}
 			}
 			
 			if(no_errors){
+				new_board.CurrentMove=0;/*NO move below readFen()*/
 				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
 				
 				new_board.InitialFullMove=new_board.FullMove;
 				new_board.MoveList=[{Fen : new_board.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-				new_board.CurrentMove=0;
 				new_board.setPromoteTo(p.promoteTo);
 				new_board.IsRotated=p.isRotated;
 				new_board.IsHidden=p.isHidden;
@@ -1618,11 +1643,11 @@
 			
 			if(no_errors){
 				if(!postfen_was_valid){
+					new_board.CurrentMove=0;/*NO move below readFen()*/
 					new_board.readFen(_DEFAULT_FEN);
 					
 					new_board.InitialFullMove=new_board.FullMove;
 					new_board.MoveList=[{Fen : new_board.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-					new_board.CurrentMove=0;
 					new_board.setPromoteTo(p.promoteTo);
 					new_board.IsRotated=p.isRotated;
 					new_board.IsHidden=p.isHidden;

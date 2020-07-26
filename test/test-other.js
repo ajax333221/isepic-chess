@@ -93,7 +93,7 @@ function testBasicFunctionality(){
 	
 	if(!error_msg){
 		if(JSON.stringify(board.MoveList)!=="[{\"Fen\":\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\",\"PGNmove\":\"\",\"PGNend\":\"\",\"FromBos\":\"\",\"ToBos\":\"\",\"InitialVal\":0,\"FinalVal\":0,\"KingCastled\":0},{\"Fen\":\"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\",\"PGNmove\":\"e4\",\"PGNend\":\"\",\"FromBos\":\"e2\",\"ToBos\":\"e4\",\"InitialVal\":1,\"FinalVal\":1,\"KingCastled\":0},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2\",\"PGNmove\":\"f5\",\"PGNend\":\"\",\"FromBos\":\"f7\",\"ToBos\":\"f5\",\"InitialVal\":-1,\"FinalVal\":-1,\"KingCastled\":0},{\"Fen\":\"rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2\",\"PGNmove\":\"Qh5+\",\"PGNend\":\"\",\"FromBos\":\"d1\",\"ToBos\":\"h5\",\"InitialVal\":5,\"FinalVal\":5,\"KingCastled\":0}]"){
-			error_msg="Error [3] movelist format, enpassant, clocks";
+			error_msg=JSON.stringify(board.MoveList);
 		}
 	}
 	
@@ -684,7 +684,7 @@ function testFenPositions(){
 	
 	start_time=new Date().getTime();
 	
-	for(i=0, len=invalid_positions.length; i<len; i++){
+	for(i=0, len=invalid_positions.length; i<len; i++){//0<len
 		Ic.setSilentMode(true);
 		
 		if(Ic.fenApply(invalid_positions[i], "isLegalFen")){
@@ -707,7 +707,7 @@ function testFenPositions(){
 }
 
 function testSpecificCases(){
-	var temp, temp2, board, board_name, start_time, end_time, error_msg;
+	var i, len, arr, temp, temp2, board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
 	start_time=new Date().getTime();
@@ -755,6 +755,54 @@ function testSpecificCases(){
 	if(!error_msg){
 		if(Ic.toVal([5])!==0){
 			error_msg="Error [4] array in Ic.toVal() should default to 0";
+		}
+	}
+	
+	if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [5] failed to initBoard("+board_name+")";
+		}
+	}
+	
+	if(!error_msg){
+		arr=[["b1", "c3"], ["b8", "c6"], ["c3", "b1"], ["c6", "b8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["b1", "c3"], ["b8", "a6"], ["c3", "d5"], ["a6", "b8"], ["d5", "c3"], ["g8", "f6"], ["c3", "b1"], ["h8", "g8"], ["g1", "f3"], ["g8", "h8"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "d4"], ["f6", "d5"], ["d4", "b5"], ["d5", "b4"], ["b5", "a3"], ["b4", "a6"], ["b1", "c3"], ["b8", "c6"], ["a3", "b1"], ["a6", "b8"], ["c3", "e4"], ["c6", "e5"], ["e4", "g5"], ["e5", "g4"], ["g5", "f3"], ["g4", "f6"]];
+		
+		temp="";
+		temp2="";
+		
+		for(i=0, len=arr.length; i<len; i++){//0<len
+			board.moveCaller(arr[i][0], arr[i][1]);
+			temp+=(board.IsThreefold*1);
+			temp2+=(board.IsFiftyMove*1);
+		}
+		
+		for(i=0; i<15; i++){//0...14
+			board.moveCaller("h1", "g1");
+			temp+=(board.IsThreefold*1);
+			temp2+=(board.IsFiftyMove*1);
+			
+			board.moveCaller("h8", "g8");
+			temp+=(board.IsThreefold*1);
+			temp2+=(board.IsFiftyMove*1);
+			
+			board.moveCaller("g1", "h1");
+			temp+=(board.IsThreefold*1);
+			temp2+=(board.IsFiftyMove*1);
+			
+			board.moveCaller("g8", "h8");
+			temp+=(board.IsThreefold*1);
+			temp2+=(board.IsFiftyMove*1);
+		}
+		
+		if((temp+" x "+temp2)!=="000000010001000010100000000000000000000001000000001111111111111111111111111111111111111111111111111111 x 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111"){
+			error_msg="Error [6] draw by threefold repetition or fifty-move rule";
 		}
 	}
 	

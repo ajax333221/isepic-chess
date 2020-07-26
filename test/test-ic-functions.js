@@ -1439,12 +1439,13 @@ function fnIcSameSquare(){
 	
 	if(!error_msg){
 		arr=[0, 1, 2, 3, 4, 5, 6, 7];
+		len=arr.length;
 		
 		outer:
-		for(w=0; w<8; w++){
-			for(x=0; x<8; x++){
-				for(y=0; y<8; y++){
-					for(z=0; z<8; z++){
+		for(w=0; w<len; w++){//0<len
+			for(x=0; x<len; x++){//0<len
+				for(y=0; y<len; y++){//0<len
+					for(z=0; z<len; z++){//0<len
 						if(Ic.sameSquare([arr[w], arr[x]], [arr[y], arr[z]])!==(arr[w]===arr[y] && arr[x]===arr[z])){
 							error_msg="Error [8] pos, pos ("+arr[w]+", "+arr[x]+" ,"+arr[y]+", "+arr[z]+")";
 							break outer;

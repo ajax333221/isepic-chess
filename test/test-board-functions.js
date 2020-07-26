@@ -7,7 +7,7 @@
 //_setPromoteTo
 //_setCurrentMove
 //_readFen
-//_updateKingsChecksFenMatdiff
+//_updateFenAndMisc
 //_refinedFenTest
 //_testCollision
 //[### ya via fenApply() ###] _legalMoves
@@ -39,7 +39,7 @@ function fnBoardBoardHash(){
 	//}
 	
 	if(!error_msg){
-		if(board.boardHash()!==739745259){
+		if(board.boardHash()!==-1509395701){
 			error_msg="Error [1] wrong hash for default fen (+ isHidden prop)";
 		}
 	}
@@ -47,7 +47,7 @@ function fnBoardBoardHash(){
 	if(!error_msg){
 		board.moveCaller("a2", "a4");
 		
-		if(board.boardHash()!==1623782388){
+		if(board.boardHash()!==-1601973036){
 			error_msg="Error [2] wrong hash for board after a2-a4";
 		}
 	}
