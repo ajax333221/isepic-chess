@@ -4,7 +4,7 @@
 
 (function(win, $, Ic){
 	var IcUi=(function(){
-		var _VERSION="1.1.0";
+		var _VERSION="1.1.1";
 		
 		function refreshBoard(animate_move){
 			var that, temp, is_reversed, from_bos, to_bos, initial_val, final_val, piece_class, promotion_class, is_new_html;
@@ -54,6 +54,7 @@
 				rtn+="<li><strong>Is stalemate?:</strong> <span>"+that.IsStalemate+"</span></li>";
 				rtn+="<li><strong>Is threefold repetition?:</strong> <span>"+that.IsThreefold+"</span></li>";
 				rtn+="<li><strong>Is fifty-move rule?:</strong> <span>"+that.IsFiftyMove+"</span></li>";
+				rtn+="<li><strong>Is insufficient material?:</strong> <span>"+that.IsInsufficientMaterial+"</span></li>";
 				rtn+="<li><strong>En Passant square:</strong> <span>"+(that.EnPassantBos || "-")+"</span></li>";
 				
 				rtn+="<li>";

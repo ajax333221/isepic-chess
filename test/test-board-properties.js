@@ -303,6 +303,43 @@ function fnBoardIsFiftyMove(){
 	};
 }
 
+function fnBoardIsInsufficientMaterial(){
+	var i, len, arr, start_time, end_time, error_msg;
+	
+	error_msg="";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		arr=["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "K6k/8/8/8/8/8/8/3BB3 w - - 0 1", "K6k/8/8/8/8/8/8/3BB3 b - - 0 1", "K6k/8/8/8/8/8/8/3bb3 w - - 0 1", "K6k/8/8/8/8/8/8/3bb3 b - - 0 1", "K6k/8/8/8/8/8/2bBb3/8 w - - 0 1", "K6k/8/8/8/8/8/2bBb3/8 b - - 0 1", "K6k/8/8/8/8/8/2BbB3/8 w - - 0 1", "K6k/8/8/8/8/8/2BbB3/8 b - - 0 1", "K6k/8/8/8/8/3Nb3/8/8 w - - 0 1", "K6k/8/8/8/8/3Nn3/8/8 w - - 0 1", "K6k/8/8/8/8/3NB3/8/8 w - - 0 1", "K6k/8/8/8/8/3NN3/8/8 w - - 0 1", "K6k/8/8/8/4P3/8/8/8 w - - 0 1", "K6k/8/8/8/4p3/8/8/8 w - - 0 1", "K6k/8/8/8/4R3/8/8/8 w - - 0 1", "K6k/8/8/8/4r3/8/8/8 w - - 0 1", "K6k/8/8/8/8/8/8/4Q3 w - - 0 1", "K6k/8/8/8/8/8/8/4q3 w - - 0 1"];
+		
+		for(i=0, len=arr.length; i<len; i++){//0<len
+			if(Ic.fenGet(arr[i], "IsInsufficientMaterial").IsInsufficientMaterial!==false){
+				error_msg="Error [0] get(IsInsufficientMaterial) arr["+i+"] !== false";
+			}
+		}
+	//}
+	
+	if(!error_msg){
+		arr=["K6k/8/8/8/8/8/8/8 w - - 0 1", "K6k/8/8/8/8/3N4/8/8 w - - 0 1", "K6k/8/8/8/8/3N4/8/8 b - - 0 1", "K6k/8/8/8/8/3n4/8/8 w - - 0 1", "K6k/8/8/8/8/3n4/8/8 b - - 0 1", "K6k/8/8/8/8/3B4/8/8 w - - 0 1", "K6k/8/8/8/8/3B4/8/8 b - - 0 1", "K6k/8/8/8/8/3b4/8/8 w - - 0 1", "K6k/8/8/8/8/3b4/8/8 b - - 0 1", "K6k/8/8/8/8/3B4/2B5/1B6 w - - 0 1", "K6k/8/8/8/8/3B4/2B5/1B6 b - - 0 1", "K6k/8/8/8/8/3b4/2b5/1b6 w - - 0 1", "K6k/8/8/8/8/3b4/2b5/1b6 b - - 0 1", "K6k/8/8/8/8/3b4/2b1B3/1b1B4 w - - 0 1", "K6k/8/8/8/8/3b4/2b1B3/1b1B4 b - - 0 1", "K6k/8/8/8/8/4B3/3B4/2B5 w - - 0 1", "K6k/8/8/8/8/4B3/3B4/2B5 b - - 0 1", "K6k/8/8/8/8/4b3/3b4/2b5 w - - 0 1", "K6k/8/8/8/8/4b3/3b4/2b5 b - - 0 1", "K6k/8/8/8/8/4b3/3b1B2/2b1B3 w - - 0 1", "K6k/8/8/8/8/4b3/3b1B2/2b1B3 b - - 0 1"];
+		
+		for(i=0, len=arr.length; i<len; i++){//0<len
+			if(Ic.fenGet(arr[i], "IsInsufficientMaterial").IsInsufficientMaterial!==true){
+				error_msg="Error [1] get(IsInsufficientMaterial) arr["+i+"] !== true";
+			}
+		}
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "board.IsInsufficientMaterial",
+		fromFile : "test-board-properties.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
 /*function fnIcAAAAA(){
 	var start_time, end_time, error_msg;
 	

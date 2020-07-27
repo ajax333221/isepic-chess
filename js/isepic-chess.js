@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.8.3";
+		var _VERSION="2.8.4";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- utilities
 		
@@ -494,7 +494,7 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, that, current_square, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves;
+			var i, j, that, current_square, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves, bishop_count, at_least_one_light, at_least_one_dark;
 			
 			that=this;
 			
@@ -519,6 +519,7 @@
 			}
 			
 			new_fen_board="";
+			bishop_count={w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}};
 			
 			for(i=0; i<8; i++){//0...7
 				consecutive_empty_squares=0;
@@ -532,6 +533,20 @@
 								that.Active.kingBos=current_square.bos;
 							}else{
 								that.NonActive.kingBos=current_square.bos;
+							}
+						}else if(current_square.isBishop){
+							if(current_square.sign>0){
+								if((i+j)%2){
+									bishop_count.w.darkSquaredBishops++;
+								}else{
+									bishop_count.w.lightSquaredBishops++;
+								}
+							}else{
+								if((i+j)%2){
+									bishop_count.b.darkSquaredBishops++;
+								}else{
+									bishop_count.b.lightSquaredBishops++;
+								}
 							}
 						}
 						
@@ -587,9 +602,20 @@
 			that.IsFiftyMove=(that.HalfMove>=100);
 			
 			total_pieces=countPieces(clockless_fen);
+			that.IsInsufficientMaterial=false;
 			
-			/*2020 IsInsufficientMaterial*/
-			//use total_pieces -> k vs k, k vs n, SPECIAL: k+(b*X) vs k+(b*X) same color
+			if(!(total_pieces.w.p+total_pieces.b.p+total_pieces.w.r+total_pieces.b.r+total_pieces.w.q+total_pieces.b.q)){
+				if(total_pieces.w.n+total_pieces.b.n){
+					that.IsInsufficientMaterial=((total_pieces.w.n+total_pieces.b.n+total_pieces.w.b+total_pieces.b.b)===1);//k vs kn
+				}else if(total_pieces.w.b+total_pieces.b.b){
+					at_least_one_light=!!(bishop_count.w.lightSquaredBishops+bishop_count.b.lightSquaredBishops);
+					at_least_one_dark=!!(bishop_count.w.darkSquaredBishops+bishop_count.b.darkSquaredBishops);
+					
+					that.IsInsufficientMaterial=(at_least_one_light!==at_least_one_dark);//k(b*x) vs k(b*x)
+				}else{//k vs k
+					that.IsInsufficientMaterial=true;
+				}
+			}
 			
 			that.MaterialDiff=_materialDifference(total_pieces);
 		}
@@ -1609,6 +1635,7 @@
 				target.IsStalemate=null;
 				target.IsThreefold=null;
 				target.IsFiftyMove=null;
+				target.IsInsufficientMaterial=null;
 				target.MaterialDiff=null;
 				target.PromoteTo=null;
 				target.SelectedBos=null;
