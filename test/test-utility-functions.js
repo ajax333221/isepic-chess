@@ -862,44 +862,44 @@ function fnIcUtilityBasicFenTest(){
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.basicFenTest("K7/8/8/8/8/8/8/8 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
+		if(Ic.utilityMisc.basicFenTest("K7/8/8/8/8/8/8/8 w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
 			error_msg="Error [17] missing bk";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.basicFenTest("k6k/8/8/8/8/8/8/K7 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
-			error_msg="Error [18] more than one bk";
-		}
-	}
-	
-	if(!error_msg){
 		if(Ic.utilityMisc.basicFenTest("K6K/8/8/8/8/8/8/k7 w KQkq - 0 1").substring(0, 9)!=="Error [5]"){
-			error_msg="Error [19] more than one wk";
+			error_msg="Error [18] more than one wk";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
-			error_msg="Error [20] more than 8 bp";
+		if(Ic.utilityMisc.basicFenTest("k6k/8/8/8/8/8/8/K7 w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
+			error_msg="Error [19] more than one bk";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/P7/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [6]"){
-			error_msg="Error [21] more than 8 wp";
+		if(Ic.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/P7/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [7]"){
+			error_msg="Error [20] more than 8 wp";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.basicFenTest("rrbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [7]"){
-			error_msg="Error [22] more promoted pieces than possible (b)";
+		if(Ic.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 9)!=="Error [8]"){
+			error_msg="Error [21] more than 8 bp";
 		}
 	}
 	
 	if(!error_msg){
-		if(Ic.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBRR w KQkq - 0 1").substring(0, 9)!=="Error [7]"){
-			error_msg="Error [23] more promoted pieces than possible (w)";
+		if(Ic.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBRR w KQkq - 0 1").substring(0, 9)!=="Error [9]"){
+			error_msg="Error [22] more promoted pieces than possible (w)";
+		}
+	}
+	
+	if(!error_msg){
+		if(Ic.utilityMisc.basicFenTest("rrbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1").substring(0, 10)!=="Error [10]"){
+			error_msg="Error [23] more promoted pieces than possible (b)";
 		}
 	}
 	

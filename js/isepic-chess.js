@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.8.2";
+		var _VERSION="2.8.3";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -195,7 +195,7 @@
 		}
 		
 		function _basicFenTest(fen){
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, fen_board, total_files_in_current_rank, error_msg;
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, total_files_in_current_rank, error_msg;
 			
 			error_msg="";
 			
@@ -222,8 +222,7 @@
 			}
 			
 			if(!error_msg){
-				fen_board=fen.split(" ")[0];
-				fen_board_arr=fen_board.split("/");
+				fen_board_arr=fen.split(" ")[0].split("/");
 				
 				outer:
 				for(i=0; i<8; i++){//0...7
@@ -251,24 +250,40 @@
 			}
 			
 			if(!error_msg){
-				for(i=0; i<2; i++){//0...1
-					total_pieces={P:0, N:0, B:0, R:0, Q:0, K:0};
-					
-					for(j=1; j<7; j++){//1...6
-						total_pieces[toBal(j)]=_occurrences(fen_board, toBal(j*getSign(!i)));
-					}
-					
-					if(total_pieces.K!==1){
-						error_msg="Error [5] board without exactly one "+(i ? "white" : "black")+" king";
-					}else if(total_pieces.P>8){
-						error_msg="Error [6] more than 8 "+(i ? "white" : "black")+" pawns";
-					}else if((Math.max(total_pieces.N-2, 0)+Math.max(total_pieces.B-2, 0)+Math.max(total_pieces.R-2, 0)+Math.max(total_pieces.Q-1, 0))>(8-total_pieces.P)){
-						error_msg="Error [7] promoted pieces exceed the number of missing pawns for "+(i ? "white" : "black");
-					}
-					
-					if(error_msg){
-						break;
-					}
+				total_pieces=countPieces(fen);
+				
+				if(total_pieces.w.k!==1){
+					error_msg="Error [5] board without exactly one white king";
+				}
+			}
+			
+			if(!error_msg){
+				if(total_pieces.b.k!==1){
+					error_msg="Error [6] board without exactly one black king";
+				}
+			}
+			
+			if(!error_msg){
+				if(total_pieces.w.p>8){
+					error_msg="Error [7] more than 8 white pawns";
+				}
+			}
+			
+			if(!error_msg){
+				if(total_pieces.b.p>8){
+					error_msg="Error [8] more than 8 black pawns";
+				}
+			}
+			
+			if(!error_msg){
+				if((Math.max((total_pieces.w.n-2), 0)+Math.max((total_pieces.w.b-2), 0)+Math.max((total_pieces.w.r-2), 0)+Math.max((total_pieces.w.q-1), 0))>(8-total_pieces.w.p)){
+					error_msg="Error [9] promoted pieces exceed the number of missing pawns for white";
+				}
+			}
+			
+			if(!error_msg){
+				if((Math.max((total_pieces.b.n-2), 0)+Math.max((total_pieces.b.b-2), 0)+Math.max((total_pieces.b.r-2), 0)+Math.max((total_pieces.b.q-1), 0))>(8-total_pieces.b.p)){
+					error_msg="Error [10] promoted pieces exceed the number of missing pawns for black";
 				}
 			}
 			
@@ -479,18 +494,17 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, that, current_square, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves;
+			var i, j, that, current_square, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves;
 			
 			that=this;
 			
-			function _materialDifference(){
-				var i, j, len, current_diff, fen_board, rtn;
+			function _materialDifference(totals_obj){
+				var i, j, len, current_diff, rtn;
 				
 				rtn={w:[], b:[]};
-				fen_board=that.Fen.split(" ")[0];
 				
 				for(i=1; i<7; i++){//1...6
-					current_diff=_occurrences(fen_board, toBal(i))-_occurrences(fen_board, toBal(-i));
+					current_diff=(totals_obj.w[toBal(-i)]-totals_obj.b[toBal(-i)]);
 					
 					for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
 						if(current_diff>0){
@@ -572,7 +586,12 @@
 			
 			that.IsFiftyMove=(that.HalfMove>=100);
 			
-			that.MaterialDiff=_materialDifference();
+			total_pieces=countPieces(clockless_fen);
+			
+			/*2020 IsInsufficientMaterial*/
+			//use total_pieces -> k vs k, k vs n, SPECIAL: k+(b*X) vs k+(b*X) same color
+			
+			that.MaterialDiff=_materialDifference(total_pieces);
 		}
 		
 		function _refinedFenTest(){
@@ -1427,6 +1446,24 @@
 			return rtn;
 		}
 		
+		function countPieces(fen){
+			var i, j, fen_board, rtn;
+			
+			rtn={w:{p:0, n:0, b:0, r:0, q:0, k:0}, b:{p:0, n:0, b:0, r:0, q:0, k:0}};
+			
+			if((typeof fen)==="string"){
+				fen_board=_trimSpaces(fen).split(" ")[0];
+				
+				for(i=1; i<7; i++){//1...6
+					for(j=0; j<2; j++){//0...1
+						rtn[j ? "w" : "b"][toBal(-i)]=_occurrences(fen_board, toBal(i*getSign(!j)));
+					}
+				}
+			}
+			
+			return rtn;
+		}
+		
 		function removeBoard(woard){
 			var del_board, del_board_name_cache, rtn;
 			
@@ -1796,6 +1833,7 @@
 			getFileBos : getFileBos,
 			isInsideBoard : isInsideBoard,
 			sameSquare : sameSquare,
+			countPieces : countPieces,
 			removeBoard : removeBoard,
 			isEqualBoard : isEqualBoard,
 			cloneBoard : cloneBoard,
