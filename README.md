@@ -86,8 +86,8 @@ Property | Type | Description
 **IsCheckmate** | Boolean | Indicates that there isn't any legal moves for the side to move and the **active** king is at check.<hr>Examples:<ul><li>`board_in_check.IsCheckmate //false`</li><li>`board_in_checkmate.IsCheckmate //true`</li><li>`board_in_stalemate.IsCheckmate //false`</li><li>`board_not_in_check.IsCheckmate //false`</li></ul>
 **IsStalemate** | Boolean | Indicates that there isn't any legal moves for the side to move and the **active** king is not at check.<hr>Examples:<ul><li>`board_in_check.IsStalemate //false`</li><li>`board_in_checkmate.IsStalemate //false`</li><li>`board_in_stalemate.IsStalemate //true`</li><li>`board_not_in_check.IsStalemate //false`</li></ul>
 **IsThreefold** | Boolean | Indicates that the current position has appeared at least three times before.<hr>Examples:<ul><li>`not_repeated_thrice_before.IsThreefold //false`</li><li>`repeated_thrice_before.IsThreefold //true`</li></ul>
-**IsInsufficientMaterial** | Boolean | Indicates that there isn't enough material for either side to deliver a checkmate.<hr>Examples:<ul><li>`b.IsInsufficientMaterial //false`</li><li>`b.IsInsufficientMaterial //true`</li></ul>
 **IsFiftyMove** | Boolean | Indicates that no capture has been made and no pawn has been moved in the last 50 moves (100 half moves).<hr>Examples:<ul><li>`board_99halfmoves.IsFiftyMove //false`</li><li>`board_100halfmoves.IsFiftyMove //true`</li></ul>
+**IsInsufficientMaterial** | Boolean | Indicates that there isn't enough material for either side to deliver a checkmate.<hr>Examples:<ul><li>`k_vs_k.IsInsufficientMaterial //true`</li><li>`k_vs_kn.IsInsufficientMaterial //true`</li><li>`k_vs_kb.IsInsufficientMaterial //true`</li><li>`k_vs_knn.IsInsufficientMaterial //false`</li><li>`kn_vs_kn.IsInsufficientMaterial //false`</li><li>`k_vs_knb.IsInsufficientMaterial //false`</li></ul>
 **MaterialDiff** | Object | The **material difference** is an object with the structure of `{w:[], b:[]}`.<br><br>`board.MaterialDiff.w` holds a **piece val array** (with *positive* **piece sign**s) of exceeding pieces that white has over black.<br><br>`board.MaterialDiff.b` holds a **piece val array** (with *negative* **piece sign**s) of exceeding pieces that black has over white.<br><br>Differences by more than one piece of the same value will result in appearing multiple times e.g. `[1, 1, ...]`.<hr>Examples:<ul><li>`Ic.initBoard({ fen : "k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1" }).MaterialDiff //{w:[4, 4], b:[-1]}`</li><li>`Ic.initBoard({ fen : "8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1" }).MaterialDiff //{w:[1, 1, 3, 5], b:[-2, -2, -4]}`</li><li>`Ic.initBoard({ fen : "8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1" }).MaterialDiff //{w:[], b:[]}`</li><li>`Ic.initBoard({ fen : "0invalidfen0" }).MaterialDiff //{w:[], b:[]}`</li></ul>
 **PromoteTo** | Number | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board_q_option.PromoteTo //5`</li><li>`board_r_option.PromoteTo //4`</li><li>`board_b_option.PromoteTo //3`</li><li>`board_n_option.PromoteTo //2`</li></ul>
 **SelectedBos** | String | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board_e2_selected_in_ui.SelectedBos //"e2"`</li><li>`board_after_e4.SelectedBos //""`</li></ul>
@@ -122,7 +122,6 @@ To Do
 -------------
 
 - Documentation (:wrench: 70% done)
-- Draw by insufficient material
 - PGN parser
 - Nested move list variations
 
