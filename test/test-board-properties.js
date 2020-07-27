@@ -175,6 +175,134 @@ function fnBoardIsStalemate(){
 	};
 }
 
+function fnBoardIsThreefold(){
+	var i, len, arr, temp, board, board_name, start_time, end_time, error_msg;
+	
+	error_msg="";
+	board_name="board_IsThreefold";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [0] failed to initBoard("+board_name+")";
+		}
+	//}
+	
+	if(!error_msg){
+		arr=[["b1", "c3"], ["b8", "c6"], ["c3", "b1"], ["c6", "b8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["b1", "c3"], ["b8", "a6"], ["c3", "d5"], ["a6", "b8"], ["d5", "c3"], ["g8", "f6"], ["c3", "b1"], ["h8", "g8"], ["g1", "f3"], ["g8", "h8"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "d4"], ["f6", "d5"], ["d4", "b5"], ["d5", "b4"], ["b5", "a3"], ["b4", "a6"], ["b1", "c3"], ["b8", "c6"], ["a3", "b1"], ["a6", "b8"], ["c3", "e4"], ["c6", "e5"], ["e4", "g5"], ["e5", "g4"], ["g5", "f3"], ["g4", "f6"]];
+		
+		temp="";
+		
+		for(i=0, len=arr.length; i<len; i++){//0<len
+			board.moveCaller(arr[i][0], arr[i][1]);
+			temp+=(board.IsThreefold*1);
+		}
+		
+		for(i=0; i<15; i++){//0...14
+			board.moveCaller("h1", "g1");
+			temp+=(board.IsThreefold*1);
+			
+			board.moveCaller("h8", "g8");
+			temp+=(board.IsThreefold*1);
+			
+			board.moveCaller("g1", "h1");
+			temp+=(board.IsThreefold*1);
+			
+			board.moveCaller("g8", "h8");
+			temp+=(board.IsThreefold*1);
+		}
+		
+		if(temp!=="000000010001000010100000000000000000000001000000001111111111111111111111111111111111111111111111111111"){
+			error_msg="Error [1] draw by threefold repetition";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "board.IsThreefold",
+		fromFile : "test-board-properties.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
+function fnBoardIsFiftyMove(){
+	var i, len, arr, temp, board, board_name, start_time, end_time, error_msg;
+	
+	error_msg="";
+	board_name="board_IsFiftyMove";
+	start_time=new Date().getTime();
+	
+	//if(!error_msg){
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			isHidden : true,
+			invalidFenStop : true
+		});
+		
+		if(Ic.boardExists(board)!==true){
+			error_msg="Error [0] failed to initBoard("+board_name+")";
+		}
+	//}
+	
+	if(!error_msg){
+		arr=[["b1", "c3"], ["b8", "c6"], ["c3", "b1"], ["c6", "b8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["b1", "c3"], ["b8", "a6"], ["c3", "d5"], ["a6", "b8"], ["d5", "c3"], ["g8", "f6"], ["c3", "b1"], ["h8", "g8"], ["g1", "f3"], ["g8", "h8"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "d4"], ["f6", "d5"], ["d4", "b5"], ["d5", "b4"], ["b5", "a3"], ["b4", "a6"], ["b1", "c3"], ["b8", "c6"], ["a3", "b1"], ["a6", "b8"], ["c3", "e4"], ["c6", "e5"], ["e4", "g5"], ["e5", "g4"], ["g5", "f3"], ["g4", "f6"]];
+		
+		temp="";
+		
+		for(i=0, len=arr.length; i<len; i++){//0<len
+			board.moveCaller(arr[i][0], arr[i][1]);
+			temp+=(board.IsFiftyMove*1);
+		}
+		
+		for(i=0; i<15; i++){//0...14
+			board.moveCaller("h1", "g1");
+			temp+=(board.IsFiftyMove*1);
+			
+			board.moveCaller("h8", "g8");
+			temp+=(board.IsFiftyMove*1);
+			
+			board.moveCaller("g1", "h1");
+			temp+=(board.IsFiftyMove*1);
+			
+			board.moveCaller("g8", "h8");
+			temp+=(board.IsFiftyMove*1);
+		}
+		
+		if(temp!=="000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111"){
+			error_msg="Error [1] draw by fifty-move rule";
+		}
+	}
+	
+	if(Ic.boardExists(board)){
+		Ic.removeBoard(board);
+	}
+	
+	end_time=new Date().getTime();
+	
+	return {
+		testName : "board.IsFiftyMove",
+		fromFile : "test-board-properties.js",
+		result : (error_msg || "✓"),
+		elapsedTime : ((end_time-start_time)+" ms"),
+		passed : !error_msg
+	};
+}
+
 /*function fnIcAAAAA(){
 	var start_time, end_time, error_msg;
 	

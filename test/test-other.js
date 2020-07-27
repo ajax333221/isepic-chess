@@ -6,7 +6,7 @@ function testDisambiguation(){
 	var board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
-	board_name="board_testDis";
+	board_name="board_testDisambiguation";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -57,8 +57,8 @@ function testBasicFunctionality(){
 	var board, board_name, board_copy, board_copy_name, start_time, end_time, error_msg;
 	
 	error_msg="";
-	board_name="board_testBas";
-	board_copy_name="board_testBas_copy";
+	board_name="board_testBasic";
+	board_copy_name="board_testBasic_copy";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -707,9 +707,10 @@ function testFenPositions(){
 }
 
 function testSpecificCases(){
-	var i, len, arr, temp, temp2, board, board_name, start_time, end_time, error_msg;
+	var temp, temp2, board, board_name, start_time, end_time, error_msg;
 	
 	error_msg="";
+	board_name="board_testSpecific";
 	start_time=new Date().getTime();
 	
 	//if(!error_msg){
@@ -755,54 +756,6 @@ function testSpecificCases(){
 	if(!error_msg){
 		if(Ic.toVal([5])!==0){
 			error_msg="Error [4] array in Ic.toVal() should default to 0";
-		}
-	}
-	
-	if(!error_msg){
-		board=Ic.initBoard({
-			boardName : board_name,
-			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			isHidden : true,
-			invalidFenStop : true
-		});
-		
-		if(Ic.boardExists(board)!==true){
-			error_msg="Error [5] failed to initBoard("+board_name+")";
-		}
-	}
-	
-	if(!error_msg){
-		arr=[["b1", "c3"], ["b8", "c6"], ["c3", "b1"], ["c6", "b8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "g1"], ["f6", "g8"], ["b1", "c3"], ["b8", "a6"], ["c3", "d5"], ["a6", "b8"], ["d5", "c3"], ["g8", "f6"], ["c3", "b1"], ["h8", "g8"], ["g1", "f3"], ["g8", "h8"], ["f3", "g1"], ["f6", "g8"], ["g1", "f3"], ["g8", "f6"], ["f3", "d4"], ["f6", "d5"], ["d4", "b5"], ["d5", "b4"], ["b5", "a3"], ["b4", "a6"], ["b1", "c3"], ["b8", "c6"], ["a3", "b1"], ["a6", "b8"], ["c3", "e4"], ["c6", "e5"], ["e4", "g5"], ["e5", "g4"], ["g5", "f3"], ["g4", "f6"]];
-		
-		temp="";
-		temp2="";
-		
-		for(i=0, len=arr.length; i<len; i++){//0<len
-			board.moveCaller(arr[i][0], arr[i][1]);
-			temp+=(board.IsThreefold*1);
-			temp2+=(board.IsFiftyMove*1);
-		}
-		
-		for(i=0; i<15; i++){//0...14
-			board.moveCaller("h1", "g1");
-			temp+=(board.IsThreefold*1);
-			temp2+=(board.IsFiftyMove*1);
-			
-			board.moveCaller("h8", "g8");
-			temp+=(board.IsThreefold*1);
-			temp2+=(board.IsFiftyMove*1);
-			
-			board.moveCaller("g1", "h1");
-			temp+=(board.IsThreefold*1);
-			temp2+=(board.IsFiftyMove*1);
-			
-			board.moveCaller("g8", "h8");
-			temp+=(board.IsThreefold*1);
-			temp2+=(board.IsFiftyMove*1);
-		}
-		
-		if((temp+" x "+temp2)!=="000000010001000010100000000000000000000001000000001111111111111111111111111111111111111111111111111111 x 000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111"){
-			error_msg="Error [6] draw by threefold repetition or fifty-move rule";
 		}
 	}
 	

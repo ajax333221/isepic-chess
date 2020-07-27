@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.8.1";
+		var _VERSION="2.8.2";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -589,7 +589,7 @@
 			//}
 			
 			if(!error_msg){
-				if(that.Active.checks>=3){
+				if(that.Active.checks>2){
 					error_msg="Error [1] king is checked more times than possible";
 				}
 			}
