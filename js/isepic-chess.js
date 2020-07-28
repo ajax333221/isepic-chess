@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.9.0";
+		var _VERSION="2.9.1";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- utilities
 		
@@ -598,6 +598,8 @@
 					that.IsInsufficientMaterial=true;
 				}
 			}
+			
+			that.InDraw=(that.IsStalemate || that.IsThreefold || that.IsFiftyMove || that.IsInsufficientMaterial);
 			
 			that.MaterialDiff={w:[], b:[]};
 			
@@ -1630,6 +1632,7 @@
 				target.IsThreefold=null;
 				target.IsFiftyMove=null;
 				target.IsInsufficientMaterial=null;
+				target.InDraw=null;
 				target.MaterialDiff=null;
 				target.PromoteTo=null;
 				target.SelectedBos=null;

@@ -3,7 +3,7 @@ isepic-chess.js
 
 `isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN position validation, storing SAN moves, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
 
-**Note:** As of `v2.6.0`<sup>(April, 2020)</sup>, everything visual (HTML board, move animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery and can be used as a stand-alone command-line.
+**Note:** As of `v2.6.0` <sup>(April, 2020)</sup>, everything visual (HTML board, move animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery and can be used as a stand-alone command-line.
 
 Demo
 -------------
@@ -18,7 +18,7 @@ Features
 - Material difference
 - Multiple boards at once
 - Pawn promotion options
-- Checkmate / Stalemate
+- Check / checkmate / draw detection
 - Store SAN moves
 - ASCII diagram
 - Extense parameter-flexibility
@@ -88,6 +88,7 @@ Property | Type | Description
 **IsThreefold** | Boolean | Indicates that the current position has appeared at least three times before.<hr>Examples:<ul><li>`not_repeated_thrice_before.IsThreefold //false`</li><li>`repeated_thrice_before.IsThreefold //true`</li></ul>
 **IsFiftyMove** | Boolean | Indicates that no capture has been made and no pawn has been moved in the last 50 moves (100 half moves).<hr>Examples:<ul><li>`board_99halfmoves.IsFiftyMove //false`</li><li>`board_100halfmoves.IsFiftyMove //true`</li></ul>
 **IsInsufficientMaterial** | Boolean | Indicates that there isn't enough material for either side to deliver a checkmate.<hr>Examples:<ul><li>`k_vs_k.IsInsufficientMaterial //true`</li><li>`k_vs_kn.IsInsufficientMaterial //true`</li><li>`k_vs_kb.IsInsufficientMaterial //true`</li><li>`k_vs_knn.IsInsufficientMaterial //false`</li><li>`kn_vs_kn.IsInsufficientMaterial //false`</li><li>`k_vs_knb.IsInsufficientMaterial //false`</li></ul>
+**InDraw** | Boolean | Indicates that a draw is present.<hr>Examples:<ul><li>`main_board.InDraw //false`</li><li>`board_in_stalemate.InDraw //true`</li><li>`board_in_3fold.InDraw //true`</li><li>`board_100halfmoves.InDraw //true`</li><li>`board_insufficient_mat.InDraw //true`</li></ul>
 **MaterialDiff** | Object | The **material difference** is an object with the structure of `{w:[], b:[]}`.<br><br>`board.MaterialDiff.w` holds a **piece val array** (with *positive* **piece sign**s) of exceeding pieces that white has over black.<br><br>`board.MaterialDiff.b` holds a **piece val array** (with *negative* **piece sign**s) of exceeding pieces that black has over white.<br><br>Differences by more than one piece of the same value will result in appearing multiple times e.g. `[1, 1, ...]`.<hr>Examples:<ul><li>`Ic.initBoard({ fen : "k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1" }).MaterialDiff //{w:[4, 4], b:[-1]}`</li><li>`Ic.initBoard({ fen : "8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1" }).MaterialDiff //{w:[1, 1, 3, 5], b:[-2, -2, -4]}`</li><li>`Ic.initBoard({ fen : "8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1" }).MaterialDiff //{w:[], b:[]}`</li><li>`Ic.initBoard({ fen : "0invalidfen0" }).MaterialDiff //{w:[], b:[]}`</li></ul>
 **PromoteTo** | Number | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board_q_option.PromoteTo //5`</li><li>`board_r_option.PromoteTo //4`</li><li>`board_b_option.PromoteTo //3`</li><li>`board_n_option.PromoteTo //2`</li></ul>
 **SelectedBos** | String | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board_e2_selected_in_ui.SelectedBos //"e2"`</li><li>`board_after_e4.SelectedBos //""`</li></ul>
@@ -117,12 +118,41 @@ cloneBoardTo(...) | :wrench: | :wrench: | :wrench: ... **under construction** ..
 moveCaller(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 refreshBoard(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 
+<hr>
+
+#### List of `square.<properties>`:
+
+Squares from `board.getSquare()` <sup>(including referenceless copies)</sup> and manually selected from `board.Squares[<a1-h8>]` have the following accessible properties.
+
+Property | Type | Description
+------- | ---- | -----------
+**pos** | Array | **squarePos**: `[0-7, 0-7]`
+**bos** | String | **squareBos**: `"a1" to "h8"`
+**rankPos** | Number | **squareRankPos**: `0-7`
+**filePos** | Number | **squareFilePos**: `0-7`
+**rankBos** | String | **squareRankBos**: `1-8`
+**fileBos** | String | **squareFileBos**: `a-h`
+**bal** | String | **squareBal**: `"k", "q", "r", "b", "n", "p", "*", "P", "N", "B", "R", "Q", "K"`
+**absBal** | String | **squareAbsBal**: `"*", "P", "N", "B", "R", "Q", "K"`
+**val** | Number | **squareVal**: `-6 to 6`
+**absVal** | Number | **squareAbsVal**: `0 to 6`
+**className** | String | **squareClassName**: `"bk", "bq", "br", "bb", "bn", "bp", "", "wp", "wn", "wb", "wr", "wq", "wk"`
+**sign** | Number | **squareSign**: `-1 or 1`
+**isEmptySquare** | Boolean | `true` when the **square abs val** is `0`
+**isPawn** | Boolean | `true` when the **square abs val** is `1`
+**isKnight** | Boolean | `true` when the **square abs val** is `2`
+**isBishop** | Boolean | `true` when the **square abs val** is `3`
+**isRook** | Boolean | `true` when the **square abs val** is `4`
+**isQueen** | Boolean | `true` when the **square abs val** is `5`
+**isKing** | Boolean | `true` when the **square abs val** is `6`
+
 To Do
 -------------
 
-- Documentation (:wrench: 70% done)
+- Documentation (:wrench: 80% done)
 - PGN parser
 - Nested move list variations
+- Publish to `npm` (Node package manager)
 
 Copyright and License
 -------------

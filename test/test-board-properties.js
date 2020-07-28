@@ -19,6 +19,7 @@
 //MoveList (va ser default)
 //CurrentMove (va ser default)
 //IsRotated (va ser default)
+//InDraw
 //PromoteTo (va ser default)
 //SelectedBos (va ser default)
 //IsHidden (va ser default)
