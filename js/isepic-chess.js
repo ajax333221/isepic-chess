@@ -1015,6 +1015,13 @@
 			//}
 			
 			if(no_errors){
+				if(that===from_board){
+					no_errors=false;
+					_consoleLog("Error[_cloneBoardFrom]: trying to self clone");
+				}
+			}
+			
+			if(no_errors){
 				_cloneBoardObjs(that, from_board);
 				
 				//that.refreshBoard(); not without autorefresh
@@ -1038,6 +1045,13 @@
 					_consoleLog("Error[_cloneBoardTo]: could not select to_board");
 				}
 			//}
+			
+			if(no_errors){
+				if(that===to_board){
+					no_errors=false;
+					_consoleLog("Error[_cloneBoardTo]: trying to self clone");
+				}
+			}
 			
 			if(no_errors){
 				_cloneBoardObjs(to_board, that);
