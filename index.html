@@ -58,7 +58,7 @@
 				rff_board.toggleIsRotated();
 				
 				Ic.utilityMisc.consoleLog(main_board.ascii());//text diagram board
-				
+				other_board.cloneBoardFrom(other_board);
 				main_board.refreshBoard();//if the UI is not included, this line will be silently ignored
 			});
 		</script>

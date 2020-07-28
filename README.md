@@ -104,14 +104,13 @@ Function | Parameters | Return | Description
 -------- | ---------- | ------ | -----------
 getSquare(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 setSquare(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
-calculateChecks(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
+countAttacks(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 toggleIsRotated(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 setPromoteTo(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 setCurrentMove(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 isLegalMove(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 legalMoves(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 ascii(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
-boardHash(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 isEqualBoard(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 cloneBoardFrom(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:
 cloneBoardTo(...) | :wrench: | :wrench: | :wrench: ... **under construction** ... :wrench:

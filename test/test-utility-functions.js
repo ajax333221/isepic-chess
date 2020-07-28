@@ -734,6 +734,14 @@ function fnIcUtilityCloneBoardObjs(){
 		}
 	}
 	
+	if(!error_msg){
+		Ic.utilityMisc.cloneBoardObjs(board_copy, board_copy);
+		
+		if(board_copy.isEqualBoard(board)!==true){
+			error_msg="Error [3] clone to self problems";
+		}
+	}
+	
 	if(Ic.boardExists(board)){
 		Ic.removeBoard(board);
 	}

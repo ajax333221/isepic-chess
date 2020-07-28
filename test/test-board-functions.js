@@ -2,7 +2,7 @@
 //
 //[### ya via fenApply() ###] _getSquare
 //_setSquare
-//_calculateChecks
+//_countAttacks
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
 //_setPromoteTo
 //_setCurrentMove

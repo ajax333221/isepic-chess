@@ -4,7 +4,7 @@
 
 (function(win){
 	var Ic=(function(){
-		var _VERSION="2.8.4";
+		var _VERSION="2.9.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -147,49 +147,51 @@
 		function _cloneBoardObjs(to_board, from_board){
 			var i, j, len, len2, current_key, sub_keys, to_prop, from_prop;
 			
-			to_board.MoveList=[];
-			to_board.MaterialDiff={w:[], b:[]};//ver si ocupa
-			
-			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
-				current_key=_MUTABLE_KEYS[i];
-				to_prop=to_board[current_key];
-				from_prop=from_board[current_key];
+			if(to_board!==from_board){
+				to_board.MoveList=[];
+				to_board.MaterialDiff={w:[], b:[]};//ver si ocupa
 				
-				//["Squares"] constant len, objects with hard values
-				//["Active", "NonActive"] constant len, hard values only (strings/numbers) inside direct children
-				//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
-				//["MaterialDiff"] constant len, references (arrays) inside direct children
-				if(_isObject(from_prop)){
-					if(current_key==="MaterialDiff"){
-						to_prop.w=from_prop.w.slice(0);
-						to_prop.b=from_prop.b.slice(0);
-					}else{
-						sub_keys=Object.keys(from_prop);
-						
-						for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
-							if(current_key==="Squares"){
-								//ver si ocupa un object reset
-								
-								to_prop[sub_keys[j]].bal=from_prop[sub_keys[j]].bal;
-								to_prop[sub_keys[j]].absBal=from_prop[sub_keys[j]].absBal;
-								to_prop[sub_keys[j]].val=from_prop[sub_keys[j]].val;
-								to_prop[sub_keys[j]].absVal=from_prop[sub_keys[j]].absVal;
-								to_prop[sub_keys[j]].className=from_prop[sub_keys[j]].className;
-								to_prop[sub_keys[j]].sign=from_prop[sub_keys[j]].sign;
-								to_prop[sub_keys[j]].isEmptySquare=from_prop[sub_keys[j]].isEmptySquare;
-								to_prop[sub_keys[j]].isPawn=from_prop[sub_keys[j]].isPawn;
-								to_prop[sub_keys[j]].isKnight=from_prop[sub_keys[j]].isKnight;
-								to_prop[sub_keys[j]].isBishop=from_prop[sub_keys[j]].isBishop;
-								to_prop[sub_keys[j]].isRook=from_prop[sub_keys[j]].isRook;
-								to_prop[sub_keys[j]].isQueen=from_prop[sub_keys[j]].isQueen;
-								to_prop[sub_keys[j]].isKing=from_prop[sub_keys[j]].isKing;
-							}else{
-								to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
+				for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
+					current_key=_MUTABLE_KEYS[i];
+					to_prop=to_board[current_key];
+					from_prop=from_board[current_key];
+					
+					//["Squares"] constant len, objects with hard values
+					//["Active", "NonActive"] constant len, hard values only (strings/numbers) inside direct children
+					//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
+					//["MaterialDiff"] constant len, references (arrays) inside direct children
+					if(_isObject(from_prop)){
+						if(current_key==="MaterialDiff"){
+							to_prop.w=from_prop.w.slice(0);
+							to_prop.b=from_prop.b.slice(0);
+						}else{
+							sub_keys=Object.keys(from_prop);
+							
+							for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
+								if(current_key==="Squares"){
+									//ver si ocupa un object reset
+									
+									to_prop[sub_keys[j]].bal=from_prop[sub_keys[j]].bal;
+									to_prop[sub_keys[j]].absBal=from_prop[sub_keys[j]].absBal;
+									to_prop[sub_keys[j]].val=from_prop[sub_keys[j]].val;
+									to_prop[sub_keys[j]].absVal=from_prop[sub_keys[j]].absVal;
+									to_prop[sub_keys[j]].className=from_prop[sub_keys[j]].className;
+									to_prop[sub_keys[j]].sign=from_prop[sub_keys[j]].sign;
+									to_prop[sub_keys[j]].isEmptySquare=from_prop[sub_keys[j]].isEmptySquare;
+									to_prop[sub_keys[j]].isPawn=from_prop[sub_keys[j]].isPawn;
+									to_prop[sub_keys[j]].isKnight=from_prop[sub_keys[j]].isKnight;
+									to_prop[sub_keys[j]].isBishop=from_prop[sub_keys[j]].isBishop;
+									to_prop[sub_keys[j]].isRook=from_prop[sub_keys[j]].isRook;
+									to_prop[sub_keys[j]].isQueen=from_prop[sub_keys[j]].isQueen;
+									to_prop[sub_keys[j]].isKing=from_prop[sub_keys[j]].isKing;
+								}else{
+									to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
+								}
 							}
 						}
+					}else{
+						to_board[current_key]=from_board[current_key];//can't use to_prop, it's not a reference here
 					}
-				}else{
-					to_board[current_key]=from_board[current_key];//can't use to_prop, it's not a reference here
 				}
 			}
 		}
@@ -379,7 +381,7 @@
 			return rtn_set;
 		}
 		
-		function _calculateChecks(king_qos, early_break){
+		function _countAttacks(king_qos, early_break){
 			var i, j, that, as_knight, rtn_total_checks;
 			
 			that=this;
@@ -494,29 +496,9 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, that, current_square, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves, bishop_count, at_least_one_light, at_least_one_dark;
+			var i, j, len, that, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves, bishop_count, at_least_one_light, at_least_one_dark;
 			
 			that=this;
-			
-			function _materialDifference(totals_obj){
-				var i, j, len, current_diff, rtn;
-				
-				rtn={w:[], b:[]};
-				
-				for(i=1; i<7; i++){//1...6
-					current_diff=(totals_obj.w[toBal(-i)]-totals_obj.b[toBal(-i)]);
-					
-					for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
-						if(current_diff>0){
-							rtn.w.push(i);
-						}else{
-							rtn.b.push(-i);
-						}
-					}
-				}
-				
-				return rtn;
-			}
 			
 			new_fen_board="";
 			bishop_count={w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}};
@@ -560,7 +542,7 @@
 				new_fen_board+=(consecutive_empty_squares || "")+(i!==7 ? "/" : "");
 			}
 			
-			that.Active.checks=that.calculateChecks(null, false);
+			that.Active.checks=that.countAttacks(null);
 			that.NonActive.checks=0;
 			no_legal_moves=true;
 			
@@ -617,7 +599,19 @@
 				}
 			}
 			
-			that.MaterialDiff=_materialDifference(total_pieces);
+			that.MaterialDiff={w:[], b:[]};
+			
+			for(i=1; i<7; i++){//1...6
+				current_diff=(total_pieces.w[toBal(-i)]-total_pieces.b[toBal(-i)]);
+				
+				for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
+					if(current_diff>0){
+						that.MaterialDiff.w.push(i);
+					}else{
+						that.MaterialDiff.b.push(-i);
+					}
+				}
+			}
 		}
 		
 		function _refinedFenTest(){
@@ -647,7 +641,7 @@
 				that.Active.sign=getSign(!temp);
 				that.NonActive.sign=getSign(temp);
 				
-				if(that.calculateChecks(that.NonActive.kingBos, true)){
+				if(that.countAttacks(that.NonActive.kingBos, true)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
@@ -847,7 +841,7 @@
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
 								if(_candidateMoves((i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
-									if(!that.calculateChecks([active_king_original_rank, (i ? 3 : 5)], true)){
+									if(!that.countAttacks([active_king_original_rank, (i ? 3 : 5)], true)){
 										pre_validated_arr_pos.push([[active_king_original_rank, (i ? 2 : 6)]]);
 									}
 								}
@@ -899,7 +893,7 @@
 							}
 						}
 						
-						if(!that.calculateChecks((target_cached_square.isKing ? current_cached_square.pos : null), true)){
+						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square.pos : null), true)){
 							rtn.push(current_cached_square.pos);
 						}
 						
@@ -996,7 +990,7 @@
 			//}
 			
 			if(no_errors){
-				rtn=(that.BoardName===to_board.BoardName || that.boardHash()===to_board.boardHash());
+				rtn=(that===to_board || that.boardHash()===to_board.boardHash());
 			}
 			
 			return rtn;
@@ -1584,7 +1578,7 @@
 						BoardName : board_name,
 						getSquare : _getSquare,
 						setSquare : _setSquare,
-						calculateChecks : _calculateChecks,
+						countAttacks : _countAttacks,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
 						setCurrentMove : _setCurrentMove,
