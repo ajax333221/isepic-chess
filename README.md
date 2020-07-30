@@ -5,6 +5,14 @@ isepic-chess.js
 
 **Note:** As of `v2.6.0` <sup>(April, 2020)</sup>, everything visual (HTML board, move animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery and can be used as a stand-alone command-line.
 
+Installation
+-------------
+
+```
+# NPM
+npm i isepic-chess
+```
+
 Demo
 -------------
 
@@ -22,6 +30,7 @@ Features
 - Store SAN moves
 - ASCII diagram
 - Extense parameter-flexibility
+- Can be used in/with: Browsers / Node.js (or any CommonJS) / RequireJS environment
 
 Documentation
 -------------
@@ -152,7 +161,7 @@ To Do
 - Documentation (:wrench: 80% done)
 - PGN parser
 - Nested move list variations
-- Publish to `npm` (Node package manager)
+- Add a minified version `isepic-chess.min.js`
 
 Copyright and License
 -------------
