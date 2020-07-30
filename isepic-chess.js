@@ -2,9 +2,9 @@
 
 /*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
 
-(function(win){
+(function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="2.9.2";
+		var _VERSION="3.0.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -1260,7 +1260,7 @@
 			
 			that=this;
 			
-			if(win.IcUi && win.IcUi.refreshBoard){
+			if(windw && windw.IcUi && windw.IcUi.refreshBoard){
 				IcUi.refreshBoard.apply(that, [animate_move]);
 			}
 		}
@@ -1902,7 +1902,24 @@
 		};
 	})();
 	
-	if(!win.Ic){
-		win.Ic=Ic;
+	//Browser
+	if(windw!==null){
+		if(!windw.Ic){
+			windw.Ic=Ic;
+		}
 	}
-})(window);
+	
+	//Node.js or any CommonJS
+	if(expts!==null){
+		if(!expts.Ic){
+			expts.Ic=Ic;
+		}
+	}
+	
+	//RequireJS environment
+	if((typeof defin)==="function" && defin.amd){
+		defin(function(){
+			return Ic;
+		});
+	}
+})(((typeof window)!=="undefined" ? window : null), ((typeof exports)!=="undefined" ? exports : null), ((typeof define)!=="undefined" ? define : null));
