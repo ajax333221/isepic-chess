@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.0.0";
+		var _VERSION="3.0.1";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		

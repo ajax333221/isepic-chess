@@ -13,6 +13,11 @@ Installation
 npm i isepic-chess
 ```
 
+```
+# Web (the variable 'Ic' will be added to window)
+<script src="./isepic-chess.js"></script>
+```
+
 Demo
 -------------
 
