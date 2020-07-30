@@ -3,7 +3,7 @@
   "version": "2.9.2",
   "title": "isepic-chess.js",
   "description": "Chess utility library written in JavaScript",
-  "main": "js/isepic-chess.js",
+  "main": "isepic-chess.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ajax333221/isepic-chess.git"
@@ -22,6 +22,5 @@
   "bugs": {
     "url": "https://github.com/ajax333221/isepic-chess/issues"
   },
-  "homepage": "https://github.com/ajax333221/isepic-chess#readme",
-  "private": true
+  "homepage": "https://github.com/ajax333221/isepic-chess#readme"
 }
