@@ -8,7 +8,7 @@ isepic-chess.js
 Demo
 -------------
 
-https://ajax333221.github.io/isepic-chess/
+https://ajax333221.github.io/isepic-chess-ui/
 
 Features
 -------------
