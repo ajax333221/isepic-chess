@@ -4,3 +4,6 @@ Thumbs.db
 
 # Node modules
 node_modules/
+
+# Not really needed for our 0 dependencies
+package-lock.json
