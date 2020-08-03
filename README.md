@@ -163,10 +163,12 @@ Property | Type | Description
 To Do
 -------------
 
-- Documentation (:wrench: 80% done)
-- PGN parser
-- Nested move list variations
-- Add a minified version `isepic-chess.min.js`
+- **Import the tests back** to `./test` <sup>(path ignored in the npm package)</sup> and rewrite them in Jest, *Note: this is high priority and no new code will be written until this step is finished*. (:wrench: 30% done)
+- **Move the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple (also finish the documentation)
+- **Provide a minified version** `isepic-chess.min.js` (ignore file in the npm package)
+- **Simple PGN parser** (no support for nested-variations and comments will be removed)
+- **Nested move list variations** (currently if you go back in history and make a move, the moves from that point get lost instead of starting a variation)
+- **PGN parser** (full support for nested-variations and comments)
 
 Copyright and License
 -------------

@@ -1,2 +1,13 @@
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Node modules
+node_modules/
+
+# Tests
+test/
+
+# Git files
 .gitignore
 .gitattributes
