@@ -1,6 +1,6 @@
 const {Ic}=require("../isepic-chess");
 
-//Ic.setSilentMode(false);
+Ic.setSilentMode(false);
 
 //---to do:
 //

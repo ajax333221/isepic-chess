@@ -3,22 +3,26 @@ isepic-chess.js
 
 `isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN position validation, storing SAN moves, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
 
-**Note:** As of `v2.6.0` <sup>(April, 2020)</sup>, everything visual (HTML board, move animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery and can be used as a stand-alone command-line.
+> **Note:** As of `v2.6.0` <sup>(April, 2020)</sup>, everything visual (HTML board, piece animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery (or any other dependency).
 
 Installation
 -------------
 
 ```
 # NPM
-npm i isepic-chess
+npm install isepic-chess
 ```
+Then: `const {Ic} = require("./isepic-chess");`
+
+<hr>
 
 ```
-# Web (the variable 'Ic' will be added to window)
+# Web browser
 <script src="./isepic-chess.js"></script>
 ```
+The variable `Ic` will be added to window.
 
-Demo
+Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
 -------------
 
 https://ajax333221.github.io/isepic-chess-ui/
@@ -35,7 +39,6 @@ Features
 - Store SAN moves
 - ASCII diagram
 - Extense parameter-flexibility
-- Can be used in/with: Browsers / Node.js (or any CommonJS) / RequireJS environment
 
 Documentation
 -------------
@@ -163,9 +166,9 @@ Property | Type | Description
 To Do
 -------------
 
-- **Import the tests back** to `./test` <sup>(path ignored in the npm package)</sup> and rewrite them in Jest, *Note: this is high priority and no new code will be written until this step is finished*. (:wrench: 30% done)
+- **Import the tests back** to `./test` <sup>(path ignored in the npm package)</sup> and rewrite them in Jest, *Note: this is high priority and no new code will be written until this step is finished*. (:wrench: 50% done)
 - **Move the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple (also finish the documentation)
-- **Provide a minified version** `isepic-chess.min.js` (ignore file in the npm package)
+- **Provide a minified version** `isepic-chess.min.js` <sup>(ignore file in the npm package)</sup>
 - **Simple PGN parser** (no support for nested-variations and comments will be removed)
 - **Nested move list variations** (currently if you go back in history and make a move, the moves from that point get lost instead of starting a variation)
 - **PGN parser** (full support for nested-variations and comments)
