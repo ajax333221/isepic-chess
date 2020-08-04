@@ -19,7 +19,7 @@ Ic.setSilentMode(false);
 //[N/A?] _consoleLog()
 
 describe("Ic utility methods", () => {
-	test("Ic.utilityMisc.trimSpaces", () => {
+	test("Ic.utilityMisc.trimSpaces()", () => {
 		expect(Ic.utilityMisc.trimSpaces("  abc")).toBe("abc");
 		expect(Ic.utilityMisc.trimSpaces("abc  ")).toBe("abc");
 		expect(Ic.utilityMisc.trimSpaces("a  b  c")).toBe("a b c");
@@ -32,7 +32,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.trimSpaces([, 2, " ", null, "", "  ", Infinity, "  a  b  ", ("x"*9)])).toBe(",2, ,,, ,Infinity, a b ,NaN");
 	});
 	
-	test("Ic.utilityMisc.formatName", () => {
+	test("Ic.utilityMisc.formatName()", () => {
 		expect(Ic.utilityMisc.formatName(" a  Bc ")).toBe("a_Bc");
 		expect(Ic.utilityMisc.formatName("0ñ2(4) á")).toBe("0_2_4___");
 		expect(Ic.utilityMisc.formatName(" ")).toBe("");
@@ -40,7 +40,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.formatName("ñ")).toBe("_");
 	});
 	
-	test("Ic.utilityMisc.strContains", () => {
+	test("Ic.utilityMisc.strContains()", () => {
 		var str_base;
 		
 		str_base="abc de -5 6NaNf";
@@ -63,7 +63,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.strContains(str_base, ("x"*9))).toBe(true);
 	});
 	
-	test("Ic.utilityMisc.occurrences", () => {
+	test("Ic.utilityMisc.occurrences()", () => {
 		var str_base;
 		
 		str_base=" ababABA  BABabab ";
@@ -85,7 +85,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.occurrences(" abc Ddd  eEfFgGhHiIII  jk ", "e|D|k|i|x")).toBe(4);
 	});
 	
-	test("Ic.utilityMisc.toInt", () => {
+	test("Ic.utilityMisc.toInt()", () => {
 		expect(Ic.utilityMisc.toInt(1.1)).toBe(1);
 		expect(Ic.utilityMisc.toInt(-1.1)).toBe(-1);
 		expect(Ic.utilityMisc.toInt(2, -3, 3)).toBe(2);
@@ -121,7 +121,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.toInt(true)).toBe(1);
 	});
 	
-	describe("Ic.utilityMisc.hashCode", () => {
+	describe("Ic.utilityMisc.hashCode()", () => {
 		test("default value", () => {
 			var i, len, arr, default_val;
 			
@@ -141,7 +141,7 @@ describe("Ic utility methods", () => {
 		});
 	});
 	
-	test("Ic.utilityMisc.castlingChars", () => {
+	test("Ic.utilityMisc.castlingChars()", () => {
 		expect(Ic.utilityMisc.castlingChars()).toBe("");
 		expect(Ic.utilityMisc.castlingChars(-9)).toBe("");
 		expect(Ic.utilityMisc.castlingChars("-1")).toBe("");
@@ -157,7 +157,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.castlingChars(true)).toBe("k");
 	});
 	
-	describe("Ic.utilityMisc.cloneBoardObjs", () => {
+	describe("Ic.utilityMisc.cloneBoardObjs()", () => {
 		var board_name, other_board_name;
 		
 		board_name="board_clone_board_objs";
@@ -220,7 +220,7 @@ describe("Ic utility methods", () => {
 		});
 	});
 	
-	describe("Ic.utilityMisc.basicFenTest", () => {
+	describe("Ic.utilityMisc.basicFenTest()", () => {
 		describe("Error type: 0", () => {
 			var len, error_msg;
 			
