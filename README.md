@@ -166,7 +166,6 @@ Property | Type | Description
 To Do
 -------------
 
-- **Import the tests back** to `./test` <sup>(path ignored in the npm package)</sup> and rewrite them in Jest, *Note: this is high priority and no new code will be written until this step is finished*. (:wrench: 50% done)
 - **Move the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple (also finish the documentation)
 - **Provide a minified version** `isepic-chess.min.js` <sup>(ignore file in the npm package)</sup>
 - **Simple PGN parser** (no support for nested-variations and comments will be removed)

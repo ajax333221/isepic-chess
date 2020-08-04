@@ -23,7 +23,7 @@ Ic.setSilentMode(false);
 //_refreshBoard (ponerle ui y sin ui o que?)
 
 describe("Board methods", () => {
-	describe("b.boardHash", () => {
+	describe("b.boardHash()", () => {
 		var board_name, other_board_name;
 		
 		board_name="board_hash";
@@ -68,7 +68,7 @@ describe("Board methods", () => {
 		});
 	});
 	
-	describe("b.isEqualBoard", () => {
+	describe("b.isEqualBoard()", () => {
 		var board_name, other_board_name;
 		
 		board_name="board_is_equal";

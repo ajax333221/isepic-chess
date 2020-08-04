@@ -18,12 +18,13 @@ describe("Ic methods", () => {
 	var bad_shared_values, bad_shared_positions;
 	
 	//used in: Ic.toVal(), Ic.toAbsVal(), Ic.toBal(), Ic.toAbsBal(), Ic.toClassName(), Ic.getSign()
+	//Note: getSign() skips the 'false' value
 	bad_shared_values=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "err", 0, -0, "*", "5", "-5", "xx", "XQ", "BX", "BQxyz"];
 	
 	//used in: Ic.toBos(), Ic.toPos(), Ic.getRankPos(), Ic.getFilePos(), Ic.getRankBos(), Ic.getFileBos(), Ic.isInsideBoard()
 	bad_shared_positions=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz", 0, 1, 8, Infinity, -Infinity, [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
 	
-	describe("Ic.toVal", () => {
+	describe("Ic.toVal()", () => {
 		var board_name;
 		
 		board_name="board_to_val";
@@ -74,7 +75,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.toAbsVal", () => {
+	describe("Ic.toAbsVal()", () => {
 		var board_name;
 		
 		board_name="board_to_abs_val";
@@ -125,7 +126,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.toBal", () => {
+	describe("Ic.toBal()", () => {
 		var board_name;
 		
 		board_name="board_to_bal";
@@ -176,7 +177,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.toAbsBal", () => {
+	describe("Ic.toAbsBal()", () => {
 		var board_name;
 		
 		board_name="board_to_abs_bal";
@@ -227,7 +228,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.toClassName", () => {
+	describe("Ic.toClassName()", () => {
 		var board_name;
 		
 		board_name="board_to_class_name";
@@ -278,7 +279,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.getSign", () => {
+	describe("Ic.getSign()", () => {
 		var board_name;
 		
 		board_name="board_get_sign";
@@ -331,7 +332,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.toBos", () => {
+	describe("Ic.toBos()", () => {
 		test("default value", () => {
 			var i, len;
 			
@@ -380,7 +381,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.toPos", () => {
+	describe("Ic.toPos()", () => {
 		test("default value", () => {
 			var i, len;
 			
@@ -429,7 +430,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.getRankPos", () => {
+	describe("Ic.getRankPos()", () => {
 		test("default value", () => {
 			var i, len;
 			
@@ -478,7 +479,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.getFilePos", () => {
+	describe("Ic.getFilePos()", () => {
 		test("default value", () => {
 			var i, len;
 			
@@ -527,7 +528,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.getRankBos", () => {
+	describe("Ic.getRankBos()", () => {
 		test("default value", () => {
 			var i, len;
 			
@@ -576,7 +577,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.getFileBos", () => {
+	describe("Ic.getFileBos()", () => {
 		test("default value", () => {
 			var i, len;
 			
@@ -625,7 +626,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.isInsideBoard", () => {
+	describe("Ic.isInsideBoard()", () => {
 		test("default value", () => {
 			var i, len, default_val;
 			
@@ -676,7 +677,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.sameSquare", () => {
+	describe("Ic.sameSquare()", () => {
 		test("normal inputs", () => {
 			expect(Ic.sameSquare("d2", [6, 3])).toBe(true);
 			expect(Ic.sameSquare("a1", "A1")).toBe(true);
@@ -737,7 +738,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.initBoard", () => {
+	describe("Ic.initBoard()", () => {
 		var board_name, other_board_name;
 		
 		board_name="board_init";
@@ -755,9 +756,9 @@ describe("Ic methods", () => {
 		});
 		
 		test("original board is overwritten by valid fen and references still work", () => {
-			var temp;
+			var board_obj;
 			
-			temp=Ic.initBoard({
+			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "8/1r5k/8/8/8/1R5K/8/8 w - - 0 1",
 				isHidden : true,
@@ -765,15 +766,15 @@ describe("Ic methods", () => {
 			});
 			
 			expect(Ic.selectBoard(board_name).Fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
-			expect(temp===Ic.selectBoard(board_name)).toBe(true);
+			expect(board_obj===Ic.selectBoard(board_name)).toBe(true);
 		});
 		
 		test("original board is not overwritten by invalid fen and null is returned (invalidFenStop=true)", () => {
-			var temp;
+			var board_obj;
 			
 			Ic.setSilentMode(true);
 			
-			temp=Ic.initBoard({
+			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "0invalidfen0",
 				isHidden : true,
@@ -783,7 +784,7 @@ describe("Ic methods", () => {
 			Ic.setSilentMode(false);
 			
 			expect(Ic.selectBoard(board_name).Fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
-			expect(temp).toBeNull();
+			expect(board_obj).toBeNull();
 		});
 		
 		test("original board is not overwritten by creating other board", () => {
@@ -798,20 +799,20 @@ describe("Ic methods", () => {
 		});
 		
 		test("original board is overwritten to default fen by invalid fen (invalidFenStop=false)", () => {
-			var temp;
+			var board_obj;
 			
-			temp=Ic.initBoard({
+			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "0invalidfen0",
 				isHidden : true
 			});
 			
 			expect(Ic.selectBoard(board_name).Fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-			expect(temp).not.toBeNull();
+			expect(board_obj).not.toBeNull();
 		});
 	});
 	
-	describe("Ic.fenApply", () => {
+	describe("Ic.fenApply()", () => {
 		describe("legalMoves", () => {
 			Ic.setSilentMode(true);
 			expect(Ic.mapToBos(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"])).sort()).toEqual([].sort());
@@ -873,7 +874,7 @@ describe("Ic methods", () => {
 		});
 	});
 	
-	describe("Ic.mapToBos", () => {
+	describe("Ic.mapToBos()", () => {
 		expect(Ic.mapToBos([[0, 7], [2, 2]]).sort()).toEqual(["c6", "h8"].sort());
 		
 		expect(Ic.mapToBos([[1, 1], "a2"]).sort()).toEqual(["a2", "b7"].sort());
