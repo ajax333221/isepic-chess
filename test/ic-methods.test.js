@@ -12,7 +12,6 @@ Ic.setSilentMode(false);
 //removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
 //isEqualBoard
 //cloneBoard
-//fenGet (pero solo invalid board, properties, etc)
 
 describe("Ic methods", () => {
 	var bad_shared_values, bad_shared_positions;
@@ -872,6 +871,18 @@ describe("Ic methods", () => {
 			
 			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["h4", {fileShift : 1}])).toBeNull();
 		});
+	});
+	
+	test("Ic.fenGet()", () => {
+		Ic.setSilentMode(true);
+		
+		expect(Ic.fenGet("0invalidfen0", "IsCheck")).toBeNull();
+		
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "")).toBeNull();
+		
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "Fen, 0invalidprop0")).toBeNull();
+		
+		Ic.setSilentMode(false);
 	});
 	
 	describe("Ic.mapToBos()", () => {

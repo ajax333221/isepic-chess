@@ -4,7 +4,6 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//[### ya via fenApply() ###] _getSquare
 //_setSquare
 //_countAttacks
 //_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
@@ -14,13 +13,15 @@ Ic.setSilentMode(false);
 //_updateFenAndMisc
 //_refinedFenTest
 //_testCollision
-//[### ya via fenApply() ###] _legalMoves
-//[### ya via fenApply() ###] _isLegalMove
 //_ascii
 //_cloneBoardFrom
 //_cloneBoardTo
 //_moveCaller
 //_refreshBoard (ponerle ui y sin ui o que?)
+//
+//[### ya via fenApply() ###] _getSquare
+//[### ya via fenApply() ###] _legalMoves
+//[### ya via fenApply() ###] _isLegalMove
 
 describe("Board methods", () => {
 	describe("b.boardHash()", () => {
