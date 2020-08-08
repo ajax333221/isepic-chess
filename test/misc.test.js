@@ -4,7 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//ok
+//regression test intentar pasar [] a init, y a los que usen p={}, antes isObject permitia arrays
 
 describe("Misc.", () => {
 	describe("Regression tests", () => {

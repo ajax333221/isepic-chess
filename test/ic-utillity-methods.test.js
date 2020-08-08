@@ -8,17 +8,67 @@ Ic.setSilentMode(false);
 //se ocupara el slice? (en uso) to_prop[sub_keys[j]].pos=from_prop[sub_keys[j]].pos.slice(0);
 //se ocupara en clone? (no existe) to_prop[sub_keys[j]]=Object.create(null);
 //
-//_isObject
-//_isArray
-//_isSquare
-//_isBoard
-//_formatStrToVal
-//_formatStrToBos
-//_formatArrToPos
-//
-//[N/A?] _consoleLog()
+//[### ya via toVal() ###] _formatStrToVal
+//[### ya via toBos()+toPos() ###] _formatStrToBos
+//[### ya via toBos()+toPos() ###] _formatArrToPos
 
 describe("Ic utility methods", () => {
+	test("Ic.utilityMisc.consoleLog()", () => {
+		Ic.setSilentMode(true);
+		expect(Ic.utilityMisc.consoleLog("this doesn't print because the silent mode")).toBe(false);
+		Ic.setSilentMode(false);
+		
+		//expect(Ic.utilityMisc.consoleLog("this gets printed when not commented out")).toBe(true);
+	});
+	
+	test("Ic.utilityMisc.isObject()", () => {
+		expect(Ic.utilityMisc.isObject({})).toBe(true);
+		expect(Ic.utilityMisc.isObject({hello:"world"})).toBe(true);
+		expect(Ic.utilityMisc.isObject(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "Squares").Squares["c3"])).toBe(true);
+		expect(Ic.utilityMisc.isObject({bos : "this technically is a square"})).toBe(true);
+		expect(Ic.utilityMisc.isObject(Ic.initBoard())).toBe(true);
+		expect(Ic.utilityMisc.isObject({BoardName : "this technically is a board"})).toBe(true);
+		expect(Ic.utilityMisc.isObject([])).toBe(false);
+		expect(Ic.utilityMisc.isObject(["hello", "world", "!"])).toBe(false);
+		expect(Ic.utilityMisc.isObject(null)).toBe(false);
+	});
+	
+	test("Ic.utilityMisc.isArray()", () => {
+		expect(Ic.utilityMisc.isArray({})).toBe(false);
+		expect(Ic.utilityMisc.isArray({hello:"world"})).toBe(false);
+		expect(Ic.utilityMisc.isArray(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "Squares").Squares["c3"])).toBe(false);
+		expect(Ic.utilityMisc.isArray({bos : "this technically is a square"})).toBe(false);
+		expect(Ic.utilityMisc.isArray(Ic.initBoard())).toBe(false);
+		expect(Ic.utilityMisc.isArray({BoardName : "this technically is a board"})).toBe(false);
+		expect(Ic.utilityMisc.isArray([])).toBe(true);
+		expect(Ic.utilityMisc.isArray(["hello", "world", "!"])).toBe(true);
+		expect(Ic.utilityMisc.isArray(null)).toBe(false);
+	});
+	
+	test("Ic.utilityMisc.isSquare()", () => {
+		expect(Ic.utilityMisc.isSquare({})).toBe(false);
+		expect(Ic.utilityMisc.isSquare({hello : "world"})).toBe(false);
+		expect(Ic.utilityMisc.isSquare(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "Squares").Squares["c3"])).toBe(true);
+		expect(Ic.utilityMisc.isSquare({bos : "this technically is a square"})).toBe(true);
+		expect(Ic.utilityMisc.isSquare(Ic.initBoard())).toBe(false);
+		expect(Ic.utilityMisc.isSquare({BoardName : "this technically is a board"})).toBe(false);
+		expect(Ic.utilityMisc.isSquare([])).toBe(false);
+		expect(Ic.utilityMisc.isSquare(["hello", "world", "!"])).toBe(false);
+		expect(Ic.utilityMisc.isSquare(null)).toBe(false);
+	});
+	
+	test("Ic.utilityMisc.isBoard()", () => {
+		expect(Ic.utilityMisc.isBoard({})).toBe(false);
+		expect(Ic.utilityMisc.isBoard({hello : "world"})).toBe(false);
+		expect(Ic.utilityMisc.isBoard(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "Squares").Squares["c3"])).toBe(false);
+		expect(Ic.utilityMisc.isBoard({bos : "this technically is a square"})).toBe(false);
+		expect(Ic.utilityMisc.isBoard(Ic.initBoard())).toBe(true);
+		expect(Ic.utilityMisc.isBoard({BoardName : "this technically is a board"})).toBe(true);
+		expect(Ic.utilityMisc.isBoard([])).toBe(false);
+		expect(Ic.utilityMisc.isBoard(["hello", "world", "!"])).toBe(false);
+		expect(Ic.utilityMisc.isBoard(null)).toBe(false);
+	});
+	
 	test("Ic.utilityMisc.trimSpaces()", () => {
 		expect(Ic.utilityMisc.trimSpaces("  abc")).toBe("abc");
 		expect(Ic.utilityMisc.trimSpaces("abc  ")).toBe("abc");

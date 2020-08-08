@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.0.2";
+		var _VERSION="3.0.3";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -21,11 +21,20 @@
 		//---------------- utilities
 		
 		function _consoleLog(msg){
-			if(!_SILENT_MODE){console.log(msg);}
+			var rtn;
+			
+			rtn=false;
+			
+			if(!_SILENT_MODE){
+				rtn=true;
+				console.log(msg);
+			}
+			
+			return rtn;
 		}
 		
 		function _isObject(obj){
-			return ((typeof obj)==="object" && obj!==null);
+			return ((typeof obj)==="object" && obj!==null && !_isArray(obj));
 		}
 		
 		function _isArray(arr){
@@ -160,7 +169,7 @@
 					//["Active", "NonActive"] constant len, hard values only (strings/numbers) inside direct children
 					//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
 					//["MaterialDiff"] constant len, references (arrays) inside direct children
-					if(_isObject(from_prop)){
+					if(_isObject(from_prop) || _isArray(from_prop)){
 						if(current_key==="MaterialDiff"){
 							to_prop.w=from_prop.w.slice(0);
 							to_prop.b=from_prop.b.slice(0);
@@ -1317,7 +1326,7 @@
 			}
 			
 			if(no_errors){
-				rtn=(_isObject(woard) ? woard : _BOARDS[woard]);
+				rtn=(_isBoard(woard) ? woard : _BOARDS[woard]);
 			}
 			
 			return rtn;
@@ -1507,13 +1516,13 @@
 			del_board=selectBoard(woard);
 			
 			if(boardExists(del_board)){
+				rtn=true;
+				
 				del_board_name_cache=del_board.BoardName;
 				del_board=null;
 				
 				_BOARDS[del_board_name_cache]=null;
 				delete _BOARDS[del_board_name_cache];
-				
-				rtn=true;
 			}
 			
 			return rtn;
