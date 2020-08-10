@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.0.4";
+		var _VERSION="3.1.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -1266,13 +1266,85 @@
 			return rtn_can_move;
 		}
 		
+		//---------------- board (using IcUi)
+		
+		function _navFirst(){
+			var that, rtn_moved;
+			
+			that=this;
+			
+			rtn_moved=false;
+			
+			if(windw && windw.IcUi && windw.IcUi.navFirst){
+				rtn_moved=windw.IcUi.navFirst.apply(that, []);
+			}
+			
+			return rtn_moved;
+		}
+		
+		function _navPrevious(){
+			var that, rtn_moved;
+			
+			that=this;
+			
+			rtn_moved=false;
+			
+			if(windw && windw.IcUi && windw.IcUi.navPrevious){
+				rtn_moved=windw.IcUi.navPrevious.apply(that, []);
+			}
+			
+			return rtn_moved;
+		}
+		
+		function _navNext(){
+			var that, rtn_moved;
+			
+			that=this;
+			
+			rtn_moved=false;
+			
+			if(windw && windw.IcUi && windw.IcUi.navNext){
+				rtn_moved=windw.IcUi.navNext.apply(that, []);
+			}
+			
+			return rtn_moved;
+		}
+		
+		function _navLast(){
+			var that, rtn_moved;
+			
+			that=this;
+			
+			rtn_moved=false;
+			
+			if(windw && windw.IcUi && windw.IcUi.navLast){
+				rtn_moved=windw.IcUi.navLast.apply(that, []);
+			}
+			
+			return rtn_moved;
+		}
+		
+		function _navLinkMove(move_index){
+			var that, rtn_moved;
+			
+			that=this;
+			
+			rtn_moved=false;
+			
+			if(windw && windw.IcUi && windw.IcUi.navLinkMove){
+				rtn_moved=windw.IcUi.navLinkMove.apply(that, [move_index]);
+			}
+			
+			return rtn_moved;
+		}
+		
 		function _refreshBoard(animate_move){
 			var that;
 			
 			that=this;
 			
 			if(windw && windw.IcUi && windw.IcUi.refreshBoard){
-				IcUi.refreshBoard.apply(that, [animate_move]);
+				windw.IcUi.refreshBoard.apply(that, [animate_move]);
 			}
 		}
 		
@@ -1621,6 +1693,11 @@
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
 						moveCaller : _moveCaller,
+						navFirst : _navFirst,
+						navPrevious : _navPrevious,
+						navNext : _navNext,
+						navLast : _navLast,
+						navLinkMove : _navLinkMove,
 						refreshBoard : _refreshBoard
 					};
 				}
