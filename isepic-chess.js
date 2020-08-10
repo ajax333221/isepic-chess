@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.0.3";
+		var _VERSION="3.0.4";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -454,6 +454,8 @@
 					that.readFen(that.MoveList[temp].Fen);
 				}
 			}
+			
+			that.refreshBoard((rtn_moved && !is_goto) ? num : 0);//autorefresh
 			
 			return rtn_moved;
 		}
