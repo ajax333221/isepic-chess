@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.1.0";
+		var _VERSION="3.2.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -69,20 +69,21 @@
 			}else if(RegExp(/^([pnbrqk])$/, "gi").test(str)){
 				temp=str.toLowerCase();
 				rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
+			}else if((""+_toInt(str))===str){
+				rtn=str;
 			}
 			
-			return _toInt(rtn);//_toInt() removes sign on negative zero
+			return _toInt(rtn, -6, 6);//_toInt() removes sign on negative zero
 		}
 		
 		function _formatStrToBos(str){
 			var rtn;
 			
 			rtn=null;
+			str=_trimSpaces(str);
 			
-			if(str && (typeof str)==="string"){
-				if(RegExp(/^([a-h][1-8])$/, "gi").test(str)){
-					rtn=str.toLowerCase();
-				}
+			if(RegExp(/^([a-h][1-8])$/, "gi").test(str)){
+				rtn=str.toLowerCase();
 			}
 			
 			return rtn;
@@ -426,6 +427,8 @@
 			that=this;
 			
 			that.IsRotated=!that.IsRotated;
+			
+			that.refreshBoard(0);//autorefresh
 		}
 		
 		function _setPromoteTo(qal){
@@ -434,6 +437,8 @@
 			that=this;
 			
 			that.PromoteTo=_toInt((toAbsVal(qal) || _QUEEN), 2, 5);
+			
+			that.refreshBoard(0);//autorefresh
 		}
 		
 		function _setCurrentMove(num, is_goto){
@@ -1035,7 +1040,7 @@
 			if(no_errors){
 				_cloneBoardObjs(that, from_board);
 				
-				//that.refreshBoard(); not without autorefresh
+				//that.refreshBoard(); autorefresh
 			}
 			
 			return no_errors;
@@ -1067,7 +1072,7 @@
 			if(no_errors){
 				_cloneBoardObjs(to_board, that);
 				
-				//to_board.refreshBoard(); not without autorefresh
+				//to_board.refreshBoard(); autorefresh
 			}
 			
 			return no_errors;
@@ -1597,6 +1602,9 @@
 				
 				_BOARDS[del_board_name_cache]=null;
 				delete _BOARDS[del_board_name_cache];
+				
+				//if current board is the one removed, refresh to other, else refresh too (best only html tabs)
+				//x.refreshBoard(); autorefresh
 			}
 			
 			return rtn;
@@ -1816,7 +1824,7 @@
 				
 				rtn=new_board;
 				
-				//new_board.refreshBoard(); not without autorefresh
+				//new_board.refreshBoard(); autorefresh
 			}
 			
 			return rtn;

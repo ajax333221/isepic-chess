@@ -18,10 +18,10 @@ describe("Ic methods", () => {
 	
 	//used in: Ic.toVal(), Ic.toAbsVal(), Ic.toBal(), Ic.toAbsBal(), Ic.toClassName(), Ic.getSign()
 	//Note: getSign() skips the 'false' value
-	bad_shared_values=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "err", 0, -0, "*", "5", "-5", "xx", "XQ", "BX", "BQxyz"];
+	bad_shared_values=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "err", 0, -0, "*", "xx", "XQ", "BX", "BQxyz"];
 	
 	//used in: Ic.toBos(), Ic.toPos(), Ic.getRankPos(), Ic.getFilePos(), Ic.getRankBos(), Ic.getFileBos(), Ic.isInsideBoard()
-	bad_shared_positions=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz", 0, 1, 8, Infinity, -Infinity, [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
+	bad_shared_positions=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz", 0, 1, 8, Infinity, -Infinity, "Infinity", "-Infinity", [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
 	
 	describe("Ic.toVal()", () => {
 		var board_name;
@@ -60,6 +60,12 @@ describe("Ic methods", () => {
 			expect(Ic.toVal(-99)).toBe(-6);
 			expect(Ic.toVal(99)).toBe(6);
 			expect(Ic.toVal("BQ")).toBe(-5);
+			expect(Ic.toVal("-5")).toBe(-5);
+			expect(Ic.toVal("5")).toBe(5);
+			expect(Ic.toVal(Infinity)).toBe(6);
+			expect(Ic.toVal(-Infinity)).toBe(-6);
+			expect(Ic.toVal("Infinity")).toBe(6);
+			expect(Ic.toVal("-Infinity")).toBe(-6);
 		});
 		
 		test("square input", () => {
@@ -111,6 +117,12 @@ describe("Ic methods", () => {
 			expect(Ic.toAbsVal(-99)).toBe(6);
 			expect(Ic.toAbsVal(99)).toBe(6);
 			expect(Ic.toAbsVal("BQ")).toBe(5);
+			expect(Ic.toAbsVal("-5")).toBe(5);
+			expect(Ic.toAbsVal("5")).toBe(5);
+			expect(Ic.toAbsVal(Infinity)).toBe(6);
+			expect(Ic.toAbsVal(-Infinity)).toBe(6);
+			expect(Ic.toAbsVal("Infinity")).toBe(6);
+			expect(Ic.toAbsVal("-Infinity")).toBe(6);
 		});
 		
 		test("square input", () => {
@@ -162,6 +174,12 @@ describe("Ic methods", () => {
 			expect(Ic.toBal(-99)).toBe("k");
 			expect(Ic.toBal(99)).toBe("K");
 			expect(Ic.toBal("BQ")).toBe("q");
+			expect(Ic.toBal("-5")).toBe("q");
+			expect(Ic.toBal("5")).toBe("Q");
+			expect(Ic.toBal(Infinity)).toBe("K");
+			expect(Ic.toBal(-Infinity)).toBe("k");
+			expect(Ic.toBal("Infinity")).toBe("K");
+			expect(Ic.toBal("-Infinity")).toBe("k");
 		});
 		
 		test("square input", () => {
@@ -213,6 +231,12 @@ describe("Ic methods", () => {
 			expect(Ic.toAbsBal(-99)).toBe("K");
 			expect(Ic.toAbsBal(99)).toBe("K");
 			expect(Ic.toAbsBal("BQ")).toBe("Q");
+			expect(Ic.toAbsBal("-5")).toBe("Q");
+			expect(Ic.toAbsBal("5")).toBe("Q");
+			expect(Ic.toAbsBal(Infinity)).toBe("K");
+			expect(Ic.toAbsBal(-Infinity)).toBe("K");
+			expect(Ic.toAbsBal("Infinity")).toBe("K");
+			expect(Ic.toAbsBal("-Infinity")).toBe("K");
 		});
 		
 		test("square input", () => {
@@ -264,6 +288,12 @@ describe("Ic methods", () => {
 			expect(Ic.toClassName(-99)).toBe("bk");
 			expect(Ic.toClassName(99)).toBe("wk");
 			expect(Ic.toClassName("BQ")).toBe("bq");
+			expect(Ic.toClassName("-5")).toBe("bq");
+			expect(Ic.toClassName("5")).toBe("wq");
+			expect(Ic.toClassName(Infinity)).toBe("wk");
+			expect(Ic.toClassName(-Infinity)).toBe("bk");
+			expect(Ic.toClassName("Infinity")).toBe("wk");
+			expect(Ic.toClassName("-Infinity")).toBe("bk");
 		});
 		
 		test("square input", () => {
@@ -317,6 +347,12 @@ describe("Ic methods", () => {
 			expect(Ic.getSign(-99)).toBe(-1);
 			expect(Ic.getSign(99)).toBe(1);
 			expect(Ic.getSign("BQ")).toBe(-1);
+			expect(Ic.getSign("-5")).toBe(-1);
+			expect(Ic.getSign("5")).toBe(1);
+			expect(Ic.getSign(Infinity)).toBe(1);
+			expect(Ic.getSign(-Infinity)).toBe(-1);
+			expect(Ic.getSign("Infinity")).toBe(1);
+			expect(Ic.getSign("-Infinity")).toBe(-1);
 		});
 		
 		test("square input", () => {
