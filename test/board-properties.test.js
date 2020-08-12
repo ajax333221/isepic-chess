@@ -4,14 +4,14 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//MoveList (default con fenGet)
-//CurrentMove (default con fenGet)
-//IsRotated (default con fenGet)
-//PromoteTo (default con fenGet)
-//IsHidden (default con fenGet)
+//MoveList (no con fenGet o sera siempre default)
+//CurrentMove (no con fenGet o sera siempre default)
+//IsRotated (no con fenGet o sera siempre default)
+//PromoteTo (no con fenGet o sera siempre default)
+//IsHidden (no con fenGet o sera siempre true)
 //
-//(x) SelectedBos (siempre empty_string + solo por ui)
-//(x) InDraw = (that.IsStalemate || that.IsThreefold || that.IsFiftyMove || that.IsInsufficientMaterial)
+//(x) SelectedBos (N/A)(siempre empty_string + solo cambia por ui)
+//(x) InDraw = (N/A)(that.IsStalemate || that.IsThreefold || that.IsFiftyMove || that.IsInsufficientMaterial)
 
 describe("Board properties", () => {
 	describe("Active, NonActive, HalfMove, FullMove and InitialFullMove", () => {

@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.2.0";
+		var _VERSION="3.3.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -17,6 +17,59 @@
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		
+		//---------------- helpers
+		
+		function _strToValHelper(str){
+			var temp, pc_exec, rtn;
+			
+			rtn=0;
+			str=_trimSpaces(str);
+			pc_exec=/^([wb])([pnbrqk])$/.exec(str.toLowerCase());
+			
+			if(!str){
+				rtn=str;
+			}else if(!!pc_exec){
+				rtn=("*pnbrqk".indexOf(pc_exec[2])*getSign(pc_exec[1]==="b"));
+			}else if(RegExp(/^([pnbrqk])$/, "gi").test(str)){
+				temp=str.toLowerCase();
+				rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
+			}else if((""+_toInt(str))===str){
+				rtn=str;
+			}
+			
+			return _toInt(rtn, -6, 6);//_toInt() removes sign on negative zero
+		}
+		
+		function _strToBosHelper(str){
+			var rtn;
+			
+			rtn=null;
+			str=_trimSpaces(str);
+			
+			if(str && RegExp(/^([a-h][1-8])$/, "gi").test(str)){
+				rtn=str.toLowerCase();
+			}
+			
+			return rtn;
+		}
+		
+		function _arrToPosHelper(arr){
+			var rank_pos, file_pos, rtn;
+			
+			rtn=null;
+			
+			if(_isArray(arr) && arr.length===2){
+				rank_pos=_toInt(arr[0]);
+				file_pos=_toInt(arr[1]);
+				
+				if((rank_pos<=7 && rank_pos>=0) && (file_pos<=7 && file_pos>=0)){
+					rtn=[rank_pos, file_pos];
+				}
+			}
+			
+			return rtn;
+		}
 		
 		//---------------- utilities
 		
@@ -55,55 +108,6 @@
 		
 		function _formatName(str){
 			return _trimSpaces(""+str).replace(/[^a-z0-9]/gi, "_");
-		}
-		
-		function _formatStrToVal(str){
-			var temp, pc_exec, rtn;
-			
-			rtn=0;
-			str=_trimSpaces(str);
-			pc_exec=/^([wb])([pnbrqk])$/.exec(str.toLowerCase());
-			
-			if(!!pc_exec){
-				rtn=("*pnbrqk".indexOf(pc_exec[2])*getSign(pc_exec[1]==="b"));
-			}else if(RegExp(/^([pnbrqk])$/, "gi").test(str)){
-				temp=str.toLowerCase();
-				rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
-			}else if((""+_toInt(str))===str){
-				rtn=str;
-			}
-			
-			return _toInt(rtn, -6, 6);//_toInt() removes sign on negative zero
-		}
-		
-		function _formatStrToBos(str){
-			var rtn;
-			
-			rtn=null;
-			str=_trimSpaces(str);
-			
-			if(RegExp(/^([a-h][1-8])$/, "gi").test(str)){
-				rtn=str.toLowerCase();
-			}
-			
-			return rtn;
-		}
-		
-		function _formatArrToPos(arr){
-			var rank_pos, file_pos, rtn;
-			
-			rtn=null;
-			
-			if(_isArray(arr) && arr.length===2){
-				rank_pos=_toInt(arr[0]);
-				file_pos=_toInt(arr[1]);
-				
-				if((rank_pos<=7 && rank_pos>=0) && (file_pos<=7 && file_pos>=0)){
-					rtn=[rank_pos, file_pos];
-				}
-			}
-			
-			return rtn;
 		}
 		
 		function _strContains(str, str_to_find){
@@ -1417,7 +1421,7 @@
 			rtn=0;
 			
 			if((typeof qal)==="string"){
-				rtn=_formatStrToVal(qal);
+				rtn=_strToValHelper(qal);
 			}else if((typeof qal)==="number"){
 				rtn=_toInt(qal, -6, 6);
 			}else if(_isSquare(qal)){
@@ -1461,15 +1465,15 @@
 			rtn=null;
 			
 			if(_isArray(qos)){
-				qos=_formatArrToPos(qos);
+				qos=_arrToPosHelper(qos);
 				
 				if(qos!==null){
 					rtn=("abcdefgh".charAt(qos[1])+""+(8-qos[0]));
 				}
 			}else if((typeof qos)==="string"){
-				rtn=_formatStrToBos(qos);
+				rtn=_strToBosHelper(qos);
 			}else if(_isSquare(qos)){
-				rtn=_formatStrToBos(qos.bos);
+				rtn=_strToBosHelper(qos.bos);
 			}
 			
 			return rtn;
@@ -1481,15 +1485,15 @@
 			rtn=null;
 			
 			if((typeof qos)==="string"){
-				qos=_formatStrToBos(qos);
+				qos=_strToBosHelper(qos);
 				
 				if(qos!==null){
 					rtn=[(8-_toInt(qos.charAt(1), 1, 8)), _toInt("abcdefgh".indexOf(qos.charAt(0)), 0, 7)];
 				}
 			}else if(_isArray(qos)){
-				rtn=_formatArrToPos(qos);
+				rtn=_arrToPosHelper(qos);
 			}else if(_isSquare(qos)){
-				rtn=_formatArrToPos(qos.pos);
+				rtn=_arrToPosHelper(qos.pos);
 			}
 			
 			return rtn;
@@ -1984,9 +1988,6 @@
 				isBoard : _isBoard,
 				trimSpaces : _trimSpaces,
 				formatName : _formatName,
-				formatStrToVal : _formatStrToVal,
-				formatStrToBos : _formatStrToBos,
-				formatArrToPos : _formatArrToPos,
 				strContains : _strContains,
 				occurrences : _occurrences,
 				toInt : _toInt,

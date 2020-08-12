@@ -5,13 +5,14 @@ Ic.setSilentMode(false);
 //---to do:
 //
 //getBoardNames
-//setSilentMode
 //boardExists (+ que deje igual silent mode)
 //selectBoard
 //countPieces
 //removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
 //isEqualBoard
 //cloneBoard
+//
+//(x) setSilentMode (N/A)
 
 describe("Ic methods", () => {
 	var bad_shared_values, bad_shared_positions;
@@ -848,64 +849,30 @@ describe("Ic methods", () => {
 	});
 	
 	describe("Ic.fenApply()", () => {
-		describe("legalMoves", () => {
+		test("default value", () => {
 			Ic.setSilentMode(true);
+			
 			expect(Ic.mapToBos(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"])).sort()).toEqual([].sort());
-			Ic.setSilentMode(false);
 			
-			expect(Ic.mapToBos(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"])).sort()).toEqual(["a2", "d2", "b2"].sort());
-			
-			expect(Ic.mapToBos(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"])).sort()).toEqual([].sort());
-			
-			expect(Ic.mapToBos(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"])])).sort()).toEqual(["a3", "a4"].sort());
-		});
-		
-		describe("isLegalMove", () => {
-			Ic.setSilentMode(true);
 			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2", "a3"])).toBe(false);
-			Ic.setSilentMode(false);
-			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["c2", "a2"])).toBe(true);
-			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["a2", "c2"])).toBe(false);
-			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalMove", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a4"])])).toBe(true);
-		});
-		
-		describe("isLegalFen", () => {
-			Ic.setSilentMode(true);
 			
 			expect(Ic.fenApply("0invalidfen0", "isLegalFen")).toBe(false);
+			
+			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "0invalidfn0")).toBeNull();
+			
+			Ic.setSilentMode(false);
+		});
+		
+		test("isLegalFen", () => {//this belong here (it's not a board method)
+			Ic.setSilentMode(true);
 			
 			expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")).toBe(true);
 			
 			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalFen")).toBe(false);
 			
 			Ic.setSilentMode(false);
-		});
-		
-		describe("getSquare", () => {
-			Ic.setSilentMode(true);
-			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();
-			Ic.setSilentMode(false);
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["e8"]).val).toBe(-6);
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", [[2, 5]]).val).toBe(4);
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["d7", {rankShift : 1, fileShift : 2}]).isRook).toBe(true);
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", [[3, 3], {rankShift : -1}]).val).toBe(6);
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["f8"]), {fileShift : -1}]).val).toBe(-6);
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["e8", {rankShift : -1}])).toBeNull();
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["e1", {rankShift : 1}])).toBeNull();
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["a4", {fileShift : -1}])).toBeNull();
-			
-			expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["h4", {fileShift : 1}])).toBeNull();
 		});
 	});
 	
@@ -921,7 +888,7 @@ describe("Ic methods", () => {
 		Ic.setSilentMode(false);
 	});
 	
-	describe("Ic.mapToBos()", () => {
+	test("Ic.mapToBos()", () => {
 		expect(Ic.mapToBos([[0, 7], [2, 2]]).sort()).toEqual(["c6", "h8"].sort());
 		
 		expect(Ic.mapToBos([[1, 1], "a2"]).sort()).toEqual(["a2", "b7"].sort());

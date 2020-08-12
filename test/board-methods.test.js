@@ -4,24 +4,26 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//_setSquare
-//_countAttacks
-//_toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
-//_setPromoteTo
-//_setCurrentMove
-//_readFen
-//_updateFenAndMisc
-//_refinedFenTest
-//_testCollision
-//_ascii
-//_cloneBoardFrom
-//_cloneBoardTo
-//_moveCaller
-//_refreshBoard (ponerle ui y sin ui o que?)
+//setSquare
+//countAttacks
+//toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
+//setPromoteTo
+//setCurrentMove
+//readFen
+//updateFenAndMisc
+//refinedFenTest
+//testCollision
+//ascii
+//cloneBoardFrom
+//cloneBoardTo
+//moveCaller
 //
-//[### ya via fenApply() ###] _getSquare
-//[### ya via fenApply() ###] _legalMoves
-//[### ya via fenApply() ###] _isLegalMove
+//(x) navFirst (N/A)(ui only)
+//(x) navPrevious (N/A)(ui only)
+//(x) navNext (N/A)(ui only)
+//(x) navLast (N/A)(ui only)
+//(x) navLinkMove (N/A)(ui only)
+//(x) refreshBoard (N/A)(ui only)
 
 describe("Board methods", () => {
 	describe("b.boardHash()", () => {
@@ -109,5 +111,41 @@ describe("Board methods", () => {
 			expect(board_a.isEqualBoard(board_b)).toBe(true);
 			expect(board_b.isEqualBoard(board_a)).toBe(true);
 		});
+	});
+	
+	test("b.legalMoves()", () => {
+		expect(Ic.mapToBos(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"])).sort()).toEqual(["a2", "d2", "b2"].sort());
+		
+		expect(Ic.mapToBos(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"])).sort()).toEqual([].sort());
+		
+		expect(Ic.mapToBos(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"])])).sort()).toEqual(["a3", "a4"].sort());
+	});
+	
+	test("b.isLegalMove()", () => {
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["c2", "a2"])).toBe(true);
+		
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["a2", "c2"])).toBe(false);
+		
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalMove", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a4"])])).toBe(true);
+	});
+	
+	test("b.getSquare()", () => {
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["e8"]).val).toBe(-6);
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", [[2, 5]]).val).toBe(4);
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["d7", {rankShift : 1, fileShift : 2}]).isRook).toBe(true);
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", [[3, 3], {rankShift : -1}]).val).toBe(6);
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["f8"]), {fileShift : -1}]).val).toBe(-6);
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["e8", {rankShift : -1}])).toBeNull();
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["e1", {rankShift : 1}])).toBeNull();
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["a4", {fileShift : -1}])).toBeNull();
+		
+		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["h4", {fileShift : 1}])).toBeNull();
 	});
 });

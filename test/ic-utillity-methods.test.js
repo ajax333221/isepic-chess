@@ -2,16 +2,6 @@ const {Ic}=require("../isepic-chess");
 
 Ic.setSilentMode(false);
 
-//---to do:
-//
-//se ocupara en clone? (en uso) to_board.MaterialDiff={w:[], b:[]};
-//se ocupara el slice? (en uso) to_prop[sub_keys[j]].pos=from_prop[sub_keys[j]].pos.slice(0);
-//se ocupara en clone? (no existe) to_prop[sub_keys[j]]=Object.create(null);
-//
-//[### ya via toVal() ###] _formatStrToVal
-//[### ya via toBos()+toPos() ###] _formatStrToBos
-//[### ya via toBos()+toPos() ###] _formatArrToPos
-
 describe("Ic utility methods", () => {
 	test("Ic.utilityMisc.consoleLog()", () => {
 		Ic.setSilentMode(true);

@@ -2,10 +2,6 @@ const {Ic}=require("../isepic-chess");
 
 Ic.setSilentMode(false);
 
-//---to do:
-//
-//regression test intentar pasar [] a init, y a los que usen p={}, antes isObject permitia arrays
-
 describe("Misc.", () => {
 	describe("Regression tests", () => {
 		var board_name;
