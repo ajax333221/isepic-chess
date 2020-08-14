@@ -151,7 +151,7 @@ describe("Board methods", () => {
 		board_name="board_shared_ascii";
 		
 		test("b.ascii(), b.toggleIsRotated(), b.countAttacks() and b.setPromoteTo()", () => {
-			var temp, board_obj;
+			var temp, board_obj, rotated_yes, rotated_no;
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
@@ -162,6 +162,10 @@ describe("Board methods", () => {
 				invalidFenStop : true
 			});
 			
+			rotated_no=board_obj.ascii(false);
+			rotated_yes=board_obj.ascii(true);
+			
+			expect(board_obj.ascii()===rotated_yes).toBe(true);
 			expect(board_obj.ascii()).toBe(
 `   +------------------------+
  1 | k  .  b  n  .  .  .  . |
@@ -186,6 +190,7 @@ describe("Board methods", () => {
 			board_obj.toggleIsRotated();
 			expect(temp===board_obj.boardHash()).toBe(false);
 			
+			expect(board_obj.ascii()===rotated_no).toBe(true);
 			expect(board_obj.ascii()).toBe(
 `   +------------------------+
  8 | .  .  .  .  .  .  .  . |
