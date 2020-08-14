@@ -7,7 +7,6 @@ Ic.setSilentMode(false);
 //getBoardNames
 //boardExists (+ que deje igual silent mode)
 //selectBoard
-//countPieces
 //removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
 //isEqualBoard
 //cloneBoard
@@ -772,6 +771,20 @@ describe("Ic methods", () => {
 			
 			expect(Ic.sameSquare(square_e7, "e7")).toBe(true);
 		});
+	});
+	
+	test("Ic.countPieces()", () => {
+		expect(Ic.countPieces("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")).toEqual({w:{p:8, n:2, b:2, r:2, q:1, k:1}, b:{p:8, n:2, b:2, r:2, q:1, k:1}});
+		
+		expect(Ic.countPieces("1n1Rkb1r/p4ppp/4q3/4p1B1/4P3/8/PPP2PPP/2K5 b k - 1 17")).toEqual({w:{p:7, n:0, b:1, r:1, q:0, k:1}, b:{p:5, n:1, b:1, r:1, q:1, k:1}});
+		
+		expect(Ic.countPieces("rnbqkbnr/p1pp2pp/p3p3/5P2/1P6/8/P1PP1PPP/RNBQK1NR b KQkq b3 0 4")).toEqual({w:{p:8, n:2, b:1, r:2, q:1, k:1}, b:{p:7, n:2, b:2, r:2, q:1, k:1}});
+		
+		expect(Ic.countPieces(" rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ")).toEqual({w:{p:8, n:2, b:2, r:2, q:1, k:1}, b:{p:8, n:2, b:2, r:2, q:1, k:1}});
+		
+		expect(Ic.countPieces("badFenGetsParsedAnyway up until first space")).toEqual({w:{p:1, n:0, b:0, r:0, q:0, k:0}, b:{p:0, n:2, b:1, r:1, q:0, k:0}});
+		
+		expect(Ic.countPieces("BBBBBBBBBBBBBBBBBBBbBpPpb nNkK")).toEqual({w:{p:1, n:0, b:20, r:0, q:0, k:0}, b:{p:2, n:0, b:2, r:0, q:0, k:0}});
 	});
 	
 	describe("Ic.initBoard()", () => {

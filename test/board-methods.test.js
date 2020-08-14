@@ -5,15 +5,11 @@ Ic.setSilentMode(false);
 //---to do:
 //
 //setSquare
-//countAttacks
-//toggleIsRotated //test con board hash. + otro test de toggle x2 = mismo hash
-//setPromoteTo
 //setCurrentMove
 //readFen
 //updateFenAndMisc
 //refinedFenTest
 //testCollision
-//ascii
 //cloneBoardFrom
 //cloneBoardTo
 //moveCaller
@@ -147,5 +143,83 @@ describe("Board methods", () => {
 		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["a4", {fileShift : -1}])).toBeNull();
 		
 		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["h4", {fileShift : 1}])).toBeNull();
+	});
+	
+	describe("ascii, toggleIsRotated, countAttacks and setPromoteTo", () => {
+		var board_name;
+		
+		board_name="board_shared_ascii";
+		
+		test("b.ascii(), b.toggleIsRotated(), b.countAttacks() and b.setPromoteTo()", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "8/2PR4/8/p5PK/P1Q2n2/3PNp2/5q1r/4nb1k w - - 0 1",
+				isRotated : true,
+				promoteTo : "b",
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			expect(board_obj.ascii()).toBe(
+`   +------------------------+
+ 1 | k  .  b  n  .  .  .  . |
+ 2 | r  .  q  .  .  .  .  . |
+ 3 | .  .  p  N  P  .  .  . |
+ 4 | .  .  n  .  .  Q  .  P |
+ 5 | K  P  .  .  .  .  .  p |
+ 6 | .  .  .  .  .  .  .  . |
+ 7 | .  .  .  .  R  P  .  . |
+ 8 | .  .  .  .  .  .  .  . |
+   +------------------------+
+     h  g  f  e  d  c  b  a
+`
+			);
+			
+			temp=board_obj.boardHash();
+			
+			board_obj.toggleIsRotated();
+			board_obj.toggleIsRotated();
+			expect(temp===board_obj.boardHash()).toBe(true);
+			
+			board_obj.toggleIsRotated();
+			expect(temp===board_obj.boardHash()).toBe(false);
+			
+			expect(board_obj.ascii()).toBe(
+`   +------------------------+
+ 8 | .  .  .  .  .  .  .  . |
+ 7 | .  .  P  R  .  .  .  . |
+ 6 | .  .  .  .  .  .  .  . |
+ 5 | p  .  .  .  .  .  P  K |
+ 4 | P  .  Q  .  .  n  .  . |
+ 3 | .  .  .  P  N  p  .  . |
+ 2 | .  .  .  .  .  q  .  r |
+ 1 | .  .  .  .  n  b  .  k |
+   +------------------------+
+     a  b  c  d  e  f  g  h
+`
+			);
+			
+			expect(board_obj.countAttacks()).toBe(2);
+			expect(board_obj.countAttacks("g2")).toBe(7);
+			expect(board_obj.countAttacks("g2", true)).toBe(1);
+			expect(board_obj.countAttacks("g4", false)).toBe(0);
+			expect(board_obj.countAttacks("g4", true)).toBe(0);
+			
+			expect(board_obj.PromoteTo).toBe(3);
+			
+			board_obj.setPromoteTo(4);
+			expect(board_obj.PromoteTo).toBe(4);
+			
+			board_obj.setPromoteTo(99);
+			expect(board_obj.PromoteTo).toBe(5);
+			
+			board_obj.setPromoteTo(-3);
+			expect(board_obj.PromoteTo).toBe(3);
+			
+			board_obj.setPromoteTo(-1);
+			expect(board_obj.PromoteTo).toBe(2);
+		});
 	});
 });

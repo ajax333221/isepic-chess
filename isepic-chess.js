@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.3.0";
+		var _VERSION="3.3.1";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -19,6 +19,10 @@
 		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- helpers
+		
+		function _promoteValHelper(qal){
+			return _toInt((toAbsVal(qal) || _QUEEN), 2, 5);
+		}
 		
 		function _strToValHelper(str){
 			var temp, pc_exec, rtn;
@@ -440,7 +444,7 @@
 			
 			that=this;
 			
-			that.PromoteTo=_toInt((toAbsVal(qal) || _QUEEN), 2, 5);
+			that.PromoteTo=_promoteValHelper(qal);
 			
 			that.refreshBoard(0);//autorefresh
 		}
@@ -1795,14 +1799,15 @@
 			}
 			
 			if(no_errors){
+				new_board.IsHidden=p.isHidden;
+				
 				new_board.CurrentMove=0;/*NO move below readFen()*/
 				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
 				
 				new_board.InitialFullMove=new_board.FullMove;
 				new_board.MoveList=[{Fen : new_board.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-				new_board.setPromoteTo(p.promoteTo);
 				new_board.IsRotated=p.isRotated;
-				new_board.IsHidden=p.isHidden;
+				new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -1816,14 +1821,15 @@
 			
 			if(no_errors){
 				if(!postfen_was_valid){
+					new_board.IsHidden=p.isHidden;
+					
 					new_board.CurrentMove=0;/*NO move below readFen()*/
 					new_board.readFen(_DEFAULT_FEN);
 					
 					new_board.InitialFullMove=new_board.FullMove;
 					new_board.MoveList=[{Fen : new_board.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-					new_board.setPromoteTo(p.promoteTo);
 					new_board.IsRotated=p.isRotated;
-					new_board.IsHidden=p.isHidden;
+					new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				}
 				
 				rtn=new_board;
