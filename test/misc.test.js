@@ -4,9 +4,10 @@ Ic.setSilentMode(false);
 
 describe("Misc.", () => {
 	describe("Regression tests", () => {
-		var board_name;
+		var board_name, other_board_name;
 		
 		board_name="board_regression_tests";
+		other_board_name="board_regression_tests_other";
 		
 		test("enpassant capture applied to other non enpassant moves", () => {
 			expect(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).sort()).toEqual(["d6", "e6"].sort());
@@ -28,7 +29,7 @@ describe("Misc.", () => {
 		});
 		
 		test("b.getSquare() isUnreferenced not working", () => {
-			var temp, temp2, board_obj;
+			var temp, temp2, board_obj, board_other;
 			
 			board_obj=Ic.selectBoard(board_name);
 			
@@ -41,6 +42,26 @@ describe("Misc.", () => {
 			
 			expect(temp.isBishop).toBe(true);
 			expect(temp2.isPawn).toBe(true);
+			
+			board_other=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			temp=board_other.getSquare("b2", {isUnreferenced : false});
+			temp2=board_other.getSquare("b2", {isUnreferenced : true});
+			
+			board_obj.moveCaller("h6", "h5");
+			board_obj.moveCaller("b2", "c1");
+			
+			expect(temp.isBishop).toBe(true);
+			expect(temp2.isBishop).toBe(true);
+			expect(board_obj.getSquare("b2", {isUnreferenced : false}).isEmptySquare).toBe(true);
+			expect(board_obj.getSquare("b2", {isUnreferenced : true}).isEmptySquare).toBe(true);
 		});
 	});
 	

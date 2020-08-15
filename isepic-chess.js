@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.3.1";
+		var _VERSION="3.3.2";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -163,32 +163,26 @@
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
-			var i, j, len, len2, current_key, sub_keys, to_prop, from_prop;
+			var i, j, k, len, len2, len3, current_key, sub_keys, sub_sub_keys, to_prop, from_prop;
 			
 			if(to_board!==from_board){
 				to_board.MoveList=[];
-				to_board.MaterialDiff={w:[], b:[]};//ver si ocupa
 				
 				for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
 					current_key=_MUTABLE_KEYS[i];
 					to_prop=to_board[current_key];
 					from_prop=from_board[current_key];
 					
-					//["Squares"] constant len, objects with hard values
-					//["Active", "NonActive"] constant len, hard values only (strings/numbers) inside direct children
-					//["MoveList"] variable len, hard values only (strings/numbers) inside direct children
-					//["MaterialDiff"] constant len, references (arrays) inside direct children
+					//["Squares"], ["MaterialDiff"], ["MoveList"], ["Active", "NonActive"]
 					if(_isObject(from_prop) || _isArray(from_prop)){
-						if(current_key==="MaterialDiff"){
-							to_prop.w=from_prop.w.slice(0);
-							to_prop.b=from_prop.b.slice(0);
-						}else{
-							sub_keys=Object.keys(from_prop);
-							
-							for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
+						sub_keys=Object.keys(from_prop);
+						
+						for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
+							//["Squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
+							//["MaterialDiff"] object of (2), arrays of (N)
+							//["MoveList"] array of (N), object of (8)
+							if(_isObject(from_prop[sub_keys[j]]) || _isArray(from_prop[sub_keys[j]])){
 								if(current_key==="Squares"){
-									//ver si ocupa un object reset
-									
 									to_prop[sub_keys[j]].bal=from_prop[sub_keys[j]].bal;
 									to_prop[sub_keys[j]].absBal=from_prop[sub_keys[j]].absBal;
 									to_prop[sub_keys[j]].val=from_prop[sub_keys[j]].val;
@@ -203,11 +197,27 @@
 									to_prop[sub_keys[j]].isQueen=from_prop[sub_keys[j]].isQueen;
 									to_prop[sub_keys[j]].isKing=from_prop[sub_keys[j]].isKing;
 								}else{
-									to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
+									sub_sub_keys=Object.keys(from_prop[sub_keys[j]]);
+									
+									if(current_key==="MaterialDiff"){
+										to_prop[sub_keys[j]]=[];
+									}else if(current_key==="MoveList"){
+										to_prop[sub_keys[j]]={};
+									}
+									
+									for(k=0, len3=sub_sub_keys.length; k<len3; k++){//0<len3
+										if(_isObject(from_prop[sub_keys[j]][sub_sub_keys[k]]) || _isArray(from_prop[sub_keys[j]][sub_sub_keys[k]])){
+											_consoleLog("Error[_cloneBoardObjs]: unexpected type in key \""+sub_sub_keys[k]+"\"");
+										}else{
+											to_prop[sub_keys[j]][sub_sub_keys[k]]=from_prop[sub_keys[j]][sub_sub_keys[k]];
+										}
+									}
 								}
+							}else{//["Active", "NonActive"] object of (4)
+								to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
 							}
 						}
-					}else{
+					}else{//...other _MUTABLE_KEYS
 						to_board[current_key]=from_board[current_key];//can't use to_prop, it's not a reference here
 					}
 				}
