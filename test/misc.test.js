@@ -66,6 +66,65 @@ describe("Misc.", () => {
 			expect(board_obj.getSquare("b2", {isUnreferenced : false}).isEmptySquare).toBe(true);
 			expect(board_obj.getSquare("b2", {isUnreferenced : true}).isEmptySquare).toBe(true);
 		});
+		
+		describe("Ic.utilityMisc.cloneBoardObjs()", () => {
+			test("cloning unmutable Squares.x.pos", () => {
+				var temp, temp2, board_obj, board_other;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				board_other=Ic.initBoard({
+					boardName : other_board_name,
+					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				temp=board_obj.getSquare("e4", {isUnreferenced : false});
+				temp2=board_other.getSquare("e4", {isUnreferenced : false});
+				
+				expect(temp.pos).toEqual(temp2.pos);
+				expect(temp.pos===temp2.pos).toEqual(false);
+				
+				temp.pos=[0, 0];
+				
+				expect(board_obj.getSquare("e4", {isUnreferenced : false}).pos).toEqual([0, 0]);
+				
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				
+				expect(temp2.pos).not.toEqual([0, 0]);
+				expect(temp.pos===temp2.pos).toEqual(false);
+			});
+			
+			test("MaterialDiff not applied to new []", () => {
+				var board_obj, board_other;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				board_other=Ic.initBoard({
+					boardName : other_board_name,
+					fen : "8/2kq4/2pn4/7p/1P5P/2PB2P1/2KR4/8 w - - 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				expect(board_other.MaterialDiff).toEqual({w:[1, 1, 3, 4], b:[-2, -5]});
+				
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				
+				expect(board_other.MaterialDiff).toEqual({w:[], b:[]});
+			});
+		});
 	});
 	
 	test("Invalid FEN positions that only the refined FEN test catches", () => {
