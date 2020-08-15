@@ -50,10 +50,13 @@ describe("Misc.", () => {
 				invalidFenStop : true
 			});
 			
+			temp=board_other.getSquare("b2", {isUnreferenced : false});
+			
+			expect(temp.isPawn).toBe(true);
+			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			temp=board_other.getSquare("b2", {isUnreferenced : false});
-			temp2=board_other.getSquare("b2", {isUnreferenced : true});
+			temp2=board_other.getSquare("b2", {isUnreferenced : false});
 			
 			board_obj.moveCaller("h6", "h5");
 			board_obj.moveCaller("b2", "c1");
