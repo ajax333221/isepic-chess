@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.3.2";
+		var _VERSION="3.3.3";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -163,7 +163,7 @@
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
-			var i, j, k, len, len2, len3, current_key, sub_keys, sub_sub_keys, to_prop, from_prop;
+			var i, j, k, len, len2, len3, current_key, current_sub_from, sub_keys, sub_sub_keys, to_prop, from_prop;
 			
 			if(to_board!==from_board){
 				to_board.MoveList=[];
@@ -178,26 +178,28 @@
 						sub_keys=Object.keys(from_prop);
 						
 						for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
+							current_sub_from=from_prop[sub_keys[j]];
+							
 							//["Squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
 							//["MaterialDiff"] object of (2), arrays of (N)
 							//["MoveList"] array of (N), object of (8)
-							if(_isObject(from_prop[sub_keys[j]]) || _isArray(from_prop[sub_keys[j]])){
+							if(_isObject(current_sub_from) || _isArray(current_sub_from)){
 								if(current_key==="Squares"){
-									to_prop[sub_keys[j]].bal=from_prop[sub_keys[j]].bal;
-									to_prop[sub_keys[j]].absBal=from_prop[sub_keys[j]].absBal;
-									to_prop[sub_keys[j]].val=from_prop[sub_keys[j]].val;
-									to_prop[sub_keys[j]].absVal=from_prop[sub_keys[j]].absVal;
-									to_prop[sub_keys[j]].className=from_prop[sub_keys[j]].className;
-									to_prop[sub_keys[j]].sign=from_prop[sub_keys[j]].sign;
-									to_prop[sub_keys[j]].isEmptySquare=from_prop[sub_keys[j]].isEmptySquare;
-									to_prop[sub_keys[j]].isPawn=from_prop[sub_keys[j]].isPawn;
-									to_prop[sub_keys[j]].isKnight=from_prop[sub_keys[j]].isKnight;
-									to_prop[sub_keys[j]].isBishop=from_prop[sub_keys[j]].isBishop;
-									to_prop[sub_keys[j]].isRook=from_prop[sub_keys[j]].isRook;
-									to_prop[sub_keys[j]].isQueen=from_prop[sub_keys[j]].isQueen;
-									to_prop[sub_keys[j]].isKing=from_prop[sub_keys[j]].isKing;
+									to_prop[sub_keys[j]].bal=current_sub_from.bal;
+									to_prop[sub_keys[j]].absBal=current_sub_from.absBal;
+									to_prop[sub_keys[j]].val=current_sub_from.val;
+									to_prop[sub_keys[j]].absVal=current_sub_from.absVal;
+									to_prop[sub_keys[j]].className=current_sub_from.className;
+									to_prop[sub_keys[j]].sign=current_sub_from.sign;
+									to_prop[sub_keys[j]].isEmptySquare=current_sub_from.isEmptySquare;
+									to_prop[sub_keys[j]].isPawn=current_sub_from.isPawn;
+									to_prop[sub_keys[j]].isKnight=current_sub_from.isKnight;
+									to_prop[sub_keys[j]].isBishop=current_sub_from.isBishop;
+									to_prop[sub_keys[j]].isRook=current_sub_from.isRook;
+									to_prop[sub_keys[j]].isQueen=current_sub_from.isQueen;
+									to_prop[sub_keys[j]].isKing=current_sub_from.isKing;
 								}else{
-									sub_sub_keys=Object.keys(from_prop[sub_keys[j]]);
+									sub_sub_keys=Object.keys(current_sub_from);
 									
 									if(current_key==="MaterialDiff"){
 										to_prop[sub_keys[j]]=[];
@@ -206,18 +208,18 @@
 									}
 									
 									for(k=0, len3=sub_sub_keys.length; k<len3; k++){//0<len3
-										if(_isObject(from_prop[sub_keys[j]][sub_sub_keys[k]]) || _isArray(from_prop[sub_keys[j]][sub_sub_keys[k]])){
+										if(_isObject(current_sub_from[sub_sub_keys[k]]) || _isArray(current_sub_from[sub_sub_keys[k]])){
 											_consoleLog("Error[_cloneBoardObjs]: unexpected type in key \""+sub_sub_keys[k]+"\"");
-										}else{
-											to_prop[sub_keys[j]][sub_sub_keys[k]]=from_prop[sub_keys[j]][sub_sub_keys[k]];
+										}else{//[...] primitive data type
+											to_prop[sub_keys[j]][sub_sub_keys[k]]=current_sub_from[sub_sub_keys[k]];
 										}
 									}
 								}
-							}else{//["Active", "NonActive"] object of (4)
-								to_prop[sub_keys[j]]=from_prop[sub_keys[j]];
+							}else{//["Active", "NonActive"] primitive data type
+								to_prop[sub_keys[j]]=current_sub_from;
 							}
 						}
-					}else{//...other _MUTABLE_KEYS
+					}else{//[...] primitive data type
 						to_board[current_key]=from_board[current_key];//can't use to_prop, it's not a reference here
 					}
 				}
@@ -327,7 +329,7 @@
 			
 			that=this;
 			
-			function _squareHelper(my_square, is_unreferenced){
+			function _squareHelper(my_square, is_unreferenced){//uses: that
 				var temp, rtn_square;
 				
 				rtn_square=my_square;
@@ -414,7 +416,7 @@
 			
 			that=this;
 			
-			function _isAttacked(initial_qos, piece_direction, as_knight){
+			function _isAttacked(initial_qos, piece_direction, as_knight){//uses: that
 				return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null).isAttacked;
 			}
 			
@@ -840,7 +842,7 @@
 			
 			that=this;
 			
-			function _candidateMoves(piece_direction, as_knight, total_squares, allow_capture){
+			function _candidateMoves(piece_direction, as_knight, total_squares, allow_capture){//uses: that, target_qos
 				return that.testCollision(1, target_qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
 			}
 			
@@ -1101,7 +1103,7 @@
 			
 			that=this;
 			
-			function _disambiguationPos(piece_direction, as_knight, ally_qal){
+			function _disambiguationPos(piece_direction, as_knight, ally_qal){//uses: that, final_qos
 				return that.testCollision(3, final_qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
 			}
 			
