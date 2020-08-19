@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.4.0";
+		var _VERSION="3.5.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -103,7 +103,7 @@
 		}
 		
 		function _isBoard(obj){
-			return (_isObject(obj) && (typeof obj.BoardName)==="string");
+			return (_isObject(obj) && (typeof obj.boardName)==="string");
 		}
 		
 		function _trimSpaces(str){
@@ -1617,7 +1617,7 @@
 			if(boardExists(del_board)){
 				rtn=true;
 				
-				del_board_name_cache=del_board.BoardName;
+				del_board_name_cache=del_board.boardName;
 				del_board=null;
 				
 				_BOARDS[del_board_name_cache]=null;
@@ -1702,7 +1702,7 @@
 			if(no_errors){
 				if(!boardExists(board_name)){
 					_BOARDS[board_name]={
-						BoardName : board_name,
+						boardName : board_name,
 						getSquare : _getSquare,
 						setSquare : _setSquare,
 						countAttacks : _countAttacks,
