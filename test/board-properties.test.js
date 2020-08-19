@@ -96,38 +96,38 @@ describe("Board properties", () => {
 		});
 	});
 	
-	test("b.Fen, b.WCastling and b.BCastling", () => {
+	test("b.fen, b.WCastling and b.BCastling", () => {
 		var temp, strlist, current_fen;
 		
-		strlist="Fen, WCastling, BCastling";
+		strlist="fen, WCastling, BCastling";
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		temp=Ic.fenGet(current_fen, strlist);
-		expect(temp.Fen).toBe(current_fen);
+		expect(temp.fen).toBe(current_fen);
 		expect(temp.WCastling).toBe(3);
 		expect(temp.BCastling).toBe(3);
 		
 		current_fen="rnbqkbnr/1ppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 b Qkq -";
 		temp=Ic.fenGet(current_fen, strlist);
-		expect(temp.Fen).toBe(current_fen+" 0 1");
+		expect(temp.fen).toBe(current_fen+" 0 1");
 		expect(temp.WCastling).toBe(2);
 		expect(temp.BCastling).toBe(3);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 w Qk - 2 5";
 		temp=Ic.fenGet(current_fen, strlist);
-		expect(temp.Fen).toBe(current_fen);
+		expect(temp.fen).toBe(current_fen);
 		expect(temp.WCastling).toBe(2);
 		expect(temp.BCastling).toBe(1);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 b k - 3 5";
 		temp=Ic.fenGet(current_fen, strlist);
-		expect(temp.Fen).toBe(current_fen);
+		expect(temp.fen).toBe(current_fen);
 		expect(temp.WCastling).toBe(0);
 		expect(temp.BCastling).toBe(1);
 		
 		current_fen="1nbq1bnr/rpppkpp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 w - -";
 		temp=Ic.fenGet(current_fen, strlist);
-		expect(temp.Fen).toBe(current_fen+" 0 1");
+		expect(temp.fen).toBe(current_fen+" 0 1");
 		expect(temp.WCastling).toBe(0);
 		expect(temp.BCastling).toBe(0);
 	});

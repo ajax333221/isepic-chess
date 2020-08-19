@@ -801,7 +801,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.selectBoard(board_name).Fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
+			expect(Ic.selectBoard(board_name).fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
 		});
 		
 		test("original board is overwritten by valid fen and references still work", () => {
@@ -814,7 +814,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.selectBoard(board_name).Fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
+			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 			expect(board_obj===Ic.selectBoard(board_name)).toBe(true);
 		});
 		
@@ -832,7 +832,7 @@ describe("Ic methods", () => {
 			
 			Ic.setSilentMode(false);
 			
-			expect(Ic.selectBoard(board_name).Fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
+			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 			expect(board_obj).toBeNull();
 		});
 		
@@ -844,7 +844,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.selectBoard(board_name).Fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
+			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 		});
 		
 		test("original board is overwritten to default fen by invalid fen (invalidFenStop=false)", () => {
@@ -856,7 +856,7 @@ describe("Ic methods", () => {
 				isHidden : true
 			});
 			
-			expect(Ic.selectBoard(board_name).Fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			expect(Ic.selectBoard(board_name).fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 			expect(board_obj).not.toBeNull();
 		});
 	});
@@ -896,7 +896,7 @@ describe("Ic methods", () => {
 		
 		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "")).toBeNull();
 		
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "Fen, 0invalidprop0")).toBeNull();
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen, 0invalidprop0")).toBeNull();
 		
 		Ic.setSilentMode(false);
 	});

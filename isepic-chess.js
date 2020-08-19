@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "Fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- helpers
 		
@@ -598,7 +598,7 @@
 			
 			clockless_fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-"));
 			
-			that.Fen=(clockless_fen+" "+that.HalfMove+" "+that.FullMove);
+			that.fen=(clockless_fen+" "+that.HalfMove+" "+that.FullMove);
 			
 			that.IsThreefold=false;
 			
@@ -704,7 +704,7 @@
 			}
 			
 			if(!error_msg){
-				fen_board=that.Fen.split(" ")[0];
+				fen_board=that.fen.split(" ")[0];
 				
 				for(i=0; i<2; i++){//0...1
 					min_captured=0;
@@ -1285,7 +1285,7 @@
 					}
 				}
 				
-				that.MoveList.push({Fen : that.Fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (promoted_val || initial_cached_square.val), KingCastled : king_castled});
+				that.MoveList.push({Fen : that.fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (promoted_val || initial_cached_square.val), KingCastled : king_castled});
 			}
 			
 			return rtn_can_move;
@@ -1746,7 +1746,7 @@
 					checks : null
 				};
 				
-				target.Fen=null;
+				target.fen=null;
 				target.WCastling=null;
 				target.BCastling=null;
 				target.EnPassantBos=null;
@@ -1817,7 +1817,7 @@
 				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
 				
 				new_board.InitialFullMove=new_board.FullMove;
-				new_board.MoveList=[{Fen : new_board.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
+				new_board.MoveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 				new_board.IsRotated=p.isRotated;
 				new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				
@@ -1839,7 +1839,7 @@
 					new_board.readFen(_DEFAULT_FEN);
 					
 					new_board.InitialFullMove=new_board.FullMove;
-					new_board.MoveList=[{Fen : new_board.Fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
+					new_board.MoveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 					new_board.IsRotated=p.isRotated;
 					new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				}
