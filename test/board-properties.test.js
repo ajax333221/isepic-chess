@@ -4,20 +4,20 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//MoveList (no con fenGet o sera siempre default)
-//CurrentMove (no con fenGet o sera siempre default)
-//IsRotated (no con fenGet o sera siempre default)
-//PromoteTo (no con fenGet o sera siempre default)
-//IsHidden (no con fenGet o sera siempre true)
+//moveList (no con fenGet o sera siempre default)
+//currentMove (no con fenGet o sera siempre default)
+//isRotated (no con fenGet o sera siempre default)
+//promoteTo (no con fenGet o sera siempre default)
+//isHidden (no con fenGet o sera siempre true)
 //
-//(x) SelectedBos (N/A)(siempre empty_string + solo cambia por ui)
+//(x) selectedBos (N/A)(siempre empty_string + solo cambia por ui)
 //(x) inDraw = (N/A)(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial)
 
 describe("Board properties", () => {
-	describe("Active, NonActive, halfMove, fullMove and InitialFullMove", () => {
+	describe("Active, NonActive, halfMove, fullMove and initialFullMove", () => {
 		var strlist, get_stalemate, get_checkmate, get_checkmate_double_check;
 		
-		strlist="Active, NonActive, halfMove, fullMove, InitialFullMove";
+		strlist="Active, NonActive, halfMove, fullMove, initialFullMove";
 		
 		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", strlist);
 		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", strlist);
@@ -87,12 +87,12 @@ describe("Board properties", () => {
 			expect(get_checkmate_double_check.fullMove).toBe(7);
 		});
 		
-		test("b.InitialFullMove", () => {
-			expect(get_stalemate.InitialFullMove).toBe(10);
-			expect(get_checkmate.InitialFullMove).toBe(3);
-			expect(get_checkmate_double_check.InitialFullMove).toBe(7);
+		test("b.initialFullMove", () => {
+			expect(get_stalemate.initialFullMove).toBe(10);
+			expect(get_checkmate.initialFullMove).toBe(3);
+			expect(get_checkmate_double_check.initialFullMove).toBe(7);
 			
-			expect(Ic.fenGet("r1bqkb1r/pppppppp/2n2n2/8/8/2N2N2/PPPPPPPP/R1BQKB1R w KQkq -", "InitialFullMove").InitialFullMove).toBe(1);
+			expect(Ic.fenGet("r1bqkb1r/pppppppp/2n2n2/8/8/2N2N2/PPPPPPPP/R1BQKB1R w KQkq -", "initialFullMove").initialFullMove).toBe(1);
 		});
 	});
 	
@@ -160,12 +160,12 @@ describe("Board properties", () => {
 		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P1B1P2P/8/1PPP1PP1/RNBQK1NR b KQkq - 1 4", "enPassantBos").enPassantBos).toBe("");
 	});
 	
-	test("b.MaterialDiff", () => {
-		expect(Ic.fenGet("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "MaterialDiff").MaterialDiff).toEqual({w:[4, 4], b:[-1]});
+	test("b.materialDiff", () => {
+		expect(Ic.fenGet("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "materialDiff").materialDiff).toEqual({w:[4, 4], b:[-1]});
 		
-		expect(Ic.fenGet("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "MaterialDiff").MaterialDiff).toEqual({w:[1, 1, 3, 5], b:[-2, -2, -4]});
+		expect(Ic.fenGet("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDiff").materialDiff).toEqual({w:[1, 1, 3, 5], b:[-2, -2, -4]});
 		
-		expect(Ic.fenGet("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "MaterialDiff").MaterialDiff).toEqual({w:[], b:[]});
+		expect(Ic.fenGet("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDiff").materialDiff).toEqual({w:[], b:[]});
 	});
 	
 	test("b.isCheck", () => {

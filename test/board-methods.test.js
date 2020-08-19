@@ -212,19 +212,19 @@ describe("Board methods", () => {
 			expect(board_obj.countAttacks("g4", false)).toBe(0);
 			expect(board_obj.countAttacks("g4", true)).toBe(0);
 			
-			expect(board_obj.PromoteTo).toBe(3);
+			expect(board_obj.promoteTo).toBe(3);
 			
 			board_obj.setPromoteTo(4);
-			expect(board_obj.PromoteTo).toBe(4);
+			expect(board_obj.promoteTo).toBe(4);
 			
 			board_obj.setPromoteTo(99);
-			expect(board_obj.PromoteTo).toBe(5);
+			expect(board_obj.promoteTo).toBe(5);
 			
 			board_obj.setPromoteTo(-3);
-			expect(board_obj.PromoteTo).toBe(3);
+			expect(board_obj.promoteTo).toBe(3);
 			
 			board_obj.setPromoteTo(-1);
-			expect(board_obj.PromoteTo).toBe(2);
+			expect(board_obj.promoteTo).toBe(2);
 		});
 	});
 });

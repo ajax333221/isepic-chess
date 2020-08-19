@@ -101,7 +101,7 @@ describe("Misc.", () => {
 				expect(temp.pos===temp2.pos).toEqual(false);
 			});
 			
-			test("MaterialDiff not applied to new []", () => {
+			test("materialDiff not applied to new []", () => {
 				var board_obj, board_other;
 				
 				board_obj=Ic.initBoard({
@@ -118,11 +118,11 @@ describe("Misc.", () => {
 					invalidFenStop : true
 				});
 				
-				expect(board_other.MaterialDiff).toEqual({w:[1, 1, 3, 4], b:[-2, -5]});
+				expect(board_other.materialDiff).toEqual({w:[1, 1, 3, 4], b:[-2, -5]});
 				
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 				
-				expect(board_other.MaterialDiff).toEqual({w:[], b:[]});
+				expect(board_other.materialDiff).toEqual({w:[], b:[]});
 			});
 		});
 	});

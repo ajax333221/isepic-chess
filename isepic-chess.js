@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "initialFullMove", "moveList", "currentMove", "isRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "Squares"];
 		
 		//---------------- helpers
 		
@@ -166,14 +166,14 @@
 			var i, j, k, len, len2, len3, current_key, current_sub_from, sub_keys, sub_sub_keys, to_prop, from_prop;
 			
 			if(to_board!==from_board){
-				to_board.MoveList=[];
+				to_board.moveList=[];
 				
 				for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
 					current_key=_MUTABLE_KEYS[i];
 					to_prop=to_board[current_key];
 					from_prop=from_board[current_key];
 					
-					//["Squares"], ["MaterialDiff"], ["MoveList"], ["Active", "NonActive"]
+					//["Squares"], ["materialDiff"], ["moveList"], ["Active", "NonActive"]
 					if(_isObject(from_prop) || _isArray(from_prop)){
 						sub_keys=Object.keys(from_prop);
 						
@@ -181,8 +181,8 @@
 							current_sub_from=from_prop[sub_keys[j]];
 							
 							//["Squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
-							//["MaterialDiff"] object of (2), arrays of (N)
-							//["MoveList"] array of (N), object of (8)
+							//["materialDiff"] object of (2), arrays of (N)
+							//["moveList"] array of (N), object of (8)
 							if(_isObject(current_sub_from) || _isArray(current_sub_from)){
 								if(current_key==="Squares"){
 									to_prop[sub_keys[j]].bal=current_sub_from.bal;
@@ -201,9 +201,9 @@
 								}else{
 									sub_sub_keys=Object.keys(current_sub_from);
 									
-									if(current_key==="MaterialDiff"){
+									if(current_key==="materialDiff"){
 										to_prop[sub_keys[j]]=[];
-									}else if(current_key==="MoveList"){
+									}else if(current_key==="moveList"){
 										to_prop[sub_keys[j]]={};
 									}
 									
@@ -446,7 +446,7 @@
 			
 			that=this;
 			
-			that.IsRotated=!that.IsRotated;
+			that.isRotated=!that.isRotated;
 			
 			that.refreshBoard(0);//autorefresh
 		}
@@ -456,7 +456,7 @@
 			
 			that=this;
 			
-			that.PromoteTo=_promoteValHelper(qal);
+			that.promoteTo=_promoteValHelper(qal);
 			
 			that.refreshBoard(0);//autorefresh
 		}
@@ -467,16 +467,16 @@
 			that=this;
 			
 			rtn_moved=false;
-			len=that.MoveList.length;
+			len=that.moveList.length;
 			
 			if(len>1){
-				temp=_toInt((is_goto ? num : (num+that.CurrentMove)), 0, (len-1));
+				temp=_toInt((is_goto ? num : (num+that.currentMove)), 0, (len-1));
 				
-				if(temp!==that.CurrentMove){
+				if(temp!==that.currentMove){
 					rtn_moved=true;
 					
-					that.CurrentMove=temp;
-					that.readFen(that.MoveList[temp].Fen);
+					that.currentMove=temp;
+					that.readFen(that.moveList[temp].Fen);
 				}
 			}
 			
@@ -602,11 +602,11 @@
 			
 			that.isThreefold=false;
 			
-			if(that.CurrentMove>7){
+			if(that.currentMove>7){
 				times_found=1;
 				
-				for(i=(that.CurrentMove-1); i>=0; i--){//(len-1)...0
-					if(that.MoveList[i].Fen.split(" ").slice(0, 4).join(" ")===clockless_fen){
+				for(i=(that.currentMove-1); i>=0; i--){//(len-1)...0
+					if(that.moveList[i].Fen.split(" ").slice(0, 4).join(" ")===clockless_fen){
 						times_found++;
 						
 						if(times_found>2){
@@ -637,16 +637,16 @@
 			
 			that.inDraw=(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial);
 			
-			that.MaterialDiff={w:[], b:[]};
+			that.materialDiff={w:[], b:[]};
 			
 			for(i=1; i<7; i++){//1...6
 				current_diff=(total_pieces.w[toBal(-i)]-total_pieces.b[toBal(-i)]);
 				
 				for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
 					if(current_diff>0){
-						that.MaterialDiff.w.push(i);
+						that.materialDiff.w.push(i);
 					}else{
-						that.MaterialDiff.b.push(-i);
+						that.materialDiff.b.push(-i);
 					}
 				}
 			}
@@ -973,7 +973,7 @@
 			
 			that=this;
 			
-			is_rotated=((typeof is_rotated)==="boolean" ? is_rotated : that.IsRotated);
+			is_rotated=((typeof is_rotated)==="boolean" ? is_rotated : that.isRotated);
 			
 			rtn="   +------------------------+\n";
 			bottom_label="";
@@ -1150,7 +1150,7 @@
 					}else if(sameSquare(final_cached_square.bos, that.enPassantBos)){//enpassant capture
 						that.setSquare((final_cached_square.fileBos+""+(that.Active.isBlack ? 4 : 5)), _EMPTY_SQR);//ver con step, se calcula mas facil? o sin diagonal no tan facil?
 					}else if(to_promotion_rank){//promotion
-						promoted_val=(that.PromoteTo*that.Active.sign);
+						promoted_val=(that.promoteTo*that.Active.sign);
 					}
 				}
 				
@@ -1262,12 +1262,12 @@
 					that.fullMove++;
 				}
 				
-				that.CurrentMove++;
+				that.currentMove++;
 				
 				that.updateFenAndMisc();
 				
-				if(that.CurrentMove!==that.MoveList.length){
-					that.MoveList=that.MoveList.slice(0, that.CurrentMove);/*start variation instead of overwrite*/
+				if(that.currentMove!==that.moveList.length){
+					that.moveList=that.moveList.slice(0, that.currentMove);/*start variation instead of overwrite*/
 				}
 				
 				pgn_end="";
@@ -1285,7 +1285,7 @@
 					}
 				}
 				
-				that.MoveList.push({Fen : that.fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (promoted_val || initial_cached_square.val), KingCastled : king_castled});
+				that.moveList.push({Fen : that.fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (promoted_val || initial_cached_square.val), KingCastled : king_castled});
 			}
 			
 			return rtn_can_move;
@@ -1752,10 +1752,10 @@
 				target.enPassantBos=null;
 				target.halfMove=null;
 				target.fullMove=null;
-				target.InitialFullMove=null;
-				target.MoveList=null;
-				target.CurrentMove=null;
-				target.IsRotated=null;
+				target.initialFullMove=null;
+				target.moveList=null;
+				target.currentMove=null;
+				target.isRotated=null;
 				target.isCheck=null;
 				target.isCheckmate=null;
 				target.isStalemate=null;
@@ -1763,10 +1763,10 @@
 				target.isFiftyMove=null;
 				target.isInsufficientMaterial=null;
 				target.inDraw=null;
-				target.MaterialDiff=null;
-				target.PromoteTo=null;
-				target.SelectedBos=null;
-				target.IsHidden=null;
+				target.materialDiff=null;
+				target.promoteTo=null;
+				target.selectedBos=null;
+				target.isHidden=null;
 				target.Squares=Object.create(null);
 				
 				for(i=0; i<8; i++){//0...7
@@ -1811,15 +1811,15 @@
 			}
 			
 			if(no_errors){
-				new_board.IsHidden=p.isHidden;
+				new_board.isHidden=p.isHidden;
 				
-				new_board.CurrentMove=0;/*NO move below readFen()*/
+				new_board.currentMove=0;/*NO move below readFen()*/
 				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
 				
-				new_board.InitialFullMove=new_board.fullMove;
-				new_board.MoveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-				new_board.IsRotated=p.isRotated;
-				new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
+				new_board.initialFullMove=new_board.fullMove;
+				new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
+				new_board.isRotated=p.isRotated;
+				new_board.promoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -1833,15 +1833,15 @@
 			
 			if(no_errors){
 				if(!postfen_was_valid){
-					new_board.IsHidden=p.isHidden;
+					new_board.isHidden=p.isHidden;
 					
-					new_board.CurrentMove=0;/*NO move below readFen()*/
+					new_board.currentMove=0;/*NO move below readFen()*/
 					new_board.readFen(_DEFAULT_FEN);
 					
-					new_board.InitialFullMove=new_board.fullMove;
-					new_board.MoveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-					new_board.IsRotated=p.isRotated;
-					new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
+					new_board.initialFullMove=new_board.fullMove;
+					new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
+					new_board.isRotated=p.isRotated;
+					new_board.promoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				}
 				
 				rtn=new_board;
