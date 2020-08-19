@@ -23,9 +23,9 @@ describe("Misc.", () => {
 				invalidFenStop : true
 			});
 			
-			temp=Ic.toPos(board_obj.Squares["a2"].pos);
+			temp=Ic.toPos(board_obj.squares["a2"].pos);
 			
-			expect(temp===Ic.toPos(board_obj.Squares["a2"].pos).sort()).toBe(false);
+			expect(temp===Ic.toPos(board_obj.squares["a2"].pos).sort()).toBe(false);
 		});
 		
 		test("b.getSquare() isUnreferenced not working", () => {
@@ -68,7 +68,7 @@ describe("Misc.", () => {
 		});
 		
 		describe("Ic.utilityMisc.cloneBoardObjs()", () => {
-			test("cloning unmutable Squares.x.pos", () => {
+			test("cloning unmutable squares.x.pos", () => {
 				var temp, temp2, board_obj, board_other;
 				
 				board_obj=Ic.initBoard({

@@ -76,7 +76,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.toVal(Ic.selectBoard(board_name).Squares["c8"])).toBe(-6);
+			expect(Ic.toVal(Ic.selectBoard(board_name).squares["c8"])).toBe(-6);
 		});
 	});
 	
@@ -133,7 +133,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.toAbsVal(Ic.selectBoard(board_name).Squares["c8"])).toBe(6);
+			expect(Ic.toAbsVal(Ic.selectBoard(board_name).squares["c8"])).toBe(6);
 		});
 	});
 	
@@ -190,7 +190,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.toBal(Ic.selectBoard(board_name).Squares["c8"])).toBe("k");
+			expect(Ic.toBal(Ic.selectBoard(board_name).squares["c8"])).toBe("k");
 		});
 	});
 	
@@ -247,7 +247,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.toAbsBal(Ic.selectBoard(board_name).Squares["c8"])).toBe("K");
+			expect(Ic.toAbsBal(Ic.selectBoard(board_name).squares["c8"])).toBe("K");
 		});
 	});
 	
@@ -304,7 +304,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.toClassName(Ic.selectBoard(board_name).Squares["c8"])).toBe("bk");
+			expect(Ic.toClassName(Ic.selectBoard(board_name).squares["c8"])).toBe("bk");
 		});
 	});
 	
@@ -363,7 +363,7 @@ describe("Ic methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.getSign(Ic.selectBoard(board_name).Squares["c8"])).toBe(-1);
+			expect(Ic.getSign(Ic.selectBoard(board_name).squares["c8"])).toBe(-1);
 		});
 	});
 	

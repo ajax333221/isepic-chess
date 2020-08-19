@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "initialFullMove", "moveList", "currentMove", "isRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "initialFullMove", "moveList", "currentMove", "isRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "squares"];
 		
 		//---------------- helpers
 		
@@ -173,18 +173,18 @@
 					to_prop=to_board[current_key];
 					from_prop=from_board[current_key];
 					
-					//["Squares"], ["materialDiff"], ["moveList"], ["Active", "NonActive"]
+					//["squares"], ["materialDiff"], ["moveList"], ["Active", "NonActive"]
 					if(_isObject(from_prop) || _isArray(from_prop)){
 						sub_keys=Object.keys(from_prop);
 						
 						for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
 							current_sub_from=from_prop[sub_keys[j]];
 							
-							//["Squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
+							//["squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
 							//["materialDiff"] object of (2), arrays of (N)
 							//["moveList"] array of (N), object of (8)
 							if(_isObject(current_sub_from) || _isArray(current_sub_from)){
-								if(current_key==="Squares"){
+								if(current_key==="squares"){
 									to_prop[sub_keys[j]].bal=current_sub_from.bal;
 									to_prop[sub_keys[j]].absBal=current_sub_from.absBal;
 									to_prop[sub_keys[j]].val=current_sub_from.val;
@@ -372,7 +372,7 @@
 				pre_validated_pos=[(temp_pos[0]+_toInt(p.rankShift)), (temp_pos[1]+_toInt(p.fileShift))];
 				
 				if(isInsideBoard(pre_validated_pos)){
-					rtn=_squareHelper(that.Squares[toBos(pre_validated_pos)], p.isUnreferenced);
+					rtn=_squareHelper(that.squares[toBos(pre_validated_pos)], p.isUnreferenced);
 				}
 			}
 			
@@ -1767,38 +1767,38 @@
 				target.promoteTo=null;
 				target.selectedBos=null;
 				target.isHidden=null;
-				target.Squares=Object.create(null);
+				target.squares=Object.create(null);
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
 						current_pos=[i, j];
 						current_bos=toBos(current_pos);
 						
-						target.Squares[current_bos]=Object.create(null);
+						target.squares[current_bos]=Object.create(null);
 						
 						//static
-						target.Squares[current_bos].pos=current_pos;
-						target.Squares[current_bos].bos=current_bos;
-						target.Squares[current_bos].rankPos=getRankPos(current_pos);
-						target.Squares[current_bos].filePos=getFilePos(current_pos);
-						target.Squares[current_bos].rankBos=getRankBos(current_pos);
-						target.Squares[current_bos].fileBos=getFileBos(current_pos);
+						target.squares[current_bos].pos=current_pos;
+						target.squares[current_bos].bos=current_bos;
+						target.squares[current_bos].rankPos=getRankPos(current_pos);
+						target.squares[current_bos].filePos=getFilePos(current_pos);
+						target.squares[current_bos].rankBos=getRankBos(current_pos);
+						target.squares[current_bos].fileBos=getFileBos(current_pos);
 						//isPromotion square, isWhiteProm, isWenpass, etc
 						
 						//mutable
-						target.Squares[current_bos].bal=null;
-						target.Squares[current_bos].absBal=null;
-						target.Squares[current_bos].val=null;
-						target.Squares[current_bos].absVal=null;
-						target.Squares[current_bos].className=null;
-						target.Squares[current_bos].sign=null;
-						target.Squares[current_bos].isEmptySquare=null;
-						target.Squares[current_bos].isPawn=null;
-						target.Squares[current_bos].isKnight=null;
-						target.Squares[current_bos].isBishop=null;
-						target.Squares[current_bos].isRook=null;
-						target.Squares[current_bos].isQueen=null;
-						target.Squares[current_bos].isKing=null;
+						target.squares[current_bos].bal=null;
+						target.squares[current_bos].absBal=null;
+						target.squares[current_bos].val=null;
+						target.squares[current_bos].absVal=null;
+						target.squares[current_bos].className=null;
+						target.squares[current_bos].sign=null;
+						target.squares[current_bos].isEmptySquare=null;
+						target.squares[current_bos].isPawn=null;
+						target.squares[current_bos].isKnight=null;
+						target.squares[current_bos].isBishop=null;
+						target.squares[current_bos].isRook=null;
+						target.squares[current_bos].isQueen=null;
+						target.squares[current_bos].isKing=null;
 					}
 				}
 				

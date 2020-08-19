@@ -81,7 +81,7 @@ Function | Parameters | Return | Description
 
 <hr>
 
-#### List of `board.<Properties>`:
+#### List of `board.<properties>`:
 
 Boards created by `Ic.initBoard()` have the following accessible properties.
 
@@ -110,7 +110,7 @@ Property | Type | Description
 **promoteTo** | Number | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board_q_option.promoteTo //5`</li><li>`board_r_option.promoteTo //4`</li><li>`board_b_option.promoteTo //3`</li><li>`board_n_option.promoteTo //2`</li></ul>
 **selectedBos** | String | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board_e2_selected_in_ui.selectedBos //"e2"`</li><li>`board_after_e4.selectedBos //""`</li></ul>
 **isHidden** | Boolean | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`main_board.isHidden //false`</li><li>`h_board.isHidden //true`</li></ul>
-**Squares** | Object | Collection of the 64 :pushpin:**square**s of the board.<br><br>:zap:**Tip:** the preferred way of selecting squares is via `board.getSquare(...)`.<hr>Examples:<ul><li>`board.Squares["a1"] //Object{...}`</li><li>`board.Squares["h8"] //Object{...}`</li></ul><hr>:pushpin:Square documentation link:<ul><li>[square properties](https://github.com/ajax333221/isepic-chess#list-of-squareproperties).</li></ul>
+**squares** | Object | Collection of the 64 :pushpin:**square**s of the board.<br><br>:zap:**Tip:** the preferred way of selecting squares is via `board.getSquare(...)`.<hr>Examples:<ul><li>`board.squares["a1"] //Object{...}`</li><li>`board.squares["h8"] //Object{...}`</li></ul><hr>:pushpin:Square documentation link:<ul><li>[square properties](https://github.com/ajax333221/isepic-chess#list-of-squareproperties).</li></ul>
 
 <hr>
 
@@ -140,7 +140,7 @@ Function | Parameters | Return | Board refresh? | Description
 
 #### List of `square.<properties>`:
 
-Squares from `board.getSquare()` <sup>(including unreferenced copies)</sup> and manually selected from `board.Squares[<a1-h8>]` have the following accessible properties.
+Squares from `board.getSquare()` <sup>(including unreferenced copies)</sup> and manually selected from `board.squares[<a1-h8>]` have the following accessible properties.
 
 Property | Type | Description
 ------- | ---- | -----------

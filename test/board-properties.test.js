@@ -132,21 +132,21 @@ describe("Board properties", () => {
 		expect(temp.bCastling).toBe(0);
 	});
 	
-	test("b.Squares", () => {
+	test("b.squares", () => {
 		var get_custom;
 		
-		get_custom=Ic.fenGet("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "Squares");
+		get_custom=Ic.fenGet("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "squares");
 		
-		expect(Object.keys(get_custom.Squares).length).toBe(64);
+		expect(Object.keys(get_custom.squares).length).toBe(64);
 		
-		expect(get_custom.Squares["d6"].className).toBe("wk");
-		expect(get_custom.Squares["f6"].className).toBe("wr");
-		expect(get_custom.Squares["e8"].isKing).toBe(true);
-		expect(get_custom.Squares["a1"].val).toBe(0);
-		expect(get_custom.Squares["a2"].pos).toEqual([6, 0]);
-		expect(get_custom.Squares["a3"].bos).toBe("a3");
-		expect(get_custom.Squares["h1"].fileBos).toBe("h");
-		expect(get_custom.Squares["h2"].isEmptySquare).toBe(true);
+		expect(get_custom.squares["d6"].className).toBe("wk");
+		expect(get_custom.squares["f6"].className).toBe("wr");
+		expect(get_custom.squares["e8"].isKing).toBe(true);
+		expect(get_custom.squares["a1"].val).toBe(0);
+		expect(get_custom.squares["a2"].pos).toEqual([6, 0]);
+		expect(get_custom.squares["a3"].bos).toBe("a3");
+		expect(get_custom.squares["h1"].fileBos).toBe("h");
+		expect(get_custom.squares["h2"].isEmptySquare).toBe(true);
 	});
 	
 	test("b.enPassantBos", () => {
