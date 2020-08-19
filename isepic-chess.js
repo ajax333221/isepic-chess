@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- helpers
 		
@@ -517,7 +517,7 @@
 			that.wCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
 			that.bCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
 			
-			that.EnPassantBos=fen_parts[3].replace("-", "");
+			that.enPassantBos=fen_parts[3].replace("-", "");
 			
 			temp=(fen_parts[1]==="b");
 			that.Active.isBlack=temp;
@@ -525,8 +525,8 @@
 			that.Active.sign=getSign(temp);
 			that.NonActive.sign=getSign(!temp);
 			
-			that.HalfMove=((fen_parts[4]*1) || 0);
-			that.FullMove=((fen_parts[5]*1) || 1);
+			that.halfMove=((fen_parts[4]*1) || 0);
+			that.fullMove=((fen_parts[5]*1) || 1);
 			
 			that.updateFenAndMisc();
 		}
@@ -596,9 +596,9 @@
 			that.IsCheckmate=(that.IsCheck && no_legal_moves);
 			that.IsStalemate=(!that.IsCheck && no_legal_moves);
 			
-			clockless_fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.wCastling).toUpperCase()+""+_castlingChars(that.bCastling)) || "-")+" "+(that.EnPassantBos || "-"));
+			clockless_fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.wCastling).toUpperCase()+""+_castlingChars(that.bCastling)) || "-")+" "+(that.enPassantBos || "-"));
 			
-			that.fen=(clockless_fen+" "+that.HalfMove+" "+that.FullMove);
+			that.fen=(clockless_fen+" "+that.halfMove+" "+that.fullMove);
 			
 			that.IsThreefold=false;
 			
@@ -617,7 +617,7 @@
 				}
 			}
 			
-			that.IsFiftyMove=(that.HalfMove>=100);
+			that.IsFiftyMove=(that.halfMove>=100);
 			
 			total_pieces=countPieces(clockless_fen);
 			that.IsInsufficientMaterial=false;
@@ -660,7 +660,7 @@
 			error_msg="";
 			
 			//if(!error_msg){
-				if((that.HalfMove-that.Active.isBlack+1)>=(that.FullMove*2)){
+				if((that.halfMove-that.Active.isBlack+1)>=(that.fullMove*2)){
 					error_msg="Error [0] exceeding half moves ratio";
 				}
 			//}
@@ -690,14 +690,14 @@
 			}
 			
 			if(!error_msg){
-				if(that.EnPassantBos){
+				if(that.enPassantBos){
 					temp=that.NonActive.sign;
 					
-					en_passant_square=that.getSquare(that.EnPassantBos);
-					behind_ep_is_empty=that.getSquare(that.EnPassantBos, {rankShift : temp}).isEmptySquare;
-					infront_ep_val=that.getSquare(that.EnPassantBos, {rankShift : -temp}).val;
+					en_passant_square=that.getSquare(that.enPassantBos);
+					behind_ep_is_empty=that.getSquare(that.enPassantBos, {rankShift : temp}).isEmptySquare;
+					infront_ep_val=that.getSquare(that.enPassantBos, {rankShift : -temp}).val;
 					
-					if(that.HalfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(that.Active.isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==temp){
+					if(that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(that.Active.isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==temp){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -898,7 +898,7 @@
 						if(current_diagonal_square!==null){
 							if(!current_diagonal_square.isEmptySquare && current_diagonal_square.sign===that.NonActive.sign && !current_diagonal_square.isKing){
 								pre_validated_arr_pos.push([current_diagonal_square.pos]);
-							}else if(sameSquare(current_diagonal_square.bos, that.EnPassantBos)){
+							}else if(sameSquare(current_diagonal_square.bos, that.enPassantBos)){
 								en_passant_capturable_cached_square=that.getSquare(current_diagonal_square.pos, {
 									rankShift : that.Active.sign,
 									isUnreferenced : true
@@ -926,7 +926,7 @@
 						that.setSquare(target_qos, _EMPTY_SQR);
 						
 						if(en_passant_capturable_cached_square!==null){
-							if(sameSquare(current_cached_square.bos, that.EnPassantBos)){
+							if(sameSquare(current_cached_square.bos, that.enPassantBos)){
 								that.setSquare(en_passant_capturable_cached_square.pos, _EMPTY_SQR);
 							}
 						}
@@ -1147,7 +1147,7 @@
 					
 					if(Math.abs(initial_cached_square.rankPos-final_cached_square.rankPos)>1){//new enpassant
 						new_en_passant_bos=(final_cached_square.fileBos+""+(that.Active.isBlack ? 6 : 3));
-					}else if(sameSquare(final_cached_square.bos, that.EnPassantBos)){//enpassant capture
+					}else if(sameSquare(final_cached_square.bos, that.enPassantBos)){//enpassant capture
 						that.setSquare((final_cached_square.fileBos+""+(that.Active.isBlack ? 4 : 5)), _EMPTY_SQR);//ver con step, se calcula mas facil? o sin diagonal no tan facil?
 					}else if(to_promotion_rank){//promotion
 						promoted_val=(that.PromoteTo*that.Active.sign);
@@ -1242,7 +1242,7 @@
 				that.wCastling=(that.Active.isBlack ? new_non_active_castling_availity : new_active_castling_availity);
 				that.bCastling=(that.Active.isBlack ? new_active_castling_availity : new_non_active_castling_availity);
 				
-				that.EnPassantBos=new_en_passant_bos;
+				that.enPassantBos=new_en_passant_bos;
 				
 				that.setSquare(final_qos, (promoted_val || initial_cached_square.val));
 				that.setSquare(initial_qos, _EMPTY_SQR);
@@ -1253,13 +1253,13 @@
 				that.Active.sign=getSign(!temp);
 				that.NonActive.sign=getSign(temp);
 				
-				that.HalfMove++;
+				that.halfMove++;
 				if(pawn_moved || final_cached_square.val){
-					that.HalfMove=0;
+					that.halfMove=0;
 				}
 				
 				if(that.NonActive.isBlack){
-					that.FullMove++;
+					that.fullMove++;
 				}
 				
 				that.CurrentMove++;
@@ -1749,9 +1749,9 @@
 				target.fen=null;
 				target.wCastling=null;
 				target.bCastling=null;
-				target.EnPassantBos=null;
-				target.HalfMove=null;
-				target.FullMove=null;
+				target.enPassantBos=null;
+				target.halfMove=null;
+				target.fullMove=null;
 				target.InitialFullMove=null;
 				target.MoveList=null;
 				target.CurrentMove=null;
@@ -1816,7 +1816,7 @@
 				new_board.CurrentMove=0;/*NO move below readFen()*/
 				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
 				
-				new_board.InitialFullMove=new_board.FullMove;
+				new_board.InitialFullMove=new_board.fullMove;
 				new_board.MoveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 				new_board.IsRotated=p.isRotated;
 				new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
@@ -1838,7 +1838,7 @@
 					new_board.CurrentMove=0;/*NO move below readFen()*/
 					new_board.readFen(_DEFAULT_FEN);
 					
-					new_board.InitialFullMove=new_board.FullMove;
+					new_board.InitialFullMove=new_board.fullMove;
 					new_board.MoveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 					new_board.IsRotated=p.isRotated;
 					new_board.PromoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/

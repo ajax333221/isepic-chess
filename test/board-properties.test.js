@@ -14,10 +14,10 @@ Ic.setSilentMode(false);
 //(x) InDraw = (N/A)(that.IsStalemate || that.IsThreefold || that.IsFiftyMove || that.IsInsufficientMaterial)
 
 describe("Board properties", () => {
-	describe("Active, NonActive, HalfMove, FullMove and InitialFullMove", () => {
+	describe("Active, NonActive, halfMove, fullMove and InitialFullMove", () => {
 		var strlist, get_stalemate, get_checkmate, get_checkmate_double_check;
 		
-		strlist="Active, NonActive, HalfMove, FullMove, InitialFullMove";
+		strlist="Active, NonActive, halfMove, fullMove, InitialFullMove";
 		
 		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", strlist);
 		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", strlist);
@@ -75,16 +75,16 @@ describe("Board properties", () => {
 			});
 		});
 		
-		test("b.HalfMove", () => {
-			expect(get_stalemate.HalfMove).toBe(2);
-			expect(get_checkmate.HalfMove).toBe(1);
-			expect(get_checkmate_double_check.HalfMove).toBe(5);
+		test("b.halfMove", () => {
+			expect(get_stalemate.halfMove).toBe(2);
+			expect(get_checkmate.halfMove).toBe(1);
+			expect(get_checkmate_double_check.halfMove).toBe(5);
 		});
 		
-		test("b.FullMove", () => {
-			expect(get_stalemate.FullMove).toBe(10);
-			expect(get_checkmate.FullMove).toBe(3);
-			expect(get_checkmate_double_check.FullMove).toBe(7);
+		test("b.fullMove", () => {
+			expect(get_stalemate.fullMove).toBe(10);
+			expect(get_checkmate.fullMove).toBe(3);
+			expect(get_checkmate_double_check.fullMove).toBe(7);
 		});
 		
 		test("b.InitialFullMove", () => {
@@ -149,15 +149,15 @@ describe("Board properties", () => {
 		expect(get_custom.Squares["h2"].isEmptySquare).toBe(true);
 	});
 	
-	test("b.EnPassantBos", () => {
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "EnPassantBos").EnPassantBos).toBe("");
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "EnPassantBos").EnPassantBos).toBe("e3");
-		expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6", "EnPassantBos").EnPassantBos).toBe("e6");
-		expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P2P/8/PPPP1PP1/RNBQKBNR b KQkq h3 0 2", "EnPassantBos").EnPassantBos).toBe("h3");
-		expect(Ic.fenGet("rnbqkbnr/pppp1pp1/8/4p2p/4P2P/8/PPPP1PP1/RNBQKBNR w KQkq h6 0 3", "EnPassantBos").EnPassantBos).toBe("h6");
-		expect(Ic.fenGet("rnbqkbnr/pppp1pp1/8/4p2p/P3P2P/8/1PPP1PP1/RNBQKBNR b KQkq a3", "EnPassantBos").EnPassantBos).toBe("a3");
-		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P3P2P/8/1PPP1PP1/RNBQKBNR w KQkq a6 0 4", "EnPassantBos").EnPassantBos).toBe("a6");
-		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P1B1P2P/8/1PPP1PP1/RNBQK1NR b KQkq - 1 4", "EnPassantBos").EnPassantBos).toBe("");
+	test("b.enPassantBos", () => {
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "enPassantBos").enPassantBos).toBe("");
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "enPassantBos").enPassantBos).toBe("e3");
+		expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6", "enPassantBos").enPassantBos).toBe("e6");
+		expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P2P/8/PPPP1PP1/RNBQKBNR b KQkq h3 0 2", "enPassantBos").enPassantBos).toBe("h3");
+		expect(Ic.fenGet("rnbqkbnr/pppp1pp1/8/4p2p/4P2P/8/PPPP1PP1/RNBQKBNR w KQkq h6 0 3", "enPassantBos").enPassantBos).toBe("h6");
+		expect(Ic.fenGet("rnbqkbnr/pppp1pp1/8/4p2p/P3P2P/8/1PPP1PP1/RNBQKBNR b KQkq a3", "enPassantBos").enPassantBos).toBe("a3");
+		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P3P2P/8/1PPP1PP1/RNBQKBNR w KQkq a6 0 4", "enPassantBos").enPassantBos).toBe("a6");
+		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P1B1P2P/8/1PPP1PP1/RNBQK1NR b KQkq - 1 4", "enPassantBos").enPassantBos).toBe("");
 	});
 	
 	test("b.MaterialDiff", () => {
