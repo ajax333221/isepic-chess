@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- helpers
 		
@@ -592,15 +592,15 @@
 				}
 			}
 			
-			that.IsCheck=!!that.Active.checks;
-			that.IsCheckmate=(that.IsCheck && no_legal_moves);
-			that.IsStalemate=(!that.IsCheck && no_legal_moves);
+			that.isCheck=!!that.Active.checks;
+			that.isCheckmate=(that.isCheck && no_legal_moves);
+			that.isStalemate=(!that.isCheck && no_legal_moves);
 			
 			clockless_fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.wCastling).toUpperCase()+""+_castlingChars(that.bCastling)) || "-")+" "+(that.enPassantBos || "-"));
 			
 			that.fen=(clockless_fen+" "+that.halfMove+" "+that.fullMove);
 			
-			that.IsThreefold=false;
+			that.isThreefold=false;
 			
 			if(that.CurrentMove>7){
 				times_found=1;
@@ -610,32 +610,32 @@
 						times_found++;
 						
 						if(times_found>2){
-							that.IsThreefold=true;
+							that.isThreefold=true;
 							break;
 						}
 					}
 				}
 			}
 			
-			that.IsFiftyMove=(that.halfMove>=100);
+			that.isFiftyMove=(that.halfMove>=100);
 			
 			total_pieces=countPieces(clockless_fen);
-			that.IsInsufficientMaterial=false;
+			that.isInsufficientMaterial=false;
 			
 			if(!(total_pieces.w.p+total_pieces.b.p+total_pieces.w.r+total_pieces.b.r+total_pieces.w.q+total_pieces.b.q)){
 				if(total_pieces.w.n+total_pieces.b.n){
-					that.IsInsufficientMaterial=((total_pieces.w.n+total_pieces.b.n+total_pieces.w.b+total_pieces.b.b)===1);//k vs kn
+					that.isInsufficientMaterial=((total_pieces.w.n+total_pieces.b.n+total_pieces.w.b+total_pieces.b.b)===1);//k vs kn
 				}else if(total_pieces.w.b+total_pieces.b.b){
 					at_least_one_light=!!(bishop_count.w.lightSquaredBishops+bishop_count.b.lightSquaredBishops);
 					at_least_one_dark=!!(bishop_count.w.darkSquaredBishops+bishop_count.b.darkSquaredBishops);
 					
-					that.IsInsufficientMaterial=(at_least_one_light!==at_least_one_dark);//k(b*x) vs k(b*x)
+					that.isInsufficientMaterial=(at_least_one_light!==at_least_one_dark);//k(b*x) vs k(b*x)
 				}else{//k vs k
-					that.IsInsufficientMaterial=true;
+					that.isInsufficientMaterial=true;
 				}
 			}
 			
-			that.InDraw=(that.IsStalemate || that.IsThreefold || that.IsFiftyMove || that.IsInsufficientMaterial);
+			that.inDraw=(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial);
 			
 			that.MaterialDiff={w:[], b:[]};
 			
@@ -875,7 +875,7 @@
 					
 					active_castling_availity=(that.Active.isBlack ? that.bCastling : that.wCastling);
 					
-					if(active_castling_availity && !that.IsCheck){
+					if(active_castling_availity && !that.isCheck){
 						for(i=0; i<2; i++){//0...1
 							if(active_castling_availity!==(i ? 1 : 2)){
 								if(_candidateMoves((i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
@@ -1272,15 +1272,15 @@
 				
 				pgn_end="";
 				
-				if(that.IsCheck){
-					if(that.IsCheckmate){
+				if(that.isCheck){
+					if(that.isCheckmate){
 						pgn_move+="#";
 						pgn_end=(that.Active.isBlack ? "1-0" : "0-1");
 					}else{
 						pgn_move+="+";
 					}
 				}else{
-					if(that.IsStalemate){
+					if(that.isStalemate){
 						pgn_end="1/2-1/2";
 					}
 				}
@@ -1756,13 +1756,13 @@
 				target.MoveList=null;
 				target.CurrentMove=null;
 				target.IsRotated=null;
-				target.IsCheck=null;
-				target.IsCheckmate=null;
-				target.IsStalemate=null;
-				target.IsThreefold=null;
-				target.IsFiftyMove=null;
-				target.IsInsufficientMaterial=null;
-				target.InDraw=null;
+				target.isCheck=null;
+				target.isCheckmate=null;
+				target.isStalemate=null;
+				target.isThreefold=null;
+				target.isFiftyMove=null;
+				target.isInsufficientMaterial=null;
+				target.inDraw=null;
 				target.MaterialDiff=null;
 				target.PromoteTo=null;
 				target.SelectedBos=null;

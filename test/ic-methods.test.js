@@ -892,7 +892,7 @@ describe("Ic methods", () => {
 	test("Ic.fenGet()", () => {
 		Ic.setSilentMode(true);
 		
-		expect(Ic.fenGet("0invalidfen0", "IsCheck")).toBeNull();
+		expect(Ic.fenGet("0invalidfen0", "isCheck")).toBeNull();
 		
 		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "")).toBeNull();
 		

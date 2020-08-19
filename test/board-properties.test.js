@@ -11,7 +11,7 @@ Ic.setSilentMode(false);
 //IsHidden (no con fenGet o sera siempre true)
 //
 //(x) SelectedBos (N/A)(siempre empty_string + solo cambia por ui)
-//(x) InDraw = (N/A)(that.IsStalemate || that.IsThreefold || that.IsFiftyMove || that.IsInsufficientMaterial)
+//(x) inDraw = (N/A)(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial)
 
 describe("Board properties", () => {
 	describe("Active, NonActive, halfMove, fullMove and InitialFullMove", () => {
@@ -168,22 +168,22 @@ describe("Board properties", () => {
 		expect(Ic.fenGet("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "MaterialDiff").MaterialDiff).toEqual({w:[], b:[]});
 	});
 	
-	test("b.IsCheck", () => {
-		expect(Ic.fenGet("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "IsCheck").IsCheck).toBe(true);
-		expect(Ic.fenGet("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "IsCheck").IsCheck).toBe(false);
+	test("b.isCheck", () => {
+		expect(Ic.fenGet("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck").isCheck).toBe(true);
+		expect(Ic.fenGet("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck").isCheck).toBe(false);
 	});
 	
-	test("b.IsCheckmate", () => {
-		expect(Ic.fenGet("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "IsCheckmate").IsCheckmate).toBe(true);
-		expect(Ic.fenGet("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "IsCheckmate").IsCheckmate).toBe(false);
+	test("b.isCheckmate", () => {
+		expect(Ic.fenGet("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate").isCheckmate).toBe(true);
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate").isCheckmate).toBe(false);
 	});
 	
-	test("b.IsStalemate", () => {
-		expect(Ic.fenGet("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "IsStalemate").IsStalemate).toBe(true);
-		expect(Ic.fenGet("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "IsStalemate").IsStalemate).toBe(false);
+	test("b.isStalemate", () => {
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "isStalemate").isStalemate).toBe(true);
+		expect(Ic.fenGet("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "isStalemate").isStalemate).toBe(false);
 	});
 	
-	test("b.IsThreefold and b.IsFiftyMove", () => {
+	test("b.isThreefold and b.isFiftyMove", () => {
 		var i, len, arr, threefold_all, fifty_all, board_name, board_obj;
 		
 		board_name="board_is_threefold_is_fifty_move";
@@ -202,26 +202,26 @@ describe("Board properties", () => {
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			board_obj.moveCaller(arr[i][0], arr[i][1]);
-			threefold_all+=(board_obj.IsThreefold*1);
-			fifty_all+=(board_obj.IsFiftyMove*1);
+			threefold_all+=(board_obj.isThreefold*1);
+			fifty_all+=(board_obj.isFiftyMove*1);
 		}
 		
 		for(i=0; i<15; i++){//0...14
 			board_obj.moveCaller("h1", "g1");
-			threefold_all+=(board_obj.IsThreefold*1);
-			fifty_all+=(board_obj.IsFiftyMove*1);
+			threefold_all+=(board_obj.isThreefold*1);
+			fifty_all+=(board_obj.isFiftyMove*1);
 			
 			board_obj.moveCaller("h8", "g8");
-			threefold_all+=(board_obj.IsThreefold*1);
-			fifty_all+=(board_obj.IsFiftyMove*1);
+			threefold_all+=(board_obj.isThreefold*1);
+			fifty_all+=(board_obj.isFiftyMove*1);
 			
 			board_obj.moveCaller("g1", "h1");
-			threefold_all+=(board_obj.IsThreefold*1);
-			fifty_all+=(board_obj.IsFiftyMove*1);
+			threefold_all+=(board_obj.isThreefold*1);
+			fifty_all+=(board_obj.isFiftyMove*1);
 			
 			board_obj.moveCaller("g8", "h8");
-			threefold_all+=(board_obj.IsThreefold*1);
-			fifty_all+=(board_obj.IsFiftyMove*1);
+			threefold_all+=(board_obj.isThreefold*1);
+			fifty_all+=(board_obj.isFiftyMove*1);
 		}
 		
 		expect(threefold_all).toBe("000000010001000010100000000000000000000001000000001111111111111111111111111111111111111111111111111111");
@@ -229,14 +229,14 @@ describe("Board properties", () => {
 		expect(fifty_all).toBe("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111");
 	});
 	
-	describe("b.IsInsufficientMaterial", () => {
+	describe("b.isInsufficientMaterial", () => {
 		test("cases returning false", () => {
 			var i, len, arr;
 			
 			arr=["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "K6k/8/8/8/8/8/8/3BB3 w - - 0 1", "K6k/8/8/8/8/8/8/3BB3 b - - 0 1", "K6k/8/8/8/8/8/8/3bb3 w - - 0 1", "K6k/8/8/8/8/8/8/3bb3 b - - 0 1", "K6k/8/8/8/8/8/2bBb3/8 w - - 0 1", "K6k/8/8/8/8/8/2bBb3/8 b - - 0 1", "K6k/8/8/8/8/8/2BbB3/8 w - - 0 1", "K6k/8/8/8/8/8/2BbB3/8 b - - 0 1", "K6k/8/8/8/8/3Nb3/8/8 w - - 0 1", "K6k/8/8/8/8/3Nn3/8/8 w - - 0 1", "K6k/8/8/8/8/3NB3/8/8 w - - 0 1", "K6k/8/8/8/8/3NN3/8/8 w - - 0 1", "K6k/8/8/8/4P3/8/8/8 w - - 0 1", "K6k/8/8/8/4p3/8/8/8 w - - 0 1", "K6k/8/8/8/4R3/8/8/8 w - - 0 1", "K6k/8/8/8/4r3/8/8/8 w - - 0 1", "K6k/8/8/8/8/8/8/4Q3 w - - 0 1", "K6k/8/8/8/8/8/8/4q3 w - - 0 1"];
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
-				expect(Ic.fenGet(arr[i], "IsInsufficientMaterial").IsInsufficientMaterial).toBe(false);
+				expect(Ic.fenGet(arr[i], "isInsufficientMaterial").isInsufficientMaterial).toBe(false);
 			}
 		});
 		
@@ -246,7 +246,7 @@ describe("Board properties", () => {
 			arr=["K6k/8/8/8/8/8/8/8 w - - 0 1", "K6k/8/8/8/8/3N4/8/8 w - - 0 1", "K6k/8/8/8/8/3N4/8/8 b - - 0 1", "K6k/8/8/8/8/3n4/8/8 w - - 0 1", "K6k/8/8/8/8/3n4/8/8 b - - 0 1", "K6k/8/8/8/8/3B4/8/8 w - - 0 1", "K6k/8/8/8/8/3B4/8/8 b - - 0 1", "K6k/8/8/8/8/3b4/8/8 w - - 0 1", "K6k/8/8/8/8/3b4/8/8 b - - 0 1", "K6k/8/8/8/8/3B4/2B5/1B6 w - - 0 1", "K6k/8/8/8/8/3B4/2B5/1B6 b - - 0 1", "K6k/8/8/8/8/3b4/2b5/1b6 w - - 0 1", "K6k/8/8/8/8/3b4/2b5/1b6 b - - 0 1", "K6k/8/8/8/8/3b4/2b1B3/1b1B4 w - - 0 1", "K6k/8/8/8/8/3b4/2b1B3/1b1B4 b - - 0 1", "K6k/8/8/8/8/4B3/3B4/2B5 w - - 0 1", "K6k/8/8/8/8/4B3/3B4/2B5 b - - 0 1", "K6k/8/8/8/8/4b3/3b4/2b5 w - - 0 1", "K6k/8/8/8/8/4b3/3b4/2b5 b - - 0 1", "K6k/8/8/8/8/4b3/3b1B2/2b1B3 w - - 0 1", "K6k/8/8/8/8/4b3/3b1B2/2b1B3 b - - 0 1"];
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
-				expect(Ic.fenGet(arr[i], "IsInsufficientMaterial").IsInsufficientMaterial).toBe(true);
+				expect(Ic.fenGet(arr[i], "isInsufficientMaterial").isInsufficientMaterial).toBe(true);
 			}
 		});
 	});
