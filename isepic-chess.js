@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "WCastling", "BCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
+		var _MUTABLE_KEYS=["Active", "NonActive", "fen", "wCastling", "bCastling", "EnPassantBos", "HalfMove", "FullMove", "InitialFullMove", "MoveList", "CurrentMove", "IsRotated", "IsCheck", "IsCheckmate", "IsStalemate", "IsThreefold", "IsFiftyMove", "IsInsufficientMaterial", "InDraw", "MaterialDiff", "PromoteTo", "SelectedBos", "IsHidden", "Squares"];
 		
 		//---------------- helpers
 		
@@ -514,8 +514,8 @@
 				}
 			}
 			
-			that.WCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
-			that.BCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
+			that.wCastling=(_strContains(fen_parts[2], "K") ? 1 : 0)+(_strContains(fen_parts[2], "Q") ? 2 : 0);
+			that.bCastling=(_strContains(fen_parts[2], "k") ? 1 : 0)+(_strContains(fen_parts[2], "q") ? 2 : 0);
 			
 			that.EnPassantBos=fen_parts[3].replace("-", "");
 			
@@ -596,7 +596,7 @@
 			that.IsCheckmate=(that.IsCheck && no_legal_moves);
 			that.IsStalemate=(!that.IsCheck && no_legal_moves);
 			
-			clockless_fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.WCastling).toUpperCase()+""+_castlingChars(that.BCastling)) || "-")+" "+(that.EnPassantBos || "-"));
+			clockless_fen=(new_fen_board+" "+(that.Active.isBlack ? "b" : "w")+" "+((_castlingChars(that.wCastling).toUpperCase()+""+_castlingChars(that.bCastling)) || "-")+" "+(that.EnPassantBos || "-"));
 			
 			that.fen=(clockless_fen+" "+that.HalfMove+" "+that.FullMove);
 			
@@ -733,7 +733,7 @@
 			
 			if(!error_msg){
 				for(i=0; i<2; i++){//0...1
-					current_castling_availity=(i ? that.WCastling : that.BCastling);
+					current_castling_availity=(i ? that.wCastling : that.bCastling);
 					
 					if(current_castling_availity){
 						current_sign=getSign(!i);
@@ -873,7 +873,7 @@
 						if((temp=_candidateMoves(i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 					
-					active_castling_availity=(that.Active.isBlack ? that.BCastling : that.WCastling);
+					active_castling_availity=(that.Active.isBlack ? that.bCastling : that.wCastling);
 					
 					if(active_castling_availity && !that.IsCheck){
 						for(i=0; i<2; i++){//0...1
@@ -1120,8 +1120,8 @@
 				promoted_val=0;
 				king_castled=0;
 				
-				new_active_castling_availity=(that.Active.isBlack ? that.BCastling : that.WCastling);
-				new_non_active_castling_availity=(that.Active.isBlack ? that.WCastling : that.BCastling);
+				new_active_castling_availity=(that.Active.isBlack ? that.bCastling : that.wCastling);
+				new_non_active_castling_availity=(that.Active.isBlack ? that.wCastling : that.bCastling);
 				
 				to_promotion_rank=(final_cached_square.rankPos===(that.Active.isBlack ? 7 : 0));
 				active_king_original_rank=(that.Active.isBlack ? 0 : 7);
@@ -1239,8 +1239,8 @@
 					}
 				}
 				
-				that.WCastling=(that.Active.isBlack ? new_non_active_castling_availity : new_active_castling_availity);
-				that.BCastling=(that.Active.isBlack ? new_active_castling_availity : new_non_active_castling_availity);
+				that.wCastling=(that.Active.isBlack ? new_non_active_castling_availity : new_active_castling_availity);
+				that.bCastling=(that.Active.isBlack ? new_active_castling_availity : new_non_active_castling_availity);
 				
 				that.EnPassantBos=new_en_passant_bos;
 				
@@ -1747,8 +1747,8 @@
 				};
 				
 				target.fen=null;
-				target.WCastling=null;
-				target.BCastling=null;
+				target.wCastling=null;
+				target.bCastling=null;
 				target.EnPassantBos=null;
 				target.HalfMove=null;
 				target.FullMove=null;
