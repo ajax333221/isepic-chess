@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.6.0";
+		var _VERSION="3.6.1";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -551,12 +551,7 @@
 					
 					if(!current_square.isEmptySquare){
 						if(current_square.isKing){
-							/*zzz 2020 ya se puede hacer inline*/
-							if(current_square.sign===that[that.activeColor].sign){
-								that[that.activeColor].kingBos=current_square.bos;
-							}else{
-								that[that.nonActiveColor].kingBos=current_square.bos;
-							}
+							that[current_square.sign===that[that.activeColor].sign ? that.activeColor : that.nonActiveColor].kingBos=current_square.bos;
 						}else if(current_square.isBishop){
 							if(current_square.sign>0){
 								if((i+j)%2){
