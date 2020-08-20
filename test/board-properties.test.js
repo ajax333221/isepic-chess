@@ -14,64 +14,76 @@ Ic.setSilentMode(false);
 //(x) inDraw = (N/A)(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial)
 
 describe("Board properties", () => {
-	describe("active, nonActive, halfMove, fullMove and initialFullMove", () => {
+	describe("w, b, activeColor, nonActiveColor, halfMove, fullMove and initialFullMove", () => {
 		var strlist, get_stalemate, get_checkmate, get_checkmate_double_check;
 		
-		strlist="active, nonActive, halfMove, fullMove, initialFullMove";
+		strlist="w, b, activeColor, nonActiveColor, halfMove, fullMove, initialFullMove";
 		
 		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", strlist);
 		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", strlist);
 		get_checkmate_double_check=Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", strlist);
 		
-		describe("active", () => {
-			test("b.active.isBlack", () => {
-				expect(get_stalemate.active.isBlack).toBe(true);
-				expect(get_checkmate.active.isBlack).toBe(false);
-				expect(get_checkmate_double_check.active.isBlack).toBe(true);
+		test("b.activeColor", () => {
+			expect(get_stalemate.activeColor).toBe("b");
+			expect(get_checkmate.activeColor).toBe("w");
+			expect(get_checkmate_double_check.activeColor).toBe("b");
+		});
+		
+		test("b.nonActiveColor", () => {
+			expect(get_stalemate.nonActiveColor).toBe("w");
+			expect(get_checkmate.nonActiveColor).toBe("b");
+			expect(get_checkmate_double_check.nonActiveColor).toBe("w");
+		});
+		
+		describe("b[b.activeColor]", () => {
+			test("isBlack", () => {
+				expect(get_stalemate[get_stalemate.activeColor].isBlack).toBe(true);
+				expect(get_checkmate[get_checkmate.activeColor].isBlack).toBe(false);
+				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].isBlack).toBe(true);
 			});
 			
-			test("b.active.sign", () => {
-				expect(get_stalemate.active.sign).toBe(-1);
-				expect(get_checkmate.active.sign).toBe(1);
-				expect(get_checkmate_double_check.active.sign).toBe(-1);
+			test("sign", () => {
+				expect(get_stalemate[get_stalemate.activeColor].sign).toBe(-1);
+				expect(get_checkmate[get_checkmate.activeColor].sign).toBe(1);
+				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].sign).toBe(-1);
 			});
 			
-			test("b.active.kingBos", () => {
-				expect(get_stalemate.active.kingBos).toBe("g6");
-				expect(get_checkmate.active.kingBos).toBe("e1");
-				expect(get_checkmate_double_check.active.kingBos).toBe("e8");
+			test("kingBos", () => {
+				expect(get_stalemate[get_stalemate.activeColor].kingBos).toBe("g6");
+				expect(get_checkmate[get_checkmate.activeColor].kingBos).toBe("e1");
+				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].kingBos).toBe("e8");
 			});
 			
-			test("b.active.checks", () => {
-				expect(get_stalemate.active.checks).toBe(0);
-				expect(get_checkmate.active.checks).toBe(1);
-				expect(get_checkmate_double_check.active.checks).toBe(2);
+			test("checks", () => {
+				expect(get_stalemate[get_stalemate.activeColor].checks).toBe(0);
+				expect(get_checkmate[get_checkmate.activeColor].checks).toBe(1);
+				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].checks).toBe(2);
 			});
 		});
 		
-		describe("nonActive", () => {
-			test("b.nonActive.isBlack", () => {
-				expect(get_stalemate.nonActive.isBlack).toBe(false);
-				expect(get_checkmate.nonActive.isBlack).toBe(true);
-				expect(get_checkmate_double_check.nonActive.isBlack).toBe(false);
+		describe("b[b.nonActiveColor]", () => {
+			test("isBlack", () => {
+				expect(get_stalemate[get_stalemate.nonActiveColor].isBlack).toBe(false);
+				expect(get_checkmate[get_checkmate.nonActiveColor].isBlack).toBe(true);
+				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].isBlack).toBe(false);
 			});
 			
-			test("b.nonActive.sign", () => {
-				expect(get_stalemate.nonActive.sign).toBe(1);
-				expect(get_checkmate.nonActive.sign).toBe(-1);
-				expect(get_checkmate_double_check.nonActive.sign).toBe(1);
+			test("sign", () => {
+				expect(get_stalemate[get_stalemate.nonActiveColor].sign).toBe(1);
+				expect(get_checkmate[get_checkmate.nonActiveColor].sign).toBe(-1);
+				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].sign).toBe(1);
 			});
 			
-			test("b.nonActive.kingBos", () => {
-				expect(get_stalemate.nonActive.kingBos).toBe("e1");
-				expect(get_checkmate.nonActive.kingBos).toBe("e8");
-				expect(get_checkmate_double_check.nonActive.kingBos).toBe("d1");
+			test("kingBos", () => {
+				expect(get_stalemate[get_stalemate.nonActiveColor].kingBos).toBe("e1");
+				expect(get_checkmate[get_checkmate.nonActiveColor].kingBos).toBe("e8");
+				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].kingBos).toBe("d1");
 			});
 			
-			test("b.nonActive.checks", () => {
-				expect(get_stalemate.nonActive.checks).toBe(0);
-				expect(get_checkmate.nonActive.checks).toBe(0);
-				expect(get_checkmate_double_check.nonActive.checks).toBe(0);
+			test("checks", () => {
+				expect(get_stalemate[get_stalemate.nonActiveColor].checks).toBe(0);
+				expect(get_checkmate[get_checkmate.nonActiveColor].checks).toBe(0);
+				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].checks).toBe(0);
 			});
 		});
 		

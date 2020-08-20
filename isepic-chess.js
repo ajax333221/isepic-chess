@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(){
-		var _VERSION="3.5.0";
+		var _VERSION="3.6.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["active", "nonActive", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "initialFullMove", "moveList", "currentMove", "isRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "wCastling", "bCastling", "enPassantBos", "halfMove", "fullMove", "initialFullMove", "moveList", "currentMove", "isRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "squares"];
 		
 		//---------------- helpers
 		
@@ -173,7 +173,7 @@
 					to_prop=to_board[current_key];
 					from_prop=from_board[current_key];
 					
-					//["squares"], ["materialDiff"], ["moveList"], ["active", "nonActive"]
+					//["squares"], ["materialDiff"], ["moveList"], ["w", "b"]
 					if(_isObject(from_prop) || _isArray(from_prop)){
 						sub_keys=Object.keys(from_prop);
 						
@@ -215,7 +215,7 @@
 										}
 									}
 								}
-							}else{//["active", "nonActive"] primitive data type
+							}else{//["w", "b"] primitive data type
 								to_prop[sub_keys[j]]=current_sub_from;
 							}
 						}
@@ -421,7 +421,7 @@
 			}
 			
 			rtn_total_checks=0;
-			king_qos=(king_qos || that.active.kingBos);
+			king_qos=(king_qos || that[that.activeColor].kingBos);
 			
 			outer:
 			for(i=0; i<2; i++){//0...1
@@ -520,10 +520,14 @@
 			that.enPassantBos=fen_parts[3].replace("-", "");
 			
 			temp=(fen_parts[1]==="b");
-			that.active.isBlack=temp;
-			that.nonActive.isBlack=!temp;
-			that.active.sign=getSign(temp);
-			that.nonActive.sign=getSign(!temp);
+			
+			that.activeColor=(temp ? "b" : "w");
+			that.nonActiveColor=(!temp ? "b" : "w");
+			
+			that[that.activeColor].isBlack=temp;
+			that[that.nonActiveColor].isBlack=!temp;
+			that[that.activeColor].sign=getSign(temp);
+			that[that.nonActiveColor].sign=getSign(!temp);
 			
 			that.halfMove=((fen_parts[4]*1) || 0);
 			that.fullMove=((fen_parts[5]*1) || 1);
@@ -547,10 +551,11 @@
 					
 					if(!current_square.isEmptySquare){
 						if(current_square.isKing){
-							if(current_square.sign===that.active.sign){
-								that.active.kingBos=current_square.bos;
+							/*zzz 2020 ya se puede hacer inline*/
+							if(current_square.sign===that[that.activeColor].sign){
+								that[that.activeColor].kingBos=current_square.bos;
 							}else{
-								that.nonActive.kingBos=current_square.bos;
+								that[that.nonActiveColor].kingBos=current_square.bos;
 							}
 						}else if(current_square.isBishop){
 							if(current_square.sign>0){
@@ -578,8 +583,8 @@
 				new_fen_board+=(consecutive_empty_squares || "")+(i!==7 ? "/" : "");
 			}
 			
-			that.active.checks=that.countAttacks(null);
-			that.nonActive.checks=0;
+			that[that.activeColor].checks=that.countAttacks(null);
+			that[that.nonActiveColor].checks=0;
 			no_legal_moves=true;
 			
 			outer:
@@ -592,11 +597,11 @@
 				}
 			}
 			
-			that.isCheck=!!that.active.checks;
+			that.isCheck=!!that[that.activeColor].checks;
 			that.isCheckmate=(that.isCheck && no_legal_moves);
 			that.isStalemate=(!that.isCheck && no_legal_moves);
 			
-			clockless_fen=(new_fen_board+" "+(that.active.isBlack ? "b" : "w")+" "+((_castlingChars(that.wCastling).toUpperCase()+""+_castlingChars(that.bCastling)) || "-")+" "+(that.enPassantBos || "-"));
+			clockless_fen=(new_fen_board+" "+that.activeColor+" "+((_castlingChars(that.wCastling).toUpperCase()+""+_castlingChars(that.bCastling)) || "-")+" "+(that.enPassantBos || "-"));
 			
 			that.fen=(clockless_fen+" "+that.halfMove+" "+that.fullMove);
 			
@@ -660,44 +665,50 @@
 			error_msg="";
 			
 			//if(!error_msg){
-				if((that.halfMove-that.active.isBlack+1)>=(that.fullMove*2)){
+				if((that.halfMove-that[that.activeColor].isBlack+1)>=(that.fullMove*2)){
 					error_msg="Error [0] exceeding half moves ratio";
 				}
 			//}
 			
 			if(!error_msg){
-				if(that.active.checks>2){
+				if(that[that.activeColor].checks>2){
 					error_msg="Error [1] king is checked more times than possible";
 				}
 			}
 			
 			if(!error_msg){
-				temp=that.active.isBlack;
+				temp=that[that.activeColor].isBlack;
 				
-				that.active.isBlack=!temp;
-				that.nonActive.isBlack=temp;
-				that.active.sign=getSign(!temp);
-				that.nonActive.sign=getSign(temp);
+				that.activeColor=(!temp ? "b" : "w");
+				that.nonActiveColor=(temp ? "b" : "w");
 				
-				if(that.countAttacks(that.nonActive.kingBos, true)){
+				that[that.activeColor].isBlack=!temp;
+				that[that.nonActiveColor].isBlack=temp;
+				that[that.activeColor].sign=getSign(!temp);
+				that[that.nonActiveColor].sign=getSign(temp);
+				
+				if(that.countAttacks(null, true)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
-				that.active.isBlack=temp;
-				that.nonActive.isBlack=!temp;
-				that.active.sign=getSign(temp);
-				that.nonActive.sign=getSign(!temp);
+				that.activeColor=(temp ? "b" : "w");
+				that.nonActiveColor=(!temp ? "b" : "w");
+				
+				that[that.activeColor].isBlack=temp;
+				that[that.nonActiveColor].isBlack=!temp;
+				that[that.activeColor].sign=getSign(temp);
+				that[that.nonActiveColor].sign=getSign(!temp);
 			}
 			
 			if(!error_msg){
 				if(that.enPassantBos){
-					temp=that.nonActive.sign;
+					temp=that[that.nonActiveColor].sign;
 					
 					en_passant_square=that.getSquare(that.enPassantBos);
 					behind_ep_is_empty=that.getSquare(that.enPassantBos, {rankShift : temp}).isEmptySquare;
 					infront_ep_val=that.getSquare(that.enPassantBos, {rankShift : -temp}).val;
 					
-					if(that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(that.active.isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==temp){
+					if(that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(that[that.activeColor].isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==temp){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -784,7 +795,7 @@
 				}
 				
 				if(!current_square.isEmptySquare){
-					if(current_square.sign===that.nonActive.sign){//is enemy piece
+					if(current_square.sign===that[that.nonActiveColor].sign){//is enemy piece
 						if(op===1){
 							if(allow_capture && !current_square.isKing){
 								rtn.candidateMoves.push(current_square.pos);
@@ -858,7 +869,7 @@
 			//}
 			
 			if(no_errors){
-				if(target_cached_square.isEmptySquare || target_cached_square.sign===that.nonActive.sign){
+				if(target_cached_square.isEmptySquare || target_cached_square.sign===that[that.nonActiveColor].sign){
 					no_errors=false;
 				}
 			}
@@ -866,14 +877,14 @@
 			if(no_errors){//is inside board + is ally piece
 				pre_validated_arr_pos=[];
 				en_passant_capturable_cached_square=null;
-				active_king_original_rank=(that.active.isBlack ? 0 : 7);
+				active_king_original_rank=(that[that.activeColor].isBlack ? 0 : 7);
 				
 				if(target_cached_square.isKing){
 					for(i=1; i<9; i++){//1...8
 						if((temp=_candidateMoves(i, false, 1, true)).length){pre_validated_arr_pos.push(temp);}
 					}
 					
-					active_castling_availity=(that.active.isBlack ? that.bCastling : that.wCastling);
+					active_castling_availity=(that[that.activeColor].isBlack ? that.bCastling : that.wCastling);/*x 2020*/
 					
 					if(active_castling_availity && !that.isCheck){
 						for(i=0; i<2; i++){//0...1
@@ -887,20 +898,20 @@
 						}
 					}
 				}else if(target_cached_square.isPawn){
-					if((temp=_candidateMoves((that.active.isBlack ? 5 : 1), false, (target_cached_square.rankPos===(active_king_original_rank+that.nonActive.sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
+					if((temp=_candidateMoves((that[that.activeColor].isBlack ? 5 : 1), false, (target_cached_square.rankPos===(active_king_original_rank+that[that.nonActiveColor].sign) ? 2 : 1), false)).length){pre_validated_arr_pos.push(temp);}
 					
 					for(i=0; i<2; i++){//0...1
 						current_diagonal_square=that.getSquare(target_qos, {
-							rankShift : that.nonActive.sign,
+							rankShift : that[that.nonActiveColor].sign,
 							fileShift : (i ? 1 : -1)
 						});
 						
 						if(current_diagonal_square!==null){
-							if(!current_diagonal_square.isEmptySquare && current_diagonal_square.sign===that.nonActive.sign && !current_diagonal_square.isKing){
+							if(!current_diagonal_square.isEmptySquare && current_diagonal_square.sign===that[that.nonActiveColor].sign && !current_diagonal_square.isKing){
 								pre_validated_arr_pos.push([current_diagonal_square.pos]);
 							}else if(sameSquare(current_diagonal_square.bos, that.enPassantBos)){
 								en_passant_capturable_cached_square=that.getSquare(current_diagonal_square.pos, {
-									rankShift : that.active.sign,
+									rankShift : that[that.activeColor].sign,
 									isUnreferenced : true
 								});
 								
@@ -1113,18 +1124,18 @@
 				initial_cached_square=that.getSquare(initial_qos, {isUnreferenced : true});
 				final_cached_square=that.getSquare(final_qos, {isUnreferenced : true});
 				
-				active_color_rook=(_ROOK*that.active.sign);
+				active_color_rook=(_ROOK*that[that.activeColor].sign);/*w 2020*/
 				
 				pawn_moved=false;
 				new_en_passant_bos="";
 				promoted_val=0;
 				king_castled=0;
 				
-				new_active_castling_availity=(that.active.isBlack ? that.bCastling : that.wCastling);
-				new_non_active_castling_availity=(that.active.isBlack ? that.wCastling : that.bCastling);
+				new_active_castling_availity=(that[that.activeColor].isBlack ? that.bCastling : that.wCastling);/*x 2020*/
+				new_non_active_castling_availity=(that[that.activeColor].isBlack ? that.wCastling : that.bCastling);/*x 2020*/
 				
-				to_promotion_rank=(final_cached_square.rankPos===(that.active.isBlack ? 7 : 0));
-				active_king_original_rank=(that.active.isBlack ? 0 : 7);
+				to_promotion_rank=(final_cached_square.rankPos===(that[that.activeColor].isBlack ? 7 : 0));
+				active_king_original_rank=(that[that.activeColor].isBlack ? 0 : 7);
 				
 				if(initial_cached_square.isKing){
 					if(new_active_castling_availity){
@@ -1146,11 +1157,11 @@
 					pawn_moved=true;
 					
 					if(Math.abs(initial_cached_square.rankPos-final_cached_square.rankPos)>1){//new enpassant
-						new_en_passant_bos=(final_cached_square.fileBos+""+(that.active.isBlack ? 6 : 3));
+						new_en_passant_bos=(final_cached_square.fileBos+""+(that[that.activeColor].isBlack ? 6 : 3));
 					}else if(sameSquare(final_cached_square.bos, that.enPassantBos)){//enpassant capture
-						that.setSquare((final_cached_square.fileBos+""+(that.active.isBlack ? 4 : 5)), _EMPTY_SQR);//ver con step, se calcula mas facil? o sin diagonal no tan facil?
+						that.setSquare((final_cached_square.fileBos+""+(that[that.activeColor].isBlack ? 4 : 5)), _EMPTY_SQR);//ver con step, se calcula mas facil? o sin diagonal no tan facil?
 					}else if(to_promotion_rank){//promotion
-						promoted_val=(that.promoteTo*that.active.sign);
+						promoted_val=(that.promoteTo*that[that.activeColor].sign);
 					}
 				}
 				
@@ -1239,26 +1250,30 @@
 					}
 				}
 				
-				that.wCastling=(that.active.isBlack ? new_non_active_castling_availity : new_active_castling_availity);
-				that.bCastling=(that.active.isBlack ? new_active_castling_availity : new_non_active_castling_availity);
+				that.wCastling=(that[that.activeColor].isBlack ? new_non_active_castling_availity : new_active_castling_availity);/*x 2020*/
+				that.bCastling=(that[that.activeColor].isBlack ? new_active_castling_availity : new_non_active_castling_availity);/*x 2020*/
 				
 				that.enPassantBos=new_en_passant_bos;
 				
 				that.setSquare(final_qos, (promoted_val || initial_cached_square.val));
 				that.setSquare(initial_qos, _EMPTY_SQR);
 				
-				temp=that.active.isBlack;
-				that.active.isBlack=!temp;
-				that.nonActive.isBlack=temp;
-				that.active.sign=getSign(!temp);
-				that.nonActive.sign=getSign(temp);
+				temp=that[that.activeColor].isBlack;
+				
+				that.activeColor=(!temp ? "b" : "w");
+				that.nonActiveColor=(temp ? "b" : "w");
+				
+				that[that.activeColor].isBlack=!temp;
+				that[that.nonActiveColor].isBlack=temp;
+				that[that.activeColor].sign=getSign(!temp);
+				that[that.nonActiveColor].sign=getSign(temp);
 				
 				that.halfMove++;
 				if(pawn_moved || final_cached_square.val){
 					that.halfMove=0;
 				}
 				
-				if(that.nonActive.isBlack){
+				if(that[that.nonActiveColor].isBlack){
 					that.fullMove++;
 				}
 				
@@ -1275,7 +1290,7 @@
 				if(that.isCheck){
 					if(that.isCheckmate){
 						pgn_move+="#";
-						pgn_end=(that.active.isBlack ? "1-0" : "0-1");
+						pgn_end=(that[that.activeColor].isBlack ? "1-0" : "0-1");
 					}else{
 						pgn_move+="+";
 					}
@@ -1732,20 +1747,22 @@
 				
 				target=_BOARDS[board_name];
 				
-				target.active={
+				target.w={
 					isBlack : null,
 					sign : null,
 					kingBos : null,
 					checks : null
 				};
 				
-				target.nonActive={
+				target.b={
 					isBlack : null,
 					sign : null,
 					kingBos : null,
 					checks : null
 				};
 				
+				target.activeColor=null;
+				target.nonActiveColor=null;
 				target.fen=null;
 				target.wCastling=null;
 				target.bCastling=null;
