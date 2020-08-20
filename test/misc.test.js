@@ -125,6 +125,115 @@ describe("Misc.", () => {
 				expect(board_other.materialDiff).toEqual({w:[], b:[]});
 			});
 		});
+		
+		test("Removing castle rights", () => {
+			var board_obj, board_other;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "r3k2r/4p3/8/3bb3/8/8/Q3P2Q/R3K2R w KQkq - 0 1",
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			board_other=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			expect(board_obj.w.castling).toBe(3);
+			expect(board_obj.b.castling).toBe(3);
+			
+			//w losing long-castle right by rook-move
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("a1", "d1");
+			expect(board_other.w.castling).toBe(1);
+			expect(board_other.b.castling).toBe(3);
+			
+			//w losing short-castle right by rook-move
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("h1", "f1");
+			expect(board_other.w.castling).toBe(2);
+			expect(board_other.b.castling).toBe(3);
+			
+			//w losing both castling rights by king-move
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("e1", "d1");
+			expect(board_other.w.castling).toBe(0);
+			expect(board_other.b.castling).toBe(3);
+			
+			//w losing both castling rights by long-castle
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("e1", "c1");
+			expect(board_other.w.castling).toBe(0);
+			expect(board_other.b.castling).toBe(3);
+			
+			//w losing both castling rights by short-castle
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("e1", "g1");
+			expect(board_other.w.castling).toBe(0);
+			expect(board_other.b.castling).toBe(3);
+			
+			//w making b lose long-castle right by rook-capture
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("a2", "a8");
+			expect(board_other.w.castling).toBe(3);
+			expect(board_other.b.castling).toBe(1);
+			
+			//w making b lose short-castle right by rook-capture
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("h2", "h8");
+			expect(board_other.w.castling).toBe(3);
+			expect(board_other.b.castling).toBe(2);
+			
+			board_obj.moveCaller("e2", "e3");
+			expect(board_obj.w.castling).toBe(3);
+			expect(board_obj.b.castling).toBe(3);
+			
+			//b losing long-castle right by rook-move
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("a8", "d8");
+			expect(board_other.w.castling).toBe(3);
+			expect(board_other.b.castling).toBe(1);
+			
+			//b losing short-castle right by rook-move
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("h8", "f8");
+			expect(board_other.w.castling).toBe(3);
+			expect(board_other.b.castling).toBe(2);
+			
+			//b losing both castling rights by king-move
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("e8", "d8");
+			expect(board_other.w.castling).toBe(3);
+			expect(board_other.b.castling).toBe(0);
+			
+			//b losing both castling rights by long-castle
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("e8", "c8");
+			expect(board_other.w.castling).toBe(3);
+			expect(board_other.b.castling).toBe(0);
+			
+			//b losing both castling rights by short-castle
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("e8", "g8");
+			expect(board_other.w.castling).toBe(3);
+			expect(board_other.b.castling).toBe(0);
+			
+			//b making w lose long-castle right by rook-capture
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("e5", "a1");
+			expect(board_other.w.castling).toBe(1);
+			expect(board_other.b.castling).toBe(3);
+			
+			//b making w lose short-castle right by rook-capture
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			board_other.moveCaller("d5", "h1");
+			expect(board_other.w.castling).toBe(2);
+			expect(board_other.b.castling).toBe(3);
+		});
 	});
 	
 	test("Invalid FEN positions that only the refined FEN test catches", () => {

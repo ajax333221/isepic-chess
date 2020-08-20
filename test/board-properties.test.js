@@ -54,6 +54,8 @@ describe("Board properties", () => {
 				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].kingBos).toBe("e8");
 			});
 			
+			//b.x.castling in "b.fen, b.w.castling and b.b.castling"
+			
 			test("checks", () => {
 				expect(get_stalemate[get_stalemate.activeColor].checks).toBe(0);
 				expect(get_checkmate[get_checkmate.activeColor].checks).toBe(1);
@@ -79,6 +81,8 @@ describe("Board properties", () => {
 				expect(get_checkmate[get_checkmate.nonActiveColor].kingBos).toBe("e8");
 				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].kingBos).toBe("d1");
 			});
+			
+			//b.x.castling in "b.fen, b.w.castling and b.b.castling"
 			
 			test("checks", () => {
 				expect(get_stalemate[get_stalemate.nonActiveColor].checks).toBe(0);
@@ -108,40 +112,40 @@ describe("Board properties", () => {
 		});
 	});
 	
-	test("b.fen, b.wCastling and b.bCastling", () => {
+	test("b.fen, b.w.castling and b.b.castling", () => {
 		var temp, strlist, current_fen;
 		
-		strlist="fen, wCastling, bCastling";
+		strlist="fen, w, b";
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		temp=Ic.fenGet(current_fen, strlist);
 		expect(temp.fen).toBe(current_fen);
-		expect(temp.wCastling).toBe(3);
-		expect(temp.bCastling).toBe(3);
+		expect(temp.w.castling).toBe(3);
+		expect(temp.b.castling).toBe(3);
 		
 		current_fen="rnbqkbnr/1ppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 b Qkq -";
 		temp=Ic.fenGet(current_fen, strlist);
 		expect(temp.fen).toBe(current_fen+" 0 1");
-		expect(temp.wCastling).toBe(2);
-		expect(temp.bCastling).toBe(3);
+		expect(temp.w.castling).toBe(2);
+		expect(temp.b.castling).toBe(3);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 w Qk - 2 5";
 		temp=Ic.fenGet(current_fen, strlist);
 		expect(temp.fen).toBe(current_fen);
-		expect(temp.wCastling).toBe(2);
-		expect(temp.bCastling).toBe(1);
+		expect(temp.w.castling).toBe(2);
+		expect(temp.b.castling).toBe(1);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 b k - 3 5";
 		temp=Ic.fenGet(current_fen, strlist);
 		expect(temp.fen).toBe(current_fen);
-		expect(temp.wCastling).toBe(0);
-		expect(temp.bCastling).toBe(1);
+		expect(temp.w.castling).toBe(0);
+		expect(temp.b.castling).toBe(1);
 		
 		current_fen="1nbq1bnr/rpppkpp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 w - -";
 		temp=Ic.fenGet(current_fen, strlist);
 		expect(temp.fen).toBe(current_fen+" 0 1");
-		expect(temp.wCastling).toBe(0);
-		expect(temp.bCastling).toBe(0);
+		expect(temp.w.castling).toBe(0);
+		expect(temp.b.castling).toBe(0);
 	});
 	
 	test("b.squares", () => {
