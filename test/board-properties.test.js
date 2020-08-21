@@ -55,12 +55,6 @@ describe("Board properties", () => {
 			});
 			
 			//b.x.castling in "b.fen, b.w.castling and b.b.castling"
-			
-			test("checks", () => {
-				expect(get_stalemate[get_stalemate.activeColor].checks).toBe(0);
-				expect(get_checkmate[get_checkmate.activeColor].checks).toBe(1);
-				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].checks).toBe(2);
-			});
 		});
 		
 		describe("b[b.nonActiveColor]", () => {
@@ -83,12 +77,6 @@ describe("Board properties", () => {
 			});
 			
 			//b.x.castling in "b.fen, b.w.castling and b.b.castling"
-			
-			test("checks", () => {
-				expect(get_stalemate[get_stalemate.nonActiveColor].checks).toBe(0);
-				expect(get_checkmate[get_checkmate.nonActiveColor].checks).toBe(0);
-				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].checks).toBe(0);
-			});
 		});
 		
 		test("b.halfMove", () => {
@@ -182,6 +170,21 @@ describe("Board properties", () => {
 		expect(Ic.fenGet("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDiff").materialDiff).toEqual({w:[1, 1, 3, 5], b:[-2, -2, -4]});
 		
 		expect(Ic.fenGet("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDiff").materialDiff).toEqual({w:[], b:[]});
+	});
+	
+	test("b.checks", () => {
+		expect(Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", "checks").checks).toBe(0);
+		expect(Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", "checks").checks).toBe(1);
+		expect(Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", "checks").checks).toBe(2);
+		
+		expect(Ic.fenGet("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "checks").checks).toBe(2);
+		expect(Ic.fenGet("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "checks").checks).toBe(0);
+		
+		expect(Ic.fenGet("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "checks").checks).toBe(1);
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "checks").checks).toBe(1);
+		
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "checks").checks).toBe(0);
+		expect(Ic.fenGet("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "checks").checks).toBe(0);
 	});
 	
 	test("b.isCheck", () => {

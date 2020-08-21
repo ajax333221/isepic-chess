@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(windw){
-		var _VERSION="3.7.1";
+		var _VERSION="3.8.0";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -16,7 +16,7 @@
 		var _QUEEN=5;
 		var _KING=6;
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "initialFullMove", "moveList", "currentMove", "isRotated", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "initialFullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "squares"];
 		
 		//---------------- helpers
 		
@@ -524,11 +524,6 @@
 			that.activeColor=(temp ? "b" : "w");
 			that.nonActiveColor=(!temp ? "b" : "w");
 			
-			that[that.activeColor].isBlack=temp;
-			that[that.nonActiveColor].isBlack=!temp;
-			that[that.activeColor].sign=getSign(temp);
-			that[that.nonActiveColor].sign=getSign(!temp);
-			
 			that.halfMove=((fen_parts[4]*1) || 0);
 			that.fullMove=((fen_parts[5]*1) || 1);
 			
@@ -578,8 +573,8 @@
 				new_fen_board+=(consecutive_empty_squares || "")+(i!==7 ? "/" : "");
 			}
 			
-			that[that.activeColor].checks=that.countAttacks(null);
-			that[that.nonActiveColor].checks=0;
+			that.checks=that.countAttacks(null);
+			
 			no_legal_moves=true;
 			
 			outer:
@@ -592,7 +587,7 @@
 				}
 			}
 			
-			that.isCheck=!!that[that.activeColor].checks;
+			that.isCheck=!!that.checks;
 			that.isCheckmate=(that.isCheck && no_legal_moves);
 			that.isStalemate=(!that.isCheck && no_legal_moves);
 			
@@ -666,7 +661,7 @@
 			//}
 			
 			if(!error_msg){
-				if(that[that.activeColor].checks>2){
+				if(that.checks>2){
 					error_msg="Error [1] king is checked more times than possible";
 				}
 			}
@@ -677,22 +672,12 @@
 				that.activeColor=(!temp ? "b" : "w");
 				that.nonActiveColor=(temp ? "b" : "w");
 				
-				that[that.activeColor].isBlack=!temp;
-				that[that.nonActiveColor].isBlack=temp;
-				that[that.activeColor].sign=getSign(!temp);
-				that[that.nonActiveColor].sign=getSign(temp);
-				
 				if(that.countAttacks(null, true)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
 				that.activeColor=(temp ? "b" : "w");
 				that.nonActiveColor=(!temp ? "b" : "w");
-				
-				that[that.activeColor].isBlack=temp;
-				that[that.nonActiveColor].isBlack=!temp;
-				that[that.activeColor].sign=getSign(temp);
-				that[that.nonActiveColor].sign=getSign(!temp);
 			}
 			
 			if(!error_msg){
@@ -1129,7 +1114,7 @@
 				initial_cached_square=that.getSquare(initial_qos, {isUnreferenced : true});
 				final_cached_square=that.getSquare(final_qos, {isUnreferenced : true});
 				
-				active_color_rook=(_ROOK*that[that.activeColor].sign);/*w 2020*/
+				active_color_rook=(_ROOK*that[that.activeColor].sign);
 				
 				pawn_moved=false;
 				new_en_passant_bos="";
@@ -1259,11 +1244,6 @@
 				
 				that.activeColor=(!temp ? "b" : "w");
 				that.nonActiveColor=(temp ? "b" : "w");
-				
-				that[that.activeColor].isBlack=!temp;
-				that[that.nonActiveColor].isBlack=temp;
-				that[that.activeColor].sign=getSign(!temp);
-				that[that.nonActiveColor].sign=getSign(temp);
 				
 				that.halfMove++;
 				if(pawn_moved || final_cached_square.val){
@@ -1745,19 +1725,23 @@
 				target=_BOARDS[board_name];
 				
 				target.w={
-					isBlack : null,
-					sign : null,
+					//static
+					isBlack : false,
+					sign : 1,
+					
+					//mutable
 					kingBos : null,
-					castling : null,
-					checks : null
+					castling : null
 				};
 				
 				target.b={
-					isBlack : null,
-					sign : null,
+					//static
+					isBlack : true,
+					sign : -1,
+					
+					//mutable
 					kingBos : null,
-					castling : null,
-					checks : null
+					castling : null
 				};
 				
 				target.activeColor=null;
@@ -1770,6 +1754,7 @@
 				target.moveList=null;
 				target.currentMove=null;
 				target.isRotated=null;
+				target.checks=null;
 				target.isCheck=null;
 				target.isCheckmate=null;
 				target.isStalemate=null;
