@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(windw){
-		var _VERSION="3.7.0";
+		var _VERSION="3.7.1";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -1137,7 +1137,7 @@
 				king_castled=0;
 				
 				active_king_original_rank=(that[that.activeColor].isBlack ? 0 : 7);
-				non_active_king_original_rank=(that[that.activeColor].isBlack ? 7 : 0);
+				non_active_king_original_rank=(that[that.nonActiveColor].isBlack ? 0 : 7);
 				
 				if(initial_cached_square.isKing){
 					if(that[that.activeColor].castling){
