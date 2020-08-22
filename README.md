@@ -182,10 +182,10 @@ Property | Type | Description
 To do
 -------------
 
-- **Move the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple (also finish the documentation)
-- **Simple PGN parser** (no support for nested-variations and comments will be removed)
-- **Nested move list variations** (currently if you go back in history and make a move, the moves from that point get lost instead of starting a variation)
-- **PGN parser** (full support for nested-variations and comments)
+- **Finish the documentation** (:wrench: `board.<methods>(...)` is not complete)
+- **Relocate the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple
+- **PGN parser**
+- **Nested move list variations** (currently if you navigate back in history and make a move, the moves from that point get lost instead of starting a variation)
 
 Copyright and license
 -------------

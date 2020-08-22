@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(windw){
-		var _VERSION="3.9.0";
+		var _VERSION="3.9.1";
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -1449,7 +1449,7 @@
 			val=toVal(qal);
 			abs_val=toAbsVal(qal);
 			
-			rtn=["*", "p", "n", "b", "r", "q", "k"][abs_val];//asterisk character is dangerous: _occurrences() might use RegExp("*", "g") if not cautious
+			rtn=["*", "p", "n", "b", "r", "q", "k"][abs_val];//deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
 			
 			return (val===abs_val ? rtn.toUpperCase() : rtn);
 		}
