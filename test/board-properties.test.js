@@ -14,10 +14,10 @@ Ic.setSilentMode(false);
 //(x) inDraw = (N/A)(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial)
 
 describe("Board properties", () => {
-	describe("w, b, activeColor, nonActiveColor, halfMove, fullMove and initialFullMove", () => {
+	describe("w, b, activeColor, nonActiveColor, halfMove and fullMove", () => {
 		var strlist, get_stalemate, get_checkmate, get_checkmate_double_check;
 		
-		strlist="w, b, activeColor, nonActiveColor, halfMove, fullMove, initialFullMove";
+		strlist="w, b, activeColor, nonActiveColor, halfMove, fullMove";
 		
 		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", strlist);
 		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", strlist);
@@ -89,14 +89,6 @@ describe("Board properties", () => {
 			expect(get_stalemate.fullMove).toBe(10);
 			expect(get_checkmate.fullMove).toBe(3);
 			expect(get_checkmate_double_check.fullMove).toBe(7);
-		});
-		
-		test("b.initialFullMove", () => {
-			expect(get_stalemate.initialFullMove).toBe(10);
-			expect(get_checkmate.initialFullMove).toBe(3);
-			expect(get_checkmate_double_check.initialFullMove).toBe(7);
-			
-			expect(Ic.fenGet("r1bqkb1r/pppppppp/2n2n2/8/8/2N2N2/PPPPPPPP/R1BQKB1R w KQkq -", "initialFullMove").initialFullMove).toBe(1);
 		});
 	});
 	

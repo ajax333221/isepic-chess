@@ -1,9 +1,25 @@
 isepic-chess.js
 ================
 
-`isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN position validation, storing SAN moves, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
+`isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, storing SAN moves, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
 
 > **Note:** As of `v2.6.0` <sup>(April, 2020)</sup>, everything visual (HTML board, piece animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery (or any other dependency).
+
+Table of contents
+-------------
+
+- [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
+- [Table of contents](https://github.com/ajax333221/isepic-chess#table-of-contents)
+- [Installation](https://github.com/ajax333221/isepic-chess#installation)
+- [Demo](https://github.com/ajax333221/isepic-chess#demo-from-isepic-chess-ui)
+- [Features](https://github.com/ajax333221/isepic-chess#features)
+- [Documentation](https://github.com/ajax333221/isepic-chess#documentation)
+	- [Ic methods](https://github.com/ajax333221/isepic-chess#list-of-icmethods)
+	- [Board properties](https://github.com/ajax333221/isepic-chess#list-of-boardproperties)
+	- [Board methods](https://github.com/ajax333221/isepic-chess#list-of-boardmethods)
+	- [Square properties](https://github.com/ajax333221/isepic-chess#list-of-squareproperties)
+- [To do](https://github.com/ajax333221/isepic-chess#to-do)
+- [Copyright and license](https://github.com/ajax333221/isepic-chess#copyright-and-license)
 
 Installation
 -------------
@@ -91,10 +107,9 @@ Property | Type | Description
 **w**<hr>**b** | Object | They both have the following sub-properties:<ul><li>**isBlack** (Boolean): `board.w.isBlack` will always be **false** and `board.b.isBlack` will always be **true**.</li><li>**sign** (Number): `board.w.sign` will always be **positive** `1` and `board.b.sign` will always be **negative** `-1`.</li><li>**kingBos** (String): `board.w.kingBos` and `board.b.kingBos` hold the **king bos** square of their respective king.</li><li>**castling** (Number): `board.w.castling` and `board.b.castling` hold the **castling rights** in a single digit value: `0 = no castling rights`, `1 = only short castle`, `2 = only long castle`, `3 = both castling rights`.</li></ul><hr>Examples:<ul><li>`board.w.isBlack //false`</li><li>`board.b.isBlack //true`</li><li>`board.w.sign //1`</li><li>`board.b.sign //-1`</li><li>`board.w.kingBos //"e1"`</li><li>`board.b.kingBos //"e8"`</li><li>`board.w.castling //3`</li><li>`board.b.castling //3`</li></ul>
 **activeColor**<hr>**nonActiveColor** | String | `board.activeColor` holds `"w"` when **white** to move and `"b"` when **black** to move.<br><br>`board.nonActiveColor` holds `"w"` when **black** to move and `"b"` when **white** to move.<br><br>:zap:**Tip:** you can use `board[board.activeColor]` and `board[board.nonActiveColor]` to access the sub-properties of `board.w` and `board.b` <sup>(not respectively)</sup> depending on the actual **active** or **non active color**.<hr>Examples:<ul><li>`main_board.activeColor //"w"`</li><li>`main_board.nonActiveColor //"b"`</li><li>`rff_board.activeColor //"b"`</li><li>`rff_board.nonActiveColor //"w"`</li></ul>
 **fen** | String | The **fen** (Forsyth–Edwards Notation) of the **board** in its current state.<hr>Examples:<ul><li>`main_board.fen //"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"`</li><li>`rff_board.fen //"r5k1/pp3ppp/7n/8/2P2P1K/3P1q2/P1PBb2P/R5QR b - - 3 22"`</li></ul>
-**enPassantBos** | String | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board_after_e4.enPassantBos //"e3"`</li><li>`board_no_enpass.enPassantBos //""`</li></ul>
-**halfMove** | Number | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board.halfMove //0`</li><li>`board_after_e4.halfMove //0`</li><li>`board_after_e4_e5.halfMove //0`</li><li>`board_after_e4_e5_nf3.halfMove //1`</li><li>`rff_board.halfMove //3`</li></ul>
-**fullMove** | Number | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board.fullMove //1`</li><li>`board_after_e4.fullMove //1`</li><li>`board_after_e4_e5.fullMove //2`</li><li>`board_after_e4_e5_nf3.fullMove //2`</li><li>`rff_board.fullMove //22`</li></ul>
-**initialFullMove** | Number | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`main_board.initialFullMove //1`</li><li>`rff_board.initialFullMove //22`</li></ul>
+**enPassantBos** | String | Holds the **En passant bos** square (if any) or an empty string.<hr>Examples:<ul><li>`board_after_e4.enPassantBos //"e3"`</li><li>`board_no_enpass.enPassantBos //""`</li></ul>
+**halfMove** | Number | The **halfmove clock**.<br><br>Starts with the default value of `0` unless the **fen** used to initiate the **board** provides the optional **halfmove/fullmove clocks**.<hr>Examples:<ul><li>`board.halfMove //0`</li><li>`board_after_e4.halfMove //0`</li><li>`board_after_e4_e5.halfMove //0`</li><li>`board_after_e4_e5_nf3.halfMove //1`</li><li>`rff_board.halfMove //3`</li></ul>
+**fullMove** | Number | The **fullmove clock**.<br><br>Starts with the default value of `1` unless the **fen** used to initiate the **board** provides the optional **halfmove/fullmove clocks**.<hr>Examples:<ul><li>`board.fullMove //1`</li><li>`board_after_e4.fullMove //1`</li><li>`board_after_e4_e5.fullMove //2`</li><li>`board_after_e4_e5_nf3.fullMove //2`</li><li>`rff_board.fullMove //22`</li></ul>
 **moveList** | Object | :wrench: ... **under construction** ... :wrench:
 **currentMove** | Number | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board.currentMove //0`</li><li>`board_after_e4.currentMove //1`</li><li>`board_after_e4_e5.currentMove //2`</li><li>`board_after_e4_e5_nf3.currentMove //3`</li><li>`rff_board.currentMove //0`</li></ul>
 **isRotated** | Boolean | :wrench: ... **under construction** ... :wrench:<hr>Examples:<ul><li>`board.isRotated //false`</li><li>`board_currently_rotated.isRotated //true`</li></ul>
@@ -164,7 +179,7 @@ Property | Type | Description
 **isQueen** | Boolean | `true` when the **square abs val** is `5`
 **isKing** | Boolean | `true` when the **square abs val** is `6`
 
-To Do
+To do
 -------------
 
 - **Move the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple (also finish the documentation)
@@ -172,7 +187,7 @@ To Do
 - **Nested move list variations** (currently if you go back in history and make a move, the moves from that point get lost instead of starting a variation)
 - **PGN parser** (full support for nested-variations and comments)
 
-Copyright and License
+Copyright and license
 -------------
 
 Copyright © 2020 Ajax Isepic (ajax333221)

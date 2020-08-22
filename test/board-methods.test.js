@@ -36,7 +36,7 @@ describe("Board methods", () => {
 				invalidFenStop : true
 			});
 			
-			expect(Ic.selectBoard(board_name).boardHash()).toBe(-809100118);
+			expect(Ic.selectBoard(board_name).boardHash()).toBe(1599610631);
 		});
 		
 		test("other position and board name not used in the hash", () => {
@@ -61,7 +61,7 @@ describe("Board methods", () => {
 			hash_a=Ic.selectBoard(board_name).boardHash();
 			hash_b=Ic.selectBoard(other_board_name).boardHash();
 			
-			expect(hash_a).toBe(-2127056355);
+			expect(hash_a).toBe(-906290733);
 			expect(hash_a===hash_b).toBe(true);
 			expect(Ic.selectBoard(board_name)===Ic.selectBoard(other_board_name)).toBe(false);
 		});
