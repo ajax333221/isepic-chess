@@ -4,7 +4,8 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(windw){
-		var _VERSION="3.9.1";
+		var _VERSION="3.10.0";
+		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
 		
@@ -15,7 +16,9 @@
 		var _ROOK=4;
 		var _QUEEN=5;
 		var _KING=6;
+		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+		
 		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "squares"];
 		
 		//---------------- helpers
@@ -412,7 +415,7 @@
 		}
 		
 		function _countAttacks(king_qos, early_break){
-			var i, j, that, as_knight, rtn_total_checks;
+			var i, j, that, as_knight, active_side, rtn_total_checks;
 			
 			that=this;
 			
@@ -421,7 +424,9 @@
 			}
 			
 			rtn_total_checks=0;
-			king_qos=(king_qos || that[that.activeColor].kingBos);
+			
+			active_side=that[that.activeColor];
+			king_qos=(king_qos || active_side.kingBos);
 			
 			outer:
 			for(i=0; i<2; i++){//0...1
@@ -441,12 +446,25 @@
 			return rtn_total_checks;
 		}
 		
-		function _toggleIsRotated(){
+		function _toggleActiveNonActive(new_active){
 			var that;
 			
 			that=this;
 			
-			that.isRotated=!that.isRotated;
+			new_active=((typeof new_active)==="boolean" ? new_active : !that[that.activeColor].isBlack);
+			
+			that.activeColor=(new_active ? "b" : "w");
+			that.nonActiveColor=(!new_active ? "b" : "w");
+		}
+		
+		function _toggleIsRotated(new_is_rotated){
+			var that;
+			
+			that=this;
+			
+			new_is_rotated=((typeof new_is_rotated)==="boolean" ? new_is_rotated : !that.isRotated);
+			
+			that.isRotated=new_is_rotated;
 			
 			that.refreshBoard(0);//autorefresh
 		}
@@ -486,7 +504,7 @@
 		}
 		
 		function _readFen(fen){
-			var i, j, len, that, temp, fen_parts, current_file, current_char, fen_board_arr, skip_files;
+			var i, j, len, that, fen_parts, current_file, current_char, fen_board_arr, skip_files;
 			
 			that=this;
 			
@@ -519,10 +537,7 @@
 			
 			that.enPassantBos=fen_parts[3].replace("-", "");
 			
-			temp=(fen_parts[1]==="b");
-			
-			that.activeColor=(temp ? "b" : "w");
-			that.nonActiveColor=(!temp ? "b" : "w");
+			that.toggleActiveNonActive(fen_parts[1]==="b");
 			
 			that.halfMove=((fen_parts[4]*1) || 0);
 			that.fullMove=((fen_parts[5]*1) || 1);
@@ -531,7 +546,7 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, len, that, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves, bishop_count, at_least_one_light, at_least_one_dark;
+			var i, j, len, that, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, no_legal_moves, bishop_count, at_least_one_light, at_least_one_dark, current_side;
 			
 			that=this;
 			
@@ -546,20 +561,16 @@
 					
 					if(!current_square.isEmptySquare){
 						if(current_square.isKing){
-							that[current_square.sign===that[that.activeColor].sign ? that.activeColor : that.nonActiveColor].kingBos=current_square.bos;
+							current_side=(current_square.sign===that[that.activeColor].sign ? that[that.activeColor] : that[that.nonActiveColor]);
+							
+							current_side.kingBos=current_square.bos;
 						}else if(current_square.isBishop){
-							if(current_square.sign>0){
-								if((i+j)%2){
-									bishop_count.w.darkSquaredBishops++;
-								}else{
-									bishop_count.w.lightSquaredBishops++;
-								}
+							current_side=(current_square.sign>0 ? bishop_count.w : bishop_count.b);
+							
+							if((i+j)%2){
+								current_side.darkSquaredBishops++;
 							}else{
-								if((i+j)%2){
-									bishop_count.b.darkSquaredBishops++;
-								}else{
-									bishop_count.b.lightSquaredBishops++;
-								}
+								current_side.lightSquaredBishops++;
 							}
 						}
 						
@@ -648,14 +659,17 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, current_side, current_king_rank, en_passant_square, behind_ep_is_empty, infront_ep_val, fen_board, total_pawns_in_current_file, min_captured, error_msg;
+			var i, j, k, that, temp, current_king_rank, en_passant_square, behind_ep_is_empty, infront_ep_val, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, error_msg;
 			
 			that=this;
 			
 			error_msg="";
 			
 			//if(!error_msg){
-				if((that.halfMove-that[that.activeColor].isBlack+1)>=(that.fullMove*2)){
+				active_side=that[that.activeColor];
+				non_active_side=that[that.nonActiveColor];
+				
+				if((that.halfMove-active_side.isBlack+1)>=(that.fullMove*2)){
 					error_msg="Error [0] exceeding half moves ratio";
 				}
 			//}
@@ -667,28 +681,22 @@
 			}
 			
 			if(!error_msg){
-				temp=that[that.activeColor].isBlack;
-				
-				that.activeColor=(!temp ? "b" : "w");
-				that.nonActiveColor=(temp ? "b" : "w");
+				that.toggleActiveNonActive();
 				
 				if(that.countAttacks(null, true)){
 					error_msg="Error [2] non-active king in check";
 				}
 				
-				that.activeColor=(temp ? "b" : "w");
-				that.nonActiveColor=(!temp ? "b" : "w");
+				that.toggleActiveNonActive();
 			}
 			
 			if(!error_msg){
 				if(that.enPassantBos){
-					temp=that[that.nonActiveColor].sign;
-					
 					en_passant_square=that.getSquare(that.enPassantBos);
-					behind_ep_is_empty=that.getSquare(that.enPassantBos, {rankShift : temp}).isEmptySquare;
-					infront_ep_val=that.getSquare(that.enPassantBos, {rankShift : -temp}).val;
+					behind_ep_is_empty=that.getSquare(that.enPassantBos, {rankShift : non_active_side.sign}).isEmptySquare;
+					infront_ep_val=that.getSquare(that.enPassantBos, {rankShift : active_side.sign}).val;
 					
-					if(that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(that[that.activeColor].isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==temp){
+					if(that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(active_side.isBlack ? 5 : 2) || !behind_ep_is_empty || infront_ep_val!==non_active_side.pawn){
 						error_msg="Error [3] bad en-passant";
 					}
 				}
@@ -698,15 +706,14 @@
 				fen_board=that.fen.split(" ")[0];
 				
 				for(i=0; i<2; i++){//0...1
+					current_side=(i ? that.w : that.b);
 					min_captured=0;
 					
 					for(j=0; j<8; j++){//0...7
 						total_pawns_in_current_file=0;
 						
 						for(k=0; k<8; k++){//0...7
-							temp=that.getSquare([k, j]).val;
-							
-							total_pawns_in_current_file+=(temp===(_PAWN*getSign(!i)));
+							total_pawns_in_current_file+=(that.getSquare([k, j]).val===current_side.pawn);
 						}
 						
 						if(total_pawns_in_current_file>1){
@@ -730,11 +737,11 @@
 					if(current_side.castling){
 						current_king_rank=(i ? 7 : 0);
 						
-						if(that.getSquare([current_king_rank, 4]).val!==(_KING*current_side.sign)){
+						if(that.getSquare([current_king_rank, 4]).val!==current_side.king){
 							error_msg="Error [5] "+(i ? "white" : "black")+" castling rights without king in original position";
-						}else if(current_side.castling!==2 && that.getSquare([current_king_rank, 7]).val!==(_ROOK*current_side.sign)){
+						}else if(current_side.castling!==2 && that.getSquare([current_king_rank, 7]).val!==current_side.rook){
 							error_msg="Error [6] "+(i ? "white" : "black")+" short castling rights with missing H-file rook";
-						}else if(current_side.castling!==1 && that.getSquare([current_king_rank, 0]).val!==(_ROOK*current_side.sign)){
+						}else if(current_side.castling!==1 && that.getSquare([current_king_rank, 0]).val!==current_side.rook){
 							error_msg="Error [7] "+(i ? "white" : "black")+" long castling rights with missing A-file rook";
 						}
 					}
@@ -749,7 +756,7 @@
 		}
 		
 		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_qal){
-			var i, that, current_square, rank_change, file_change, rtn;
+			var i, that, current_square, rank_change, file_change, active_side, rtn;
 			
 			that=this;
 			
@@ -759,9 +766,12 @@
 				disambiguationPos : null
 			};
 			
+			active_side=that[that.activeColor];
+			
 			piece_direction=_toInt(piece_direction, 1, 8);
 			rank_change=(as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction-1];
 			file_change=(as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction-1];
+			
 			total_squares=_toInt(as_knight ? 1 : (total_squares || 7));
 			
 			for(i=0; i<total_squares; i++){//0<total_squares
@@ -775,7 +785,13 @@
 				}
 				
 				if(!current_square.isEmptySquare){
-					if(current_square.sign===that[that.nonActiveColor].sign){//is enemy piece
+					if(current_square.sign===active_side.sign){//is ally piece
+						if(op===3){
+							if(current_square.absVal===toAbsVal(ally_qal)){
+								rtn.disambiguationPos=current_square.pos;
+							}
+						}
+					}else{//is enemy piece
 						if(op===1){
 							if(allow_capture && !current_square.isKing){
 								rtn.candidateMoves.push(current_square.pos);
@@ -809,12 +825,6 @@
 								}
 							}
 						}
-					}else{//is ally piece
-						if(op===3){
-							if(current_square.absVal===toAbsVal(ally_qal)){
-								rtn.disambiguationPos=current_square.pos;
-							}
-						}
 					}
 					
 					break;
@@ -829,7 +839,7 @@
 		}
 		
 		function _legalMoves(target_qos){
-			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, active_king_original_rank, en_passant_capturable_cached_square, piece_directions, no_errors, rtn;
+			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, active_king_original_rank, en_passant_capturable_cached_square, piece_directions, no_errors, active_side, non_active_side, rtn;
 			
 			that=this;
 			
@@ -849,7 +859,10 @@
 			//}
 			
 			if(no_errors){
-				if(target_cached_square.isEmptySquare || target_cached_square.sign===that[that.nonActiveColor].sign){
+				active_side=that[that.activeColor];
+				non_active_side=that[that.nonActiveColor];
+				
+				if(target_cached_square.isEmptySquare || target_cached_square.sign===non_active_side.sign){
 					no_errors=false;
 				}
 			}
@@ -857,7 +870,8 @@
 			if(no_errors){//is inside board + is ally piece
 				pre_validated_arr_pos=[];
 				en_passant_capturable_cached_square=null;
-				active_king_original_rank=(that[that.activeColor].isBlack ? 0 : 7);
+				
+				active_king_original_rank=(active_side.isBlack ? 0 : 7);/*2020*/
 				
 				if(target_cached_square.isKing){
 					for(i=1; i<9; i++){//1...8
@@ -868,9 +882,9 @@
 						}
 					}
 					
-					if(that[that.activeColor].castling && !that.isCheck){
+					if(active_side.castling && !that.isCheck){
 						for(i=0; i<2; i++){//0...1
-							if(that[that.activeColor].castling!==(i ? 1 : 2)){
+							if(active_side.castling!==(i ? 1 : 2)){
 								if(_candidateMoves((i ? 7 : 3), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
 									if(!that.countAttacks([active_king_original_rank, (i ? 3 : 5)], true)){
 										pre_validated_arr_pos.push([[active_king_original_rank, (i ? 2 : 6)]]);
@@ -880,7 +894,7 @@
 						}
 					}
 				}else if(target_cached_square.isPawn){
-					temp=_candidateMoves((that[that.activeColor].isBlack ? 5 : 1), false, (target_cached_square.rankPos===(active_king_original_rank+that[that.nonActiveColor].sign) ? 2 : 1), false);
+					temp=_candidateMoves((active_side.isBlack ? 5 : 1), false, (target_cached_square.rankPos===(active_king_original_rank+non_active_side.sign) ? 2 : 1), false);
 					
 					if(temp.length){
 						pre_validated_arr_pos.push(temp);
@@ -888,16 +902,16 @@
 					
 					for(i=0; i<2; i++){//0...1
 						current_diagonal_square=that.getSquare(target_qos, {
-							rankShift : that[that.nonActiveColor].sign,
+							rankShift : non_active_side.sign,
 							fileShift : (i ? 1 : -1)
 						});
 						
 						if(current_diagonal_square!==null){
-							if(!current_diagonal_square.isEmptySquare && current_diagonal_square.sign===that[that.nonActiveColor].sign && !current_diagonal_square.isKing){
+							if(!current_diagonal_square.isEmptySquare && current_diagonal_square.sign===non_active_side.sign && !current_diagonal_square.isKing){
 								pre_validated_arr_pos.push([current_diagonal_square.pos]);
 							}else if(sameSquare(current_diagonal_square.bos, that.enPassantBos)){
 								en_passant_capturable_cached_square=that.getSquare(current_diagonal_square.pos, {
-									rankShift : that[that.activeColor].sign,
+									rankShift : active_side.sign,
 									isUnreferenced : true
 								});
 								
@@ -1100,7 +1114,7 @@
 		}
 		
 		function _moveCaller(initial_qos, final_qos){
-			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, active_king_original_rank, non_active_king_original_rank, pawn_moved, active_color_rook, new_en_passant_bos, promoted_val, king_castled, pgn_move, pgn_end, piece_directions, rtn_can_move;
+			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, active_king_original_rank, non_active_king_original_rank, pawn_moved, new_en_passant_bos, promoted_val, king_castled, pgn_move, pgn_end, piece_directions, active_side, non_active_side, rtn_can_move;
 			
 			that=this;
 			
@@ -1111,32 +1125,33 @@
 			rtn_can_move=that.isLegalMove(initial_qos, final_qos);
 			
 			if(rtn_can_move){
+				active_side=that[that.activeColor];
+				non_active_side=that[that.nonActiveColor];
+				
 				initial_cached_square=that.getSquare(initial_qos, {isUnreferenced : true});
 				final_cached_square=that.getSquare(final_qos, {isUnreferenced : true});
-				
-				active_color_rook=(_ROOK*that[that.activeColor].sign);
 				
 				pawn_moved=false;
 				new_en_passant_bos="";
 				promoted_val=0;
 				king_castled=0;
 				
-				active_king_original_rank=(that[that.activeColor].isBlack ? 0 : 7);
-				non_active_king_original_rank=(that[that.nonActiveColor].isBlack ? 0 : 7);
+				active_king_original_rank=(active_side.isBlack ? 0 : 7);/*2020*/
+				non_active_king_original_rank=(non_active_side.isBlack ? 0 : 7);/*2020*/
 				
 				if(initial_cached_square.isKing){
-					if(that[that.activeColor].castling){
-						that[that.activeColor].castling=0;
+					if(active_side.castling){
+						active_side.castling=0;
 						
 						if(final_cached_square.filePos===6){//short
 							king_castled=1;
 							
-							that.setSquare([active_king_original_rank, 5], active_color_rook);
+							that.setSquare([active_king_original_rank, 5], active_side.rook);
 							that.setSquare([active_king_original_rank, 7], _EMPTY_SQR);
 						}else if(final_cached_square.filePos===2){//long
 							king_castled=2;
 							
-							that.setSquare([active_king_original_rank, 3], active_color_rook);
+							that.setSquare([active_king_original_rank, 3], active_side.rook);
 							that.setSquare([active_king_original_rank, 0], _EMPTY_SQR);
 						}
 					}
@@ -1144,11 +1159,11 @@
 					pawn_moved=true;
 					
 					if(Math.abs(initial_cached_square.rankPos-final_cached_square.rankPos)>1){//new enpassant
-						new_en_passant_bos=(final_cached_square.fileBos+""+(that[that.activeColor].isBlack ? 6 : 3));
+						new_en_passant_bos=(final_cached_square.fileBos+""+(active_side.isBlack ? 6 : 3));
 					}else if(sameSquare(final_cached_square.bos, that.enPassantBos)){//enpassant capture
-						that.setSquare((final_cached_square.fileBos+""+(that[that.activeColor].isBlack ? 4 : 5)), _EMPTY_SQR);//ver con step, se calcula mas facil? o sin diagonal no tan facil?
+						that.setSquare((final_cached_square.fileBos+""+(active_side.isBlack ? 4 : 5)), _EMPTY_SQR);//ver con step, se calcula mas facil? o sin diagonal no tan facil?
 					}else if(final_cached_square.rankPos===non_active_king_original_rank){//promotion
-						promoted_val=(that.promoteTo*that[that.activeColor].sign);
+						promoted_val=(that.promoteTo*active_side.sign);
 					}
 				}
 				
@@ -1218,20 +1233,20 @@
 				}
 				
 				//test for rook move (original square)
-				if(that[that.activeColor].castling && initial_cached_square.isRook && initial_cached_square.rankPos===active_king_original_rank){
-					if(initial_cached_square.filePos===7 && that[that.activeColor].castling!==2){//short
-						that[that.activeColor].castling--;
-					}else if(initial_cached_square.filePos===0 && that[that.activeColor].castling!==1){//long
-						that[that.activeColor].castling-=2;
+				if(active_side.castling && initial_cached_square.isRook && initial_cached_square.rankPos===active_king_original_rank){
+					if(initial_cached_square.filePos===7 && active_side.castling!==2){//short
+						active_side.castling--;
+					}else if(initial_cached_square.filePos===0 && active_side.castling!==1){//long
+						active_side.castling-=2;
 					}
 				}
 				
 				//test for rook capture (original square)
-				if(that[that.nonActiveColor].castling && final_cached_square.isRook && final_cached_square.rankPos===non_active_king_original_rank){
-					if(final_cached_square.filePos===7 && that[that.nonActiveColor].castling!==2){//short
-						that[that.nonActiveColor].castling--;
-					}else if(final_cached_square.filePos===0 && that[that.nonActiveColor].castling!==1){//long
-						that[that.nonActiveColor].castling-=2;
+				if(non_active_side.castling && final_cached_square.isRook && final_cached_square.rankPos===non_active_king_original_rank){
+					if(final_cached_square.filePos===7 && non_active_side.castling!==2){//short
+						non_active_side.castling--;
+					}else if(final_cached_square.filePos===0 && non_active_side.castling!==1){//long
+						non_active_side.castling-=2;
 					}
 				}
 				
@@ -1240,17 +1255,14 @@
 				that.setSquare(final_qos, (promoted_val || initial_cached_square.val));
 				that.setSquare(initial_qos, _EMPTY_SQR);
 				
-				temp=that[that.activeColor].isBlack;
-				
-				that.activeColor=(!temp ? "b" : "w");
-				that.nonActiveColor=(temp ? "b" : "w");
+				that.toggleActiveNonActive();
 				
 				that.halfMove++;
 				if(pawn_moved || final_cached_square.val){
 					that.halfMove=0;
 				}
 				
-				if(that[that.nonActiveColor].isBlack){
+				if(active_side.isBlack){
 					that.fullMove++;
 				}
 				
@@ -1267,7 +1279,7 @@
 				if(that.isCheck){
 					if(that.isCheckmate){
 						pgn_move+="#";
-						pgn_end=(that[that.activeColor].isBlack ? "1-0" : "0-1");
+						pgn_end=(non_active_side.isBlack ? "1-0" : "0-1");
 					}else{
 						pgn_move+="+";
 					}
@@ -1583,7 +1595,7 @@
 		}
 		
 		function countPieces(fen){
-			var i, j, fen_board, rtn;
+			var i, j, fen_board, current_side, rtn;
 			
 			rtn={w:{p:0, n:0, b:0, r:0, q:0, k:0}, b:{p:0, n:0, b:0, r:0, q:0, k:0}};
 			
@@ -1592,7 +1604,9 @@
 				
 				for(i=1; i<7; i++){//1...6
 					for(j=0; j<2; j++){//0...1
-						rtn[j ? "w" : "b"][toBal(-i)]=_occurrences(fen_board, toBal(i*getSign(!j)));
+						current_side=(j ? rtn.w : rtn.b);
+						
+						current_side[toBal(-i)]=_occurrences(fen_board, toBal(i*getSign(!j)));
 					}
 				}
 			}
@@ -1698,6 +1712,7 @@
 						getSquare : _getSquare,
 						setSquare : _setSquare,
 						countAttacks : _countAttacks,
+						toggleActiveNonActive : _toggleActiveNonActive,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
 						setCurrentMove : _setCurrentMove,
@@ -1728,6 +1743,12 @@
 					//static
 					isBlack : false,
 					sign : 1,
+					pawn : _PAWN,
+					knight : _KNIGHT,
+					bishop : _BISHOP,
+					rook : _ROOK,
+					queen : _QUEEN,
+					king : _KING,
 					
 					//mutable
 					kingBos : null,
@@ -1738,6 +1759,12 @@
 					//static
 					isBlack : true,
 					sign : -1,
+					pawn : -_PAWN,
+					knight : -_KNIGHT,
+					bishop : -_BISHOP,
+					rook : -_ROOK,
+					queen : -_QUEEN,
+					king : -_KING,
 					
 					//mutable
 					kingBos : null,

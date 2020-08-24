@@ -23,6 +23,110 @@ describe("Board properties", () => {
 		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", strlist);
 		get_checkmate_double_check=Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", strlist);
 		
+		describe("b[b.activeColor]", () => {
+			describe("static", () => {
+				test("isBlack", () => {
+					expect(get_stalemate[get_stalemate.activeColor].isBlack).toBe(true);
+					expect(get_checkmate[get_checkmate.activeColor].isBlack).toBe(false);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].isBlack).toBe(true);
+				});
+				
+				test("sign", () => {
+					expect(get_stalemate[get_stalemate.activeColor].sign).toBe(-1);
+					expect(get_checkmate[get_checkmate.activeColor].sign).toBe(1);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].sign).toBe(-1);
+				});
+				
+				test("pawn, knight, bishop, rook, queen, king", () => {
+					expect(get_stalemate[get_stalemate.activeColor].pawn).toBe(-1);
+					expect(get_checkmate[get_checkmate.activeColor].pawn).toBe(1);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].pawn).toBe(-1);
+					
+					expect(get_stalemate[get_stalemate.activeColor].knight).toBe(-2);
+					expect(get_checkmate[get_checkmate.activeColor].knight).toBe(2);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].knight).toBe(-2);
+					
+					expect(get_stalemate[get_stalemate.activeColor].bishop).toBe(-3);
+					expect(get_checkmate[get_checkmate.activeColor].bishop).toBe(3);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].bishop).toBe(-3);
+					
+					expect(get_stalemate[get_stalemate.activeColor].rook).toBe(-4);
+					expect(get_checkmate[get_checkmate.activeColor].rook).toBe(4);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].rook).toBe(-4);
+					
+					expect(get_stalemate[get_stalemate.activeColor].queen).toBe(-5);
+					expect(get_checkmate[get_checkmate.activeColor].queen).toBe(5);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].queen).toBe(-5);
+					
+					expect(get_stalemate[get_stalemate.activeColor].king).toBe(-6);
+					expect(get_checkmate[get_checkmate.activeColor].king).toBe(6);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].king).toBe(-6);
+				});
+			});
+			
+			describe("mutable", () => {
+				test("kingBos", () => {
+					expect(get_stalemate[get_stalemate.activeColor].kingBos).toBe("g6");
+					expect(get_checkmate[get_checkmate.activeColor].kingBos).toBe("e1");
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].kingBos).toBe("e8");
+				});
+				
+				//b.x.castling in "b.fen, b.w.castling and b.b.castling"
+			});
+		});
+		
+		describe("b[b.nonActiveColor]", () => {
+			describe("static", () => {
+				test("isBlack", () => {
+					expect(get_stalemate[get_stalemate.nonActiveColor].isBlack).toBe(false);
+					expect(get_checkmate[get_checkmate.nonActiveColor].isBlack).toBe(true);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].isBlack).toBe(false);
+				});
+				
+				test("sign", () => {
+					expect(get_stalemate[get_stalemate.nonActiveColor].sign).toBe(1);
+					expect(get_checkmate[get_checkmate.nonActiveColor].sign).toBe(-1);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].sign).toBe(1);
+				});
+				
+				test("pawn, knight, bishop, rook, queen, king", () => {
+					expect(get_stalemate[get_stalemate.nonActiveColor].pawn).toBe(1);
+					expect(get_checkmate[get_checkmate.nonActiveColor].pawn).toBe(-1);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].pawn).toBe(1);
+					
+					expect(get_stalemate[get_stalemate.nonActiveColor].knight).toBe(2);
+					expect(get_checkmate[get_checkmate.nonActiveColor].knight).toBe(-2);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].knight).toBe(2);
+					
+					expect(get_stalemate[get_stalemate.nonActiveColor].bishop).toBe(3);
+					expect(get_checkmate[get_checkmate.nonActiveColor].bishop).toBe(-3);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].bishop).toBe(3);
+					
+					expect(get_stalemate[get_stalemate.nonActiveColor].rook).toBe(4);
+					expect(get_checkmate[get_checkmate.nonActiveColor].rook).toBe(-4);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].rook).toBe(4);
+					
+					expect(get_stalemate[get_stalemate.nonActiveColor].queen).toBe(5);
+					expect(get_checkmate[get_checkmate.nonActiveColor].queen).toBe(-5);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].queen).toBe(5);
+					
+					expect(get_stalemate[get_stalemate.nonActiveColor].king).toBe(6);
+					expect(get_checkmate[get_checkmate.nonActiveColor].king).toBe(-6);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].king).toBe(6);
+				});
+			});
+			
+			describe("mutable", () => {
+				test("kingBos", () => {
+					expect(get_stalemate[get_stalemate.nonActiveColor].kingBos).toBe("e1");
+					expect(get_checkmate[get_checkmate.nonActiveColor].kingBos).toBe("e8");
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].kingBos).toBe("d1");
+				});
+				
+				//b.x.castling in "b.fen, b.w.castling and b.b.castling"
+			});
+		});
+		
 		test("b.activeColor", () => {
 			expect(get_stalemate.activeColor).toBe("b");
 			expect(get_checkmate.activeColor).toBe("w");
@@ -33,50 +137,6 @@ describe("Board properties", () => {
 			expect(get_stalemate.nonActiveColor).toBe("w");
 			expect(get_checkmate.nonActiveColor).toBe("b");
 			expect(get_checkmate_double_check.nonActiveColor).toBe("w");
-		});
-		
-		describe("b[b.activeColor]", () => {
-			test("isBlack", () => {
-				expect(get_stalemate[get_stalemate.activeColor].isBlack).toBe(true);
-				expect(get_checkmate[get_checkmate.activeColor].isBlack).toBe(false);
-				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].isBlack).toBe(true);
-			});
-			
-			test("sign", () => {
-				expect(get_stalemate[get_stalemate.activeColor].sign).toBe(-1);
-				expect(get_checkmate[get_checkmate.activeColor].sign).toBe(1);
-				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].sign).toBe(-1);
-			});
-			
-			test("kingBos", () => {
-				expect(get_stalemate[get_stalemate.activeColor].kingBos).toBe("g6");
-				expect(get_checkmate[get_checkmate.activeColor].kingBos).toBe("e1");
-				expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].kingBos).toBe("e8");
-			});
-			
-			//b.x.castling in "b.fen, b.w.castling and b.b.castling"
-		});
-		
-		describe("b[b.nonActiveColor]", () => {
-			test("isBlack", () => {
-				expect(get_stalemate[get_stalemate.nonActiveColor].isBlack).toBe(false);
-				expect(get_checkmate[get_checkmate.nonActiveColor].isBlack).toBe(true);
-				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].isBlack).toBe(false);
-			});
-			
-			test("sign", () => {
-				expect(get_stalemate[get_stalemate.nonActiveColor].sign).toBe(1);
-				expect(get_checkmate[get_checkmate.nonActiveColor].sign).toBe(-1);
-				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].sign).toBe(1);
-			});
-			
-			test("kingBos", () => {
-				expect(get_stalemate[get_stalemate.nonActiveColor].kingBos).toBe("e1");
-				expect(get_checkmate[get_checkmate.nonActiveColor].kingBos).toBe("e8");
-				expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].kingBos).toBe("d1");
-			});
-			
-			//b.x.castling in "b.fen, b.w.castling and b.b.castling"
 		});
 		
 		test("b.halfMove", () => {

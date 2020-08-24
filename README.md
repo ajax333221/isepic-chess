@@ -138,6 +138,7 @@ Function | Parameters | Return | Board refresh? | Description
 **getSquare(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
 **setSquare(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
 **countAttacks(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
+**toggleActiveNonActive(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
 **toggleIsRotated(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
 **setPromoteTo(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
 **setCurrentMove(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
