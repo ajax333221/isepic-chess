@@ -37,6 +37,18 @@ describe("Board properties", () => {
 					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].sign).toBe(-1);
 				});
 				
+				test("firstRankPos", () => {
+					expect(get_stalemate[get_stalemate.activeColor].firstRankPos).toBe(0);
+					expect(get_checkmate[get_checkmate.activeColor].firstRankPos).toBe(7);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].firstRankPos).toBe(0);
+				});
+				
+				test("lastRankPos", () => {
+					expect(get_stalemate[get_stalemate.activeColor].lastRankPos).toBe(7);
+					expect(get_checkmate[get_checkmate.activeColor].lastRankPos).toBe(0);
+					expect(get_checkmate_double_check[get_checkmate_double_check.activeColor].lastRankPos).toBe(7);
+				});
+				
 				test("pawn, knight, bishop, rook, queen, king", () => {
 					expect(get_stalemate[get_stalemate.activeColor].pawn).toBe(-1);
 					expect(get_checkmate[get_checkmate.activeColor].pawn).toBe(1);
@@ -87,6 +99,18 @@ describe("Board properties", () => {
 					expect(get_stalemate[get_stalemate.nonActiveColor].sign).toBe(1);
 					expect(get_checkmate[get_checkmate.nonActiveColor].sign).toBe(-1);
 					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].sign).toBe(1);
+				});
+				
+				test("firstRankPos", () => {
+					expect(get_stalemate[get_stalemate.nonActiveColor].firstRankPos).toBe(7);
+					expect(get_checkmate[get_checkmate.nonActiveColor].firstRankPos).toBe(0);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].firstRankPos).toBe(7);
+				});
+				
+				test("lastRankPos", () => {
+					expect(get_stalemate[get_stalemate.nonActiveColor].lastRankPos).toBe(0);
+					expect(get_checkmate[get_checkmate.nonActiveColor].lastRankPos).toBe(7);
+					expect(get_checkmate_double_check[get_checkmate_double_check.nonActiveColor].lastRankPos).toBe(0);
 				});
 				
 				test("pawn, knight, bishop, rook, queen, king", () => {
