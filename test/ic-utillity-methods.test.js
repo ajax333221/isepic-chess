@@ -267,8 +267,9 @@ describe("Ic utility methods", () => {
 			error_msg="Error [0]";
 			len=error_msg.length;
 			
-			test("empty_string", () => {
+			test("falsy after trim", () => {
 				expect(Ic.utilityMisc.basicFenTest("").substring(0, len)).toBe(error_msg);
+				expect(Ic.utilityMisc.basicFenTest(" ").substring(0, len)).toBe(error_msg);
 			});
 		});
 		

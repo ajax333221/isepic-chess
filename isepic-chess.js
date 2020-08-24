@@ -3,8 +3,8 @@
 /*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
 
 (function(windw, expts, defin){
-	var Ic=(function(windw){
-		var _VERSION="3.10.1";
+	var Ic=(function(_WIN){
+		var _VERSION="3.10.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -114,7 +114,7 @@
 		}
 		
 		function _formatName(str){
-			return _trimSpaces(""+str).replace(/[^a-z0-9]/gi, "_");
+			return _trimSpaces(str).replace(/[^a-z0-9]/gi, "_");
 		}
 		
 		function _strContains(str, str_to_find){
@@ -235,8 +235,10 @@
 			error_msg="";
 			
 			//if(!error_msg){
+				fen=_trimSpaces(fen);
+				
 				if(!fen){
-					error_msg="Error [0] empty fen";
+					error_msg="Error [0] falsy value after trim";
 				}
 			//}
 			
@@ -513,6 +515,8 @@
 					that.setSquare([i, j], _EMPTY_SQR);
 				}
 			}
+			
+			fen=_trimSpaces(fen);
 			
 			fen_parts=fen.split(" ");
 			fen_board_arr=fen_parts[0].split("/");
@@ -965,7 +969,6 @@
 			that=this;
 			
 			rtn=false;
-			
 			final_square=that.getSquare(final_qos);
 			
 			if(final_square!==null){
@@ -1297,8 +1300,8 @@
 			
 			rtn_moved=false;
 			
-			if(windw && windw.IcUi && windw.IcUi.navFirst){
-				rtn_moved=windw.IcUi.navFirst.apply(that, []);
+			if(_WIN && _WIN.IcUi && _WIN.IcUi.navFirst){
+				rtn_moved=_WIN.IcUi.navFirst.apply(that, []);
 			}
 			
 			return rtn_moved;
@@ -1311,8 +1314,8 @@
 			
 			rtn_moved=false;
 			
-			if(windw && windw.IcUi && windw.IcUi.navPrevious){
-				rtn_moved=windw.IcUi.navPrevious.apply(that, []);
+			if(_WIN && _WIN.IcUi && _WIN.IcUi.navPrevious){
+				rtn_moved=_WIN.IcUi.navPrevious.apply(that, []);
 			}
 			
 			return rtn_moved;
@@ -1325,8 +1328,8 @@
 			
 			rtn_moved=false;
 			
-			if(windw && windw.IcUi && windw.IcUi.navNext){
-				rtn_moved=windw.IcUi.navNext.apply(that, []);
+			if(_WIN && _WIN.IcUi && _WIN.IcUi.navNext){
+				rtn_moved=_WIN.IcUi.navNext.apply(that, []);
 			}
 			
 			return rtn_moved;
@@ -1339,8 +1342,8 @@
 			
 			rtn_moved=false;
 			
-			if(windw && windw.IcUi && windw.IcUi.navLast){
-				rtn_moved=windw.IcUi.navLast.apply(that, []);
+			if(_WIN && _WIN.IcUi && _WIN.IcUi.navLast){
+				rtn_moved=_WIN.IcUi.navLast.apply(that, []);
 			}
 			
 			return rtn_moved;
@@ -1353,8 +1356,8 @@
 			
 			rtn_moved=false;
 			
-			if(windw && windw.IcUi && windw.IcUi.navLinkMove){
-				rtn_moved=windw.IcUi.navLinkMove.apply(that, [move_index]);
+			if(_WIN && _WIN.IcUi && _WIN.IcUi.navLinkMove){
+				rtn_moved=_WIN.IcUi.navLinkMove.apply(that, [move_index]);
 			}
 			
 			return rtn_moved;
@@ -1365,8 +1368,8 @@
 			
 			that=this;
 			
-			if(windw && windw.IcUi && windw.IcUi.refreshBoard){
-				windw.IcUi.refreshBoard.apply(that, [animate_move]);
+			if(_WIN && _WIN.IcUi && _WIN.IcUi.refreshBoard){
+				_WIN.IcUi.refreshBoard.apply(that, [animate_move]);
 			}
 		}
 		
@@ -1576,7 +1579,6 @@
 			var rtn;
 			
 			rtn=false;
-			
 			qos1=toBos(qos1);
 			qos2=toBos(qos2);
 			
@@ -1674,23 +1676,21 @@
 		}
 		
 		function initBoard(p){//{boardName, fen, isRotated, isHidden, promoteTo, invalidFenStop}
-			var i, j, target, board_name, current_pos, current_bos, pre_fen, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
+			var i, j, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
 			
 			rtn=null;
 			no_errors=true;
 			p=(_isObject(p) ? p : {});
 			
 			//if(no_errors){
-				pre_fen=_trimSpaces(p.fen);
-				
-				p.invalidFenStop=(p.invalidFenStop===true);
 				p.boardName=(((typeof p.boardName)==="string" && _trimSpaces(p.boardName).length) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
-				p.isRotated=(p.isRotated===true);
-				p.isHidden=(p.isHidden===true);
-				p.promoteTo=toVal(p.promoteTo);
 				board_name=p.boardName;
 				
-				fen_was_valid=((typeof p.fen)==="string" && !_basicFenTest(pre_fen));
+				p.isRotated=(p.isRotated===true);
+				p.isHidden=(p.isHidden===true);
+				p.invalidFenStop=(p.invalidFenStop===true);
+				
+				fen_was_valid=!_basicFenTest(p.fen);
 				
 				if(p.invalidFenStop && !fen_was_valid){
 					no_errors=false;
@@ -1835,7 +1835,7 @@
 				new_board.isHidden=p.isHidden;
 				
 				new_board.currentMove=0;/*NO move below readFen()*/
-				new_board.readFen(fen_was_valid ? pre_fen : _DEFAULT_FEN);
+				new_board.readFen(fen_was_valid ? p.fen : _DEFAULT_FEN);
 				
 				new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 				new_board.isRotated=p.isRotated;
