@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.10.3";
+		var _VERSION="3.10.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -246,7 +246,7 @@
 		}
 		
 		function _basicFenTest(fen){
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, total_files_in_current_rank, error_msg;
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, total_files_in_current_rank, current_side, error_msg;
 			
 			error_msg="";
 			
@@ -305,38 +305,23 @@
 			if(!error_msg){
 				total_pieces=countPieces(fen);
 				
-				if(total_pieces.w.k!==1){
-					error_msg="Error [5] board without exactly one white king";
-				}
-			}
-			
-			if(!error_msg){
-				if(total_pieces.b.k!==1){
-					error_msg="Error [6] board without exactly one black king";
-				}
-			}
-			
-			if(!error_msg){
-				if(total_pieces.w.p>8){
-					error_msg="Error [7] more than 8 white pawns";
-				}
-			}
-			
-			if(!error_msg){
-				if(total_pieces.b.p>8){
-					error_msg="Error [8] more than 8 black pawns";
-				}
-			}
-			
-			if(!error_msg){
-				if((Math.max((total_pieces.w.n-2), 0)+Math.max((total_pieces.w.b-2), 0)+Math.max((total_pieces.w.r-2), 0)+Math.max((total_pieces.w.q-1), 0))>(8-total_pieces.w.p)){
-					error_msg="Error [9] promoted pieces exceed the number of missing pawns for white";
-				}
-			}
-			
-			if(!error_msg){
-				if((Math.max((total_pieces.b.n-2), 0)+Math.max((total_pieces.b.b-2), 0)+Math.max((total_pieces.b.r-2), 0)+Math.max((total_pieces.b.q-1), 0))>(8-total_pieces.b.p)){
-					error_msg="Error [10] promoted pieces exceed the number of missing pawns for black";
+				for(i=0; i<2; i++){//0...1
+					current_side=(i ? total_pieces.b : total_pieces.w);
+					
+					if(current_side.k!==1){
+						error_msg="Error ["+(i+5)+"] board without exactly one king";
+						break;
+					}
+					
+					if(current_side.p>8){
+						error_msg="Error ["+(i+7)+"] more than 8 pawns";
+						break;
+					}
+					
+					if((Math.max((current_side.n-2), 0)+Math.max((current_side.b-2), 0)+Math.max((current_side.r-2), 0)+Math.max((current_side.q-1), 0))>(8-current_side.p)){
+						error_msg="Error ["+(i+9)+"] promoted pieces exceed the number of missing pawns";
+						break;
+					}
 				}
 			}
 			
@@ -1129,7 +1114,7 @@
 		}
 		
 		function _moveCaller(initial_qos, final_qos){
-			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pawn_moved, new_en_passant_bos, promoted_val, king_castled, pgn_move, pgn_end, piece_directions, active_side, non_active_side, rtn_can_move;
+			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pawn_moved, new_en_passant_bos, promoted_val, king_castled, pgn_move, pgn_end, piece_directions, active_side, non_active_side, current_side, rtn_can_move;
 			
 			that=this;
 			
@@ -1204,7 +1189,7 @@
 						if(!initial_cached_square.isBishop){piece_directions.push(1, 3, 5, 7);}
 						if(!initial_cached_square.isRook){piece_directions.push(2, 4, 6, 8);}
 						
-						for(i=0, len=piece_directions.length; i<len; i++){//0...1
+						for(i=0, len=piece_directions.length; i<len; i++){//0<len
 							temp=_disambiguationPos(piece_directions[i], initial_cached_square.isKnight, initial_cached_square.absVal);
 							
 							if(temp){
@@ -1244,21 +1229,16 @@
 					pgn_move+=final_cached_square.bos;
 				}
 				
-				//test for rook move (original square)
-				if(active_side.castling && initial_cached_square.isRook && initial_cached_square.rankPos===active_side.firstRankPos){
-					if(initial_cached_square.filePos===_ORIGINAL_H_ROOK_FILE_POS && active_side.castling!==_LONG_CASTLE){//short
-						active_side.castling-=_SHORT_CASTLE;
-					}else if(initial_cached_square.filePos===_ORIGINAL_A_ROOK_FILE_POS && active_side.castling!==_SHORT_CASTLE){//long
-						active_side.castling-=_LONG_CASTLE;
-					}
-				}
-				
-				//test for rook capture (original square)
-				if(non_active_side.castling && final_cached_square.isRook && final_cached_square.rankPos===non_active_side.firstRankPos){
-					if(final_cached_square.filePos===_ORIGINAL_H_ROOK_FILE_POS && non_active_side.castling!==_LONG_CASTLE){//short
-						non_active_side.castling-=_SHORT_CASTLE;
-					}else if(final_cached_square.filePos===_ORIGINAL_A_ROOK_FILE_POS && non_active_side.castling!==_SHORT_CASTLE){//long
-						non_active_side.castling-=_LONG_CASTLE;
+				for(i=0; i<2; i++){//0...1
+					current_side=(i ? active_side : non_active_side);
+					temp=(i ? initial_cached_square : final_cached_square);
+					
+					if(current_side.castling && temp.isRook && temp.rankPos===current_side.firstRankPos){
+						if(temp.filePos===_ORIGINAL_H_ROOK_FILE_POS && current_side.castling!==_LONG_CASTLE){//short
+							current_side.castling-=_SHORT_CASTLE;
+						}else if(temp.filePos===_ORIGINAL_A_ROOK_FILE_POS && current_side.castling!==_SHORT_CASTLE){//long
+							current_side.castling-=_LONG_CASTLE;
+						}
 					}
 				}
 				
