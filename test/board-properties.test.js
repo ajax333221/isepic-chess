@@ -4,13 +4,13 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//moveList (no con fenGet o sera siempre default)
-//currentMove (no con fenGet o sera siempre default)
-//isRotated (no con fenGet o sera siempre default)
-//promoteTo (no con fenGet o sera siempre default)
-//isHidden (no con fenGet o sera siempre true)
+//moveList (no con fenGet) en misc hay PGNmove y PGNend, buscar un ejemplo completo (e.g. promotion)
+//promoteTo (no con fenGet) poner muchos advanced pawns y promoverlos todos (solo checkar el Fen final)
+//currentMove (no con fenGet) test de movelist split cuando currentMove no esta al final
 //
+//(x) isRotated (completado)(b.ascii() en board-methods.test.js + hasta se le hizo test por board hash)
 //(x) selectedBos (N/A)(siempre empty_string + solo cambia por ui)
+//(x) isHidden (N/A)(en ic solo afecta el board hash + solo cambia por ui)
 //(x) inDraw = (N/A)(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial)
 
 describe("Board properties", () => {

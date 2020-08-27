@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.10.5";
+		var _VERSION="3.10.6";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -920,7 +920,7 @@
 						if(current_diagonal_square!==null){
 							if(current_diagonal_square.sign!==active_side.sign && !current_diagonal_square.isEmptySquare && !current_diagonal_square.isKing){
 								pre_validated_arr_pos.push([current_diagonal_square]);
-							}else if(sameSquare(current_diagonal_square.bos, that.enPassantBos)){
+							}else if(sameSquare(current_diagonal_square, that.enPassantBos)){
 								en_passant_capturable_cached_square=that.getSquare(current_diagonal_square, {
 									rankShift : non_active_side.singlePawnRankShift,
 									isUnreferenced : true
@@ -954,7 +954,7 @@
 						that.setSquare(target_cached_square, _EMPTY_SQR);
 						
 						if(en_passant_capturable_cached_square!==null){
-							if(sameSquare(current_cached_square.bos, that.enPassantBos)){
+							if(sameSquare(current_cached_square, that.enPassantBos)){
 								that.setSquare(en_passant_capturable_cached_square, _EMPTY_SQR);
 							}
 						}
@@ -1157,6 +1157,7 @@
 					if(active_side.castling){
 						active_side.castling=0;
 						
+						/*2020 hacer sameSquare(bos) con 8 1*/
 						if(final_cached_square.filePos===6){//short
 							king_castled=_SHORT_CASTLE;
 							
@@ -1186,7 +1187,7 @@
 						new_en_passant_square=that.getSquare(final_cached_square, {
 							rankShift : non_active_side.singlePawnRankShift
 						});
-					}else if(sameSquare(final_cached_square.bos, that.enPassantBos)){//enpassant capture
+					}else if(sameSquare(final_cached_square, that.enPassantBos)){//enpassant capture
 						that.setSquare(final_cached_square, _EMPTY_SQR, {
 							rankShift : non_active_side.singlePawnRankShift
 						});

@@ -9,8 +9,101 @@ describe("Misc.", () => {
 		board_name="board_regression_tests";
 		other_board_name="board_regression_tests_other";
 		
-		test("enpassant capture applied to other non enpassant moves", () => {
-			expect(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).sort()).toEqual(["d6", "e6"].sort());
+		describe("enpassant related", () => {
+			test("enpassant capture applied to other non enpassant moves", () => {
+				expect(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).sort()).toEqual(["d6", "e6"].sort());
+			});
+			
+			test("taking enpassant results in self check", () => {
+				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4", "d3"])).toEqual(false);
+			});
+			
+			test("missing option to remove check via enpassant", () => {
+				expect(Ic.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", ["d4", "e3"])).toEqual(true);
+			});
+			
+			test("enpassant capture discovered double check", () => {
+				var board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : "8/8/7k/6pP/5BKR/8/8/8 w - g6 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				board_obj.moveCaller("h5", "g6");
+				
+				expect(board_obj.checks).toBe(2);
+			});
+		});
+		
+		test("SAN check symbol, checkmate symbol, 1-0, 0-1 and 1/2-1/2", () => {
+			var board_obj, board_other;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "k7/P7/4q3/8/8/4Q3/p7/K7 w - - 0 1",
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			board_other=Ic.initBoard({
+				boardName : other_board_name
+			});
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("e3", "b3");
+			board_other.moveCaller("e6", "b3");
+			
+			//stalemate (white turn)
+			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1/2-1/2");
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("e3", "d4");
+			board_other.moveCaller("e6", "b6");
+			board_other.moveCaller("d4", "b6");
+			
+			//stalemate (black turn)
+			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1/2-1/2");
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("e3", "b6");
+			board_other.moveCaller("e6", "h3");
+			board_other.moveCaller("b6", "b8");
+			
+			//checkmake (white win)
+			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qb8#");
+			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1-0");
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("e3", "f4");
+			board_other.moveCaller("e6", "b3");
+			board_other.moveCaller("f4", "h6");
+			board_other.moveCaller("b3", "b1");
+			
+			//checkmake (black win)
+			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qb1#");
+			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("0-1");
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("e3", "e4");
+			
+			//check (white performs check)
+			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qe4+");
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("e3", "h6");
+			board_other.moveCaller("e6", "e5");
+			
+			//check (black performs check)
+			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qe5+");
 		});
 		
 		test("Ic.toPos() returns a reference", () => {
@@ -23,9 +116,9 @@ describe("Misc.", () => {
 				invalidFenStop : true
 			});
 			
-			temp=Ic.toPos(board_obj.squares["a2"].pos);
+			temp=Ic.toPos(board_obj.squares["a2"].pos);/*NO b.getSquare()*/
 			
-			expect(temp===Ic.toPos(board_obj.squares["a2"].pos).sort()).toBe(false);
+			expect(temp===Ic.toPos(board_obj.squares["a2"].pos).sort()).toBe(false);/*NO b.getSquare()*/
 		});
 		
 		test("b.getSquare() isUnreferenced not working", () => {
@@ -287,5 +380,224 @@ describe("Misc.", () => {
 			
 			expect(Ic.utilityMisc.basicFenTest(arr[i])).toBe("");
 		}
+	});
+	
+	describe("Old tests", () => {
+		var board_name, other_board_name;
+		
+		board_name="board_old_tests";
+		other_board_name="board_old_tests_other";
+		
+		test("Basic functionality, part 1 of 2", () => {
+			var board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				isRotated : true,
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			board_obj.moveCaller("e2", "e4");
+			board_obj.moveCaller("f7", "f5");
+			board_obj.moveCaller("d1", "h5");
+			
+			//checks
+			expect(board_obj.checks).toBe(1);
+			
+			//remove check via pawn blocking
+			expect(board_obj.legalMoves("g7").sort()).toEqual([[2, 6]].sort());
+			
+			//basic b.moveList format, enpassant and clocks
+			expect(board_obj.moveList[0].Fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			expect(board_obj.moveList[1].Fen).toBe("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
+			expect(board_obj.moveList[2].Fen).toBe("rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2");
+			expect(board_obj.moveList[3].Fen).toBe("rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2");
+			
+			board_obj.moveCaller("g7", "g6");
+			board_obj.moveCaller("h5", "g6");
+			
+			//remove check via pawn capture
+			expect(board_obj.legalMoves("h7").sort()).toEqual([[2, 6]].sort());
+			
+			board_obj.moveCaller("h7", "g6");
+			board_obj.moveCaller("f1", "b5");
+			board_obj.moveCaller("h8", "h2");
+			board_obj.moveCaller("b5", "d7");
+			
+			//remove check via (knight, bishop, queen, king) capture and via (king) moving out of check
+			expect(board_obj.legalMoves("b8").sort()).toEqual([[1, 3]].sort());
+			expect(board_obj.legalMoves("c8").sort()).toEqual([[1, 3]].sort());
+			expect(board_obj.legalMoves("d8").sort()).toEqual([[1, 3]].sort());
+			expect(board_obj.legalMoves("e8").sort()).toEqual([[1, 3], [1, 5]].sort());
+			
+			board_obj.moveCaller("e8", "f7");
+			board_obj.moveCaller("e4", "f5");
+			board_obj.moveCaller("h2", "h6");
+			board_obj.moveCaller("g1", "f3");
+			board_obj.moveCaller("a7", "a5");
+			board_obj.moveCaller("f5", "g6");
+			board_obj.moveCaller("f7", "f6");
+			board_obj.moveCaller("g6", "g7");
+			board_obj.moveCaller("a8", "a6");
+			board_obj.moveCaller("d7", "e8");
+			board_obj.moveCaller("f6", "f5");
+			board_obj.moveCaller("e8", "f7");
+			board_obj.moveCaller("h6", "c6");
+			
+			board_obj.setPromoteTo(4);
+			
+			board_obj.moveCaller("g7", "f8");
+			
+			//SAN underpromote to rook
+			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("gxf8=R");
+			
+			board_obj.moveCaller("a5", "a4");
+			board_obj.moveCaller("f7", "g6");
+			
+			//two active checks via discovered check
+			expect(board_obj.checks).toBe(2);
+			
+			board_obj.moveCaller("f5", "g6");
+			board_obj.moveCaller("e1", "g1");
+			
+			//wrong legal moves for empty square, b to move
+			expect(board_obj.legalMoves("e4").sort()).toEqual([].sort());
+			
+			board_obj.moveCaller("a6", "b6");
+			
+			//wrong legal moves for empty square, w to move
+			expect(board_obj.legalMoves("e4").sort()).toEqual([].sort());
+			
+			//prevent pawn capture via moving forward (two squares, white)
+			expect(board_obj.legalMoves("a2").sort()).toEqual([[5, 0]].sort());
+			
+			//pgn disambiguation
+			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("Rab6");
+			
+			//two squares pawn movement
+			expect(board_obj.legalMoves("b2").sort()).toEqual([[5, 1], [4, 1]].sort());
+			
+			board_obj.moveCaller("b2", "b4");
+			
+			//pawn can capture enpassant or move
+			expect(board_obj.legalMoves("a4").sort()).toEqual([[5, 0], [5, 1]].sort());
+			
+			board_obj.moveCaller("c6", "f6");
+			
+			//rook movement with capture
+			expect(board_obj.legalMoves("f8").sort()).toEqual([[0, 6], [0, 3], [0, 4], [1, 5], [2, 5]].sort());
+			
+			//knight movement, prevent capture ally
+			expect(board_obj.legalMoves("b1").sort()).toEqual([[5, 2], [5, 0]].sort());
+			
+			board_obj.moveCaller("a2", "a3");
+			
+			//prevent pawn capture via moving forward (one square, black)
+			expect(board_obj.legalMoves("a4").sort()).toEqual([].sort());
+			
+			board_obj.moveCaller("b6", "a6");
+			
+			//no pgn disambiguation needed
+			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("Ra6");
+			
+			//single square pawn movement
+			expect(board_obj.legalMoves("b4").sort()).toEqual([[3, 1]].sort());
+		});
+		
+		test("Basic functionality, part 2 of 2", () => {
+			var board_obj, board_other;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "r3k2r/4p3/3B1P2/2NpN1N1/1Pn1n1n1/3b1p2/4P3/R3K2R w KQkq - 0 1",
+				isRotated : true,
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			board_other=Ic.initBoard({
+				boardName : other_board_name
+			});
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			//incorrect white castling moves
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual(["g1", "c1", "d1", "f1"].sort());
+			
+			board_other.moveCaller("b4", "b5");
+			
+			//incorrect black castling moves
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual(["f8", "d8", "c8", "g8"].sort());
+			
+			board_other.moveCaller("c4", "d2");
+			
+			//preventing to long castle with b1 attacked
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual(["c1", "d1"].sort());
+			
+			board_other.moveCaller("d6", "e7");
+			
+			//castle not being prevented via first square
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual([].sort());
+			
+			board_other.moveCaller("d2", "b1");
+			
+			//allowing to long castle with b1 occupied
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual(["f1", "g1", "d1"].sort());
+			
+			board_other.moveCaller("g5", "h3");
+			board_other.moveCaller("b1", "d2");
+			board_other.moveCaller("h3", "g5");
+			board_other.moveCaller("d2", "f1");
+			
+			//allowing to short castle with f1 occupied
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual(["f1", "c1", "d1"].sort());
+			
+			board_other.moveCaller("g5", "h3");
+			board_other.moveCaller("f1", "d2");
+			board_other.moveCaller("h3", "g5");
+			board_other.moveCaller("g4", "e3");
+			
+			//allowing to long castle with d1 attacked
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual([].sort());
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("f6", "f7");
+			
+			//allowing to castle with king at check (black)
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual(["d8", "f8"].sort());
+			
+			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+			
+			board_other.moveCaller("b4", "b5");
+			board_other.moveCaller("c4", "a3");
+			board_other.moveCaller("b5", "b6");
+			board_other.moveCaller("a3", "c2");
+			
+			//allowing to castle with king at check (white)
+			expect(Ic.mapToBos(board_other.legalMoves(board_other[board_other.activeColor].kingBos)).sort()).toEqual(["d1", "f1"].sort());
+			
+			board_other.setPromoteTo("wn");
+			
+			board_other.moveCaller("e1", "d1");
+			board_other.moveCaller("f3", "f2");
+			board_other.moveCaller("d1", "c1");
+			board_other.moveCaller("f2", "f1");
+			
+			//setPromoteTo(wrong color className: w to b)
+			expect(board_other.getSquare("f1").val).toBe(-2);
+			
+			board_other.moveCaller("b6", "b7");
+			board_other.moveCaller("g4", "h2");
+			
+			board_other.setPromoteTo("bn");
+			
+			board_other.moveCaller("b7", "a8");
+			
+			//setPromoteTo(wrong color className: b to w)
+			expect(board_other.getSquare("a8").className).toBe("wn");
+		});
 	});
 });

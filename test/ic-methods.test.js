@@ -24,10 +24,6 @@ describe("Ic methods", () => {
 	bad_shared_positions=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz", 0, 1, 8, Infinity, -Infinity, "Infinity", "-Infinity", [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
 	
 	describe("Ic.toVal()", () => {
-		var board_name;
-		
-		board_name="board_to_val";
-		
 		test("default value", () => {
 			var i, len, default_val;
 			
@@ -69,22 +65,15 @@ describe("Ic methods", () => {
 		});
 		
 		test("square input", () => {
-			Ic.initBoard({
-				boardName : board_name,
-				fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
+			var square_c8;
 			
-			expect(Ic.toVal(Ic.selectBoard(board_name).squares["c8"])).toBe(-6);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			
+			expect(Ic.toVal(square_c8)).toBe(-6);
 		});
 	});
 	
 	describe("Ic.toAbsVal()", () => {
-		var board_name;
-		
-		board_name="board_to_abs_val";
-		
 		test("default value", () => {
 			var i, len, default_val;
 			
@@ -126,22 +115,15 @@ describe("Ic methods", () => {
 		});
 		
 		test("square input", () => {
-			Ic.initBoard({
-				boardName : board_name,
-				fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
+			var square_c8;
 			
-			expect(Ic.toAbsVal(Ic.selectBoard(board_name).squares["c8"])).toBe(6);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			
+			expect(Ic.toAbsVal(square_c8)).toBe(6);
 		});
 	});
 	
 	describe("Ic.toBal()", () => {
-		var board_name;
-		
-		board_name="board_to_bal";
-		
 		test("default value", () => {
 			var i, len, default_val;
 			
@@ -183,22 +165,15 @@ describe("Ic methods", () => {
 		});
 		
 		test("square input", () => {
-			Ic.initBoard({
-				boardName : board_name,
-				fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
+			var square_c8;
 			
-			expect(Ic.toBal(Ic.selectBoard(board_name).squares["c8"])).toBe("k");
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			
+			expect(Ic.toBal(square_c8)).toBe("k");
 		});
 	});
 	
 	describe("Ic.toAbsBal()", () => {
-		var board_name;
-		
-		board_name="board_to_abs_bal";
-		
 		test("default value", () => {
 			var i, len, default_val;
 			
@@ -240,22 +215,15 @@ describe("Ic methods", () => {
 		});
 		
 		test("square input", () => {
-			Ic.initBoard({
-				boardName : board_name,
-				fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
+			var square_c8;
 			
-			expect(Ic.toAbsBal(Ic.selectBoard(board_name).squares["c8"])).toBe("K");
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			
+			expect(Ic.toAbsBal(square_c8)).toBe("K");
 		});
 	});
 	
 	describe("Ic.toClassName()", () => {
-		var board_name;
-		
-		board_name="board_to_class_name";
-		
 		test("default value", () => {
 			var i, len, default_val;
 			
@@ -297,22 +265,15 @@ describe("Ic methods", () => {
 		});
 		
 		test("square input", () => {
-			Ic.initBoard({
-				boardName : board_name,
-				fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
+			var square_c8;
 			
-			expect(Ic.toClassName(Ic.selectBoard(board_name).squares["c8"])).toBe("bk");
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			
+			expect(Ic.toClassName(square_c8)).toBe("bk");
 		});
 	});
 	
 	describe("Ic.getSign()", () => {
-		var board_name;
-		
-		board_name="board_get_sign";
-		
 		test("default value", () => {
 			var i, len, default_val;
 			
@@ -356,14 +317,11 @@ describe("Ic methods", () => {
 		});
 		
 		test("square input", () => {
-			Ic.initBoard({
-				boardName : board_name,
-				fen : "2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
+			var square_c8;
 			
-			expect(Ic.getSign(Ic.selectBoard(board_name).squares["c8"])).toBe(-1);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			
+			expect(Ic.getSign(square_c8)).toBe(-1);
 		});
 	});
 	
