@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.10.4";
+		var _VERSION="3.10.5";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -25,10 +25,6 @@
 		var _DIRECTION_BOTTOM_LEFT=6;
 		var _DIRECTION_LEFT=7;
 		var _DIRECTION_TOP_LEFT=8;
-		
-		var _ORIGINAL_KING_FILE_POS=4;
-		var _ORIGINAL_H_ROOK_FILE_POS=7;
-		var _ORIGINAL_A_ROOK_FILE_POS=0;
 		
 		var _SHORT_CASTLE=1;
 		var _LONG_CASTLE=2;
@@ -385,13 +381,13 @@
 			return rtn;
 		}
 		
-		function _setSquare(qos, new_qal){
+		function _setSquare(qos, new_qal, p){
 			var that, target_square, new_val, new_abs_val, rtn_set;
 			
 			that=this;
 			
 			rtn_set=false;
-			target_square=that.getSquare(qos);/*2020 that.getSquare(qos, p)*/
+			target_square=that.getSquare(qos, p);
 			
 			if(target_square!==null){
 				rtn_set=true;
@@ -422,8 +418,8 @@
 			
 			that=this;
 			
-			function _isAttacked(initial_qos, piece_direction, as_knight){//uses: that
-				return that.testCollision(2, initial_qos, piece_direction, as_knight, null, null, null).isAttacked;
+			function _isAttacked(qos, piece_direction, as_knight){//uses: that
+				return that.testCollision(2, qos, piece_direction, as_knight, null, null, null).isAttacked;
 			}
 			
 			rtn_total_checks=0;
@@ -698,8 +694,14 @@
 			if(!error_msg){
 				if(that.enPassantBos){
 					en_passant_square=that.getSquare(that.enPassantBos);
-					infront_ep_is_empty=that.getSquare(that.enPassantBos, {rankShift : active_side.singlePawnRankShift}).isEmptySquare;
-					behind_ep_val=that.getSquare(that.enPassantBos, {rankShift : non_active_side.singlePawnRankShift}).val;
+					
+					infront_ep_is_empty=that.getSquare(en_passant_square, {
+						rankShift : active_side.singlePawnRankShift
+					}).isEmptySquare;
+					
+					behind_ep_val=that.getSquare(en_passant_square, {
+						rankShift : non_active_side.singlePawnRankShift
+					}).val;
 					
 					if(that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(active_side.isBlack ? 5 : 2) || !infront_ep_is_empty || behind_ep_val!==non_active_side.pawn){
 						error_msg="Error [3] bad en-passant";
@@ -711,7 +713,7 @@
 				fen_board=that.fen.split(" ")[0];
 				
 				for(i=0; i<2; i++){//0...1
-					current_side=(i ? that.w : that.b);
+					current_side=(i ? that.b : that.w);
 					min_captured=0;
 					
 					for(j=0; j<8; j++){//0...7
@@ -728,7 +730,7 @@
 						}
 					}
 					
-					if(min_captured>(15-_occurrences(fen_board, (i ? "p|n|b|r|q" : "P|N|B|R|Q")))){
+					if(min_captured>(15-_occurrences(fen_board, (i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
 						error_msg="Error [4] not enough captured pieces to support the total doubled pawns";
 						break;
 					}
@@ -737,15 +739,17 @@
 			
 			if(!error_msg){
 				for(i=0; i<2; i++){//0...1
-					current_side=(i ? that.w : that.b);
+					current_side=(i ? that.b : that.w);
 					
 					if(current_side.castling){
-						if(that.getSquare([current_side.firstRankPos, _ORIGINAL_KING_FILE_POS]).val!==current_side.king){
-							error_msg="Error [5] "+(i ? "white" : "black")+" castling rights without king in original position";
-						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare([current_side.firstRankPos, _ORIGINAL_H_ROOK_FILE_POS]).val!==current_side.rook){
-							error_msg="Error [6] "+(i ? "white" : "black")+" short castling rights with missing H-file rook";
-						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare([current_side.firstRankPos, _ORIGINAL_A_ROOK_FILE_POS]).val!==current_side.rook){
-							error_msg="Error [7] "+(i ? "white" : "black")+" long castling rights with missing A-file rook";
+						temp=(i ? "8" : "1");
+						
+						if(that.getSquare("e"+temp).val!==current_side.king){
+							error_msg="Error [5] "+(i ? "black" : "white")+" castling rights without king in original position";
+						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare("h"+temp).val!==current_side.rook){
+							error_msg="Error [6] "+(i ? "black" : "white")+" short castling rights with missing H-file rook";
+						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare("a"+temp).val!==current_side.rook){
+							error_msg="Error [7] "+(i ? "black" : "white")+" long castling rights with missing A-file rook";
 						}
 					}
 					
@@ -846,15 +850,17 @@
 			
 			that=this;
 			
-			function _candidateMoves(piece_direction, as_knight, total_squares, allow_capture){//uses: that, target_qos
-				return that.testCollision(1, target_qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
+			function _candidateMoves(qos, piece_direction, as_knight, total_squares, allow_capture){//uses: that
+				return that.testCollision(1, qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
 			}
 			
 			rtn=[];
 			no_errors=true;
 			
 			//if(no_errors){
-				target_cached_square=that.getSquare(target_qos, {isUnreferenced : true});
+				target_cached_square=that.getSquare(target_qos, {
+					isUnreferenced : true
+				});
 				
 				if(target_cached_square===null){
 					no_errors=false;
@@ -876,7 +882,7 @@
 				
 				if(target_cached_square.isKing){
 					for(i=1; i<9; i++){//1...8
-						temp=_candidateMoves(i, false, 1, true);
+						temp=_candidateMoves(target_cached_square, i, false, 1, true);
 						
 						if(temp.length){
 							pre_validated_arr_pos.push(temp);
@@ -886,23 +892,27 @@
 					if(active_side.castling && !that.isCheck){
 						for(i=0; i<2; i++){//0...1
 							if(active_side.castling!==(i ? _SHORT_CASTLE : _LONG_CASTLE)){
-								if(_candidateMoves((i ? _DIRECTION_LEFT : _DIRECTION_RIGHT), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
-									if(!that.countAttacks(that.getSquare(target_qos, {fileShift : (i ? -1 : 1)}), true)){
-										pre_validated_arr_pos.push([that.getSquare(target_qos, {fileShift : (i ? -2 : 2)})]);
+								if(_candidateMoves(target_cached_square, (i ? _DIRECTION_LEFT : _DIRECTION_RIGHT), false, (i ? 3 : 2), false).length===(i ? 3 : 2)){
+									if(!that.countAttacks(that.getSquare(target_cached_square, {fileShift : (i ? -1 : 1)}), true)){
+										temp=that.getSquare(target_cached_square, {
+											fileShift : (i ? -2 : 2)
+										});
+										
+										pre_validated_arr_pos.push([temp]);
 									}
 								}
 							}
 						}
 					}
 				}else if(target_cached_square.isPawn){
-					temp=_candidateMoves((active_side.isBlack ? _DIRECTION_BOTTOM : _DIRECTION_TOP), false, (target_cached_square.rankPos===active_side.secondRankPos ? 2 : 1), false);
+					temp=_candidateMoves(target_cached_square, (active_side.isBlack ? _DIRECTION_BOTTOM : _DIRECTION_TOP), false, (target_cached_square.rankPos===active_side.secondRankPos ? 2 : 1), false);
 					
 					if(temp.length){
 						pre_validated_arr_pos.push(temp);
 					}
 					
 					for(i=0; i<2; i++){//0...1
-						current_diagonal_square=that.getSquare(target_qos, {
+						current_diagonal_square=that.getSquare(target_cached_square, {
 							rankShift : active_side.singlePawnRankShift,
 							fileShift : (i ? -1 : 1)
 						});
@@ -911,7 +921,7 @@
 							if(current_diagonal_square.sign!==active_side.sign && !current_diagonal_square.isEmptySquare && !current_diagonal_square.isKing){
 								pre_validated_arr_pos.push([current_diagonal_square]);
 							}else if(sameSquare(current_diagonal_square.bos, that.enPassantBos)){
-								en_passant_capturable_cached_square=that.getSquare(current_diagonal_square.pos, {
+								en_passant_capturable_cached_square=that.getSquare(current_diagonal_square, {
 									rankShift : non_active_side.singlePawnRankShift,
 									isUnreferenced : true
 								});
@@ -926,7 +936,7 @@
 					if(!target_cached_square.isRook){piece_directions.push(2, 4, 6, 8);}
 					
 					for(i=0, len=piece_directions.length; i<len; i++){//0<len
-						temp=_candidateMoves(piece_directions[i], target_cached_square.isKnight, null, true);
+						temp=_candidateMoves(target_cached_square, piece_directions[i], target_cached_square.isKnight, null, true);
 						
 						if(temp.length){
 							pre_validated_arr_pos.push(temp);
@@ -936,26 +946,28 @@
 				
 				for(i=0, len=pre_validated_arr_pos.length; i<len; i++){//0<len
 					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
-						current_cached_square=that.getSquare(pre_validated_arr_pos[i][j], {isUnreferenced : true});
+						current_cached_square=that.getSquare(pre_validated_arr_pos[i][j], {
+							isUnreferenced : true
+						});
 						
-						that.setSquare(current_cached_square.pos, target_cached_square.val);
-						that.setSquare(target_qos, _EMPTY_SQR);
+						that.setSquare(current_cached_square, target_cached_square.val);
+						that.setSquare(target_cached_square, _EMPTY_SQR);
 						
 						if(en_passant_capturable_cached_square!==null){
 							if(sameSquare(current_cached_square.bos, that.enPassantBos)){
-								that.setSquare(en_passant_capturable_cached_square.pos, _EMPTY_SQR);
+								that.setSquare(en_passant_capturable_cached_square, _EMPTY_SQR);
 							}
 						}
 						
-						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square.pos : null), true)){
+						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
 							rtn.push(current_cached_square.pos);
 						}
 						
-						that.setSquare(current_cached_square.pos, current_cached_square.val);
-						that.setSquare(target_qos, target_cached_square.val);
+						that.setSquare(current_cached_square, current_cached_square.val);
+						that.setSquare(target_cached_square, target_cached_square.val);
 						
 						if(en_passant_capturable_cached_square!==null){
-							that.setSquare(en_passant_capturable_cached_square.pos, en_passant_capturable_cached_square.val);
+							that.setSquare(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
 						}
 					}
 				}
@@ -1114,25 +1126,30 @@
 		}
 		
 		function _moveCaller(initial_qos, final_qos){
-			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pawn_moved, new_en_passant_bos, promoted_val, king_castled, pgn_move, pgn_end, piece_directions, active_side, non_active_side, current_side, rtn_can_move;
+			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_square, pawn_moved, promoted_val, king_castled, pgn_move, pgn_end, piece_directions, active_side, non_active_side, current_side, rtn_can_move;
 			
 			that=this;
 			
-			function _disambiguationPos(piece_direction, as_knight, ally_qal){//uses: that, final_qos
-				return that.testCollision(3, final_qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
+			function _disambiguationPos(qos, piece_direction, as_knight, ally_qal){//uses: that
+				return that.testCollision(3, qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
 			}
 			
-			rtn_can_move=that.isLegalMove(initial_qos, final_qos);
+			initial_cached_square=that.getSquare(initial_qos, {
+				isUnreferenced : true
+			});
+			
+			final_cached_square=that.getSquare(final_qos, {
+				isUnreferenced : true
+			});
+			
+			rtn_can_move=that.isLegalMove(initial_cached_square, final_cached_square);
 			
 			if(rtn_can_move){
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
 				
-				initial_cached_square=that.getSquare(initial_qos, {isUnreferenced : true});
-				final_cached_square=that.getSquare(final_qos, {isUnreferenced : true});
-				
 				pawn_moved=false;
-				new_en_passant_bos="";
+				new_en_passant_square=null;
 				promoted_val=0;
 				king_castled=0;
 				
@@ -1143,22 +1160,36 @@
 						if(final_cached_square.filePos===6){//short
 							king_castled=_SHORT_CASTLE;
 							
-							that.setSquare([active_side.firstRankPos, 5], active_side.rook);
-							that.setSquare([active_side.firstRankPos, _ORIGINAL_H_ROOK_FILE_POS], _EMPTY_SQR);
+							that.setSquare(final_cached_square, active_side.rook, {
+								fileShift : -1
+							});
+							
+							that.setSquare(final_cached_square, _EMPTY_SQR, {
+								fileShift : 1
+							});
 						}else if(final_cached_square.filePos===2){//long
 							king_castled=_LONG_CASTLE;
 							
-							that.setSquare([active_side.firstRankPos, 3], active_side.rook);
-							that.setSquare([active_side.firstRankPos, _ORIGINAL_A_ROOK_FILE_POS], _EMPTY_SQR);
+							that.setSquare(final_cached_square, active_side.rook, {
+								fileShift : 1
+							});
+							
+							that.setSquare(final_cached_square, _EMPTY_SQR, {
+								fileShift : -2
+							});
 						}
 					}
 				}else if(initial_cached_square.isPawn){
 					pawn_moved=true;
 					
 					if(Math.abs(initial_cached_square.rankPos-final_cached_square.rankPos)>1){//new enpassant
-						new_en_passant_bos=(final_cached_square.fileBos+""+(active_side.isBlack ? 6 : 3));
+						new_en_passant_square=that.getSquare(final_cached_square, {
+							rankShift : non_active_side.singlePawnRankShift
+						});
 					}else if(sameSquare(final_cached_square.bos, that.enPassantBos)){//enpassant capture
-						that.setSquare((final_cached_square.fileBos+""+(active_side.isBlack ? 4 : 5)), _EMPTY_SQR);
+						that.setSquare(final_cached_square, _EMPTY_SQR, {
+							rankShift : non_active_side.singlePawnRankShift
+						});
 					}else if(final_cached_square.rankPos===active_side.lastRankPos){//promotion
 						promoted_val=(that.promoteTo*active_side.sign);
 					}
@@ -1190,7 +1221,7 @@
 						if(!initial_cached_square.isRook){piece_directions.push(2, 4, 6, 8);}
 						
 						for(i=0, len=piece_directions.length; i<len; i++){//0<len
-							temp=_disambiguationPos(piece_directions[i], initial_cached_square.isKnight, initial_cached_square.absVal);
+							temp=_disambiguationPos(final_cached_square, piece_directions[i], initial_cached_square.isKnight, initial_cached_square.absVal);
 							
 							if(temp){
 								temp2.push(temp);
@@ -1203,7 +1234,7 @@
 							
 							for(i=0; i<len; i++){//0<len
 								//no puede haber ajustes de king o pawn, sin problemas en legal moves
-								if(!sameSquare(temp2[i], initial_qos) && that.isLegalMove(temp2[i], final_qos)){
+								if(!sameSquare(temp2[i], initial_cached_square) && that.isLegalMove(temp2[i], final_cached_square)){
 									temp3+=toBos(temp2[i]);
 								}
 							}
@@ -1233,19 +1264,21 @@
 					current_side=(i ? active_side : non_active_side);
 					temp=(i ? initial_cached_square : final_cached_square);
 					
-					if(current_side.castling && temp.isRook && temp.rankPos===current_side.firstRankPos){
-						if(temp.filePos===_ORIGINAL_H_ROOK_FILE_POS && current_side.castling!==_LONG_CASTLE){//short
+					if(current_side.castling && temp.isRook){
+						temp2=(current_side.isBlack ? "8" : "1");
+						
+						if(current_side.castling!==_LONG_CASTLE && sameSquare(temp, that.getSquare("h"+temp2))){
 							current_side.castling-=_SHORT_CASTLE;
-						}else if(temp.filePos===_ORIGINAL_A_ROOK_FILE_POS && current_side.castling!==_SHORT_CASTLE){//long
+						}else if(current_side.castling!==_SHORT_CASTLE && sameSquare(temp, that.getSquare("a"+temp2))){
 							current_side.castling-=_LONG_CASTLE;
 						}
 					}
 				}
 				
-				that.enPassantBos=new_en_passant_bos;
+				that.enPassantBos=(new_en_passant_square!==null ? new_en_passant_square.bos : "");
 				
-				that.setSquare(final_qos, (promoted_val || initial_cached_square.val));
-				that.setSquare(initial_qos, _EMPTY_SQR);
+				that.setSquare(final_cached_square, (promoted_val || initial_cached_square.val));
+				that.setSquare(initial_cached_square, _EMPTY_SQR);
 				
 				that.toggleActiveNonActive();
 				
