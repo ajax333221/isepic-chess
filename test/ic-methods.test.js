@@ -8,9 +8,9 @@ Ic.setSilentMode(false);
 //boardExists (+ que deje igual silent mode)
 //selectBoard
 //removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
-//isEqualBoard
-//cloneBoard
 //
+//(x) isEqualBoard (completado)(es un b.isEqualBoard())
+//(x) cloneBoard (completado)(es un b.cloneBoardFrom() = es un Ic.utilityMisc.cloneBoardObjs())
 //(x) setSilentMode (N/A)
 
 describe("Ic methods", () => {
@@ -751,29 +751,34 @@ describe("Ic methods", () => {
 		board_name="board_init";
 		other_board_name="board_init_other";
 		
-		test("optional clocks are added", () => {
-			Ic.initBoard({
+		test("init from missing optional clocks", () => {
+			var board_obj;
+			
+			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "8/r6k/8/8/8/R6K/8/8 w - -",
 				isHidden : true,
 				invalidFenStop : true
 			});
 			
-			expect(Ic.selectBoard(board_name).fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
+			expect(board_obj.fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
 		});
 		
-		test("original board is overwritten by valid fen and references still work", () => {
-			var board_obj;
+		test("original board is overwritten by valid fen and old references still point to the same board", () => {
+			var temp;
 			
-			board_obj=Ic.initBoard({
+			temp=Ic.selectBoard(board_name);
+			expect(temp.fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
+			
+			Ic.initBoard({
 				boardName : board_name,
 				fen : "8/1r5k/8/8/8/1R5K/8/8 w - - 0 1",
 				isHidden : true,
 				invalidFenStop : true
 			});
 			
+			expect(temp.fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
-			expect(board_obj===Ic.selectBoard(board_name)).toBe(true);
 		});
 		
 		test("original board is not overwritten by invalid fen and null is returned (invalidFenStop=true)", () => {

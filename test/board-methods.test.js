@@ -10,10 +10,10 @@ Ic.setSilentMode(false);
 //updateFenAndMisc
 //refinedFenTest
 //testCollision
-//cloneBoardFrom
-//cloneBoardTo
 //moveCaller
 //
+//(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())
+//(x) cloneBoardFrom (completado)(es un Ic.utilityMisc.cloneBoardObjs())
 //(x) navFirst (N/A)(ui only)
 //(x) navPrevious (N/A)(ui only)
 //(x) navNext (N/A)(ui only)
@@ -29,41 +29,43 @@ describe("Board methods", () => {
 		other_board_name="board_hash_other";
 		
 		test("default position", () => {
-			Ic.initBoard({
+			var board_obj;
+			
+			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isHidden : true,
 				invalidFenStop : true
 			});
 			
-			expect(Ic.selectBoard(board_name).boardHash()).toBe(1586525529);
+			expect(board_obj.boardHash()).toBe(1586525529);
 		});
 		
 		test("other position and board name not used in the hash", () => {
-			var hash_a, hash_b, shared_fen;
+			var board_a, board_b, hash_a, hash_b, shared_fen;
 			
 			shared_fen="Bnb1kb1r/2qpppp1/1pp5/p6p/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b k d3 0 8";
 			
-			Ic.initBoard({
+			board_a=Ic.initBoard({
 				boardName : board_name,
 				fen : shared_fen,
 				isHidden : true,
 				invalidFenStop : true
 			});
 			
-			Ic.initBoard({
+			board_b=Ic.initBoard({
 				boardName : other_board_name,
 				fen : shared_fen,
 				isHidden : true,
 				invalidFenStop : true
 			});
 			
-			hash_a=Ic.selectBoard(board_name).boardHash();
-			hash_b=Ic.selectBoard(other_board_name).boardHash();
+			hash_a=board_a.boardHash();
+			hash_b=board_b.boardHash();
 			
 			expect(hash_a).toBe(-464361407);
 			expect(hash_a===hash_b).toBe(true);
-			expect(Ic.selectBoard(board_name)===Ic.selectBoard(other_board_name)).toBe(false);
+			expect(board_a===board_b).toBe(false);
 		});
 	});
 	
@@ -91,13 +93,6 @@ describe("Board methods", () => {
 			expect(board_b.isEqualBoard(board_a)).toBe(true);
 			expect(board_a.isEqualBoard(board_a)).toBe(true);
 			expect(board_b.isEqualBoard(board_b)).toBe(true);
-		});
-		
-		test("after making moves", () => {
-			var board_a, board_b;
-			
-			board_a=Ic.selectBoard(board_name);
-			board_b=Ic.selectBoard(other_board_name);
 			
 			board_a.moveCaller("a2", "a4");
 			expect(board_a.isEqualBoard(board_b)).toBe(false);

@@ -9,7 +9,7 @@ describe("Misc.", () => {
 		board_name="board_regression_tests";
 		other_board_name="board_regression_tests_other";
 		
-		describe("enpassant related", () => {
+		describe("Enpassant related", () => {
 			test("enpassant capture applied to other non enpassant moves", () => {
 				expect(Ic.mapToBos(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"])).sort()).toEqual(["d6", "e6"].sort());
 			});
@@ -35,6 +35,155 @@ describe("Misc.", () => {
 				board_obj.moveCaller("h5", "g6");
 				
 				expect(board_obj.checks).toBe(2);
+			});
+		});
+		
+		describe("Castle related", () => {
+			test("castling", () => {
+				var temp;
+				
+				temp="2q1k3/3ppp2/5r2/7b/8/4n3/3PPP2/R3K2R w KQ - 0 1";
+				
+				//jumping attacked squares (white)
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "c1"])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "g1"])).toBe(false);//short
+				
+				temp="r3k2r/3pBp2/8/3N4/8/8/3PPP2/3QK3 b kq - 0 1";
+				
+				//jumping attacked squares (black)
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "c8"])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "g8"])).toBe(false);//short
+				
+				temp="qk6/pp5b/8/8/8/8/3PPP2/R3K3 w Q - 0 1";
+				
+				//b1 attack should not prevent long castle (white)
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "c1"])).toBe(true);
+				
+				temp="r3k3/3ppp2/N7/8/8/8/5PPP/6QK b q - 0 1";
+				
+				//b8 attack should not prevent long castle (black)
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "c8"])).toBe(true);
+				
+				temp="qk6/pp6/8/8/8/8/3PPPn1/R3K2R w KQ - 0 1";
+				
+				//castling in check (white)
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "c1"])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "g1"])).toBe(false);//short
+				
+				temp="r3k2r/3pppN1/8/8/8/8/5PPP/6QK b kq - 0 1";
+				
+				//castling in check (black)
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "c8"])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "g8"])).toBe(false);//short
+			});
+			
+			test("removing castle rights", () => {
+				var board_obj, board_other;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : "r3k2r/4p3/8/3bb3/8/8/Q3P2Q/R3K2R w KQkq - 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				board_other=Ic.initBoard({
+					boardName : other_board_name,
+					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+					isHidden : true,
+					invalidFenStop : true
+				});
+				
+				expect(board_obj.w.castling).toBe(3);
+				expect(board_obj.b.castling).toBe(3);
+				
+				//w losing long-castle right by rook-move
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("a1", "d1");
+				expect(board_other.w.castling).toBe(1);
+				expect(board_other.b.castling).toBe(3);
+				
+				//w losing short-castle right by rook-move
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("h1", "f1");
+				expect(board_other.w.castling).toBe(2);
+				expect(board_other.b.castling).toBe(3);
+				
+				//w losing both castling rights by king-move
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("e1", "d1");
+				expect(board_other.w.castling).toBe(0);
+				expect(board_other.b.castling).toBe(3);
+				
+				//w losing both castling rights by long-castle
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("e1", "c1");
+				expect(board_other.w.castling).toBe(0);
+				expect(board_other.b.castling).toBe(3);
+				
+				//w losing both castling rights by short-castle
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("e1", "g1");
+				expect(board_other.w.castling).toBe(0);
+				expect(board_other.b.castling).toBe(3);
+				
+				//w making b lose long-castle right by rook-capture
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("a2", "a8");
+				expect(board_other.w.castling).toBe(3);
+				expect(board_other.b.castling).toBe(1);
+				
+				//w making b lose short-castle right by rook-capture
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("h2", "h8");
+				expect(board_other.w.castling).toBe(3);
+				expect(board_other.b.castling).toBe(2);
+				
+				board_obj.moveCaller("e2", "e3");
+				expect(board_obj.w.castling).toBe(3);
+				expect(board_obj.b.castling).toBe(3);
+				
+				//b losing long-castle right by rook-move
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("a8", "d8");
+				expect(board_other.w.castling).toBe(3);
+				expect(board_other.b.castling).toBe(1);
+				
+				//b losing short-castle right by rook-move
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("h8", "f8");
+				expect(board_other.w.castling).toBe(3);
+				expect(board_other.b.castling).toBe(2);
+				
+				//b losing both castling rights by king-move
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("e8", "d8");
+				expect(board_other.w.castling).toBe(3);
+				expect(board_other.b.castling).toBe(0);
+				
+				//b losing both castling rights by long-castle
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("e8", "c8");
+				expect(board_other.w.castling).toBe(3);
+				expect(board_other.b.castling).toBe(0);
+				
+				//b losing both castling rights by short-castle
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("e8", "g8");
+				expect(board_other.w.castling).toBe(3);
+				expect(board_other.b.castling).toBe(0);
+				
+				//b making w lose long-castle right by rook-capture
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("e5", "a1");
+				expect(board_other.w.castling).toBe(1);
+				expect(board_other.b.castling).toBe(3);
+				
+				//b making w lose short-castle right by rook-capture
+				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+				board_other.moveCaller("d5", "h1");
+				expect(board_other.w.castling).toBe(2);
+				expect(board_other.b.castling).toBe(3);
 			});
 		});
 		
@@ -124,7 +273,19 @@ describe("Misc.", () => {
 		test("b.getSquare() isUnreferenced not working", () => {
 			var temp, temp2, board_obj, board_other;
 			
-			board_obj=Ic.selectBoard(board_name);
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				isHidden : true,
+				invalidFenStop : true
+			});
+			
+			board_other=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				isHidden : true,
+				invalidFenStop : true
+			});
 			
 			temp=board_obj.getSquare("b2", {isUnreferenced : false});
 			temp2=board_obj.getSquare("b2", {isUnreferenced : true});
@@ -135,13 +296,6 @@ describe("Misc.", () => {
 			
 			expect(temp.isBishop).toBe(true);
 			expect(temp2.isPawn).toBe(true);
-			
-			board_other=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
 			
 			temp=board_other.getSquare("b2", {isUnreferenced : false});
 			
@@ -217,115 +371,6 @@ describe("Misc.", () => {
 				
 				expect(board_other.materialDiff).toEqual({w:[], b:[]});
 			});
-		});
-		
-		test("Removing castle rights", () => {
-			var board_obj, board_other;
-			
-			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "r3k2r/4p3/8/3bb3/8/8/Q3P2Q/R3K2R w KQkq - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
-			
-			board_other=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true,
-				invalidFenStop : true
-			});
-			
-			expect(board_obj.w.castling).toBe(3);
-			expect(board_obj.b.castling).toBe(3);
-			
-			//w losing long-castle right by rook-move
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("a1", "d1");
-			expect(board_other.w.castling).toBe(1);
-			expect(board_other.b.castling).toBe(3);
-			
-			//w losing short-castle right by rook-move
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("h1", "f1");
-			expect(board_other.w.castling).toBe(2);
-			expect(board_other.b.castling).toBe(3);
-			
-			//w losing both castling rights by king-move
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("e1", "d1");
-			expect(board_other.w.castling).toBe(0);
-			expect(board_other.b.castling).toBe(3);
-			
-			//w losing both castling rights by long-castle
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("e1", "c1");
-			expect(board_other.w.castling).toBe(0);
-			expect(board_other.b.castling).toBe(3);
-			
-			//w losing both castling rights by short-castle
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("e1", "g1");
-			expect(board_other.w.castling).toBe(0);
-			expect(board_other.b.castling).toBe(3);
-			
-			//w making b lose long-castle right by rook-capture
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("a2", "a8");
-			expect(board_other.w.castling).toBe(3);
-			expect(board_other.b.castling).toBe(1);
-			
-			//w making b lose short-castle right by rook-capture
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("h2", "h8");
-			expect(board_other.w.castling).toBe(3);
-			expect(board_other.b.castling).toBe(2);
-			
-			board_obj.moveCaller("e2", "e3");
-			expect(board_obj.w.castling).toBe(3);
-			expect(board_obj.b.castling).toBe(3);
-			
-			//b losing long-castle right by rook-move
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("a8", "d8");
-			expect(board_other.w.castling).toBe(3);
-			expect(board_other.b.castling).toBe(1);
-			
-			//b losing short-castle right by rook-move
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("h8", "f8");
-			expect(board_other.w.castling).toBe(3);
-			expect(board_other.b.castling).toBe(2);
-			
-			//b losing both castling rights by king-move
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("e8", "d8");
-			expect(board_other.w.castling).toBe(3);
-			expect(board_other.b.castling).toBe(0);
-			
-			//b losing both castling rights by long-castle
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("e8", "c8");
-			expect(board_other.w.castling).toBe(3);
-			expect(board_other.b.castling).toBe(0);
-			
-			//b losing both castling rights by short-castle
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("e8", "g8");
-			expect(board_other.w.castling).toBe(3);
-			expect(board_other.b.castling).toBe(0);
-			
-			//b making w lose long-castle right by rook-capture
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("e5", "a1");
-			expect(board_other.w.castling).toBe(1);
-			expect(board_other.b.castling).toBe(3);
-			
-			//b making w lose short-castle right by rook-capture
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-			board_other.moveCaller("d5", "h1");
-			expect(board_other.w.castling).toBe(2);
-			expect(board_other.b.castling).toBe(3);
 		});
 	});
 	

@@ -198,66 +198,40 @@ describe("Ic utility methods", () => {
 	});
 	
 	describe("Ic.utilityMisc.cloneBoardObjs()", () => {
-		var board_name, other_board_name;
+		var board_name, other_board_name, board_obj, board_other;
 		
 		board_name="board_clone_board_objs";
 		other_board_name="board_clone_board_objs_other";
 		
-		test("init main board", () => {
-			var board_obj;
-			
-			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-				isHidden : true
-			});
-			
-			expect(Ic.boardExists(board_obj)).toBe(true);
+		board_obj=Ic.initBoard({
+			boardName : board_name,
+			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+			isHidden : true
 		});
 		
-		test("init other board", () => {
-			var board_obj;
-			
-			board_obj=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-				isHidden : true
-			});
-			
-			expect(Ic.boardExists(board_obj)).toBe(true);
+		board_other=Ic.initBoard({
+			boardName : other_board_name,
+			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+			isHidden : true
 		});
 		
-		test("incorrect copied values", () => {
-			var board_main, board_other;
-			
-			board_main=Ic.selectBoard(board_name);
-			board_other=Ic.selectBoard(other_board_name);
-			
-			board_main.moveCaller("c3", "e4");
-			
-			board_other.moveCaller("g2", "g3");
-			board_other.moveCaller("h7", "h6");
-			board_other.moveCaller("f1", "g2");
-			board_other.moveCaller("h6", "h5");
-			board_other.moveCaller("g2", "e4");
-			
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_main);
-			
-			expect(board_other.moveList[1].PGNmove).toBe("Ne4");
-			expect(!!board_other.moveList[2]).toBe(false);
-			expect(board_other.getSquare("e4").val).toBe(2);
-		});
+		board_obj.moveCaller("c3", "e4");
 		
-		test("clone to self problems", () => {
-			var board_main, board_other;
-			
-			board_main=Ic.selectBoard(board_name);
-			board_other=Ic.selectBoard(other_board_name);
-			
-			Ic.utilityMisc.cloneBoardObjs(board_other, board_other);
-			
-			expect(board_other.isEqualBoard(board_main)).toBe(true);
-		});
+		board_other.moveCaller("g2", "g3");
+		board_other.moveCaller("h7", "h6");
+		board_other.moveCaller("f1", "g2");
+		board_other.moveCaller("h6", "h5");
+		board_other.moveCaller("g2", "e4");
+		
+		Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+		
+		expect(board_other.moveList[1].PGNmove).toBe("Ne4");
+		expect(!!board_other.moveList[2]).toBe(false);
+		expect(board_other.getSquare("e4").val).toBe(2);
+		
+		Ic.utilityMisc.cloneBoardObjs(board_other, board_other);
+		
+		expect(board_other.isEqualBoard(board_obj)).toBe(true);
 	});
 	
 	describe("Ic.utilityMisc.basicFenTest()", () => {
