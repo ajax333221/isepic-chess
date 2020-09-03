@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.10.6";
+		var _VERSION="3.10.7";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -457,25 +457,31 @@
 		}
 		
 		function _toggleIsRotated(new_is_rotated){
-			var that;
+			var that, temp;
 			
 			that=this;
 			
-			new_is_rotated=((typeof new_is_rotated)==="boolean" ? new_is_rotated : !that.isRotated);
+			temp=((typeof new_is_rotated)==="boolean" ? new_is_rotated : !that.isRotated);
 			
-			that.isRotated=new_is_rotated;
-			
-			that.refreshBoard(0);//autorefresh
+			if(temp!==that.isRotated){
+				that.isRotated=temp;
+				
+				that.refreshBoard(0);//autorefresh
+			}
 		}
 		
 		function _setPromoteTo(qal){
-			var that;
+			var that, temp;
 			
 			that=this;
 			
-			that.promoteTo=_promoteValHelper(qal);
+			temp=_promoteValHelper(qal);
 			
-			that.refreshBoard(0);//autorefresh
+			if(temp!==that.promoteTo){
+				that.promoteTo=temp;
+				
+				that.refreshBoard(0);//autorefresh
+			}
 		}
 		
 		function _setCurrentMove(num, is_goto){
@@ -494,10 +500,10 @@
 					
 					that.currentMove=temp;
 					that.readFen(that.moveList[temp].Fen);
+					
+					that.refreshBoard((rtn_moved && !is_goto) ? num : 0);//autorefresh
 				}
 			}
-			
-			that.refreshBoard((rtn_moved && !is_goto) ? num : 0);//autorefresh
 			
 			return rtn_moved;
 		}
