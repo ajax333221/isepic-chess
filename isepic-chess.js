@@ -501,7 +501,7 @@
 					that.currentMove=temp;
 					that.readFen(that.moveList[temp].Fen);
 					
-					that.refreshBoard((rtn_moved && !is_goto) ? num : 0);//autorefresh
+					that.refreshBoard(!is_goto ? num : 0);//autorefresh
 				}
 			}
 			
