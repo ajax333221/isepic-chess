@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.10.7";
+		var _VERSION="3.10.8";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1093,7 +1093,7 @@
 			if(no_errors){
 				_cloneBoardObjs(that, from_board);
 				
-				//that.refreshBoard(); autorefresh
+				that.refreshBoard(0);//autorefresh
 			}
 			
 			return no_errors;
@@ -1125,7 +1125,7 @@
 			if(no_errors){
 				_cloneBoardObjs(to_board, that);
 				
-				//to_board.refreshBoard(); autorefresh
+				to_board.refreshBoard(0);//autorefresh
 			}
 			
 			return no_errors;
@@ -1163,7 +1163,7 @@
 					if(active_side.castling){
 						active_side.castling=0;
 						
-						/*2020 hacer sameSquare(bos) con 8 1*/
+						/*2020 usar sameSquare() con file bos active_side pero aun no tiene*/
 						if(final_cached_square.filePos===6){//short
 							king_castled=_SHORT_CASTLE;
 							
@@ -1321,6 +1321,8 @@
 				}
 				
 				that.moveList.push({Fen : that.fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (promoted_val || initial_cached_square.val), KingCastled : king_castled});
+				
+				that.refreshBoard(1);//autorefresh
 			}
 			
 			return rtn_can_move;
@@ -1659,9 +1661,7 @@
 				_BOARDS[del_board_name_cache]=null;
 				delete _BOARDS[del_board_name_cache];
 				
-				/*2020*/
-				//if current board is the one removed, refresh to other, else refresh too (best only html tabs)
-				//x.refreshBoard(); autorefresh
+				/*2020 autorefresh when removing current board? EDIT: can't easily select a non-hidden board*/
 			}
 			
 			return rtn;
@@ -1705,7 +1705,7 @@
 			//}
 			
 			if(no_errors){
-				rtn=to_board.cloneBoardFrom(from_woard);
+				rtn=to_board.cloneBoardFrom(from_woard);//autorefresh (sometimes)
 			}
 			
 			return rtn;
@@ -1905,7 +1905,7 @@
 				
 				rtn=new_board;
 				
-				//new_board.refreshBoard(); autorefresh
+				new_board.refreshBoard(0);//autorefresh
 			}
 			
 			return rtn;
