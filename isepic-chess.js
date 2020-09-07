@@ -1,10 +1,10 @@
 /** Copyright (c) 2020 Ajax Isepic (ajax333221) Licensed MIT */
 
-/*jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
+/* jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.10.8";
+		var _VERSION="3.10.9";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -31,7 +31,7 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "isUnlabeled", "squares"];
 		
 		//---------------- helpers
 		
@@ -1711,7 +1711,7 @@
 			return rtn;
 		}
 		
-		function initBoard(p){//{boardName, fen, isRotated, isHidden, promoteTo, invalidFenStop}
+		function initBoard(p){//{boardName, fen, isRotated, isHidden, isUnlabeled, promoteTo, invalidFenStop}
 			var i, j, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
 			
 			rtn=null;
@@ -1724,6 +1724,7 @@
 				
 				p.isRotated=(p.isRotated===true);
 				p.isHidden=(p.isHidden===true);
+				p.isUnlabeled=(p.isUnlabeled===true);
 				p.invalidFenStop=(p.invalidFenStop===true);
 				
 				fen_was_valid=!_basicFenTest(p.fen);
@@ -1829,6 +1830,7 @@
 				target.promoteTo=null;
 				target.selectedBos=null;
 				target.isHidden=null;
+				target.isUnlabeled=null;
 				target.squares=Object.create(null);
 				
 				for(i=0; i<8; i++){//0...7
@@ -1879,6 +1881,7 @@
 				
 				new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 				new_board.isRotated=p.isRotated;
+				new_board.isUnlabeled=p.isUnlabeled;
 				new_board.promoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				
 				postfen_was_valid=!new_board.refinedFenTest();
@@ -1900,6 +1903,7 @@
 					
 					new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 					new_board.isRotated=p.isRotated;
+					new_board.isUnlabeled=p.isUnlabeled;
 					new_board.promoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				}
 				
