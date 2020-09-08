@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.10.9";
+		var _VERSION="3.11.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -31,7 +31,7 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "materialDiff", "promoteTo", "selectedBos", "isHidden", "isUnlabeled", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "promoteTo", "selectedBos", "isHidden", "isUnlabeled", "squares"];
 		
 		//---------------- helpers
 		
@@ -188,50 +188,60 @@
 					to_prop=to_board[current_key];
 					from_prop=from_board[current_key];
 					
-					//["squares"], ["materialDiff"], ["moveList"], ["w", "b"]
+					//["squares"], ["moveList"], ["w"], ["b"]
 					if(_isObject(from_prop) || _isArray(from_prop)){
-						sub_keys=Object.keys(from_prop);
-						
-						for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
-							current_sub_from=from_prop[sub_keys[j]];
+						if(current_key==="w" || current_key==="b"){
+							//object or array data type
+							to_prop.materialDiff=from_prop.materialDiff.slice(0);
 							
-							//["squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
-							//["materialDiff"] object of (2), arrays of (N)
-							//["moveList"] array of (N), object of (8)
-							if(_isObject(current_sub_from) || _isArray(current_sub_from)){
-								if(current_key==="squares"){
-									to_prop[sub_keys[j]].bal=current_sub_from.bal;
-									to_prop[sub_keys[j]].absBal=current_sub_from.absBal;
-									to_prop[sub_keys[j]].val=current_sub_from.val;
-									to_prop[sub_keys[j]].absVal=current_sub_from.absVal;
-									to_prop[sub_keys[j]].className=current_sub_from.className;
-									to_prop[sub_keys[j]].sign=current_sub_from.sign;
-									to_prop[sub_keys[j]].isEmptySquare=current_sub_from.isEmptySquare;
-									to_prop[sub_keys[j]].isPawn=current_sub_from.isPawn;
-									to_prop[sub_keys[j]].isKnight=current_sub_from.isKnight;
-									to_prop[sub_keys[j]].isBishop=current_sub_from.isBishop;
-									to_prop[sub_keys[j]].isRook=current_sub_from.isRook;
-									to_prop[sub_keys[j]].isQueen=current_sub_from.isQueen;
-									to_prop[sub_keys[j]].isKing=current_sub_from.isKing;
-								}else{
-									sub_sub_keys=Object.keys(current_sub_from);
-									
-									if(current_key==="materialDiff"){
-										to_prop[sub_keys[j]]=[];
-									}else if(current_key==="moveList"){
-										to_prop[sub_keys[j]]={};
-									}
-									
-									for(k=0, len3=sub_sub_keys.length; k<len3; k++){//0<len3
-										if(_isObject(current_sub_from[sub_sub_keys[k]]) || _isArray(current_sub_from[sub_sub_keys[k]])){
-											_consoleLog("Error[_cloneBoardObjs]: unexpected type in key \""+sub_sub_keys[k]+"\"");
-										}else{//[...] primitive data type
-											to_prop[sub_keys[j]][sub_sub_keys[k]]=current_sub_from[sub_sub_keys[k]];
+							//primitive data type
+							to_prop.kingBos=from_prop.kingBos;
+							to_prop.castling=from_prop.castling;
+						}else{
+							sub_keys=Object.keys(from_prop);
+							
+							for(j=0, len2=sub_keys.length; j<len2; j++){//0<len2
+								current_sub_from=from_prop[sub_keys[j]];
+								
+								//["squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
+								//["moveList"] array of (N), object of (8)
+								if(_isObject(current_sub_from) || _isArray(current_sub_from)){
+									if(current_key==="squares"){
+										//object or array data type
+										//(none)
+										
+										//primitive data type
+										to_prop[sub_keys[j]].bal=current_sub_from.bal;
+										to_prop[sub_keys[j]].absBal=current_sub_from.absBal;
+										to_prop[sub_keys[j]].val=current_sub_from.val;
+										to_prop[sub_keys[j]].absVal=current_sub_from.absVal;
+										to_prop[sub_keys[j]].className=current_sub_from.className;
+										to_prop[sub_keys[j]].sign=current_sub_from.sign;
+										to_prop[sub_keys[j]].isEmptySquare=current_sub_from.isEmptySquare;
+										to_prop[sub_keys[j]].isPawn=current_sub_from.isPawn;
+										to_prop[sub_keys[j]].isKnight=current_sub_from.isKnight;
+										to_prop[sub_keys[j]].isBishop=current_sub_from.isBishop;
+										to_prop[sub_keys[j]].isRook=current_sub_from.isRook;
+										to_prop[sub_keys[j]].isQueen=current_sub_from.isQueen;
+										to_prop[sub_keys[j]].isKing=current_sub_from.isKing;
+									}else{
+										sub_sub_keys=Object.keys(current_sub_from);
+										
+										if(current_key==="moveList"){
+											to_prop[sub_keys[j]]={};
+										}
+										
+										for(k=0, len3=sub_sub_keys.length; k<len3; k++){//0<len3
+											if(_isObject(current_sub_from[sub_sub_keys[k]]) || _isArray(current_sub_from[sub_sub_keys[k]])){
+												_consoleLog("Error[_cloneBoardObjs]: unexpected type in key \""+sub_sub_keys[k]+"\"");
+											}else{//[...] primitive data type
+												to_prop[sub_keys[j]][sub_sub_keys[k]]=current_sub_from[sub_sub_keys[k]];
+											}
 										}
 									}
+								}else{
+									_consoleLog("Error[_cloneBoardObjs]: unexpected primitive data type");
 								}
-							}else{//["w", "b"] primitive data type
-								to_prop[sub_keys[j]]=current_sub_from;
 							}
 						}
 					}else{//[...] primitive data type
@@ -650,16 +660,17 @@
 			
 			that.inDraw=(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial);
 			
-			that.materialDiff={w:[], b:[]};
+			that.w.materialDiff=[];
+			that.b.materialDiff=[];
 			
 			for(i=1; i<7; i++){//1...6
 				current_diff=(total_pieces.w[toBal(-i)]-total_pieces.b[toBal(-i)]);
 				
 				for(j=0, len=Math.abs(current_diff); j<len; j++){//0<len
 					if(current_diff>0){
-						that.materialDiff.w.push(i);
+						that.w.materialDiff.push(i);
 					}else{
-						that.materialDiff.b.push(-i);
+						that.b.materialDiff.push(-i);
 					}
 				}
 			}
@@ -1786,7 +1797,8 @@
 					
 					//mutable
 					kingBos : null,
-					castling : null
+					castling : null,
+					materialDiff : null
 				};
 				
 				target.b={
@@ -1806,7 +1818,8 @@
 					
 					//mutable
 					kingBos : null,
-					castling : null
+					castling : null,
+					materialDiff : null
 				};
 				
 				target.activeColor=null;
@@ -1826,7 +1839,6 @@
 				target.isFiftyMove=null;
 				target.isInsufficientMaterial=null;
 				target.inDraw=null;
-				target.materialDiff=null;
 				target.promoteTo=null;
 				target.selectedBos=null;
 				target.isHidden=null;

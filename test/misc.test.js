@@ -347,30 +347,6 @@ describe("Misc.", () => {
 				expect(temp2.pos).not.toEqual([0, 0]);
 				expect(temp.pos===temp2.pos).toEqual(false);
 			});
-			
-			test("materialDiff not applied to new []", () => {
-				var board_obj, board_other;
-				
-				board_obj=Ic.initBoard({
-					boardName : board_name,
-					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				board_other=Ic.initBoard({
-					boardName : other_board_name,
-					fen : "8/2kq4/2pn4/7p/1P5P/2PB2P1/2KR4/8 w - - 0 1",
-					isHidden : true,
-					invalidFenStop : true
-				});
-				
-				expect(board_other.materialDiff).toEqual({w:[1, 1, 3, 4], b:[-2, -5]});
-				
-				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				
-				expect(board_other.materialDiff).toEqual({w:[], b:[]});
-			});
 		});
 	});
 	

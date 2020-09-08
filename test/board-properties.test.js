@@ -85,6 +85,8 @@ describe("Board properties", () => {
 				});
 				
 				//b.x.castling in "b.fen, b.w.castling and b.b.castling"
+				
+				//b.x.materialDiff in "b.w.materialDiff and b.b.materialDiff"
 			});
 		});
 		
@@ -149,6 +151,8 @@ describe("Board properties", () => {
 				});
 				
 				//b.x.castling in "b.fen, b.w.castling and b.b.castling"
+				
+				//b.x.materialDiff in "b.w.materialDiff and b.b.materialDiff"
 			});
 		});
 		
@@ -213,6 +217,32 @@ describe("Board properties", () => {
 		expect(temp.b.castling).toBe(0);
 	});
 	
+	test("b.w.materialDiff and b.b.materialDiff", () => {
+		var temp, strlist, current_fen;
+		
+		strlist="w, b";
+		
+		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+		temp=Ic.fenGet(current_fen, strlist);
+		expect(temp.w.materialDiff).toEqual([]);
+		expect(temp.b.materialDiff).toEqual([]);
+		
+		current_fen="k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - -";
+		temp=Ic.fenGet(current_fen, strlist);
+		expect(temp.w.materialDiff).toEqual([4, 4]);
+		expect(temp.b.materialDiff).toEqual([-1]);
+		
+		current_fen="8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - -";
+		temp=Ic.fenGet(current_fen, strlist);
+		expect(temp.w.materialDiff).toEqual([1, 1, 3, 5]);
+		expect(temp.b.materialDiff).toEqual([-2, -2, -4]);
+		
+		current_fen="8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1";
+		temp=Ic.fenGet(current_fen, strlist);
+		expect(temp.w.materialDiff).toEqual([]);
+		expect(temp.b.materialDiff).toEqual([]);
+	});
+	
 	test("b.squares", () => {
 		var get_custom;
 		
@@ -239,14 +269,6 @@ describe("Board properties", () => {
 		expect(Ic.fenGet("rnbqkbnr/pppp1pp1/8/4p2p/P3P2P/8/1PPP1PP1/RNBQKBNR b KQkq a3", "enPassantBos").enPassantBos).toBe("a3");
 		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P3P2P/8/1PPP1PP1/RNBQKBNR w KQkq a6 0 4", "enPassantBos").enPassantBos).toBe("a6");
 		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P1B1P2P/8/1PPP1PP1/RNBQK1NR b KQkq - 1 4", "enPassantBos").enPassantBos).toBe("");
-	});
-	
-	test("b.materialDiff", () => {
-		expect(Ic.fenGet("k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - - 0 1", "materialDiff").materialDiff).toEqual({w:[4, 4], b:[-1]});
-		
-		expect(Ic.fenGet("8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - - 0 1", "materialDiff").materialDiff).toEqual({w:[1, 1, 3, 5], b:[-2, -2, -4]});
-		
-		expect(Ic.fenGet("8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1", "materialDiff").materialDiff).toEqual({w:[], b:[]});
 	});
 	
 	test("b.checks", () => {

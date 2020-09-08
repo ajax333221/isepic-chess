@@ -232,6 +232,36 @@ describe("Ic utility methods", () => {
 		Ic.utilityMisc.cloneBoardObjs(board_other, board_other);
 		
 		expect(board_other.isEqualBoard(board_obj)).toBe(true);
+		
+		board_other.moveCaller("g7", "g5");
+		board_other.moveCaller("e4", "g5");
+		board_other.moveCaller("e7", "e5");
+		board_other.moveCaller("e2", "e4");
+		board_other.moveCaller("d8", "g5");
+		board_other.moveCaller("d2", "d3");
+		board_other.moveCaller("g5", "c1");
+		
+		expect(board_other.w.materialDiff).toEqual([1]);
+		expect(board_other.b.materialDiff).toEqual([-2, -3]);
+		
+		Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+		
+		//if we go back to push them one by one and forget to start with a [],
+		//then shorter arrays won't overwrite larger arrays properly
+		expect(board_other.w.materialDiff).toEqual([]);
+		expect(board_other.b.materialDiff).toEqual([]);
+		
+		board_obj.w.materialDiff.push(5);
+		board_obj.b.materialDiff.push(-5);
+		
+		//missing materialDiff.slice(0) binds the two references
+		expect(board_other.w.materialDiff).toEqual([]);
+		expect(board_other.b.materialDiff).toEqual([]);
+		expect(board_other.w.materialDiff).not.toEqual([5]);
+		expect(board_other.b.materialDiff).not.toEqual([-5]);
+		
+		board_obj.w.materialDiff.pop();
+		board_obj.b.materialDiff.pop();
 	});
 	
 	describe("Ic.utilityMisc.basicFenTest()", () => {
