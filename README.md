@@ -135,19 +135,24 @@ Boards created by `Ic.initBoard()` have the following available methods.
 
 Function | Parameters | Return | Board refresh? | Description
 -------- | ---------- | ------ | ---------------- | -----------
-**moveCaller(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
-**toggleIsRotated(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
-**setPromoteTo(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
-**setCurrentMove(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
-**cloneBoardFrom(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
-**cloneBoardTo(...)** | :wrench: | :wrench: | Yes | :wrench: ... **under construction** ... :wrench:
-**ascii(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
-**getSquare(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
-**setSquare(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
-**countAttacks(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
-**isLegalMove(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
-**legalMoves(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
-**isEqualBoard(...)** | :wrench: | :wrench: | No | :wrench: ... **under construction** ... :wrench:
+**moveCaller(...)** | :wrench: | Boolean | Yes | :wrench: ... **under construction** ... :wrench:
+**toggleIsRotated(...)** | :wrench: | Boolean | Yes | :wrench: ... **under construction** ... :wrench:
+**setPromoteTo(...)** | :wrench: | Boolean | Yes | :wrench: ... **under construction** ... :wrench:
+**setCurrentMove(...)** | :wrench: | Boolean | Yes | :wrench: ... **under construction** ... :wrench:
+**navFirst()** | - | Boolean | Yes | Performs a `board.setCurrentMove(0)`.
+**navPrevious()** | - | Boolean | Yes | Performs a `board.setCurrentMove(board.currentMove-1)`.
+**navNext()** | - | Boolean | Yes | Performs a `board.setCurrentMove(board.currentMove+1)`.
+**navLast()** | - | Boolean | Yes | Performs a `board.setCurrentMove(board.moveList.length-1)`.
+**navLinkMove**(<br>*moveIndex*<br>) | <ul><li>moveIndex (Number)</li></ul> | Boolean | Yes | Performs a `board.setCurrentMove(moveIndex)`.
+**cloneBoardFrom(...)** | :wrench: | Boolean | Yes | :wrench: ... **under construction** ... :wrench:
+**cloneBoardTo(...)** | :wrench: | Boolean | Yes | :wrench: ... **under construction** ... :wrench:
+**ascii(...)** | :wrench: | String | No | :wrench: ... **under construction** ... :wrench:
+**getSquare(...)** | :wrench: | Success:<ul><li>**square** (Object)</li></ul><hr>Error:<ul><li>null</li></ul> | No | :wrench: ... **under construction** ... :wrench:
+**setSquare(...)** | :wrench: | Boolean | No | :wrench: ... **under construction** ... :wrench:
+**countAttacks(...)** | :wrench: | Number | No | :wrench: ... **under construction** ... :wrench:
+**isLegalMove(...)** | :wrench: | Success:<ul><li>Boolean</li></ul><hr>Error:<ul><li>Boolean: `false`</li></ul> | No | :wrench: ... **under construction** ... :wrench:
+**legalMoves(...)** | :wrench: | Success:<ul><li>**finalPosArray** (Array)</li></ul><hr>Error:<ul><li>Array: `[]`</li></ul> | No | :wrench: ... **under construction** ... :wrench:
+**isEqualBoard(...)** | :wrench: | Boolean | No | :wrench: ... **under construction** ... :wrench:
 
 <sup>And the [board UI methods](https://github.com/ajax333221/isepic-chess-ui#list-of-boarduimethods) when **isepic-chess-ui.js** is present.</sup>
 

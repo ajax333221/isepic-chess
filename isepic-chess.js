@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.11.0";
+		var _VERSION="3.12.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -467,46 +467,66 @@
 		}
 		
 		function _toggleIsRotated(new_is_rotated){
-			var that, temp;
+			var that, temp, rtn_changed;
 			
 			that=this;
 			
+			rtn_changed=false;
 			temp=((typeof new_is_rotated)==="boolean" ? new_is_rotated : !that.isRotated);
 			
 			if(temp!==that.isRotated){
+				rtn_changed=true;
+				
 				that.isRotated=temp;
 				
 				that.refreshBoard(0);//autorefresh
 			}
+			
+			return rtn_changed;
 		}
 		
 		function _setPromoteTo(qal){
-			var that, temp;
+			var that, temp, rtn_changed;
 			
 			that=this;
 			
+			rtn_changed=false;
 			temp=_promoteValHelper(qal);
 			
 			if(temp!==that.promoteTo){
+				rtn_changed=true;
+				
 				that.promoteTo=temp;
 				
 				that.refreshBoard(0);//autorefresh
 			}
+			
+			return rtn_changed;
 		}
 		
 		function _setCurrentMove(num, is_goto){
-			var len, that, temp, rtn_moved;
+			var len, that, temp, diff, rtn_changed;
 			
 			that=this;
 			
-			rtn_moved=false;
+			rtn_changed=false;
 			len=that.moveList.length;
 			
 			if(len>1){
+				if((typeof is_goto)==="boolean"){
+					num=_toInt(num);
+				}else{
+					num=_toInt(num, 0, (len-1));
+					diff=(num-that.currentMove);
+					is_goto=(Math.abs(diff)!==1);
+					
+					num=(is_goto ? num : diff);
+				}
+				
 				temp=_toInt((is_goto ? num : (num+that.currentMove)), 0, (len-1));
 				
 				if(temp!==that.currentMove){
-					rtn_moved=true;
+					rtn_changed=true;
 					
 					that.currentMove=temp;
 					that.readFen(that.moveList[temp].Fen);
@@ -515,7 +535,47 @@
 				}
 			}
 			
-			return rtn_moved;
+			return rtn_changed;
+		}
+		
+		function _navFirst(){
+			var that;
+			
+			that=this;
+			
+			return that.setCurrentMove(0);//autorefresh (sometimes)
+		}
+		
+		function _navPrevious(){
+			var that;
+			
+			that=this;
+			
+			return that.setCurrentMove(that.currentMove-1);//autorefresh (sometimes)
+		}
+		
+		function _navNext(){
+			var that;
+			
+			that=this;
+			
+			return that.setCurrentMove(that.currentMove+1);//autorefresh (sometimes)
+		}
+		
+		function _navLast(){
+			var that;
+			
+			that=this;
+			
+			return that.setCurrentMove(that.moveList.length-1);//autorefresh (sometimes)
+		}
+		
+		function _navLinkMove(move_index){
+			var that;
+			
+			that=this;
+			
+			return that.setCurrentMove(move_index);//autorefresh (sometimes)
 		}
 		
 		function _readFen(fen){
@@ -1340,76 +1400,6 @@
 		}
 		
 		//---------------- board (using IcUi)
-		
-		function _navFirst(){
-			var that, rtn_moved;
-			
-			that=this;
-			
-			rtn_moved=false;
-			
-			if(_WIN && _WIN.IcUi && _WIN.IcUi.navFirst){
-				rtn_moved=_WIN.IcUi.navFirst.apply(that, []);
-			}
-			
-			return rtn_moved;
-		}
-		
-		function _navPrevious(){
-			var that, rtn_moved;
-			
-			that=this;
-			
-			rtn_moved=false;
-			
-			if(_WIN && _WIN.IcUi && _WIN.IcUi.navPrevious){
-				rtn_moved=_WIN.IcUi.navPrevious.apply(that, []);
-			}
-			
-			return rtn_moved;
-		}
-		
-		function _navNext(){
-			var that, rtn_moved;
-			
-			that=this;
-			
-			rtn_moved=false;
-			
-			if(_WIN && _WIN.IcUi && _WIN.IcUi.navNext){
-				rtn_moved=_WIN.IcUi.navNext.apply(that, []);
-			}
-			
-			return rtn_moved;
-		}
-		
-		function _navLast(){
-			var that, rtn_moved;
-			
-			that=this;
-			
-			rtn_moved=false;
-			
-			if(_WIN && _WIN.IcUi && _WIN.IcUi.navLast){
-				rtn_moved=_WIN.IcUi.navLast.apply(that, []);
-			}
-			
-			return rtn_moved;
-		}
-		
-		function _navLinkMove(move_index){
-			var that, rtn_moved;
-			
-			that=this;
-			
-			rtn_moved=false;
-			
-			if(_WIN && _WIN.IcUi && _WIN.IcUi.navLinkMove){
-				rtn_moved=_WIN.IcUi.navLinkMove.apply(that, [move_index]);
-			}
-			
-			return rtn_moved;
-		}
 		
 		function _refreshBoard(animate_move){
 			var that;

@@ -5,20 +5,22 @@ Ic.setSilentMode(false);
 //---to do:
 //
 //setSquare
-//setCurrentMove
 //readFen
 //updateFenAndMisc
 //refinedFenTest
 //testCollision
-//moveCaller
+//moveCaller (return value)
+//toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
+//setPromoteTo (return value)
+//setCurrentMove (return value)
 //
 //(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())
 //(x) cloneBoardFrom (completado)(es un Ic.utilityMisc.cloneBoardObjs())
-//(x) navFirst (N/A)(ui only)
-//(x) navPrevious (N/A)(ui only)
-//(x) navNext (N/A)(ui only)
-//(x) navLast (N/A)(ui only)
-//(x) navLinkMove (N/A)(ui only)
+//(x) navFirst (se hara por b.setCurrentMove())
+//(x) navPrevious (se hara por b.setCurrentMove())
+//(x) navNext (se hara por b.setCurrentMove())
+//(x) navLast (se hara por b.setCurrentMove())
+//(x) navLinkMove (se hara por b.setCurrentMove())
 //(x) refreshBoard (N/A)(ui only)
 
 describe("Board methods", () => {
