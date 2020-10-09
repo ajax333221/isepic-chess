@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.12.0";
+		var _VERSION="3.12.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -85,6 +85,77 @@
 				if((rank_pos<=7 && rank_pos>=0) && (file_pos<=7 && file_pos>=0)){
 					rtn=[rank_pos, file_pos];
 				}
+			}
+			
+			return rtn;
+		}
+		
+		function _parserHelper(str){
+			var p, temp, meta_tags, move_list, game_result, rgxp, mtch, last_index, rtn;
+			
+			rtn=null;
+			
+			meta_tags={};
+			last_index=-1;
+			rgxp=/\[\s*\w+\s+\"[^\"]*\"\s*\]/g;
+			
+			while(mtch=rgxp.exec(str)){
+				last_index=rgxp.lastIndex;
+				
+				temp=mtch[0].slice(1, -1).split("\"");
+				meta_tags[_trimSpaces(temp[0])]=_trimSpaces(temp[1]);
+			}
+			
+			if(last_index===-1){
+				last_index=0;
+			}
+			
+			p=str.slice(last_index);
+			p=p.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
+			
+			while(p!=(p=p.replace(/\{[^{}]*\}/g, "")));
+			while(p!=(p=p.replace(/\([^()]*\)/g, "")));
+			
+			p=p.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
+			p=p.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
+			p=p.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
+			p=p.replace(/[\(\{+#!?]/g, "");
+			p=p.replace(/\s*\-\s*/g, "-");
+			p=(" "+_trimSpaces(p));
+			
+			move_list=[];
+			last_index=-1;
+			rgxp=/\s\d*\s*\.*\s*\.*\s*([^\s]+)/g;
+			
+			while(mtch=rgxp.exec(p)){
+				last_index=rgxp.lastIndex;
+				
+				temp=mtch[0];
+				move_list.push(mtch[1]);
+			}
+			
+			if(last_index!==-1){
+				temp=temp.replace(/\s/g, "").replace(/o/gi, "0").replace(/½/g, "1/2");
+				
+				if(temp==="*" || temp==="1-0" || temp==="0-1" || temp==="1/2-1/2"){
+					move_list.pop();
+					
+					game_result=temp;
+				}else{
+					game_result="*";
+					
+					if(meta_tags.Result){
+						temp=meta_tags.Result.replace(/\s/g, "").replace(/o/gi, "0").replace(/½/g, "1/2");
+						
+						if(temp==="*" || temp==="1-0" || temp==="0-1" || temp==="1/2-1/2"){
+							meta_tags.Result=temp;
+							
+							game_result=temp;
+						}
+					}
+				}
+				
+				rtn=[meta_tags, move_list, game_result];
 			}
 			
 			return rtn;
@@ -1712,7 +1783,7 @@
 			return rtn;
 		}
 		
-		function initBoard(p){//{boardName, fen, isRotated, isHidden, isUnlabeled, promoteTo, invalidFenStop}
+		function initBoard(p){//{boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, invalidFenStop}
 			var i, j, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
 			
 			rtn=null;
@@ -1727,6 +1798,12 @@
 				p.isHidden=(p.isHidden===true);
 				p.isUnlabeled=(p.isUnlabeled===true);
 				p.invalidFenStop=(p.invalidFenStop===true);
+				
+				p.pgn=(((typeof p.pgn)==="string" && _trimSpaces(p.pgn).length) ? _parserHelper(p.pgn) : null);
+				
+				if(p.pgn){
+					p.fen=(p.fen || p.pgn[0].FEN);
+				}
 				
 				fen_was_valid=!_basicFenTest(p.fen);
 				
@@ -1909,6 +1986,22 @@
 					new_board.promoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				}
 				
+				if(p.pgn){
+					//to-do: attempt to play each move from p.pgn[1]
+					
+					console.log("parsed PGN object:");
+					console.log(p.pgn);
+					
+					/*if(...){
+						no_errors=false;
+						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
+						
+						removeBoard(new_board);
+					}*/
+				}
+			}
+			
+			if(no_errors){
 				rtn=new_board;
 				
 				new_board.refreshBoard(0);//autorefresh
