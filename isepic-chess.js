@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.0.0";
+		var _VERSION="4.0.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1879,6 +1879,8 @@
 					p.fen=(p.fen || p.pgn[0].FEN);
 				}
 				
+				p.fen=(p.fen || _DEFAULT_FEN);
+				
 				fen_was_valid=!_basicFenTest(p.fen);
 				
 				if(p.validOrBreak && !fen_was_valid){
@@ -2136,6 +2138,8 @@
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
 						
 						removeBoard(new_board);
+					}else{
+						new_board.setCurrentMove(0, true);
 					}
 				}
 			}
