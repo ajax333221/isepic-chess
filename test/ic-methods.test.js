@@ -4,6 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
+//+testcase for pgn (validOrBreak true/false) in Ic.initBoard()
 //getBoardNames
 //boardExists (+ que deje igual silent mode)
 //selectBoard
@@ -758,7 +759,7 @@ describe("Ic methods", () => {
 				boardName : board_name,
 				fen : "8/r6k/8/8/8/R6K/8/8 w - -",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			expect(board_obj.fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
@@ -774,14 +775,14 @@ describe("Ic methods", () => {
 				boardName : board_name,
 				fen : "8/1r5k/8/8/8/1R5K/8/8 w - - 0 1",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			expect(temp.fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 		});
 		
-		test("original board is not overwritten by invalid fen and null is returned (invalidFenStop=true)", () => {
+		test("original board is not overwritten by invalid fen and null is returned (validOrBreak=true)", () => {
 			var board_obj;
 			
 			Ic.setSilentMode(true);
@@ -790,7 +791,7 @@ describe("Ic methods", () => {
 				boardName : board_name,
 				fen : "0invalidfen0",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			Ic.setSilentMode(false);
@@ -804,13 +805,13 @@ describe("Ic methods", () => {
 				boardName : other_board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 		});
 		
-		test("original board is overwritten to default fen by invalid fen (invalidFenStop=false)", () => {
+		test("original board is overwritten to default fen by invalid fen (validOrBreak=false)", () => {
 			var board_obj;
 			
 			board_obj=Ic.initBoard({

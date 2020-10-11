@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="3.12.1";
+		var _VERSION="4.0.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -48,9 +48,9 @@
 			
 			if(!str){
 				rtn=str;
-			}else if(!!pc_exec){
+			}else if(pc_exec){
 				rtn=("*pnbrqk".indexOf(pc_exec[2])*getSign(pc_exec[1]==="b"));
-			}else if(RegExp(/^([pnbrqk])$/, "gi").test(str)){
+			}else if(/^[pnbrqk]$/i.test(str)){
 				temp=str.toLowerCase();
 				rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
 			}else if((""+_toInt(str))===str){
@@ -66,7 +66,7 @@
 			rtn=null;
 			str=_trimSpaces(str);
 			
-			if(str && RegExp(/^([a-h][1-8])$/, "gi").test(str)){
+			if(str && /^[a-h][1-8]$/i.test(str)){
 				rtn=str.toLowerCase();
 			}
 			
@@ -91,7 +91,7 @@
 		}
 		
 		function _parserHelper(str){
-			var p, temp, meta_tags, move_list, game_result, rgxp, mtch, last_index, rtn;
+			var p, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index, rtn;
 			
 			rtn=null;
 			
@@ -116,11 +116,11 @@
 			while(p!=(p=p.replace(/\{[^{}]*\}/g, "")));
 			while(p!=(p=p.replace(/\([^()]*\)/g, "")));
 			
-			p=p.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
-			p=p.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
 			p=p.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
 			p=p.replace(/[\(\{+#!?]/g, "");
 			p=p.replace(/\s*\-\s*/g, "-");
+			p=p.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
+			p=p.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
 			p=(" "+_trimSpaces(p));
 			
 			move_list=[];
@@ -1273,14 +1273,16 @@
 			return no_errors;
 		}
 		
-		function _moveCaller(initial_qos, final_qos){
-			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_square, pawn_moved, promoted_val, king_castled, pgn_move, pgn_end, piece_directions, active_side, non_active_side, current_side, rtn_can_move;
+		function _getPrePgnMoveInfo(initial_qos, final_qos){
+			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, king_castled, pgn_move, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, can_move, rtn;
 			
 			that=this;
 			
 			function _disambiguationPos(qos, piece_direction, as_knight, ally_qal){//uses: that
 				return that.testCollision(3, qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
 			}
+			
+			rtn=Object.create(null);
 			
 			initial_cached_square=that.getSquare(initial_qos, {
 				isUnreferenced : true
@@ -1290,77 +1292,69 @@
 				isUnreferenced : true
 			});
 			
-			rtn_can_move=that.isLegalMove(initial_cached_square, final_cached_square);
+			can_move=that.isLegalMove(initial_cached_square, final_cached_square);
 			
-			if(rtn_can_move){
+			if(can_move){
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
 				
 				pawn_moved=false;
-				new_en_passant_square=null;
+				new_en_passant_bos="";
 				promoted_val=0;
 				king_castled=0;
 				
 				if(initial_cached_square.isKing){
 					if(active_side.castling){
-						active_side.castling=0;
+						rtn.activeSideCastlingZero=true;
 						
 						/*2020 usar sameSquare() con file bos active_side pero aun no tiene*/
 						if(final_cached_square.filePos===6){//short
 							king_castled=_SHORT_CASTLE;
 							
-							that.setSquare(final_cached_square, active_side.rook, {
-								fileShift : -1
-							});
-							
-							that.setSquare(final_cached_square, _EMPTY_SQR, {
-								fileShift : 1
-							});
+							rtn.putRookAtFileShift=-1;
+							rtn.removeRookAtFileShift=1;
 						}else if(final_cached_square.filePos===2){//long
 							king_castled=_LONG_CASTLE;
 							
-							that.setSquare(final_cached_square, active_side.rook, {
-								fileShift : 1
-							});
-							
-							that.setSquare(final_cached_square, _EMPTY_SQR, {
-								fileShift : -2
-							});
+							rtn.putRookAtFileShift=1;
+							rtn.removeRookAtFileShift=-2;
 						}
 					}
 				}else if(initial_cached_square.isPawn){
 					pawn_moved=true;
 					
 					if(Math.abs(initial_cached_square.rankPos-final_cached_square.rankPos)>1){//new enpassant
-						new_en_passant_square=that.getSquare(final_cached_square, {
+						new_en_passant_bos=that.getSquare(final_cached_square, {
 							rankShift : non_active_side.singlePawnRankShift
-						});
+						}).bos;
 					}else if(sameSquare(final_cached_square, that.enPassantBos)){//enpassant capture
-						that.setSquare(final_cached_square, _EMPTY_SQR, {
-							rankShift : non_active_side.singlePawnRankShift
-						});
+						rtn.enPassantCaptureAtRankShift=non_active_side.singlePawnRankShift;
 					}else if(final_cached_square.rankPos===active_side.lastRankPos){//promotion
 						promoted_val=(that.promoteTo*active_side.sign);
 					}
 				}
 				
-				//aun sin mover la pieza actual (pero ya lo de enpassant capture, torre al enrocar y castling 0)
 				pgn_move="";
+				with_overdisambiguated=[];
 				
 				if(king_castled){//castling king
 					pgn_move+=(king_castled===_LONG_CASTLE ? "O-O-O" : "O-O");
-				}else if(pawn_moved){
+					with_overdisambiguated.push(pgn_move);
+				}else if(pawn_moved){//pawn move
 					if(initial_cached_square.fileBos!==final_cached_square.fileBos){
 						pgn_move+=(initial_cached_square.fileBos+"x");
 					}
 					
 					pgn_move+=final_cached_square.bos;
+					with_overdisambiguated.push(pgn_move);
 					
 					if(promoted_val){
 						pgn_move+="="+toAbsBal(promoted_val);
 					}
 				}else{//knight, bishop, rook, queen, non-castling king
-					pgn_move+=initial_cached_square.absBal;
+					extra_file_bos="";
+					extra_rank_bos="";
+					needs_extra=false;
 					
 					if(!initial_cached_square.isKing){//knight, bishop, rook, queen
 						temp2=[];
@@ -1389,24 +1383,103 @@
 							}
 							
 							if(temp3){
+								needs_extra=true;
+								
 								temp=(_strContains(temp3, initial_cached_square.fileBos)+(_strContains(temp3, initial_cached_square.rankBos)*2));
 								
-								if(temp!==1){//0,2,3
-									pgn_move+=initial_cached_square.fileBos;
+								if(temp && temp!==1){//2,3
+									extra_file_bos=initial_cached_square.fileBos;
 								}
 								
 								if(temp && temp!==2){//1,3
-									pgn_move+=initial_cached_square.rankBos;
+									extra_rank_bos=initial_cached_square.rankBos;
 								}
 							}
 						}
 					}
 					
+					temp="";
+					
 					if(!final_cached_square.isEmptySquare){
-						pgn_move+="x";
+						temp+="x";
 					}
 					
-					pgn_move+=final_cached_square.bos;
+					temp+=final_cached_square.bos;
+					temp2=(!!extra_file_bos+!!extra_rank_bos);
+					
+					if(needs_extra){
+						if(!temp2){
+							pgn_move+=initial_cached_square.absBal+initial_cached_square.fileBos+temp;
+						}else{
+							pgn_move+=initial_cached_square.absBal+extra_file_bos+extra_rank_bos+temp;
+							with_overdisambiguated.push(pgn_move);
+						}
+					}else{
+						pgn_move+=initial_cached_square.absBal+temp;
+						with_overdisambiguated.push(pgn_move);
+					}
+					
+					if(!temp2){//0
+						with_overdisambiguated.push(initial_cached_square.absBal+initial_cached_square.fileBos+temp);
+						with_overdisambiguated.push(initial_cached_square.absBal+initial_cached_square.rankBos+temp);
+					}
+					
+					if(temp2!==2){//0,1
+						with_overdisambiguated.push(initial_cached_square.absBal+initial_cached_square.fileBos+initial_cached_square.rankBos+temp);
+					}
+				}
+				
+				rtn.pawnMoved=pawn_moved;
+				rtn.newEnPassantBos=new_en_passant_bos;
+				rtn.promotedVal=promoted_val;
+				rtn.kingCastled=king_castled;
+				rtn.pgnMove=pgn_move;
+				rtn.withOverdisambiguated=with_overdisambiguated;
+			}
+			
+			rtn.initialCachedSquare=initial_cached_square;
+			rtn.finalCachedSquare=final_cached_square;
+			rtn.canMove=can_move;
+			
+			return rtn;
+		}
+		
+		function _moveCaller(initial_qos, final_qos){
+			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, rtn_can_move;
+			
+			that=this;
+			
+			pgn_obj=that.getPrePgnMoveInfo(initial_qos, final_qos);
+			
+			initial_cached_square=pgn_obj.initialCachedSquare;
+			final_cached_square=pgn_obj.finalCachedSquare;
+			
+			rtn_can_move=pgn_obj.canMove;
+			
+			if(rtn_can_move){
+				active_side=that[that.activeColor];
+				non_active_side=that[that.nonActiveColor];
+				
+				if(pgn_obj.activeSideCastlingZero){
+					active_side.castling=0;
+				}
+				
+				if(pgn_obj.putRookAtFileShift){
+					that.setSquare(final_cached_square, active_side.rook, {
+						fileShift : pgn_obj.putRookAtFileShift
+					});
+				}
+				
+				if(pgn_obj.removeRookAtFileShift){
+					that.setSquare(final_cached_square, _EMPTY_SQR, {
+						fileShift : pgn_obj.removeRookAtFileShift
+					});
+				}
+				
+				if(pgn_obj.enPassantCaptureAtRankShift){
+					that.setSquare(final_cached_square, _EMPTY_SQR, {
+						rankShift : pgn_obj.enPassantCaptureAtRankShift
+					});
 				}
 				
 				for(i=0; i<2; i++){//0...1
@@ -1424,15 +1497,15 @@
 					}
 				}
 				
-				that.enPassantBos=(new_en_passant_square!==null ? new_en_passant_square.bos : "");
+				that.enPassantBos=pgn_obj.newEnPassantBos;
 				
-				that.setSquare(final_cached_square, (promoted_val || initial_cached_square.val));
+				that.setSquare(final_cached_square, (pgn_obj.promotedVal || initial_cached_square.val));
 				that.setSquare(initial_cached_square, _EMPTY_SQR);
 				
 				that.toggleActiveNonActive();
 				
 				that.halfMove++;
-				if(pawn_moved || final_cached_square.val){
+				if(pgn_obj.pawnMoved || final_cached_square.val){
 					that.halfMove=0;
 				}
 				
@@ -1443,14 +1516,15 @@
 				that.currentMove++;/*NO move below updateFenAndMisc()*/
 				that.updateFenAndMisc();
 				
+				pgn_move_full=pgn_obj.pgnMove;
 				pgn_end="";
 				
 				if(that.isCheck){
 					if(that.isCheckmate){
-						pgn_move+="#";
+						pgn_move_full+="#";
 						pgn_end=(non_active_side.isBlack ? "1-0" : "0-1");//non_active_side is toggled
 					}else{
-						pgn_move+="+";
+						pgn_move_full+="+";
 					}
 				}else{
 					if(that.isStalemate){
@@ -1462,7 +1536,7 @@
 					that.moveList=that.moveList.slice(0, that.currentMove);/*start variation instead of overwrite*/
 				}
 				
-				that.moveList.push({Fen : that.fen, PGNmove : pgn_move, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (promoted_val || initial_cached_square.val), KingCastled : king_castled});
+				that.moveList.push({Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled});
 				
 				that.refreshBoard(1);//autorefresh
 			}
@@ -1783,8 +1857,8 @@
 			return rtn;
 		}
 		
-		function initBoard(p){//{boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, invalidFenStop}
-			var i, j, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, no_errors, rtn;
+		function initBoard(p){//{boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, validOrBreak}
+			var i, j, k, m, n, len, len2, len3, temp, temp2, pgn_obj, parse_exec, target, board_name, current_pos, current_bos, current_square, fen_was_valid, postfen_was_valid, new_board, parsed_piece_val, everything_parsed, cached_promote_to, cached_is_hidden, found_san, no_errors, rtn;
 			
 			rtn=null;
 			no_errors=true;
@@ -1797,7 +1871,7 @@
 				p.isRotated=(p.isRotated===true);
 				p.isHidden=(p.isHidden===true);
 				p.isUnlabeled=(p.isUnlabeled===true);
-				p.invalidFenStop=(p.invalidFenStop===true);
+				p.validOrBreak=(p.validOrBreak===true);
 				
 				p.pgn=(((typeof p.pgn)==="string" && _trimSpaces(p.pgn).length) ? _parserHelper(p.pgn) : null);
 				
@@ -1807,7 +1881,7 @@
 				
 				fen_was_valid=!_basicFenTest(p.fen);
 				
-				if(p.invalidFenStop && !fen_was_valid){
+				if(p.validOrBreak && !fen_was_valid){
 					no_errors=false;
 					_consoleLog("Error[initBoard]: \""+board_name+"\" bad FEN");
 				}
@@ -1835,6 +1909,7 @@
 						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
+						getPrePgnMoveInfo : _getPrePgnMoveInfo,
 						moveCaller : _moveCaller,
 						navFirst : _navFirst,
 						navPrevious : _navPrevious,
@@ -1965,7 +2040,7 @@
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
-				if(p.invalidFenStop && !postfen_was_valid){
+				if(p.validOrBreak && !postfen_was_valid){
 					no_errors=false;
 					_consoleLog("Error[initBoard]: \""+board_name+"\" bad postFEN");
 					
@@ -1987,17 +2062,81 @@
 				}
 				
 				if(p.pgn){
-					//to-do: attempt to play each move from p.pgn[1]
+					everything_parsed=true;
 					
-					console.log("parsed PGN object:");
-					console.log(p.pgn);
+					cached_promote_to=new_board.promoteTo;
+					cached_is_hidden=new_board.isHidden;
 					
-					/*if(...){
+					new_board.isHidden=true;
+					
+					for(i=0, len=p.pgn[1].length; i<len; i++){//0<len
+						temp=p.pgn[1][i];
+						parsed_piece_val=0;
+						
+						new_board.promoteTo=cached_promote_to;/*NO b.setPromoteTo()*/
+						parse_exec=/^[NBRQK]/.exec(temp);
+						
+						if(parse_exec){//knight, bishop, rook, queen, non-castling king
+							parsed_piece_val=toVal(parse_exec[0]);
+						}else if(temp==="O-O" || temp==="O-O-O"){//castling king
+							parsed_piece_val=6;
+						}else if(/^[a-h]/.exec(temp)){//pawn move
+							parsed_piece_val=1;
+							
+							parse_exec=/([^=]+)=([NBRQ]).*$/.exec(temp);
+							
+							if(parse_exec){
+								temp=parse_exec[1];
+								new_board.promoteTo=_promoteValHelper(parse_exec[2]);/*NO b.setPromoteTo()*/
+							}
+						}
+						
+						if(parsed_piece_val){
+							found_san=false;
+							
+							outer:
+							for(j=0; j<8; j++){//0...7
+								for(k=0; k<8; k++){//0...7
+									current_square=new_board.getSquare([j, k]);
+									
+									if(parsed_piece_val===current_square.absVal){
+										temp2=new_board.legalMoves(current_square);
+										
+										for(m=0, len2=temp2.length; m<len2; m++){//0<len2
+											pgn_obj=new_board.getPrePgnMoveInfo(current_square, temp2[m]);
+											
+											if(pgn_obj.canMove){
+												for(n=0, len3=pgn_obj.withOverdisambiguated.length; n<len3; n++){//0<len3
+													if(temp===pgn_obj.withOverdisambiguated[n]){
+														found_san=new_board.moveCaller(current_square, temp2[m]);
+														break outer;
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							
+							if(!found_san){
+								everything_parsed=false;
+								break;
+							}
+						}else{
+							everything_parsed=false;
+							break;
+						}
+					}
+					
+					new_board.promoteTo=cached_promote_to;/*NO b.setPromoteTo()*/
+					new_board.isHidden=cached_is_hidden;
+					
+					if(p.validOrBreak && !everything_parsed){
 						no_errors=false;
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
 						
 						removeBoard(new_board);
-					}*/
+					}
 				}
 			}
 			
@@ -2019,7 +2158,7 @@
 				boardName : "board_fenApply",
 				fen : fen,
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			board_created=boardExists(board);
@@ -2062,7 +2201,7 @@
 					boardName : "board_fenGet",
 					fen : fen,
 					isHidden : true,
-					invalidFenStop : true
+					validOrBreak : true
 				});
 				
 				board_created=boardExists(board);

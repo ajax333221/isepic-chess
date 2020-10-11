@@ -29,7 +29,7 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : "8/8/7k/6pP/5BKR/8/8/8 w - g6 0 1",
 					isHidden : true,
-					invalidFenStop : true
+					validOrBreak : true
 				});
 				
 				board_obj.moveCaller("h5", "g6");
@@ -84,14 +84,14 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : "r3k2r/4p3/8/3bb3/8/8/Q3P2Q/R3K2R w KQkq - 0 1",
 					isHidden : true,
-					invalidFenStop : true
+					validOrBreak : true
 				});
 				
 				board_other=Ic.initBoard({
 					boardName : other_board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 					isHidden : true,
-					invalidFenStop : true
+					validOrBreak : true
 				});
 				
 				expect(board_obj.w.castling).toBe(3);
@@ -194,7 +194,7 @@ describe("Misc.", () => {
 				boardName : board_name,
 				fen : "k7/P7/4q3/8/8/4Q3/p7/K7 w - - 0 1",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			board_other=Ic.initBoard({
@@ -262,7 +262,7 @@ describe("Misc.", () => {
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			temp=Ic.toPos(board_obj.squares["a2"].pos);/*NO b.getSquare()*/
@@ -277,14 +277,14 @@ describe("Misc.", () => {
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			board_other=Ic.initBoard({
 				boardName : other_board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			temp=board_obj.getSquare("b2", {isUnreferenced : false});
@@ -322,14 +322,14 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 					isHidden : true,
-					invalidFenStop : true
+					validOrBreak : true
 				});
 				
 				board_other=Ic.initBoard({
 					boardName : other_board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 					isHidden : true,
-					invalidFenStop : true
+					validOrBreak : true
 				});
 				
 				temp=board_obj.getSquare("e4", {isUnreferenced : false});
@@ -417,7 +417,7 @@ describe("Misc.", () => {
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isRotated : true,
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			board_obj.moveCaller("e2", "e4");
@@ -535,7 +535,7 @@ describe("Misc.", () => {
 				fen : "r3k2r/4p3/3B1P2/2NpN1N1/1Pn1n1n1/3b1p2/4P3/R3K2R w KQkq - 0 1",
 				isRotated : true,
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			board_other=Ic.initBoard({

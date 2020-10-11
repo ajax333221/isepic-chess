@@ -13,6 +13,7 @@ Ic.setSilentMode(false);
 //toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
 //setPromoteTo (return value)
 //setCurrentMove (return value)
+//(?) getPrePgnMoveInfo, o mejor todo en ic init board?
 //
 //(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())
 //(x) cloneBoardFrom (completado)(es un Ic.utilityMisc.cloneBoardObjs())
@@ -37,7 +38,7 @@ describe("Board methods", () => {
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			expect(board_obj.boardHash()).toBe(1819903313);
@@ -52,14 +53,14 @@ describe("Board methods", () => {
 				boardName : board_name,
 				fen : shared_fen,
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			board_b=Ic.initBoard({
 				boardName : other_board_name,
 				fen : shared_fen,
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			hash_a=board_a.boardHash();
@@ -156,7 +157,7 @@ describe("Board methods", () => {
 				isRotated : true,
 				promoteTo : "b",
 				isHidden : true,
-				invalidFenStop : true
+				validOrBreak : true
 			});
 			
 			rotated_no=board_obj.ascii(false);
