@@ -13,6 +13,7 @@ Ic.setSilentMode(false);
 //toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
 //setPromoteTo (return value)
 //setCurrentMove (return value)
+//toggleActiveNonActive (return value)
 //(?) getPrePgnMoveInfo, o mejor todo en ic init board?
 //
 //(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())

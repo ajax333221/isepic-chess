@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.0.1";
+		var _VERSION="4.0.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -36,7 +36,7 @@
 		//---------------- helpers
 		
 		function _promoteValHelper(qal){
-			return _toInt((toAbsVal(qal) || _QUEEN), 2, 5);
+			return _toInt((toAbsVal(qal) || _QUEEN), _KNIGHT, _QUEEN);
 		}
 		
 		function _strToValHelper(str){
@@ -57,7 +57,7 @@
 				rtn=str;
 			}
 			
-			return _toInt(rtn, -6, 6);//_toInt() removes sign on negative zero
+			return _toInt(rtn, -_KING, _KING);//_toInt() removes sign on negative zero
 		}
 		
 		function _strToBosHelper(str){
@@ -527,14 +527,21 @@
 		}
 		
 		function _toggleActiveNonActive(new_active){
-			var that;
+			var that, temp, rtn_changed;
 			
 			that=this;
 			
-			new_active=((typeof new_active)==="boolean" ? new_active : !that[that.activeColor].isBlack);
+			rtn_changed=false;
+			temp=((typeof new_active)==="boolean" ? new_active : !that[that.activeColor].isBlack);
 			
-			that.activeColor=(new_active ? "b" : "w");
-			that.nonActiveColor=(!new_active ? "b" : "w");
+			if((temp ? "b" : "w")!==that.activeColor || (!temp ? "b" : "w")!==that.nonActiveColor){
+				rtn_changed=true;
+				
+				that.activeColor=(temp ? "b" : "w");
+				that.nonActiveColor=(!temp ? "b" : "w");
+			}
+			
+			return rtn_changed;
 		}
 		
 		function _toggleIsRotated(new_is_rotated){
@@ -1858,7 +1865,7 @@
 		}
 		
 		function initBoard(p){//{boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, validOrBreak}
-			var i, j, k, m, n, len, len2, len3, temp, temp2, pgn_obj, parse_exec, target, board_name, current_pos, current_bos, current_square, fen_was_valid, postfen_was_valid, new_board, parsed_piece_val, everything_parsed, cached_promote_to, cached_is_hidden, found_san, no_errors, rtn;
+			var i, j, k, m, n, len, len2, len3, temp, temp2, pgn_obj, parse_exec, target, board_name, current_pos, current_bos, current_square, fen_was_valid, postfen_was_valid, new_board, parsed_piece_val, everything_parsed, found_san, no_errors, rtn;
 			
 			rtn=null;
 			no_errors=true;
@@ -1995,29 +2002,30 @@
 						current_bos=toBos(current_pos);
 						
 						target.squares[current_bos]=Object.create(null);
+						temp=target.squares[current_bos];
 						
 						//static
-						target.squares[current_bos].pos=current_pos;
-						target.squares[current_bos].bos=current_bos;
-						target.squares[current_bos].rankPos=getRankPos(current_pos);
-						target.squares[current_bos].filePos=getFilePos(current_pos);
-						target.squares[current_bos].rankBos=getRankBos(current_pos);
-						target.squares[current_bos].fileBos=getFileBos(current_pos);
+						temp.pos=current_pos;
+						temp.bos=current_bos;
+						temp.rankPos=getRankPos(current_pos);
+						temp.filePos=getFilePos(current_pos);
+						temp.rankBos=getRankBos(current_pos);
+						temp.fileBos=getFileBos(current_pos);
 						
 						//mutable
-						target.squares[current_bos].bal=null;
-						target.squares[current_bos].absBal=null;
-						target.squares[current_bos].val=null;
-						target.squares[current_bos].absVal=null;
-						target.squares[current_bos].className=null;
-						target.squares[current_bos].sign=null;
-						target.squares[current_bos].isEmptySquare=null;
-						target.squares[current_bos].isPawn=null;
-						target.squares[current_bos].isKnight=null;
-						target.squares[current_bos].isBishop=null;
-						target.squares[current_bos].isRook=null;
-						target.squares[current_bos].isQueen=null;
-						target.squares[current_bos].isKing=null;
+						temp.bal=null;
+						temp.absBal=null;
+						temp.val=null;
+						temp.absVal=null;
+						temp.className=null;
+						temp.sign=null;
+						temp.isEmptySquare=null;
+						temp.isPawn=null;
+						temp.isKnight=null;
+						temp.isBishop=null;
+						temp.isRook=null;
+						temp.isQueen=null;
+						temp.isKing=null;
 					}
 				}
 				
@@ -2030,15 +2038,12 @@
 			}
 			
 			if(no_errors){
-				new_board.isHidden=p.isHidden;
+				new_board.isHidden=true;
 				
 				new_board.currentMove=0;/*NO move below readFen()*/
 				new_board.readFen(fen_was_valid ? p.fen : _DEFAULT_FEN);
 				
 				new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-				new_board.isRotated=p.isRotated;
-				new_board.isUnlabeled=p.isUnlabeled;
-				new_board.promoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -2052,30 +2057,21 @@
 			
 			if(no_errors){
 				if(!postfen_was_valid){
-					new_board.isHidden=p.isHidden;
+					new_board.isHidden=true;
 					
 					new_board.currentMove=0;/*NO move below readFen()*/
 					new_board.readFen(_DEFAULT_FEN);
 					
 					new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
-					new_board.isRotated=p.isRotated;
-					new_board.isUnlabeled=p.isUnlabeled;
-					new_board.promoteTo=_promoteValHelper(p.promoteTo);/*NO b.setPromoteTo()*/
 				}
 				
 				if(p.pgn){
 					everything_parsed=true;
 					
-					cached_promote_to=new_board.promoteTo;
-					cached_is_hidden=new_board.isHidden;
-					
-					new_board.isHidden=true;
-					
 					for(i=0, len=p.pgn[1].length; i<len; i++){//0<len
 						temp=p.pgn[1][i];
 						parsed_piece_val=0;
 						
-						new_board.promoteTo=cached_promote_to;/*NO b.setPromoteTo()*/
 						parse_exec=/^[NBRQK]/.exec(temp);
 						
 						if(parse_exec){//knight, bishop, rook, queen, non-castling king
@@ -2089,7 +2085,7 @@
 							
 							if(parse_exec){
 								temp=parse_exec[1];
-								new_board.promoteTo=_promoteValHelper(parse_exec[2]);/*NO b.setPromoteTo()*/
+								new_board.setPromoteTo(parse_exec[2]);
 							}
 						}
 						
@@ -2130,22 +2126,25 @@
 						}
 					}
 					
-					new_board.promoteTo=cached_promote_to;/*NO b.setPromoteTo()*/
-					new_board.isHidden=cached_is_hidden;
-					
 					if(p.validOrBreak && !everything_parsed){
 						no_errors=false;
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
 						
 						removeBoard(new_board);
 					}else{
-						new_board.setCurrentMove(0, true);
+						new_board.navFirst();
 					}
 				}
 			}
 			
 			if(no_errors){
 				rtn=new_board;
+				
+				new_board.isRotated=p.isRotated;
+				new_board.isUnlabeled=p.isUnlabeled;
+				new_board.setPromoteTo(p.promoteTo);/*NO move below b.isHidden=p.isHidden*/
+				
+				new_board.isHidden=p.isHidden;
 				
 				new_board.refreshBoard(0);//autorefresh
 			}
