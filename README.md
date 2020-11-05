@@ -189,12 +189,10 @@ To do
 -------------
 
 - **Relocate the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple
-- **PGN viewer** (add the game score from the PGN)
-- **PGN viewer** (keep comments instead of deleting them)
-- **New board property** `board.disableRecording`
-- **Allow players to resign/draw**
-- **PGN export** (currently, the movelist gets printed but a true export with tags would be nice)
-- **Nested move list variations** (currently if you navigate back in history and make a move, the moves from that point get lost instead of starting a variation)
+- **PGN viewer** (include the parsed game score from the PGN and keep game comment instead of deleting them)
+- **PGN export** (currently, the movelist gets printed but a real export that includes the tags would be good to have)
+- **Option to end a game at any moment to assign a game score (implementing this without finishing PGN export is pointless though)**
+- **Nested move list variations**
 - **Custom PNBRQK chars**
 
 Copyright and license
