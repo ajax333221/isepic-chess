@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.0.3";
+		var _VERSION="4.0.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
