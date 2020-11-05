@@ -190,9 +190,11 @@ To do
 
 - **Relocate the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple
 - **PGN viewer** (include the parsed game score from the PGN and keep game comments instead of deleting them)
+- **Parse multiple games** (currently the parser only recognizes one game at a time)
 - **PGN export** (currently, the movelist gets printed but a real export that includes the tags would be good to have)
 - **Assign game scores** (option to end a game at any moment)
 - **Nested move list variations**
+- **Parse games from files** (read games from `.txt` and `.pgn`)
 - **Custom PNBRQK chars**
 
 Copyright and license
