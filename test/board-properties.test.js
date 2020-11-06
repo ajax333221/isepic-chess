@@ -16,13 +16,13 @@ Ic.setSilentMode(false);
 
 describe("Board properties", () => {
 	describe("w, b, activeColor, nonActiveColor, halfMove and fullMove", () => {
-		var strlist, get_stalemate, get_checkmate, get_checkmate_double_check;
+		var str_list, get_stalemate, get_checkmate, get_checkmate_double_check;
 		
-		strlist="w, b, activeColor, nonActiveColor, halfMove, fullMove";
+		str_list="w b activeColor nonActiveColor halfMove fullMove";
 		
-		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", strlist);
-		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", strlist);
-		get_checkmate_double_check=Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", strlist);
+		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", str_list);
+		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", str_list);
+		get_checkmate_double_check=Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", str_list);
 		
 		describe("b[b.activeColor]", () => {
 			describe("static", () => {
@@ -182,63 +182,63 @@ describe("Board properties", () => {
 	});
 	
 	test("b.fen, b.w.castling and b.b.castling", () => {
-		var temp, strlist, current_fen;
+		var temp, arr_list, current_fen;
 		
-		strlist="fen, w, b";
+		arr_list=["fen", "w", "b"];
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.fen).toBe(current_fen);
 		expect(temp.w.castling).toBe(3);
 		expect(temp.b.castling).toBe(3);
 		
 		current_fen="rnbqkbnr/1ppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 b Qkq -";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.fen).toBe(current_fen+" 0 1");
 		expect(temp.w.castling).toBe(2);
 		expect(temp.b.castling).toBe(3);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 w Qk - 2 5";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.fen).toBe(current_fen);
 		expect(temp.w.castling).toBe(2);
 		expect(temp.b.castling).toBe(1);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 b k - 3 5";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.fen).toBe(current_fen);
 		expect(temp.w.castling).toBe(0);
 		expect(temp.b.castling).toBe(1);
 		
 		current_fen="1nbq1bnr/rpppkpp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 w - -";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.fen).toBe(current_fen+" 0 1");
 		expect(temp.w.castling).toBe(0);
 		expect(temp.b.castling).toBe(0);
 	});
 	
 	test("b.w.materialDiff and b.b.materialDiff", () => {
-		var temp, strlist, current_fen;
+		var temp, arr_list, current_fen;
 		
-		strlist="w, b";
+		arr_list=["w", "b"];
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.w.materialDiff).toEqual([]);
 		expect(temp.b.materialDiff).toEqual([]);
 		
 		current_fen="k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - -";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.w.materialDiff).toEqual([4, 4]);
 		expect(temp.b.materialDiff).toEqual([-1]);
 		
 		current_fen="8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - -";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.w.materialDiff).toEqual([1, 1, 3, 5]);
 		expect(temp.b.materialDiff).toEqual([-2, -2, -4]);
 		
 		current_fen="8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1";
-		temp=Ic.fenGet(current_fen, strlist);
+		temp=Ic.fenGet(current_fen, arr_list);
 		expect(temp.w.materialDiff).toEqual([]);
 		expect(temp.b.materialDiff).toEqual([]);
 	});

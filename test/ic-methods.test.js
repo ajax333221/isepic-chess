@@ -863,6 +863,10 @@ describe("Ic methods", () => {
 		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen, 0invalidprop0")).toBeNull();
 		
 		Ic.setSilentMode(false);
+		
+		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", ["isStalemate", "inDraw"])).toEqual({inDraw:true, isStalemate:true});
+		
+		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", "isStalemate inDraw")).toEqual({isStalemate:true, inDraw:true});
 	});
 	
 	test("Ic.mapToBos()", () => {

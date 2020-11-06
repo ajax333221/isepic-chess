@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.0.4";
+		var _VERSION="4.1.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -2229,7 +2229,7 @@
 		}
 		
 		function fenGet(fen, props){
-			var i, j, len, len2, board, board_created, current_key, invalid_key, no_errors, rtn_pre, rtn;
+			var i, j, len, len2, board, board_created, board_keys, current_key, invalid_key, no_errors, rtn_pre, rtn;
 			
 			rtn=null;
 			no_errors=true;
@@ -2251,11 +2251,18 @@
 			//}
 			
 			if(no_errors){
-				props=(((typeof props)==="string" && _trimSpaces(props).length) ? props.split(",") : []);
+				board_keys=[];
+				
+				if(_isArray(props)){
+					board_keys=props;
+				}else if((typeof props)==="string" && _trimSpaces(props).length){
+					board_keys=_trimSpaces(props).split(" ");
+				}
+				
 				rtn_pre=Object.create(null);
 				
-				for(i=0, len=props.length; i<len; i++){//0<len
-					current_key=_formatName(props[i]);
+				for(i=0, len=board_keys.length; i<len; i++){//0<len
+					current_key=_formatName(board_keys[i]);
 					
 					if(current_key && (typeof rtn_pre[current_key])==="undefined"){
 						invalid_key=true;
