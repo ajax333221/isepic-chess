@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.1.0";
+		var _VERSION="4.2.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1144,7 +1144,7 @@
 						}
 						
 						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
-							rtn.push(current_cached_square.pos);
+							rtn.push(current_cached_square.bos);
 						}
 						
 						that.setSquare(current_cached_square, current_cached_square.val);
@@ -1156,6 +1156,16 @@
 					}
 				}
 			}
+			
+			return rtn;
+		}
+		
+		function _legalSanMoves(target_qos){
+			var that, rtn;
+			
+			that=this;
+			
+			rtn=that.legalMoves(target_qos).map(x => that.getPrePgnMoveInfo(target_qos, x).pgnMove);
 			
 			return rtn;
 		}
@@ -1172,7 +1182,7 @@
 				moves=that.legalMoves(initial_qos);
 				
 				if(moves.length){
-					rtn=_strContains(moves.join("/"), final_square.pos.join());
+					rtn=_strContains(moves.join(), final_square.bos);
 				}
 			}
 			
@@ -1942,6 +1952,7 @@
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
 						legalMoves : _legalMoves,
+						legalSanMoves : _legalSanMoves,
 						ascii : _ascii,
 						boardHash : _boardHash,
 						isEqualBoard : _isEqualBoard,
@@ -2206,6 +2217,9 @@
 				case "legalMoves" :
 					rtn=(board_created ? _legalMoves.apply(board, args) : []);
 					break;
+				case "legalSanMoves" :
+					rtn=(board_created ? _legalSanMoves.apply(board, args) : []);
+					break;
 				case "isLegalMove" :
 					rtn=(board_created ? _isLegalMove.apply(board, args) : false);
 					break;
@@ -2308,10 +2322,6 @@
 			return Object.keys(_BOARDS);
 		}
 		
-		function mapToBos(arr){
-			return (_isArray(arr) ? arr.map(x => toBos(x)) : []);
-		}
-		
 		return {
 			version : _VERSION,
 			setSilentMode : setSilentMode,
@@ -2339,7 +2349,6 @@
 			fenApply : fenApply,
 			fenGet : fenGet,
 			getBoardNames : getBoardNames,
-			mapToBos : mapToBos,
 			utilityMisc : {
 				consoleLog : _consoleLog,
 				isObject : _isObject,

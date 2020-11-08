@@ -829,7 +829,9 @@ describe("Ic methods", () => {
 		test("default value", () => {
 			Ic.setSilentMode(true);
 			
-			expect(Ic.mapToBos(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"])).sort()).toEqual([].sort());
+			expect(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"]).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("0invalidfen0", "legalSanMoves", ["a2"]).sort()).toEqual([].sort());
 			
 			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2", "a3"])).toBe(false);
 			
@@ -867,15 +869,5 @@ describe("Ic methods", () => {
 		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", ["isStalemate", "inDraw"])).toEqual({inDraw:true, isStalemate:true});
 		
 		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", "isStalemate inDraw")).toEqual({isStalemate:true, inDraw:true});
-	});
-	
-	test("Ic.mapToBos()", () => {
-		expect(Ic.mapToBos([[0, 7], [2, 2]]).sort()).toEqual(["c6", "h8"].sort());
-		
-		expect(Ic.mapToBos([[1, 1], "a2"]).sort()).toEqual(["a2", "b7"].sort());
-		
-		expect(Ic.mapToBos([[4, 3], "d4", Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["d4"])]).sort()).toEqual(["d4", "d4", "d4"].sort());
-		
-		expect(Ic.mapToBos("err").sort()).toEqual([].sort());
 	});
 });
