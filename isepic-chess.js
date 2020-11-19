@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.2.0";
+		var _VERSION="4.2.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1904,11 +1904,12 @@
 		}
 		
 		function initBoard(p){//{boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, validOrBreak}
-			var i, j, k, m, n, len, len2, len3, temp, temp2, pgn_obj, parse_exec, target, board_name, current_pos, current_bos, current_square, fen_was_valid, postfen_was_valid, new_board, parsed_piece_val, everything_parsed, move_was_played, no_errors, rtn;
+			var i, j, k, m, n, len, len2, len3, temp, temp2, board_created, pgn_obj, parse_exec, target, board_name, current_pos, current_bos, current_square, fen_was_valid, postfen_was_valid, new_board, parsed_piece_val, everything_parsed, move_was_played, no_errors, rtn;
 			
 			rtn=null;
-			no_errors=true;
 			p=(_isObject(p) ? p : {});
+			board_created=false;
+			no_errors=true;
 			
 			//if(no_errors){
 				p.boardName=(((typeof p.boardName)==="string" && _trimSpaces(p.boardName).length) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
@@ -2071,7 +2072,9 @@
 				
 				new_board=selectBoard(board_name);
 				
-				if(!boardExists(new_board)){
+				board_created=boardExists(new_board);
+				
+				if(!board_created){
 					no_errors=false;
 					_consoleLog("Error[initBoard]: \""+board_name+"\" board selection failure");
 				}
@@ -2090,8 +2093,6 @@
 				if(p.validOrBreak && !postfen_was_valid){
 					no_errors=false;
 					_consoleLog("Error[initBoard]: \""+board_name+"\" bad postFEN");
-					
-					removeBoard(new_board);
 				}
 			}
 			
@@ -2175,8 +2176,6 @@
 					if(p.validOrBreak && !everything_parsed){
 						no_errors=false;
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
-						
-						removeBoard(new_board);
 					}else{
 						new_board.navFirst();
 					}
@@ -2193,6 +2192,10 @@
 				new_board.isHidden=p.isHidden;
 				
 				new_board.refreshBoard(0);//autorefresh
+			}
+			
+			if(board_created && !no_errors){
+				removeBoard(new_board);
 			}
 			
 			return rtn;
@@ -2246,18 +2249,18 @@
 			var i, j, len, len2, board, board_created, board_keys, current_key, invalid_key, no_errors, rtn_pre, rtn;
 			
 			rtn=null;
+			
+			board=initBoard({
+				boardName : "board_fenGet",
+				fen : fen,
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			board_created=boardExists(board);
 			no_errors=true;
 			
 			//if(no_errors){
-				board=initBoard({
-					boardName : "board_fenGet",
-					fen : fen,
-					isHidden : true,
-					validOrBreak : true
-				});
-				
-				board_created=boardExists(board);
-				
 				if(!board_created){
 					no_errors=false;
 					_consoleLog("Error[fenGet]: invalid FEN");
