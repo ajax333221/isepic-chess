@@ -15,11 +15,11 @@ describe("Misc.", () => {
 			});
 			
 			test("taking enpassant results in self check", () => {
-				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4", "d3"])).toEqual(false);
+				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", [["c4", "d3"]])).toEqual(false);
 			});
 			
 			test("missing option to remove check via enpassant", () => {
-				expect(Ic.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", ["d4", "e3"])).toEqual(true);
+				expect(Ic.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", [["d4", "e3"]])).toEqual(true);
 			});
 			
 			test("enpassant capture discovered double check", () => {
@@ -32,7 +32,7 @@ describe("Misc.", () => {
 					validOrBreak : true
 				});
 				
-				board_obj.moveCaller("h5", "g6");
+				board_obj.moveCaller(["h5", "g6"]);
 				
 				expect(board_obj.checks).toBe(2);
 			});
@@ -45,36 +45,36 @@ describe("Misc.", () => {
 				temp="2q1k3/3ppp2/5r2/7b/8/4n3/3PPP2/R3K2R w KQ - 0 1";
 				
 				//jumping attacked squares (white)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "c1"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "g1"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", [["e1", "c1"]])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", [["e1", "g1"]])).toBe(false);//short
 				
 				temp="r3k2r/3pBp2/8/3N4/8/8/3PPP2/3QK3 b kq - 0 1";
 				
 				//jumping attacked squares (black)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "c8"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "g8"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", [["e8", "c8"]])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", [["e8", "g8"]])).toBe(false);//short
 				
 				temp="qk6/pp5b/8/8/8/8/3PPP2/R3K3 w Q - 0 1";
 				
 				//b1 attack should not prevent long castle (white)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "c1"])).toBe(true);
+				expect(Ic.fenApply(temp, "isLegalMove", [["e1", "c1"]])).toBe(true);
 				
 				temp="r3k3/3ppp2/N7/8/8/8/5PPP/6QK b q - 0 1";
 				
 				//b8 attack should not prevent long castle (black)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "c8"])).toBe(true);
+				expect(Ic.fenApply(temp, "isLegalMove", [["e8", "c8"]])).toBe(true);
 				
 				temp="qk6/pp6/8/8/8/8/3PPPn1/R3K2R w KQ - 0 1";
 				
 				//castling in check (white)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "c1"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1", "g1"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", [["e1", "c1"]])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", [["e1", "g1"]])).toBe(false);//short
 				
 				temp="r3k2r/3pppN1/8/8/8/8/5PPP/6QK b kq - 0 1";
 				
 				//castling in check (black)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "c8"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8", "g8"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", [["e8", "c8"]])).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", [["e8", "g8"]])).toBe(false);//short
 			});
 			
 			test("removing castle rights", () => {
@@ -99,89 +99,89 @@ describe("Misc.", () => {
 				
 				//w losing long-castle right by rook-move
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("a1", "d1");
+				board_other.moveCaller(["a1", "d1"]);
 				expect(board_other.w.castling).toBe(1);
 				expect(board_other.b.castling).toBe(3);
 				
 				//w losing short-castle right by rook-move
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("h1", "f1");
+				board_other.moveCaller(["h1", "f1"]);
 				expect(board_other.w.castling).toBe(2);
 				expect(board_other.b.castling).toBe(3);
 				
 				//w losing both castling rights by king-move
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("e1", "d1");
+				board_other.moveCaller(["e1", "d1"]);
 				expect(board_other.w.castling).toBe(0);
 				expect(board_other.b.castling).toBe(3);
 				
 				//w losing both castling rights by long-castle
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("e1", "c1");
+				board_other.moveCaller(["e1", "c1"]);
 				expect(board_other.w.castling).toBe(0);
 				expect(board_other.b.castling).toBe(3);
 				
 				//w losing both castling rights by short-castle
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("e1", "g1");
+				board_other.moveCaller(["e1", "g1"]);
 				expect(board_other.w.castling).toBe(0);
 				expect(board_other.b.castling).toBe(3);
 				
 				//w making b lose long-castle right by rook-capture
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("a2", "a8");
+				board_other.moveCaller(["a2", "a8"]);
 				expect(board_other.w.castling).toBe(3);
 				expect(board_other.b.castling).toBe(1);
 				
 				//w making b lose short-castle right by rook-capture
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("h2", "h8");
+				board_other.moveCaller(["h2", "h8"]);
 				expect(board_other.w.castling).toBe(3);
 				expect(board_other.b.castling).toBe(2);
 				
-				board_obj.moveCaller("e2", "e3");
+				board_obj.moveCaller(["e2", "e3"]);
 				expect(board_obj.w.castling).toBe(3);
 				expect(board_obj.b.castling).toBe(3);
 				
 				//b losing long-castle right by rook-move
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("a8", "d8");
+				board_other.moveCaller(["a8", "d8"]);
 				expect(board_other.w.castling).toBe(3);
 				expect(board_other.b.castling).toBe(1);
 				
 				//b losing short-castle right by rook-move
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("h8", "f8");
+				board_other.moveCaller(["h8", "f8"]);
 				expect(board_other.w.castling).toBe(3);
 				expect(board_other.b.castling).toBe(2);
 				
 				//b losing both castling rights by king-move
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("e8", "d8");
+				board_other.moveCaller(["e8", "d8"]);
 				expect(board_other.w.castling).toBe(3);
 				expect(board_other.b.castling).toBe(0);
 				
 				//b losing both castling rights by long-castle
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("e8", "c8");
+				board_other.moveCaller(["e8", "c8"]);
 				expect(board_other.w.castling).toBe(3);
 				expect(board_other.b.castling).toBe(0);
 				
 				//b losing both castling rights by short-castle
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("e8", "g8");
+				board_other.moveCaller(["e8", "g8"]);
 				expect(board_other.w.castling).toBe(3);
 				expect(board_other.b.castling).toBe(0);
 				
 				//b making w lose long-castle right by rook-capture
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("e5", "a1");
+				board_other.moveCaller(["e5", "a1"]);
 				expect(board_other.w.castling).toBe(1);
 				expect(board_other.b.castling).toBe(3);
 				
 				//b making w lose short-castle right by rook-capture
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-				board_other.moveCaller("d5", "h1");
+				board_other.moveCaller(["d5", "h1"]);
 				expect(board_other.w.castling).toBe(2);
 				expect(board_other.b.castling).toBe(3);
 			});
@@ -203,26 +203,26 @@ describe("Misc.", () => {
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("e3", "b3");
-			board_other.moveCaller("e6", "b3");
+			board_other.moveCaller(["e3", "b3"]);
+			board_other.moveCaller(["e6", "b3"]);
 			
 			//stalemate (white turn)
 			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1/2-1/2");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("e3", "d4");
-			board_other.moveCaller("e6", "b6");
-			board_other.moveCaller("d4", "b6");
+			board_other.moveCaller(["e3", "d4"]);
+			board_other.moveCaller(["e6", "b6"]);
+			board_other.moveCaller(["d4", "b6"]);
 			
 			//stalemate (black turn)
 			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1/2-1/2");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("e3", "b6");
-			board_other.moveCaller("e6", "h3");
-			board_other.moveCaller("b6", "b8");
+			board_other.moveCaller(["e3", "b6"]);
+			board_other.moveCaller(["e6", "h3"]);
+			board_other.moveCaller(["b6", "b8"]);
 			
 			//checkmake (white win)
 			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qb8#");
@@ -230,10 +230,10 @@ describe("Misc.", () => {
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("e3", "f4");
-			board_other.moveCaller("e6", "b3");
-			board_other.moveCaller("f4", "h6");
-			board_other.moveCaller("b3", "b1");
+			board_other.moveCaller(["e3", "f4"]);
+			board_other.moveCaller(["e6", "b3"]);
+			board_other.moveCaller(["f4", "h6"]);
+			board_other.moveCaller(["b3", "b1"]);
 			
 			//checkmake (black win)
 			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qb1#");
@@ -241,15 +241,15 @@ describe("Misc.", () => {
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("e3", "e4");
+			board_other.moveCaller(["e3", "e4"]);
 			
 			//check (white performs check)
 			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qe4+");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("e3", "h6");
-			board_other.moveCaller("e6", "e5");
+			board_other.moveCaller(["e3", "h6"]);
+			board_other.moveCaller(["e6", "e5"]);
 			
 			//check (black performs check)
 			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qe5+");
@@ -290,9 +290,9 @@ describe("Misc.", () => {
 			temp=board_obj.getSquare("b2", {isUnreferenced : false});
 			temp2=board_obj.getSquare("b2", {isUnreferenced : true});
 			
-			board_obj.moveCaller("b2", "b3");
-			board_obj.moveCaller("h7", "h6");
-			board_obj.moveCaller("c1", "b2");
+			board_obj.moveCaller(["b2", "b3"]);
+			board_obj.moveCaller(["h7", "h6"]);
+			board_obj.moveCaller(["c1", "b2"]);
 			
 			expect(temp.isBishop).toBe(true);
 			expect(temp2.isPawn).toBe(true);
@@ -305,8 +305,8 @@ describe("Misc.", () => {
 			
 			temp2=board_other.getSquare("b2", {isUnreferenced : false});
 			
-			board_obj.moveCaller("h6", "h5");
-			board_obj.moveCaller("b2", "c1");
+			board_obj.moveCaller(["h6", "h5"]);
+			board_obj.moveCaller(["b2", "c1"]);
 			
 			expect(temp.isBishop).toBe(true);
 			expect(temp2.isBishop).toBe(true);
@@ -420,9 +420,9 @@ describe("Misc.", () => {
 				validOrBreak : true
 			});
 			
-			board_obj.moveCaller("e2", "e4");
-			board_obj.moveCaller("f7", "f5");
-			board_obj.moveCaller("d1", "h5");
+			board_obj.moveCaller(["e2", "e4"]);
+			board_obj.moveCaller(["f7", "f5"]);
+			board_obj.moveCaller(["d1", "h5"]);
 			
 			//checks
 			expect(board_obj.checks).toBe(1);
@@ -436,16 +436,16 @@ describe("Misc.", () => {
 			expect(board_obj.moveList[2].Fen).toBe("rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2");
 			expect(board_obj.moveList[3].Fen).toBe("rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2");
 			
-			board_obj.moveCaller("g7", "g6");
-			board_obj.moveCaller("h5", "g6");
+			board_obj.moveCaller(["g7", "g6"]);
+			board_obj.moveCaller(["h5", "g6"]);
 			
 			//remove check via pawn capture
 			expect(board_obj.legalMoves("h7").sort()).toEqual(["g6"].sort());
 			
-			board_obj.moveCaller("h7", "g6");
-			board_obj.moveCaller("f1", "b5");
-			board_obj.moveCaller("h8", "h2");
-			board_obj.moveCaller("b5", "d7");
+			board_obj.moveCaller(["h7", "g6"]);
+			board_obj.moveCaller(["f1", "b5"]);
+			board_obj.moveCaller(["h8", "h2"]);
+			board_obj.moveCaller(["b5", "d7"]);
 			
 			//remove check via (knight, bishop, queen, king) capture and via (king) moving out of check
 			expect(board_obj.legalMoves("b8").sort()).toEqual(["d7"].sort());
@@ -453,40 +453,40 @@ describe("Misc.", () => {
 			expect(board_obj.legalMoves("d8").sort()).toEqual(["d7"].sort());
 			expect(board_obj.legalMoves("e8").sort()).toEqual(["d7", "f7"].sort());
 			
-			board_obj.moveCaller("e8", "f7");
-			board_obj.moveCaller("e4", "f5");
-			board_obj.moveCaller("h2", "h6");
-			board_obj.moveCaller("g1", "f3");
-			board_obj.moveCaller("a7", "a5");
-			board_obj.moveCaller("f5", "g6");
-			board_obj.moveCaller("f7", "f6");
-			board_obj.moveCaller("g6", "g7");
-			board_obj.moveCaller("a8", "a6");
-			board_obj.moveCaller("d7", "e8");
-			board_obj.moveCaller("f6", "f5");
-			board_obj.moveCaller("e8", "f7");
-			board_obj.moveCaller("h6", "c6");
+			board_obj.moveCaller(["e8", "f7"]);
+			board_obj.moveCaller(["e4", "f5"]);
+			board_obj.moveCaller(["h2", "h6"]);
+			board_obj.moveCaller(["g1", "f3"]);
+			board_obj.moveCaller(["a7", "a5"]);
+			board_obj.moveCaller(["f5", "g6"]);
+			board_obj.moveCaller(["f7", "f6"]);
+			board_obj.moveCaller(["g6", "g7"]);
+			board_obj.moveCaller(["a8", "a6"]);
+			board_obj.moveCaller(["d7", "e8"]);
+			board_obj.moveCaller(["f6", "f5"]);
+			board_obj.moveCaller(["e8", "f7"]);
+			board_obj.moveCaller(["h6", "c6"]);
 			
 			board_obj.setPromoteTo(4);
 			
-			board_obj.moveCaller("g7", "f8");
+			board_obj.moveCaller(["g7", "f8"]);
 			
 			//SAN underpromote to rook
 			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("gxf8=R");
 			
-			board_obj.moveCaller("a5", "a4");
-			board_obj.moveCaller("f7", "g6");
+			board_obj.moveCaller(["a5", "a4"]);
+			board_obj.moveCaller(["f7", "g6"]);
 			
 			//two active checks via discovered check
 			expect(board_obj.checks).toBe(2);
 			
-			board_obj.moveCaller("f5", "g6");
-			board_obj.moveCaller("e1", "g1");
+			board_obj.moveCaller(["f5", "g6"]);
+			board_obj.moveCaller(["e1", "g1"]);
 			
 			//wrong legal moves for empty square, b to move
 			expect(board_obj.legalMoves("e4").sort()).toEqual([].sort());
 			
-			board_obj.moveCaller("a6", "b6");
+			board_obj.moveCaller(["a6", "b6"]);
 			
 			//wrong legal moves for empty square, w to move
 			expect(board_obj.legalMoves("e4").sort()).toEqual([].sort());
@@ -500,12 +500,12 @@ describe("Misc.", () => {
 			//two squares pawn movement
 			expect(board_obj.legalMoves("b2").sort()).toEqual(["b3", "b4"].sort());
 			
-			board_obj.moveCaller("b2", "b4");
+			board_obj.moveCaller(["b2", "b4"]);
 			
 			//pawn can capture enpassant or move
 			expect(board_obj.legalMoves("a4").sort()).toEqual(["a3", "b3"].sort());
 			
-			board_obj.moveCaller("c6", "f6");
+			board_obj.moveCaller(["c6", "f6"]);
 			
 			//rook movement with capture
 			expect(board_obj.legalMoves("f8").sort()).toEqual(["g8", "d8", "e8", "f7", "f6"].sort());
@@ -513,12 +513,12 @@ describe("Misc.", () => {
 			//knight movement, prevent capture ally
 			expect(board_obj.legalMoves("b1").sort()).toEqual(["c3", "a3"].sort());
 			
-			board_obj.moveCaller("a2", "a3");
+			board_obj.moveCaller(["a2", "a3"]);
 			
 			//prevent pawn capture via moving forward (one square, black)
 			expect(board_obj.legalMoves("a4").sort()).toEqual([].sort());
 			
-			board_obj.moveCaller("b6", "a6");
+			board_obj.moveCaller(["b6", "a6"]);
 			
 			//no pgn disambiguation needed
 			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("Ra6");
@@ -547,75 +547,75 @@ describe("Misc.", () => {
 			//incorrect white castling moves
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["g1", "c1", "d1", "f1"].sort());
 			
-			board_other.moveCaller("b4", "b5");
+			board_other.moveCaller(["b4", "b5"]);
 			
 			//incorrect black castling moves
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f8", "d8", "c8", "g8"].sort());
 			
-			board_other.moveCaller("c4", "d2");
+			board_other.moveCaller(["c4", "d2"]);
 			
 			//preventing to long castle with b1 attacked
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["c1", "d1"].sort());
 			
-			board_other.moveCaller("d6", "e7");
+			board_other.moveCaller(["d6", "e7"]);
 			
 			//castle not being prevented via first square
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual([].sort());
 			
-			board_other.moveCaller("d2", "b1");
+			board_other.moveCaller(["d2", "b1"]);
 			
 			//allowing to long castle with b1 occupied
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f1", "g1", "d1"].sort());
 			
-			board_other.moveCaller("g5", "h3");
-			board_other.moveCaller("b1", "d2");
-			board_other.moveCaller("h3", "g5");
-			board_other.moveCaller("d2", "f1");
+			board_other.moveCaller(["g5", "h3"]);
+			board_other.moveCaller(["b1", "d2"]);
+			board_other.moveCaller(["h3", "g5"]);
+			board_other.moveCaller(["d2", "f1"]);
 			
 			//allowing to short castle with f1 occupied
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f1", "c1", "d1"].sort());
 			
-			board_other.moveCaller("g5", "h3");
-			board_other.moveCaller("f1", "d2");
-			board_other.moveCaller("h3", "g5");
-			board_other.moveCaller("g4", "e3");
+			board_other.moveCaller(["g5", "h3"]);
+			board_other.moveCaller(["f1", "d2"]);
+			board_other.moveCaller(["h3", "g5"]);
+			board_other.moveCaller(["g4", "e3"]);
 			
 			//allowing to long castle with d1 attacked
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual([].sort());
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("f6", "f7");
+			board_other.moveCaller(["f6", "f7"]);
 			
 			//allowing to castle with king at check (black)
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["d8", "f8"].sort());
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.moveCaller("b4", "b5");
-			board_other.moveCaller("c4", "a3");
-			board_other.moveCaller("b5", "b6");
-			board_other.moveCaller("a3", "c2");
+			board_other.moveCaller(["b4", "b5"]);
+			board_other.moveCaller(["c4", "a3"]);
+			board_other.moveCaller(["b5", "b6"]);
+			board_other.moveCaller(["a3", "c2"]);
 			
 			//allowing to castle with king at check (white)
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["d1", "f1"].sort());
 			
 			board_other.setPromoteTo("wn");
 			
-			board_other.moveCaller("e1", "d1");
-			board_other.moveCaller("f3", "f2");
-			board_other.moveCaller("d1", "c1");
-			board_other.moveCaller("f2", "f1");
+			board_other.moveCaller(["e1", "d1"]);
+			board_other.moveCaller(["f3", "f2"]);
+			board_other.moveCaller(["d1", "c1"]);
+			board_other.moveCaller(["f2", "f1"]);
 			
 			//setPromoteTo(wrong color className: w to b)
 			expect(board_other.getSquare("f1").val).toBe(-2);
 			
-			board_other.moveCaller("b6", "b7");
-			board_other.moveCaller("g4", "h2");
+			board_other.moveCaller(["b6", "b7"]);
+			board_other.moveCaller(["g4", "h2"]);
 			
 			board_other.setPromoteTo("bn");
 			
-			board_other.moveCaller("b7", "a8");
+			board_other.moveCaller(["b7", "a8"]);
 			
 			//setPromoteTo(wrong color className: b to w)
 			expect(board_other.getSquare("a8").className).toBe("wn");

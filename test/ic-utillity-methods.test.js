@@ -2,6 +2,10 @@ const {Ic}=require("../isepic-chess");
 
 Ic.setSilentMode(false);
 
+//---to do:
+//
+//minimumMutableBoard
+
 describe("Ic utility methods", () => {
 	test("Ic.utilityMisc.consoleLog()", () => {
 		Ic.setSilentMode(true);
@@ -215,13 +219,13 @@ describe("Ic utility methods", () => {
 			isHidden : true
 		});
 		
-		board_obj.moveCaller("c3", "e4");
+		board_obj.moveCaller(["c3", "e4"]);
 		
-		board_other.moveCaller("g2", "g3");
-		board_other.moveCaller("h7", "h6");
-		board_other.moveCaller("f1", "g2");
-		board_other.moveCaller("h6", "h5");
-		board_other.moveCaller("g2", "e4");
+		board_other.moveCaller(["g2", "g3"]);
+		board_other.moveCaller(["h7", "h6"]);
+		board_other.moveCaller(["f1", "g2"]);
+		board_other.moveCaller(["h6", "h5"]);
+		board_other.moveCaller(["g2", "e4"]);
 		
 		Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 		
@@ -233,13 +237,13 @@ describe("Ic utility methods", () => {
 		
 		expect(board_other.isEqualBoard(board_obj)).toBe(true);
 		
-		board_other.moveCaller("g7", "g5");
-		board_other.moveCaller("e4", "g5");
-		board_other.moveCaller("e7", "e5");
-		board_other.moveCaller("e2", "e4");
-		board_other.moveCaller("d8", "g5");
-		board_other.moveCaller("d2", "d3");
-		board_other.moveCaller("g5", "c1");
+		board_other.moveCaller(["g7", "g5"]);
+		board_other.moveCaller(["e4", "g5"]);
+		board_other.moveCaller(["e7", "e5"]);
+		board_other.moveCaller(["e2", "e4"]);
+		board_other.moveCaller(["d8", "g5"]);
+		board_other.moveCaller(["d2", "d3"]);
+		board_other.moveCaller(["g5", "c1"]);
 		
 		expect(board_other.w.materialDiff).toEqual([1]);
 		expect(board_other.b.materialDiff).toEqual([-2, -3]);

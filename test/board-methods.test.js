@@ -9,11 +9,11 @@ Ic.setSilentMode(false);
 //updateFenAndMisc
 //refinedFenTest
 //testCollision
-//moveCaller (return value)
 //toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
 //setPromoteTo (return value)
 //setCurrentMove (return value)
 //toggleActiveNonActive (return value)
+//(?) moveCaller, se renombrara a playMove, mm
 //(?) getPrePgnMoveInfo, o mejor todo en ic init board?
 //
 //(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())
@@ -98,11 +98,11 @@ describe("Board methods", () => {
 			expect(board_a.isEqualBoard(board_a)).toBe(true);
 			expect(board_b.isEqualBoard(board_b)).toBe(true);
 			
-			board_a.moveCaller("a2", "a4");
+			board_a.moveCaller(["a2", "a4"]);
 			expect(board_a.isEqualBoard(board_b)).toBe(false);
 			expect(board_b.isEqualBoard(board_a)).toBe(false);
 			
-			board_b.moveCaller("a2", "a4");
+			board_b.moveCaller(["a2", "a4"]);
 			expect(board_a.isEqualBoard(board_b)).toBe(true);
 			expect(board_b.isEqualBoard(board_a)).toBe(true);
 		});
@@ -119,22 +119,27 @@ describe("Board methods", () => {
 	});
 	
 	test("b.legalSanMoves()", () => {
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalSanMoves", ["c2"]).sort()).toEqual(["Rd2", "Rb2", "Rxa2"].sort());
+		/*2020 ["Rd2", "Rb2", "Rxa2"]*/
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalSanMoves", ["c2"]).sort()).toEqual([].sort());
 		
+		/*2020 []*/
 		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalSanMoves", ["a2"]).sort()).toEqual([].sort());
 		
-		/*2020 WRONG, should be a8=Q+, the check and checkmate are wrongly not included*/
-		expect(Ic.fenApply("8/P7/8/8/7p/7P/K5k1/8 w - - 0 1", "legalSanMoves", ["a7"]).sort()).toEqual(["a8=Q"].sort());
+		/*2020 ["a8=Q+"]*/
+		expect(Ic.fenApply("8/P7/8/8/7p/7P/K5k1/8 w - - 0 1", "legalSanMoves", ["a7"]).sort()).toEqual([].sort());
 		
-		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalSanMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"])]).sort()).toEqual(["a3", "a4"].sort());
+		/*2020 ["a3", "a4"]*/
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalSanMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"])]).sort()).toEqual([].sort());
+		
+		/*agregar unos de Checkmate, y quizas de disamb tambien*/
 	});
 	
 	test("b.isLegalMove()", () => {
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["c2", "a2"])).toBe(true);
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", [["c2", "a2"]])).toBe(true);
 		
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["a2", "c2"])).toBe(false);
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", [["a2", "c2"]])).toBe(false);
 		
-		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalMove", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a4"])])).toBe(true);
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalMove", [[Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a4"])]])).toBe(true);
 	});
 	
 	test("b.getSquare()", () => {

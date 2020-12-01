@@ -319,25 +319,25 @@ describe("Board properties", () => {
 		fifty_all="";
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
-			board_obj.moveCaller(arr[i][0], arr[i][1]);
+			board_obj.moveCaller(arr[i]);
 			threefold_all+=(board_obj.isThreefold*1);
 			fifty_all+=(board_obj.isFiftyMove*1);
 		}
 		
 		for(i=0; i<15; i++){//0...14
-			board_obj.moveCaller("h1", "g1");
+			board_obj.moveCaller(["h1", "g1"]);
 			threefold_all+=(board_obj.isThreefold*1);
 			fifty_all+=(board_obj.isFiftyMove*1);
 			
-			board_obj.moveCaller("h8", "g8");
+			board_obj.moveCaller(["h8", "g8"]);
 			threefold_all+=(board_obj.isThreefold*1);
 			fifty_all+=(board_obj.isFiftyMove*1);
 			
-			board_obj.moveCaller("g1", "h1");
+			board_obj.moveCaller(["g1", "h1"]);
 			threefold_all+=(board_obj.isThreefold*1);
 			fifty_all+=(board_obj.isFiftyMove*1);
 			
-			board_obj.moveCaller("g8", "h8");
+			board_obj.moveCaller(["g8", "h8"]);
 			threefold_all+=(board_obj.isThreefold*1);
 			fifty_all+=(board_obj.isFiftyMove*1);
 		}

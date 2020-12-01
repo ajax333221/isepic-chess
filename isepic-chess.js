@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.2.1";
+		var _VERSION="4.3.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -418,6 +418,29 @@
 			}
 			
 			return error_msg;
+		}
+		
+		function _minimumMutableBoard(){
+			var i, j, len, hueco_board;
+			
+			hueco_board={};
+			
+			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
+				hueco_board[_MUTABLE_KEYS[i]]=null;
+			}
+			
+			hueco_board.w={};
+			hueco_board.b={};
+			
+			hueco_board.squares={};
+			
+			for(i=0; i<8; i++){//0...7
+				for(j=0; j<8; j++){//0...7
+					hueco_board.squares[toBos([i, j])]={};
+				}
+			}
+			
+			return hueco_board;
 		}
 		
 		//---------------- board
@@ -1020,7 +1043,7 @@
 		}
 		
 		function _legalMoves(target_qos){
-			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, no_errors, active_side, non_active_side, rtn;
+			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
 			
@@ -1165,21 +1188,22 @@
 			
 			that=this;
 			
-			rtn=that.legalMoves(target_qos).map(x => that.getPrePgnMoveInfo(target_qos, x).pgnMove);
+			//rtn=that.legalMoves(target_qos).map(x => that.getPrePgnMoveInfo([target_qos, x]).pgnMove);
+			rtn=[];
 			
 			return rtn;
 		}
 		
-		function _isLegalMove(initial_qos, final_qos){
+		function _isLegalMove(mov){
 			var that, moves, final_square, rtn;
 			
 			that=this;
 			
 			rtn=false;
-			final_square=that.getSquare(final_qos);
+			final_square=that.getSquare(mov[1]);
 			
 			if(final_square!==null){
-				moves=that.legalMoves(initial_qos);
+				moves=that.legalMoves(mov[0]);
 				
 				if(moves.length){
 					rtn=_strContains(moves.join(), final_square.bos);
@@ -1256,10 +1280,11 @@
 		}
 		
 		function _cloneBoardFrom(from_woard){
-			var that, from_board, no_errors;
+			var that, from_board, no_errors, rtn;
 			
 			that=this;
 			
+			rtn=false;
 			no_errors=true;
 			
 			//if(no_errors){
@@ -1279,19 +1304,22 @@
 			}
 			
 			if(no_errors){
-				_cloneBoardObjs(that, from_board);
+				rtn=true;
+				
+				_cloneBoardObjs(that, from_board);/*2020 rtn=x*/
 				
 				that.refreshBoard(0);//autorefresh
 			}
 			
-			return no_errors;
+			return rtn;
 		}
 		
 		function _cloneBoardTo(to_woard){
-			var that, to_board, no_errors;
+			var that, to_board, no_errors, rtn;
 			
 			that=this;
 			
+			rtn=false;
 			no_errors=true;
 			
 			//if(no_errors){
@@ -1311,15 +1339,17 @@
 			}
 			
 			if(no_errors){
-				_cloneBoardObjs(to_board, that);
+				rtn=true;
+				
+				_cloneBoardObjs(to_board, that);/*2020 rtn=x*/
 				
 				to_board.refreshBoard(0);//autorefresh
 			}
 			
-			return no_errors;
+			return rtn;
 		}
 		
-		function _getPrePgnMoveInfo(initial_qos, final_qos){
+		function _getPrePgnMoveInfo(mov){
 			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, king_castled, pgn_move, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, can_move, rtn;
 			
 			that=this;
@@ -1330,15 +1360,15 @@
 			
 			rtn=Object.create(null);
 			
-			initial_cached_square=that.getSquare(initial_qos, {
+			initial_cached_square=that.getSquare(mov[0], {
 				isUnreferenced : true
 			});
 			
-			final_cached_square=that.getSquare(final_qos, {
+			final_cached_square=that.getSquare(mov[1], {
 				isUnreferenced : true
 			});
 			
-			can_move=that.isLegalMove(initial_cached_square, final_cached_square);
+			can_move=that.isLegalMove([initial_cached_square, final_cached_square]);
 			
 			if(can_move){
 				active_side=that[that.activeColor];
@@ -1423,7 +1453,7 @@
 							
 							for(i=0; i<len; i++){//0<len
 								//no puede haber ajustes de king o pawn, sin problemas en legal moves
-								if(!sameSquare(temp2[i], initial_cached_square) && that.isLegalMove(temp2[i], final_cached_square)){
+								if(!sameSquare(temp2[i], initial_cached_square) && that.isLegalMove([temp2[i], final_cached_square])){
 									temp3+=toBos(temp2[i]);
 								}
 							}
@@ -1490,21 +1520,41 @@
 			return rtn;
 		}
 		
-		function _moveCaller(initial_qos, final_qos){
-			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, rtn_can_move;
+		function _moveCaller(mov){
+			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, cached_board, no_errors, rtn_can_move;
 			
 			that=this;
 			
-			pgn_obj=that.getPrePgnMoveInfo(initial_qos, final_qos);
+			rtn_can_move=false;
+			no_errors=true;
 			
-			initial_cached_square=pgn_obj.initialCachedSquare;
-			final_cached_square=pgn_obj.finalCachedSquare;
+			//if(no_errors){
+				cached_board=_minimumMutableBoard();
+				_cloneBoardObjs(cached_board, that);
+				
+				pgn_obj=that.getPrePgnMoveInfo(mov);
+				
+				if(!pgn_obj.canMove){
+					no_errors=false;
+				}
+			//}
 			
-			rtn_can_move=pgn_obj.canMove;
+			if(no_errors){
+				if(true){
+					//...
+					
+					//if! then no_errors = false
+				}
+			}
 			
-			if(rtn_can_move){
+			if(no_errors){
+				rtn_can_move=true;
+				
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
+				
+				initial_cached_square=pgn_obj.initialCachedSquare;
+				final_cached_square=pgn_obj.finalCachedSquare;
 				
 				if(pgn_obj.activeSideCastlingZero){
 					active_side.castling=0;
@@ -1621,7 +1671,7 @@
 		}
 		
 		function selectBoard(woard){
-			var no_errors, is_valid, rtn;
+			var is_valid, no_errors, rtn;
 			
 			rtn=null;
 			no_errors=true;
@@ -2149,7 +2199,7 @@
 								temp2=new_board.legalMoves(current_square);
 								
 								for(m=0, len2=temp2.length; m<len2; m++){//0<len2
-									pgn_obj=new_board.getPrePgnMoveInfo(current_square, temp2[m]);
+									pgn_obj=new_board.getPrePgnMoveInfo([current_square, temp2[m]]);
 									
 									if(!pgn_obj.canMove){
 										continue;
@@ -2160,7 +2210,7 @@
 											continue;
 										}
 										
-										move_was_played=new_board.moveCaller(current_square, temp2[m]);
+										move_was_played=new_board.moveCaller([current_square, temp2[m]]);
 										break outer;
 									}
 								}
@@ -2366,7 +2416,8 @@
 				hashCode : _hashCode,
 				castlingChars : _castlingChars,
 				cloneBoardObjs : _cloneBoardObjs,
-				basicFenTest : _basicFenTest
+				basicFenTest : _basicFenTest,
+				minimumMutableBoard : _minimumMutableBoard
 			}
 		};
 	})(windw);
