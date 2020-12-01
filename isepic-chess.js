@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.3.0";
+		var _VERSION="4.4.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -784,7 +784,7 @@
 			outer:
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					if(that.legalMoves([i, j]).length){
+					if(that.legalMoves([i, j], {toSquareOnly:true}).length){
 						is_stale=false;
 						break outer;
 					}
@@ -1042,7 +1042,7 @@
 			return rtn;
 		}
 		
-		function _legalMoves(target_qos){
+		function _legalMoves(target_qos, p){
 			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
@@ -1052,9 +1052,19 @@
 			}
 			
 			rtn=[];
+			p=(_isObject(p) ? p : {});
 			no_errors=true;
 			
 			//if(no_errors){
+				p.squareType=((typeof p.squareType)==="string" ? p.squareType : "");
+				
+				p.toSquareOnly=((typeof p.toSquareOnly)==="boolean" ? p.toSquareOnly : false);
+				
+				p.joined=((typeof p.joined)==="boolean" ? p.joined : false);
+				
+				p.joinDelimiter=((typeof p.joinDelimiter)==="string" ? p.joinDelimiter : "-");
+				p.joinDelimiter=p.joinDelimiter.charAt(0);
+				
 				target_cached_square=that.getSquare(target_qos, {
 					isUnreferenced : true
 				});
@@ -1167,7 +1177,31 @@
 						}
 						
 						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
-							rtn.push(current_cached_square.bos);
+							if(p.toSquareOnly){
+								if(p.joined){
+									rtn.push(current_cached_square.bos);
+								}else{
+									if(p.squareType==="array"){
+										rtn.push(toPos(current_cached_square));
+									}else if(p.squareType==="object"){
+										rtn.push(that.getSquare(current_cached_square, {isUnreferenced : true}));
+									}else{//type "string"
+										rtn.push(current_cached_square.bos);
+									}
+								}
+							}else{
+								if(p.joined){
+									rtn.push(target_cached_square.bos+p.joinDelimiter+current_cached_square.bos);
+								}else{
+									if(p.squareType==="array"){
+										rtn.push([toPos(target_cached_square), toPos(current_cached_square)]);
+									}else if(p.squareType==="object"){
+										rtn.push([that.getSquare(target_cached_square, {isUnreferenced : true}), that.getSquare(current_cached_square, {isUnreferenced : true})]);
+									}else{//type "string"
+										rtn.push([target_cached_square.bos, current_cached_square.bos]);
+									}
+								}
+							}
 						}
 						
 						that.setSquare(current_cached_square, current_cached_square.val);
@@ -1194,16 +1228,21 @@
 			return rtn;
 		}
 		
-		function _isLegalMove(mov){
+		function _isLegalMove(mov, p){
 			var that, moves, final_square, rtn;
 			
 			that=this;
 			
 			rtn=false;
+			p=(_isObject(p) ? p : {});
+			
 			final_square=that.getSquare(mov[1]);
 			
 			if(final_square!==null){
-				moves=that.legalMoves(mov[0]);
+				/*2020 p.splitDelimiter=((typeof p.splitDelimiter)==="string" ? p.splitDelimiter : "-");*/
+				/*2020 p.splitDelimiter=p.splitDelimiter.charAt(0);*/
+				
+				moves=that.legalMoves(mov[0], {toSquareOnly:true});
 				
 				if(moves.length){
 					rtn=_strContains(moves.join(), final_square.bos);
@@ -2199,7 +2238,7 @@
 								temp2=new_board.legalMoves(current_square);
 								
 								for(m=0, len2=temp2.length; m<len2; m++){//0<len2
-									pgn_obj=new_board.getPrePgnMoveInfo([current_square, temp2[m]]);
+									pgn_obj=new_board.getPrePgnMoveInfo(temp2[m]);
 									
 									if(!pgn_obj.canMove){
 										continue;
@@ -2210,7 +2249,7 @@
 											continue;
 										}
 										
-										move_was_played=new_board.moveCaller([current_square, temp2[m]]);
+										move_was_played=new_board.moveCaller(temp2[m]);
 										break outer;
 									}
 								}

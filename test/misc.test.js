@@ -11,7 +11,7 @@ describe("Misc.", () => {
 		
 		describe("Enpassant related", () => {
 			test("enpassant capture applied to other non enpassant moves", () => {
-				expect(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"]).sort()).toEqual(["d6", "e6"].sort());
+				expect(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5", {toSquareOnly:true}]).sort()).toEqual(["d6", "e6"].sort());
 			});
 			
 			test("taking enpassant results in self check", () => {
@@ -428,7 +428,7 @@ describe("Misc.", () => {
 			expect(board_obj.checks).toBe(1);
 			
 			//remove check via pawn blocking
-			expect(board_obj.legalMoves("g7").sort()).toEqual(["g6"].sort());
+			expect(board_obj.legalMoves("g7", {toSquareOnly:true}).sort()).toEqual(["g6"].sort());
 			
 			//basic b.moveList format, enpassant and clocks
 			expect(board_obj.moveList[0].Fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -440,7 +440,7 @@ describe("Misc.", () => {
 			board_obj.moveCaller(["h5", "g6"]);
 			
 			//remove check via pawn capture
-			expect(board_obj.legalMoves("h7").sort()).toEqual(["g6"].sort());
+			expect(board_obj.legalMoves("h7", {toSquareOnly:true}).sort()).toEqual(["g6"].sort());
 			
 			board_obj.moveCaller(["h7", "g6"]);
 			board_obj.moveCaller(["f1", "b5"]);
@@ -448,10 +448,10 @@ describe("Misc.", () => {
 			board_obj.moveCaller(["b5", "d7"]);
 			
 			//remove check via (knight, bishop, queen, king) capture and via (king) moving out of check
-			expect(board_obj.legalMoves("b8").sort()).toEqual(["d7"].sort());
-			expect(board_obj.legalMoves("c8").sort()).toEqual(["d7"].sort());
-			expect(board_obj.legalMoves("d8").sort()).toEqual(["d7"].sort());
-			expect(board_obj.legalMoves("e8").sort()).toEqual(["d7", "f7"].sort());
+			expect(board_obj.legalMoves("b8", {toSquareOnly:true}).sort()).toEqual(["d7"].sort());
+			expect(board_obj.legalMoves("c8", {toSquareOnly:true}).sort()).toEqual(["d7"].sort());
+			expect(board_obj.legalMoves("d8", {toSquareOnly:true}).sort()).toEqual(["d7"].sort());
+			expect(board_obj.legalMoves("e8", {toSquareOnly:true}).sort()).toEqual(["d7", "f7"].sort());
 			
 			board_obj.moveCaller(["e8", "f7"]);
 			board_obj.moveCaller(["e4", "f5"]);
@@ -484,39 +484,39 @@ describe("Misc.", () => {
 			board_obj.moveCaller(["e1", "g1"]);
 			
 			//wrong legal moves for empty square, b to move
-			expect(board_obj.legalMoves("e4").sort()).toEqual([].sort());
+			expect(board_obj.legalMoves("e4", {toSquareOnly:true}).sort()).toEqual([].sort());
 			
 			board_obj.moveCaller(["a6", "b6"]);
 			
 			//wrong legal moves for empty square, w to move
-			expect(board_obj.legalMoves("e4").sort()).toEqual([].sort());
+			expect(board_obj.legalMoves("e4", {toSquareOnly:true}).sort()).toEqual([].sort());
 			
 			//prevent pawn capture via moving forward (two squares, white)
-			expect(board_obj.legalMoves("a2").sort()).toEqual(["a3"].sort());
+			expect(board_obj.legalMoves("a2", {toSquareOnly:true}).sort()).toEqual(["a3"].sort());
 			
 			//pgn disambiguation
 			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("Rab6");
 			
 			//two squares pawn movement
-			expect(board_obj.legalMoves("b2").sort()).toEqual(["b3", "b4"].sort());
+			expect(board_obj.legalMoves("b2", {toSquareOnly:true}).sort()).toEqual(["b3", "b4"].sort());
 			
 			board_obj.moveCaller(["b2", "b4"]);
 			
 			//pawn can capture enpassant or move
-			expect(board_obj.legalMoves("a4").sort()).toEqual(["a3", "b3"].sort());
+			expect(board_obj.legalMoves("a4", {toSquareOnly:true}).sort()).toEqual(["a3", "b3"].sort());
 			
 			board_obj.moveCaller(["c6", "f6"]);
 			
 			//rook movement with capture
-			expect(board_obj.legalMoves("f8").sort()).toEqual(["g8", "d8", "e8", "f7", "f6"].sort());
+			expect(board_obj.legalMoves("f8", {toSquareOnly:true}).sort()).toEqual(["g8", "d8", "e8", "f7", "f6"].sort());
 			
 			//knight movement, prevent capture ally
-			expect(board_obj.legalMoves("b1").sort()).toEqual(["c3", "a3"].sort());
+			expect(board_obj.legalMoves("b1", {toSquareOnly:true}).sort()).toEqual(["c3", "a3"].sort());
 			
 			board_obj.moveCaller(["a2", "a3"]);
 			
 			//prevent pawn capture via moving forward (one square, black)
-			expect(board_obj.legalMoves("a4").sort()).toEqual([].sort());
+			expect(board_obj.legalMoves("a4", {toSquareOnly:true}).sort()).toEqual([].sort());
 			
 			board_obj.moveCaller(["b6", "a6"]);
 			
@@ -524,7 +524,7 @@ describe("Misc.", () => {
 			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("Ra6");
 			
 			//single square pawn movement
-			expect(board_obj.legalMoves("b4").sort()).toEqual(["b5"].sort());
+			expect(board_obj.legalMoves("b4", {toSquareOnly:true}).sort()).toEqual(["b5"].sort());
 		});
 		
 		test("Basic functionality, part 2 of 2", () => {
@@ -545,27 +545,27 @@ describe("Misc.", () => {
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
 			//incorrect white castling moves
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["g1", "c1", "d1", "f1"].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual(["g1", "c1", "d1", "f1"].sort());
 			
 			board_other.moveCaller(["b4", "b5"]);
 			
 			//incorrect black castling moves
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f8", "d8", "c8", "g8"].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual(["f8", "d8", "c8", "g8"].sort());
 			
 			board_other.moveCaller(["c4", "d2"]);
 			
 			//preventing to long castle with b1 attacked
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["c1", "d1"].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual(["c1", "d1"].sort());
 			
 			board_other.moveCaller(["d6", "e7"]);
 			
 			//castle not being prevented via first square
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual([].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual([].sort());
 			
 			board_other.moveCaller(["d2", "b1"]);
 			
 			//allowing to long castle with b1 occupied
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f1", "g1", "d1"].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual(["f1", "g1", "d1"].sort());
 			
 			board_other.moveCaller(["g5", "h3"]);
 			board_other.moveCaller(["b1", "d2"]);
@@ -573,7 +573,7 @@ describe("Misc.", () => {
 			board_other.moveCaller(["d2", "f1"]);
 			
 			//allowing to short castle with f1 occupied
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f1", "c1", "d1"].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual(["f1", "c1", "d1"].sort());
 			
 			board_other.moveCaller(["g5", "h3"]);
 			board_other.moveCaller(["f1", "d2"]);
@@ -581,14 +581,14 @@ describe("Misc.", () => {
 			board_other.moveCaller(["g4", "e3"]);
 			
 			//allowing to long castle with d1 attacked
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual([].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual([].sort());
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
 			board_other.moveCaller(["f6", "f7"]);
 			
 			//allowing to castle with king at check (black)
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["d8", "f8"].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual(["d8", "f8"].sort());
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
@@ -598,7 +598,7 @@ describe("Misc.", () => {
 			board_other.moveCaller(["a3", "c2"]);
 			
 			//allowing to castle with king at check (white)
-			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["d1", "f1"].sort());
+			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos, {toSquareOnly:true}).sort()).toEqual(["d1", "f1"].sort());
 			
 			board_other.setPromoteTo("wn");
 			
