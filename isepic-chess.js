@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.4.0";
+		var _VERSION="4.5.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -784,7 +784,7 @@
 			outer:
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					if(that.legalMoves([i, j], {toSquareOnly:true}).length){
+					if(that.legalMoves([i, j]).length){
 						is_stale=false;
 						break outer;
 					}
@@ -1042,7 +1042,7 @@
 			return rtn;
 		}
 		
-		function _legalMoves(target_qos, p){
+		function _legalMovesHelper(target_qos, p){
 			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
@@ -1056,14 +1056,12 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				p.squareType=((typeof p.squareType)==="string" ? p.squareType : "");
+				p.returnType=((typeof p.returnType)==="string" ? p.returnType : "toSquare");
 				
-				p.toSquareOnly=((typeof p.toSquareOnly)==="boolean" ? p.toSquareOnly : false);
+				p.squareType=((typeof p.squareType)==="string" ? p.squareType : "bos");
 				
-				p.joined=((typeof p.joined)==="boolean" ? p.joined : false);
-				
-				p.joinDelimiter=((typeof p.joinDelimiter)==="string" ? p.joinDelimiter : "-");
-				p.joinDelimiter=p.joinDelimiter.charAt(0);
+				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
+				p.delimiter=p.delimiter.charAt(0);
 				
 				target_cached_square=that.getSquare(target_qos, {
 					isUnreferenced : true
@@ -1177,29 +1175,23 @@
 						}
 						
 						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
-							if(p.toSquareOnly){
-								if(p.joined){
-									rtn.push(current_cached_square.bos);
-								}else{
-									if(p.squareType==="array"){
-										rtn.push(toPos(current_cached_square));
-									}else if(p.squareType==="object"){
-										rtn.push(that.getSquare(current_cached_square, {isUnreferenced : true}));
-									}else{//type "string"
-										rtn.push(current_cached_square.bos);
-									}
+							if(p.returnType==="joined"){
+								rtn.push(target_cached_square.bos+p.delimiter+current_cached_square.bos);
+							}else if(p.returnType==="fromToSquares"){
+								if(p.squareType==="square"){
+									rtn.push([that.getSquare(target_cached_square, {isUnreferenced : true}), that.getSquare(current_cached_square, {isUnreferenced : true})]);
+								}else if(p.squareType==="pos"){
+									rtn.push([toPos(target_cached_square), toPos(current_cached_square)]);
+								}else{//type "bos"
+									rtn.push([target_cached_square.bos, current_cached_square.bos]);
 								}
-							}else{
-								if(p.joined){
-									rtn.push(target_cached_square.bos+p.joinDelimiter+current_cached_square.bos);
-								}else{
-									if(p.squareType==="array"){
-										rtn.push([toPos(target_cached_square), toPos(current_cached_square)]);
-									}else if(p.squareType==="object"){
-										rtn.push([that.getSquare(target_cached_square, {isUnreferenced : true}), that.getSquare(current_cached_square, {isUnreferenced : true})]);
-									}else{//type "string"
-										rtn.push([target_cached_square.bos, current_cached_square.bos]);
-									}
+							}else{//type "toSquare"
+								if(p.squareType==="square"){
+									rtn.push(that.getSquare(current_cached_square, {isUnreferenced : true}));
+								}else if(p.squareType==="pos"){
+									rtn.push(toPos(current_cached_square));
+								}else{//type "bos"
+									rtn.push(current_cached_square.bos);
 								}
 							}
 						}
@@ -1217,13 +1209,28 @@
 			return rtn;
 		}
 		
+		function _legalMoves(target_qos, p){
+			var that, convert_to_san;
+			
+			that=this;
+			
+			p=(_isObject(p) ? p : {});
+			
+			convert_to_san=((typeof p.returnType)==="string" && p.returnType==="san");
+			
+			return (convert_to_san ? that.legalSanMoves(target_qos) : that.legalMovesHelper(target_qos, p));
+		}
+		
 		function _legalSanMoves(target_qos){
 			var that, rtn;
 			
 			that=this;
 			
-			//rtn=that.legalMoves(target_qos).map(x => that.getPrePgnMoveInfo([target_qos, x]).pgnMove);
 			rtn=[];
+			
+			/*2020 that.legalMovesHelper(target_qos, {returnType : "san"});*/
+			
+			/*(playMove+isMockMove) & leer el .PGNmove attr*/
 			
 			return rtn;
 		}
@@ -1239,10 +1246,10 @@
 			final_square=that.getSquare(mov[1]);
 			
 			if(final_square!==null){
-				/*2020 p.splitDelimiter=((typeof p.splitDelimiter)==="string" ? p.splitDelimiter : "-");*/
-				/*2020 p.splitDelimiter=p.splitDelimiter.charAt(0);*/
+				/*2020 p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");*/
+				/*2020 p.delimiter=p.delimiter.charAt(0);*/
 				
-				moves=that.legalMoves(mov[0], {toSquareOnly:true});
+				moves=that.legalMoves(mov[0]);
 				
 				if(moves.length){
 					rtn=_strContains(moves.join(), final_square.bos);
@@ -1770,14 +1777,14 @@
 		}
 		
 		function toBal(qal){
-			var val, abs_val, rtn;
+			var temp, val, abs_val;
 			
 			val=toVal(qal);
 			abs_val=toAbsVal(qal);
 			
-			rtn=["*", "p", "n", "b", "r", "q", "k"][abs_val];//deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
+			temp=["*", "p", "n", "b", "r", "q", "k"][abs_val];//deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
 			
-			return (val===abs_val ? rtn.toUpperCase() : rtn);
+			return (val===abs_val ? temp.toUpperCase() : temp);
 		}
 		
 		function toAbsBal(qal){
@@ -2041,6 +2048,7 @@
 						refinedFenTest : _refinedFenTest,
 						testCollision : _testCollision,
 						isLegalMove : _isLegalMove,
+						legalMovesHelper : _legalMovesHelper,
 						legalMoves : _legalMoves,
 						legalSanMoves : _legalSanMoves,
 						ascii : _ascii,
@@ -2235,7 +2243,7 @@
 									continue;
 								}
 								
-								temp2=new_board.legalMoves(current_square);
+								temp2=new_board.legalMoves(current_square, {returnType : "fromToSquares"});
 								
 								for(m=0, len2=temp2.length; m<len2; m++){//0<len2
 									pgn_obj=new_board.getPrePgnMoveInfo(temp2[m]);
