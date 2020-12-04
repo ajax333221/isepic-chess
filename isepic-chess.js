@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.5.0";
+		var _VERSION="4.5.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1310,15 +1310,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				to_board=selectBoard(to_woard);
-				
-				if(!boardExists(to_board)){
+				if(!boardExists(to_woard)){
 					no_errors=false;
-					_consoleLog("Error[_isEqualBoard]: could not select to_board");
+					_consoleLog("Error[_isEqualBoard]: to_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
+				to_board=selectBoard(to_woard);
+				
 				rtn=(that===to_board || that.boardHash()===to_board.boardHash());
 			}
 			
@@ -1334,15 +1334,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				from_board=selectBoard(from_woard);
-				
-				if(!boardExists(from_board)){
+				if(!boardExists(from_woard)){
 					no_errors=false;
-					_consoleLog("Error[_cloneBoardFrom]: could not select from_board");
+					_consoleLog("Error[_cloneBoardFrom]: from_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
+				from_board=selectBoard(from_woard);
+				
 				if(that===from_board){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardFrom]: trying to self clone");
@@ -1369,15 +1369,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				to_board=selectBoard(to_woard);
-				
-				if(!boardExists(to_board)){
+				if(!boardExists(to_woard)){
 					no_errors=false;
-					_consoleLog("Error[_cloneBoardTo]: could not select to_board");
+					_consoleLog("Error[_cloneBoardTo]: to_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
+				to_board=selectBoard(to_woard);
+				
 				if(that===to_board){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardTo]: trying to self clone");
@@ -1938,15 +1938,17 @@
 			var del_board, del_board_name_cache, rtn;
 			
 			rtn=false;
-			del_board=selectBoard(woard);
 			
-			if(boardExists(del_board)){
+			if(boardExists(woard)){
 				rtn=true;
 				
-				del_board_name_cache=del_board.boardName;
-				del_board=null;
+				del_board=selectBoard(woard);
 				
+				del_board_name_cache=del_board.boardName;
+				
+				del_board=null;
 				_BOARDS[del_board_name_cache]=null;
+				
 				delete _BOARDS[del_board_name_cache];
 				
 				/*2020 autorefresh when removing current board? EDIT: can't easily select a non-hidden board*/
@@ -1962,15 +1964,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				left_board=selectBoard(left_woard);
-				
-				if(!boardExists(left_board)){
+				if(!boardExists(left_woard)){
 					no_errors=false;
-					_consoleLog("Error[isEqualBoard]: could not select left_board");
+					_consoleLog("Error[isEqualBoard]: left_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
+				left_board=selectBoard(left_woard);
+				
 				rtn=left_board.isEqualBoard(right_woard);
 			}
 			
@@ -1984,15 +1986,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				to_board=selectBoard(to_woard);
-				
-				if(!boardExists(to_board)){
+				if(!boardExists(to_woard)){
 					no_errors=false;
-					_consoleLog("Error[cloneBoard]: could not select to_board");
+					_consoleLog("Error[cloneBoard]: to_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
+				to_board=selectBoard(to_woard);
+				
 				rtn=to_board.cloneBoardFrom(from_woard);//autorefresh (sometimes)
 			}
 			
@@ -2167,17 +2169,16 @@
 					}
 				}
 				
-				new_board=selectBoard(board_name);
-				
-				board_created=boardExists(new_board);
-				
-				if(!board_created){
+				if(!boardExists(board_name)){
 					no_errors=false;
 					_consoleLog("Error[initBoard]: \""+board_name+"\" board selection failure");
 				}
 			}
 			
 			if(no_errors){
+				board_created=true;
+				new_board=selectBoard(board_name);
+				
 				new_board.isHidden=true;
 				
 				new_board.currentMove=0;/*NO move below readFen()*/
@@ -2346,6 +2347,8 @@
 			var i, j, len, len2, board, board_created, board_keys, current_key, invalid_key, no_errors, rtn_pre, rtn;
 			
 			rtn=null;
+			board_created=false;
+			no_errors=true;
 			
 			board=initBoard({
 				boardName : "board_fenGet",
@@ -2354,17 +2357,16 @@
 				validOrBreak : true
 			});
 			
-			board_created=boardExists(board);
-			no_errors=true;
-			
 			//if(no_errors){
-				if(!board_created){
+				if(!boardExists(board)){
 					no_errors=false;
 					_consoleLog("Error[fenGet]: invalid FEN");
 				}
 			//}
 			
 			if(no_errors){
+				board_created=true;
+				
 				board_keys=[];
 				
 				if(_isArray(props)){
