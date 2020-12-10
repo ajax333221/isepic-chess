@@ -4,6 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
+//cleanSan
 //minimumMutableBoard
 
 describe("Ic utility methods", () => {

@@ -14,6 +14,7 @@ Ic.setSilentMode(false);
 //setCurrentMove (return value)
 //toggleActiveNonActive (return value)
 //(?) playMove
+//(?) validSanMove
 //(?) getPrePgnMoveInfo, o mejor todo en ic init board?
 //
 //(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())

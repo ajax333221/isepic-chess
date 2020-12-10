@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.6.0";
+		var _VERSION="4.6.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -110,18 +110,7 @@
 				last_index=0;
 			}
 			
-			p=str.slice(last_index);
-			p=p.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
-			
-			while(p!=(p=p.replace(/\{[^{}]*\}/g, "")));
-			while(p!=(p=p.replace(/\([^()]*\)/g, "")));
-			
-			p=p.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
-			p=p.replace(/[\(\{+#!?]/g, "");
-			p=p.replace(/\s*\-\s*/g, "-");
-			p=p.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
-			p=p.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
-			p=(" "+_trimSpaces(p));
+			p=(" "+_cleanSan(str.slice(last_index)));
 			
 			move_list=[];
 			last_index=-1;
@@ -246,6 +235,23 @@
 		
 		function _castlingChars(num){
 			return ["", "k", "q", "kq"][_toInt(num, 0, 3)];
+		}
+		
+		function _cleanSan(rtn){
+			rtn=((typeof rtn)==="string" ? rtn : "");
+			
+			rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
+			
+			while(rtn!=(rtn=rtn.replace(/\{[^{}]*\}/g, "")));
+			while(rtn!=(rtn=rtn.replace(/\([^()]*\)/g, "")));
+			
+			rtn=rtn.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
+			rtn=rtn.replace(/[\(\{+#!?]/g, "");
+			rtn=rtn.replace(/\s*\-\s*/g, "-");
+			rtn=rtn.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
+			rtn=rtn.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
+			
+			return _trimSpaces(rtn);
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
@@ -1399,6 +1405,86 @@
 			return rtn;
 		}
 		
+		function _validSanMove(san){
+			var i, j, k, m, len, len2, that, temp, current_square, validated_move, promote_to, parsed_piece_val, parse_exec, pgn_obj, no_errors, rtn;
+			
+			that=this;
+			
+			rtn=null;
+			no_errors=true;
+			
+			//if(no_errors){
+				validated_move=null;
+				promote_to=that.promoteTo;
+				
+				parsed_piece_val=0;
+				
+				san=_cleanSan(san);/*2020 si siempre clean, y esta fn solo interna, mejor no cleanx2*/
+				parse_exec=/^[NBRQK]/.exec(san);
+				
+				if(parse_exec){//knight, bishop, rook, queen, non-castling king
+					parsed_piece_val=toVal(parse_exec[0]);
+				}else if(san==="O-O" || san==="O-O-O"){//castling king
+					parsed_piece_val=6;
+				}else if(/^[a-h]/.exec(san)){//pawn move
+					parsed_piece_val=1;
+					
+					parse_exec=/([^=]+)=([NBRQ]).*$/.exec(san);
+					
+					if(parse_exec){
+						san=parse_exec[1];
+						promote_to=parse_exec[2];
+					}
+				}
+				
+				if(!parsed_piece_val){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				outer:
+				for(i=0; i<8; i++){//0...7
+					for(j=0; j<8; j++){//0...7
+						current_square=that.getSquare([i, j]);
+						
+						if(parsed_piece_val!==current_square.absVal){
+							continue;
+						}
+						
+						temp=that.legalMoves(current_square, {returnType : "fromToSquares"});
+						
+						for(k=0, len=temp.length; k<len; k++){//0<len
+							pgn_obj=that.getPrePgnMoveInfo(temp[k]);
+							
+							if(!pgn_obj.canMove){
+								continue;
+							}
+							
+							for(m=0, len2=pgn_obj.withOverdisambiguated.length; m<len2; m++){//0<len2
+								if(san!==pgn_obj.withOverdisambiguated[m]){
+									continue;
+								}
+								
+								validated_move=temp[k];
+								break outer;
+							}
+						}
+					}
+				}
+				
+				if(!validated_move){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				rtn=[validated_move, toAbsVal(promote_to)];
+			}
+			
+			return rtn;
+		}
+		
 		function _getPrePgnMoveInfo(mov){
 			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, king_castled, pgn_move, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, can_move, rtn;
 			
@@ -2010,7 +2096,7 @@
 		}
 		
 		function initBoard(p){//{boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, validOrBreak}
-			var i, j, k, m, n, len, len2, len3, temp, temp2, board_created, pgn_obj, parse_exec, target, board_name, current_pos, current_bos, current_square, fen_was_valid, postfen_was_valid, new_board, parsed_piece_val, everything_parsed, move_was_played, no_errors, rtn;
+			var i, j, len, temp, board_created, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
 			
 			rtn=null;
 			p=(_isObject(p) ? p : {});
@@ -2066,6 +2152,7 @@
 						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
+						validSanMove : _validSanMove,
 						getPrePgnMoveInfo : _getPrePgnMoveInfo,
 						playMove : _playMove,
 						navFirst : _navFirst,
@@ -2214,64 +2301,17 @@
 					everything_parsed=true;
 					
 					for(i=0, len=p.pgn[1].length; i<len; i++){//0<len
-						temp=p.pgn[1][i];
-						parsed_piece_val=0;
+						temp=new_board.validSanMove(p.pgn[1][i]);
 						
-						parse_exec=/^[NBRQK]/.exec(temp);
-						
-						if(parse_exec){//knight, bishop, rook, queen, non-castling king
-							parsed_piece_val=toVal(parse_exec[0]);
-						}else if(temp==="O-O" || temp==="O-O-O"){//castling king
-							parsed_piece_val=6;
-						}else if(/^[a-h]/.exec(temp)){//pawn move
-							parsed_piece_val=1;
-							
-							parse_exec=/([^=]+)=([NBRQ]).*$/.exec(temp);
-							
-							if(parse_exec){
-								temp=parse_exec[1];
-								new_board.setPromoteTo(parse_exec[2]);
-							}
-						}
-						
-						if(!parsed_piece_val){
+						if(!temp){
 							everything_parsed=false;
 							break;
 						}
 						
-						move_was_played=false;
+						new_board.setPromoteTo(temp[1]);
 						
-						outer:
-						for(j=0; j<8; j++){//0...7
-							for(k=0; k<8; k++){//0...7
-								current_square=new_board.getSquare([j, k]);
-								
-								if(parsed_piece_val!==current_square.absVal){
-									continue;
-								}
-								
-								temp2=new_board.legalMoves(current_square, {returnType : "fromToSquares"});
-								
-								for(m=0, len2=temp2.length; m<len2; m++){//0<len2
-									pgn_obj=new_board.getPrePgnMoveInfo(temp2[m]);
-									
-									if(!pgn_obj.canMove){
-										continue;
-									}
-									
-									for(n=0, len3=pgn_obj.withOverdisambiguated.length; n<len3; n++){//0<len3
-										if(temp!==pgn_obj.withOverdisambiguated[n]){
-											continue;
-										}
-										
-										move_was_played=new_board.playMove(temp2[m]);
-										break outer;
-									}
-								}
-							}
-						}
-						
-						if(!move_was_played){
+						/*2020 playMove pasarle el san directo*/
+						if(!new_board.playMove(temp[0])){
 							everything_parsed=false;
 							break;
 						}
@@ -2470,6 +2510,7 @@
 				toInt : _toInt,
 				hashCode : _hashCode,
 				castlingChars : _castlingChars,
+				cleanSan : _cleanSan,
 				cloneBoardObjs : _cloneBoardObjs,
 				basicFenTest : _basicFenTest,
 				minimumMutableBoard : _minimumMutableBoard
