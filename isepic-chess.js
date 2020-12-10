@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.5.1";
+		var _VERSION="4.6.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -1246,8 +1246,8 @@
 			final_square=that.getSquare(mov[1]);
 			
 			if(final_square!==null){
-				/*2020 p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");*/
-				/*2020 p.delimiter=p.delimiter.charAt(0);*/
+				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
+				p.delimiter=p.delimiter.charAt(0);
 				
 				moves=that.legalMoves(mov[0]);
 				
@@ -1295,6 +1295,10 @@
 			temp="";
 			
 			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
+				if(_MUTABLE_KEYS[i]==="selectedBos"){
+					continue;
+				}
+				
 				temp+=JSON.stringify(that[_MUTABLE_KEYS[i]]);
 			}
 			
@@ -1566,15 +1570,19 @@
 			return rtn;
 		}
 		
-		function _moveCaller(mov){
+		function _playMove(mov, p){
 			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, cached_board, no_errors, rtn_can_move;
 			
 			that=this;
 			
 			rtn_can_move=false;
+			p=(_isObject(p) ? p : {});
 			no_errors=true;
 			
 			//if(no_errors){
+				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
+				p.delimiter=p.delimiter.charAt(0);
+				
 				cached_board=_minimumMutableBoard();
 				_cloneBoardObjs(cached_board, that);
 				
@@ -2059,7 +2067,7 @@
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
 						getPrePgnMoveInfo : _getPrePgnMoveInfo,
-						moveCaller : _moveCaller,
+						playMove : _playMove,
 						navFirst : _navFirst,
 						navPrevious : _navPrevious,
 						navNext : _navNext,
@@ -2181,9 +2189,9 @@
 				
 				new_board.isHidden=true;
 				
-				new_board.currentMove=0;/*NO move below readFen()*/
-				new_board.readFen(fen_was_valid ? p.fen : _DEFAULT_FEN);
-				
+				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO convertir en fn*/
+				new_board.currentMove=0;
+				new_board.readFen(temp);
 				new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 				
 				postfen_was_valid=!new_board.refinedFenTest();
@@ -2196,11 +2204,9 @@
 			
 			if(no_errors){
 				if(!postfen_was_valid){
-					new_board.isHidden=true;
-					
-					new_board.currentMove=0;/*NO move below readFen()*/
-					new_board.readFen(_DEFAULT_FEN);
-					
+					temp=_DEFAULT_FEN;/*NO convertir en fn*/
+					new_board.currentMove=0;
+					new_board.readFen(temp);
 					new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
 				}
 				
@@ -2258,7 +2264,7 @@
 											continue;
 										}
 										
-										move_was_played=new_board.moveCaller(temp2[m]);
+										move_was_played=new_board.playMove(temp2[m]);
 										break outer;
 									}
 								}
@@ -2285,7 +2291,7 @@
 				
 				new_board.isRotated=p.isRotated;
 				new_board.isUnlabeled=p.isUnlabeled;
-				new_board.setPromoteTo(p.promoteTo);/*NO move below b.isHidden=p.isHidden*/
+				new_board.setPromoteTo(p.promoteTo);
 				
 				new_board.isHidden=p.isHidden;
 				

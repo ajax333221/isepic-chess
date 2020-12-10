@@ -13,7 +13,7 @@ Ic.setSilentMode(false);
 //setPromoteTo (return value)
 //setCurrentMove (return value)
 //toggleActiveNonActive (return value)
-//(?) moveCaller, se renombrara a playMove, mm
+//(?) playMove
 //(?) getPrePgnMoveInfo, o mejor todo en ic init board?
 //
 //(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())
@@ -42,7 +42,7 @@ describe("Board methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(1819903313);
+			expect(board_obj.boardHash()).toBe(-930413558);
 		});
 		
 		test("other position and board name not used in the hash", () => {
@@ -67,7 +67,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(1244851141);
+			expect(hash_a).toBe(2123953790);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});
@@ -98,11 +98,11 @@ describe("Board methods", () => {
 			expect(board_a.isEqualBoard(board_a)).toBe(true);
 			expect(board_b.isEqualBoard(board_b)).toBe(true);
 			
-			board_a.moveCaller(["a2", "a4"]);
+			board_a.playMove(["a2", "a4"]);
 			expect(board_a.isEqualBoard(board_b)).toBe(false);
 			expect(board_b.isEqualBoard(board_a)).toBe(false);
 			
-			board_b.moveCaller(["a2", "a4"]);
+			board_b.playMove(["a2", "a4"]);
 			expect(board_a.isEqualBoard(board_b)).toBe(true);
 			expect(board_b.isEqualBoard(board_a)).toBe(true);
 		});
