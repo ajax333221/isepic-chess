@@ -6,6 +6,7 @@ Ic.setSilentMode(false);
 //
 //cleanSan
 //minimumMutableBoard
+//isMove
 
 describe("Ic utility methods", () => {
 	test("Ic.utilityMisc.consoleLog()", () => {

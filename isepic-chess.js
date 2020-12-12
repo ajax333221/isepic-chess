@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.6.3";
+		var _VERSION="4.6.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -179,6 +179,10 @@
 		
 		function _isBoard(obj){
 			return (_isObject(obj) && (typeof obj.boardName)==="string");
+		}
+		
+		function _isMove(obj){
+			return (_isObject(obj) && (typeof obj.FromBos)==="string" && (typeof obj.ToBos)==="string");
 		}
 		
 		function _trimSpaces(str){
@@ -1400,7 +1404,7 @@
 		}
 		
 		function _sanWrapmove(mov){
-			var i, j, k, m, len, len2, that, temp, current_square, validated_move, promote_to, parsed_piece_val, parse_exec, pgn_obj, no_errors, rtn;
+			var i, j, k, m, len, len2, that, temp, current_square, validated_move, parsed_promote, parsed_piece_val, parse_exec, pgn_obj, no_errors, rtn;
 			
 			that=this;
 			
@@ -1409,7 +1413,7 @@
 			
 			//if(no_errors){
 				validated_move=null;
-				promote_to="";
+				parsed_promote="";
 				
 				if((typeof mov)!=="string"){
 					no_errors=false;
@@ -1433,7 +1437,7 @@
 					
 					if(parse_exec){
 						mov=parse_exec[1];
-						promote_to=parse_exec[2];
+						parsed_promote=parse_exec[2];
 					}
 				}
 				
@@ -1479,14 +1483,14 @@
 			}
 			
 			if(no_errors){
-				rtn=[validated_move, promote_to];
+				rtn=[validated_move, parsed_promote];
 			}
 			
 			return rtn;
 		}
 		
 		function _joinedWrapmove(mov, p){//{delimiter}
-			var that, temp, initial_square, final_square, validated_move, no_errors, rtn;
+			var that, temp, initial_square, final_square, no_errors, rtn;
 			
 			that=this;
 			
@@ -1497,8 +1501,6 @@
 			//if(no_errors){
 				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
 				p.delimiter=p.delimiter.charAt(0);
-				
-				validated_move=null;
 				
 				if((typeof mov)!=="string"){
 					no_errors=false;
@@ -1532,16 +1534,14 @@
 			}
 			
 			if(no_errors){
-				validated_move=[initial_square, final_square];
-				
-				rtn=validated_move;
+				rtn=[initial_square, final_square];
 			}
 			
 			return rtn;
 		}
 		
 		function _fromToWrapmove(mov){
-			var that, initial_square, final_square, validated_move, no_errors, rtn;
+			var that, initial_square, final_square, no_errors, rtn;
 			
 			that=this;
 			
@@ -1549,8 +1549,6 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				validated_move=null;
-				
 				if(!_isArray(mov) || mov.length!==2){
 					no_errors=false;
 				}
@@ -1573,9 +1571,30 @@
 			}
 			
 			if(no_errors){
-				validated_move=[initial_square, final_square];
+				rtn=[initial_square, final_square];
+			}
+			
+			return rtn;
+		}
+		
+		function _moveWrapmove(mov){
+			var that, calculated_promote, no_errors, rtn;
+			
+			that=this;
+			
+			rtn=null;
+			no_errors=true;
+			
+			//if(no_errors){
+				if(!_isMove(mov)){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				calculated_promote=(mov.InitialVal!==mov.FinalVal ? mov.FinalVal : 0);
 				
-				rtn=validated_move;
+				rtn=[[mov.FromBos, mov.ToBos], calculated_promote];
 			}
 			
 			return rtn;
@@ -1607,6 +1626,16 @@
 			
 			if(rtn===null){
 				rtn=that.fromToWrapmove(mov);
+			}
+			
+			if(rtn===null){
+				temp=that.moveWrapmove(mov);
+				
+				if(temp){
+					bubbling_promoted_to=toAbsVal(temp[1]);
+					
+					rtn=temp[0];
+				}
 			}
 			
 			if(rtn){
@@ -2297,6 +2326,7 @@
 						sanWrapmove : _sanWrapmove,
 						joinedWrapmove : _joinedWrapmove,
 						fromToWrapmove : _fromToWrapmove,
+						moveWrapmove : _moveWrapmove,
 						convertToWrapmove : _convertToWrapmove,
 						getPrePgnMoveInfo : _getPrePgnMoveInfo,
 						playMove : _playMove,
@@ -2638,6 +2668,7 @@
 				isArray : _isArray,
 				isSquare : _isSquare,
 				isBoard : _isBoard,
+				isMove : _isMove,
 				trimSpaces : _trimSpaces,
 				formatName : _formatName,
 				strContains : _strContains,

@@ -17,6 +17,7 @@ Ic.setSilentMode(false);
 //(?) ...sanWrapmove
 //(?) ...joinedWrapmove
 //(?) ...fromToWrapmove
+//(?) ...moveWrapmove
 //(?) convertToWrapmove = este quizas si
 //(?) getPrePgnMoveInfo, o mejor todo en ic init board?
 //
