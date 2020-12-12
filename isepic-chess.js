@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.6.2";
+		var _VERSION="4.6.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS=Object.create(null);
@@ -451,7 +451,7 @@
 		
 		//---------------- board
 		
-		function _getSquare(qos, p){
+		function _getSquare(qos, p){//{rankShift, fileShift, isUnreferenced}
 			var that, temp_pos, pre_validated_pos, rtn;
 			
 			that=this;
@@ -1048,7 +1048,7 @@
 			return rtn;
 		}
 		
-		function _legalMovesHelper(target_qos, p){
+		function _legalMovesHelper(target_qos, p){//{returnType (!= san), squareType, delimiter}
 			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
@@ -1215,7 +1215,7 @@
 			return rtn;
 		}
 		
-		function _legalMoves(target_qos, p){
+		function _legalMoves(target_qos, p){//{returnType, squareType, delimiter}
 			var that, convert_to_san;
 			
 			that=this;
@@ -1234,14 +1234,12 @@
 			
 			rtn=[];
 			
-			/*2020 that.legalMovesHelper(target_qos, {returnType : "san"});*/
-			
-			/*(playMove+isMockMove) & leer el .PGNmove attr*/
+			/*2020 (playMove+isMockMove) & leer el .PGNmove attr*/
 			
 			return rtn;
 		}
 		
-		function _isLegalMove(mov, p){
+		function _isLegalMove(mov, p){//{delimiter}
 			var that, temp, moves, rtn;
 			
 			that=this;
@@ -1250,7 +1248,7 @@
 			
 			temp=that.convertToWrapmove(mov, p);
 			
-			if(temp){
+			if(temp!==null){
 				moves=that.legalMoves(temp[0][0]);
 				
 				if(moves.length){
@@ -1401,7 +1399,7 @@
 			return rtn;
 		}
 		
-		function _sanWrapmove(mov, p){
+		function _sanWrapmove(mov){
 			var i, j, k, m, len, len2, that, temp, current_square, validated_move, promote_to, parsed_piece_val, parse_exec, pgn_obj, no_errors, rtn;
 			
 			that=this;
@@ -1411,7 +1409,7 @@
 			
 			//if(no_errors){
 				validated_move=null;
-				promote_to=that.promoteTo;
+				promote_to="";
 				
 				if((typeof mov)!=="string"){
 					no_errors=false;
@@ -1421,7 +1419,7 @@
 			if(no_errors){
 				parsed_piece_val=0;
 				
-				mov=_cleanSan(mov);/*2020 si siempre clean, y esta fn solo interna, mejor no cleanx2 ???*/
+				mov=_cleanSan(mov);
 				parse_exec=/^[NBRQK]/.exec(mov);
 				
 				if(parse_exec){//knight, bishop, rook, queen, non-castling king
@@ -1457,7 +1455,7 @@
 						temp=that.legalMoves(current_square, {returnType : "fromToSquares"});
 						
 						for(k=0, len=temp.length; k<len; k++){//0<len
-							pgn_obj=that.getPrePgnMoveInfo(temp[k]);
+							pgn_obj=that.getPrePgnMoveInfo(temp[k]);//no importa promoteTo
 							
 							if(!pgn_obj.canMove){
 								continue;
@@ -1475,29 +1473,32 @@
 					}
 				}
 				
-				if(!validated_move){
+				if(validated_move===null){
 					no_errors=false;
 				}
 			}
 			
 			if(no_errors){
-				rtn=[validated_move, toAbsVal(promote_to)];/*2020 p.promoteTo ow?*/
+				rtn=[validated_move, promote_to];
 			}
 			
 			return rtn;
 		}
 		
-		function _joinedWrapmove(mov, p){
-			var that, temp, initial_square, final_square, validated_move, promote_to, no_errors, rtn;
+		function _joinedWrapmove(mov, p){//{delimiter}
+			var that, temp, initial_square, final_square, validated_move, no_errors, rtn;
 			
 			that=this;
 			
 			rtn=null;
+			p=(_isObject(p) ? p : {});
 			no_errors=true;
 			
 			//if(no_errors){
+				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
+				p.delimiter=p.delimiter.charAt(0);
+				
 				validated_move=null;
-				promote_to=that.promoteTo;
 				
 				if((typeof mov)!=="string"){
 					no_errors=false;
@@ -1507,7 +1508,7 @@
 			if(no_errors){
 				mov=_trimSpaces(mov);
 				
-				if(mov.length!==5 || _occurrences(mov, p.delimiter)!==1){
+				if(mov.length!==5 || mov.charAt(2)!==p.delimiter){
 					no_errors=false;
 				}
 			}
@@ -1533,14 +1534,14 @@
 			if(no_errors){
 				validated_move=[initial_square, final_square];
 				
-				rtn=[validated_move, toAbsVal(promote_to)];/*2020 p.promoteTo ow?*/
+				rtn=validated_move;
 			}
 			
 			return rtn;
 		}
 		
-		function _fromToWrapmove(mov, p){
-			var that, initial_square, final_square, validated_move, promote_to, no_errors, rtn;
+		function _fromToWrapmove(mov){
+			var that, initial_square, final_square, validated_move, no_errors, rtn;
 			
 			that=this;
 			
@@ -1549,7 +1550,6 @@
 			
 			//if(no_errors){
 				validated_move=null;
-				promote_to=that.promoteTo;
 				
 				if(!_isArray(mov) || mov.length!==2){
 					no_errors=false;
@@ -1575,41 +1575,51 @@
 			if(no_errors){
 				validated_move=[initial_square, final_square];
 				
-				rtn=[validated_move, toAbsVal(promote_to)];/*2020 p.promoteTo ow?*/
+				rtn=validated_move;
 			}
 			
 			return rtn;
 		}
 		
-		function _convertToWrapmove(mov, p){
-			var that, rtn;
+		function _convertToWrapmove(mov, p){//{promoteTo, delimiter}
+			var that, temp, bubbling_promoted_to, rtn;
 			
 			that=this;
 			
 			rtn=null;
-			
 			p=(_isObject(p) ? p : {});
 			
-			p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
-			p.delimiter=p.delimiter.charAt(0);
-			
-			//if(!rtn){
+			//if(rtn===null){
+				bubbling_promoted_to=0;
+				
 				rtn=that.joinedWrapmove(mov, p);
 			//}
 			
-			if(!rtn){
-				rtn=that.sanWrapmove(mov, p);//first try b.joinedWrapmove(), better performance
+			if(rtn===null){
+				temp=that.sanWrapmove(mov);//first try b.joinedWrapmove(), better performance
+				
+				if(temp){
+					bubbling_promoted_to=toAbsVal(temp[1]);
+					
+					rtn=temp[0];
+				}
 			}
 			
-			if(!rtn){
-				rtn=that.fromToWrapmove(mov, p);
+			if(rtn===null){
+				rtn=that.fromToWrapmove(mov);
+			}
+			
+			if(rtn){
+				temp=(toAbsVal(p.promoteTo) || bubbling_promoted_to || toAbsVal(that.promoteTo) || _QUEEN);
+				
+				rtn=[rtn, _toInt(temp, _KNIGHT, _QUEEN)];
 			}
 			
 			return rtn;
 		}
 		
-		function _getPrePgnMoveInfo(mov){
-			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, king_castled, pgn_move, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, can_move, rtn;
+		function _getPrePgnMoveInfo(mov, p){//{promoteTo, delimiter}
+			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, pgn_move, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, no_errors, rtn;
 			
 			that=this;
 			
@@ -1618,18 +1628,40 @@
 			}
 			
 			rtn=Object.create(null);
+			no_errors=true;
 			
-			initial_cached_square=that.getSquare(mov[0], {
-				isUnreferenced : true
-			});
+			//if(no_errors){
+				rtn.canMove=false;
+				
+				temp=that.convertToWrapmove(mov, p);
+				
+				if(temp===null){
+					no_errors=false;
+				}
+			//}
 			
-			final_cached_square=that.getSquare(mov[1], {
-				isUnreferenced : true
-			});
+			if(no_errors){
+				bubbling_promoted_to=temp[1];
+				
+				initial_cached_square=that.getSquare(temp[0][0], {
+					isUnreferenced : true
+				});
+				
+				final_cached_square=that.getSquare(temp[0][1], {
+					isUnreferenced : true
+				});
+				
+				rtn.initialCachedSquare=initial_cached_square;
+				rtn.finalCachedSquare=final_cached_square;
+				
+				if(!that.isLegalMove(temp[0])){
+					no_errors=false;
+				}
+			}
 			
-			can_move=that.isLegalMove([initial_cached_square, final_cached_square]);
-			
-			if(can_move){
+			if(no_errors){
+				rtn.canMove=true;
+				
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
 				
@@ -1665,7 +1697,7 @@
 					}else if(sameSquare(final_cached_square, that.enPassantBos)){//enpassant capture
 						rtn.enPassantCaptureAtRankShift=non_active_side.singlePawnRankShift;
 					}else if(final_cached_square.rankPos===active_side.lastRankPos){//promotion
-						promoted_val=(that.promoteTo*active_side.sign);
+						promoted_val=(bubbling_promoted_to*active_side.sign);
 					}
 				}
 				
@@ -1772,14 +1804,10 @@
 				rtn.withOverdisambiguated=with_overdisambiguated;
 			}
 			
-			rtn.initialCachedSquare=initial_cached_square;
-			rtn.finalCachedSquare=final_cached_square;
-			rtn.canMove=can_move;
-			
 			return rtn;
 		}
 		
-		function _playMove(mov, p){
+		function _playMove(mov, p){//{(x)isMockMove, promoteTo, delimiter}
 			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, cached_board, no_errors, rtn_can_move;
 			
 			that=this;
@@ -1789,13 +1817,9 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
-				p.delimiter=p.delimiter.charAt(0);
+				/*2020 p.isMockMove;*/
 				
-				cached_board=_minimumMutableBoard();
-				_cloneBoardObjs(cached_board, that);
-				
-				pgn_obj=that.getPrePgnMoveInfo(mov);
+				pgn_obj=that.getPrePgnMoveInfo(mov, p);
 				
 				if(!pgn_obj.canMove){
 					no_errors=false;
@@ -1803,15 +1827,10 @@
 			//}
 			
 			if(no_errors){
-				if(true){
-					//...
-					
-					//if! then no_errors = false
-				}
-			}
-			
-			if(no_errors){
 				rtn_can_move=true;
+				
+				cached_board=_minimumMutableBoard();
+				_cloneBoardObjs(cached_board, that);
 				
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
@@ -2427,17 +2446,7 @@
 					everything_parsed=true;
 					
 					for(i=0, len=p.pgn[1].length; i<len; i++){//0<len
-						temp=new_board.convertToWrapmove(p.pgn[1][i]);
-						
-						if(!temp){
-							everything_parsed=false;
-							break;
-						}
-						
-						new_board.setPromoteTo(temp[1]);
-						
-						/*2020 playMove pasarle el san directo*/
-						if(!new_board.playMove(temp[0])){
+						if(!new_board.playMove(p.pgn[1][i])){
 							everything_parsed=false;
 							break;
 						}

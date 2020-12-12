@@ -1062,7 +1062,7 @@ Rb7 24. Rd3 Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			
 			expect(Ic.fenApply("0invalidfen0", "legalSanMoves", ["a2"]).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("0invalidfen0", "isLegalMove", [["a2", "a3"]])).toBe(false);
+			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2-a3"])).toBe(false);
 			
 			expect(Ic.fenApply("0invalidfen0", "isLegalFen")).toBe(false);
 			

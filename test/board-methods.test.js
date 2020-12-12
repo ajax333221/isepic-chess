@@ -102,11 +102,11 @@ describe("Board methods", () => {
 			expect(board_a.isEqualBoard(board_a)).toBe(true);
 			expect(board_b.isEqualBoard(board_b)).toBe(true);
 			
-			board_a.playMove(["a2", "a4"]);
+			board_a.playMove("a2-a4");
 			expect(board_a.isEqualBoard(board_b)).toBe(false);
 			expect(board_b.isEqualBoard(board_a)).toBe(false);
 			
-			board_b.playMove(["a2", "a4"]);
+			board_b.playMove("a2-a4");
 			expect(board_a.isEqualBoard(board_b)).toBe(true);
 			expect(board_b.isEqualBoard(board_a)).toBe(true);
 		});
@@ -139,6 +139,14 @@ describe("Board methods", () => {
 	});
 	
 	test("b.isLegalMove()", () => {
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["Rxa2"])).toBe(true);
+		
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["Ra2"])).toBe(false);
+		
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["c2-a2"])).toBe(true);
+		
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", ["a2-c2"])).toBe(false);
+		
 		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", [["c2", "a2"]])).toBe(true);
 		
 		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "isLegalMove", [["a2", "c2"]])).toBe(false);
