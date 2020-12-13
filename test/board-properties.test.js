@@ -8,9 +8,10 @@ Ic.setSilentMode(false);
 //moveList (no con fenGet) en misc hay PGNmove y PGNend, buscar un ejemplo completo (e.g. promotion)
 //currentMove (no con fenGet) test de movelist split cuando currentMove no esta al final
 //
+//(mm) isHidden (N/A)(en ic solo afecta el board hash + solo cambia por ui)
+//(mm) isUnlabeled (N/A)(solo cambia por ui) edit: ya no afecta board hash
+//
 //(x) isRotated (completado)(b.ascii() en board-methods.test.js + hasta se le hizo test por board hash)
-//(x) isHidden (N/A)(en ic solo afecta el board hash + solo cambia por ui)
-//(x) isUnlabeled (N/A)(en ic solo afecta el board hash + solo cambia por ui)
 //(x) selectedBos (N/A)(siempre empty_string + solo cambia por ui)
 //(x) inDraw = (N/A)(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial)
 

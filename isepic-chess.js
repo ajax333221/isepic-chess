@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.7.0";
+		var _VERSION="4.7.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1012,7 +1012,7 @@
 					continue;
 				}
 				
-				is_ally_piece=(current_square.sign===active_side.sign);/*NO move above empty square check*/
+				is_ally_piece=(current_square.sign===active_side.sign);
 				
 				if(op===1 && !is_ally_piece){
 					if(allow_capture && !current_square.isKing){
@@ -1399,7 +1399,7 @@
 			if(no_errors){
 				rtn=true;
 				
-				_cloneBoardObjs(that, from_board);/*2020 rtn=x*/
+				_cloneBoardObjs(that, from_board);
 				
 				that.refreshBoard(0);//autorefresh
 			}
@@ -1434,7 +1434,7 @@
 			if(no_errors){
 				rtn=true;
 				
-				_cloneBoardObjs(to_board, that);/*2020 rtn=x*/
+				_cloneBoardObjs(to_board, that);
 				
 				to_board.refreshBoard(0);//autorefresh
 			}
@@ -1498,7 +1498,7 @@
 						temp=that.legalMoves(current_square, {returnType : "fromToSquares"});
 						
 						for(k=0, len=temp.length; k<len; k++){//0<len
-							pgn_obj=that.getPrePgnMoveInfo(temp[k]);//no importa promoteTo
+							pgn_obj=that.getPrePgnMoveInfo(temp[k]);/*NO pass unnecessary promoteTo*/
 							
 							if(!pgn_obj.canMove){
 								continue;
@@ -1654,7 +1654,7 @@
 			//}
 			
 			if(rtn===null){
-				temp=that.sanWrapmoveHelper(mov);//first try b.joinedWrapmoveHelper(), better performance
+				temp=that.sanWrapmoveHelper(mov);//always below b.joinedWrapmoveHelper() for better performance
 				
 				if(temp){
 					bubbling_promoted_to=toAbsVal(temp[1]);
@@ -1742,7 +1742,6 @@
 					if(active_side.castling){
 						rtn.activeSideCastlingZero=true;
 						
-						/*2020 usar sameSquare() con file bos active_side pero aun no tiene*/
 						if(final_cached_square.filePos===6){//short
 							king_castled=_SHORT_CASTLE;
 							
@@ -1811,7 +1810,7 @@
 							temp3="";
 							
 							for(i=0; i<len; i++){//0<len
-								//no puede haber ajustes de king o pawn, sin problemas en legal moves
+								//it's safe to calc legal moves here since we are not dealing with a pawn or king
 								if(!sameSquare(temp2[i], initial_cached_square) && that.isLegalMove([temp2[i], final_cached_square])){
 									temp3+=toBos(temp2[i]);
 								}
@@ -1986,7 +1985,7 @@
 				rtn_move_obj={Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled};
 				
 				if(that.currentMove!==that.moveList.length){
-					that.moveList=that.moveList.slice(0, that.currentMove);/*start variation instead of overwrite*/
+					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
 				that.moveList.push({Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled});/*NO push  referenced rtn_move_obj*/
@@ -2262,7 +2261,7 @@
 				
 				delete _BOARDS[del_board_name_cache];
 				
-				/*2020 autorefresh when removing current board? EDIT: can't easily select a non-hidden board*/
+				/*2020 autorefresh when removing current board. EDIT: can't easily select a non-hidden board*/
 			}
 			
 			return rtn;
@@ -2497,7 +2496,7 @@
 				
 				new_board.isHidden=true;
 				
-				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO convertir en fn*/
+				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
 				new_board.currentMove=0;
 				new_board.readFen(temp);
 				new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
@@ -2512,7 +2511,7 @@
 			
 			if(no_errors){
 				if(!postfen_was_valid){
-					temp=_DEFAULT_FEN;/*NO convertir en fn*/
+					temp=_DEFAULT_FEN;/*NO refactor to a function*/
 					new_board.currentMove=0;
 					new_board.readFen(temp);
 					new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
