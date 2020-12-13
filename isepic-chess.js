@@ -4,10 +4,10 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.6.4";
+		var _VERSION="4.7.0";
 		
 		var _SILENT_MODE=true;
-		var _BOARDS=Object.create(null);
+		var _BOARDS={};
 		
 		var _EMPTY_SQR=0;
 		var _PAWN=1;
@@ -145,6 +145,39 @@
 				}
 				
 				rtn=[meta_tags, move_list, game_result];
+			}
+			
+			return rtn;
+		}
+		
+		function _playMoveApplyHelper(fen, args){
+			var board, board_created, keep_going, rtn;
+			
+			rtn=null;
+			board_created=false;
+			keep_going=true;
+			
+			//if(keep_going){
+				board=initBoard({
+					boardName : "board_playMoveApplyHelper",
+					fen : fen,
+					isHidden : true,
+					validOrBreak : true
+				});
+				
+				if(!boardExists(board)){
+					keep_going=false;
+				}
+			//}
+			
+			if(keep_going){
+				board_created=true;
+				
+				rtn=_playMove.apply(board, args);
+			}
+			
+			if(board_created){
+				removeBoard(board);
 			}
 			
 			return rtn;
@@ -430,29 +463,6 @@
 			return error_msg;
 		}
 		
-		function _minimumMutableBoard(){
-			var i, j, len, hueco_board;
-			
-			hueco_board={};
-			
-			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
-				hueco_board[_MUTABLE_KEYS[i]]=null;
-			}
-			
-			hueco_board.w={};
-			hueco_board.b={};
-			
-			hueco_board.squares={};
-			
-			for(i=0; i<8; i++){//0...7
-				for(j=0; j<8; j++){//0...7
-					hueco_board.squares[toBos([i, j])]={};
-				}
-			}
-			
-			return hueco_board;
-		}
-		
 		//---------------- board
 		
 		function _getSquare(qos, p){//{rankShift, fileShift, isUnreferenced}
@@ -466,7 +476,7 @@
 				rtn_square=my_square;
 				
 				if(is_unreferenced){
-					temp=Object.create(null);
+					temp={};
 					
 					temp.pos=toPos(my_square.pos);//unreference
 					temp.bos=my_square.bos;
@@ -1232,13 +1242,42 @@
 		}
 		
 		function _legalSanMoves(target_qos){
-			var that, rtn;
+			var i, len, that, temp, legal_moves, legal_san_moves, no_errors, rtn;
 			
 			that=this;
 			
 			rtn=[];
+			no_errors=true;
 			
-			/*2020 (playMove+isMockMove) & leer el .PGNmove attr*/
+			//if(no_errors){
+				legal_moves=that.legalMoves(target_qos, {returnType : "fromToSquares"});
+				
+				if(!legal_moves.length){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				legal_san_moves=[];
+				
+				for(i=0, len=legal_moves.length; i<len; i++){//0<len
+					temp=that.playMove(legal_moves[i], {isMockMove : true});
+					
+					if(temp===null){
+						break;
+					}
+					
+					legal_san_moves.push(temp.PGNmove);
+				}
+				
+				if(legal_san_moves.length!==legal_moves.length){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				rtn=legal_san_moves;
+			}
 			
 			return rtn;
 		}
@@ -1403,7 +1442,7 @@
 			return rtn;
 		}
 		
-		function _sanWrapmove(mov){
+		function _sanWrapmoveHelper(mov){
 			var i, j, k, m, len, len2, that, temp, current_square, validated_move, parsed_promote, parsed_piece_val, parse_exec, pgn_obj, no_errors, rtn;
 			
 			that=this;
@@ -1489,7 +1528,7 @@
 			return rtn;
 		}
 		
-		function _joinedWrapmove(mov, p){//{delimiter}
+		function _joinedWrapmoveHelper(mov, p){//{delimiter}
 			var that, temp, initial_square, final_square, no_errors, rtn;
 			
 			that=this;
@@ -1540,7 +1579,7 @@
 			return rtn;
 		}
 		
-		function _fromToWrapmove(mov){
+		function _fromToWrapmoveHelper(mov){
 			var that, initial_square, final_square, no_errors, rtn;
 			
 			that=this;
@@ -1577,7 +1616,7 @@
 			return rtn;
 		}
 		
-		function _moveWrapmove(mov){
+		function _moveWrapmoveHelper(mov){
 			var that, calculated_promote, no_errors, rtn;
 			
 			that=this;
@@ -1611,11 +1650,11 @@
 			//if(rtn===null){
 				bubbling_promoted_to=0;
 				
-				rtn=that.joinedWrapmove(mov, p);
+				rtn=that.joinedWrapmoveHelper(mov, p);
 			//}
 			
 			if(rtn===null){
-				temp=that.sanWrapmove(mov);//first try b.joinedWrapmove(), better performance
+				temp=that.sanWrapmoveHelper(mov);//first try b.joinedWrapmoveHelper(), better performance
 				
 				if(temp){
 					bubbling_promoted_to=toAbsVal(temp[1]);
@@ -1625,11 +1664,11 @@
 			}
 			
 			if(rtn===null){
-				rtn=that.fromToWrapmove(mov);
+				rtn=that.fromToWrapmoveHelper(mov);
 			}
 			
 			if(rtn===null){
-				temp=that.moveWrapmove(mov);
+				temp=that.moveWrapmoveHelper(mov);
 				
 				if(temp){
 					bubbling_promoted_to=toAbsVal(temp[1]);
@@ -1656,7 +1695,7 @@
 				return that.testCollision(3, qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
 			}
 			
-			rtn=Object.create(null);
+			rtn={};
 			no_errors=true;
 			
 			//if(no_errors){
@@ -1836,31 +1875,36 @@
 			return rtn;
 		}
 		
-		function _playMove(mov, p){//{(x)isMockMove, promoteTo, delimiter}
-			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, cached_board, no_errors, rtn_can_move;
+		function _playMove(mov, p){//{isMockMove, promoteTo, delimiter}
+			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, keep_going, rtn_move_obj;
 			
 			that=this;
 			
-			rtn_can_move=false;
+			rtn_move_obj=null;
 			p=(_isObject(p) ? p : {});
-			no_errors=true;
+			keep_going=true;
 			
-			//if(no_errors){
-				/*2020 p.isMockMove;*/
+			//if(keep_going){
+				p.isMockMove=(p.isMockMove===true);
 				
-				pgn_obj=that.getPrePgnMoveInfo(mov, p);
-				
-				if(!pgn_obj.canMove){
-					no_errors=false;
+				if(p.isMockMove){
+					p.isMockMove=false;
+					
+					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p]);
+					
+					keep_going=false;
 				}
 			//}
 			
-			if(no_errors){
-				rtn_can_move=true;
+			if(keep_going){
+				pgn_obj=that.getPrePgnMoveInfo(mov, p);
 				
-				cached_board=_minimumMutableBoard();
-				_cloneBoardObjs(cached_board, that);
-				
+				if(!pgn_obj.canMove){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
 				
@@ -1939,16 +1983,18 @@
 					}
 				}
 				
+				rtn_move_obj={Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled};
+				
 				if(that.currentMove!==that.moveList.length){
 					that.moveList=that.moveList.slice(0, that.currentMove);/*start variation instead of overwrite*/
 				}
 				
-				that.moveList.push({Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled});
+				that.moveList.push({Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled});/*NO push  referenced rtn_move_obj*/
 				
 				that.refreshBoard(1);//autorefresh
 			}
 			
-			return rtn_can_move;
+			return rtn_move_obj;
 		}
 		
 		//---------------- board (using IcUi)
@@ -2323,10 +2369,10 @@
 						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
-						sanWrapmove : _sanWrapmove,
-						joinedWrapmove : _joinedWrapmove,
-						fromToWrapmove : _fromToWrapmove,
-						moveWrapmove : _moveWrapmove,
+						sanWrapmoveHelper : _sanWrapmoveHelper,
+						joinedWrapmoveHelper : _joinedWrapmoveHelper,
+						fromToWrapmoveHelper : _fromToWrapmoveHelper,
+						moveWrapmoveHelper : _moveWrapmoveHelper,
 						convertToWrapmove : _convertToWrapmove,
 						getPrePgnMoveInfo : _getPrePgnMoveInfo,
 						playMove : _playMove,
@@ -2404,14 +2450,14 @@
 				target.selectedBos=null;
 				target.isHidden=null;
 				target.isUnlabeled=null;
-				target.squares=Object.create(null);
+				target.squares={};
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
 						current_pos=[i, j];
 						current_bos=toBos(current_pos);
 						
-						target.squares[current_bos]=Object.create(null);
+						target.squares[current_bos]={};
 						temp=target.squares[current_bos];
 						
 						//static
@@ -2476,7 +2522,7 @@
 					everything_parsed=true;
 					
 					for(i=0, len=p.pgn[1].length; i<len; i++){//0<len
-						if(!new_board.playMove(p.pgn[1][i])){
+						if(new_board.playMove(p.pgn[1][i])===null){
 							everything_parsed=false;
 							break;
 						}
@@ -2511,40 +2557,55 @@
 		}
 		
 		function fenApply(fen, fn_name, args){
-			var temp, board, board_created, rtn;
+			var temp, board, board_created, keep_going, rtn;
 			
 			rtn=null;
+			board_created=false;
+			keep_going=true;
 			
-			board=initBoard({
-				boardName : "board_fenApply",
-				fen : fen,
-				isHidden : true,
-				validOrBreak : true
-			});
-			
-			board_created=boardExists(board);
-			fn_name=_formatName(fn_name);
-			
-			switch(fn_name){
-				case "legalMoves" :
-					rtn=(board_created ? _legalMoves.apply(board, args) : []);
-					break;
-				case "legalSanMoves" :
-					rtn=(board_created ? _legalSanMoves.apply(board, args) : []);
-					break;
-				case "isLegalMove" :
-					rtn=(board_created ? _isLegalMove.apply(board, args) : false);
-					break;
-				case "isLegalFen" :
-					rtn=board_created;
-					break;
-				case "getSquare" :
+			//if(keep_going){
+				fn_name=_formatName(fn_name);
+				
+				if(fn_name==="playMove"){
 					temp=(_isObject(args[1]) ? args[1] : {});
 					
-					rtn=(board_created ? _getSquare.apply(board, [args[0], {rankShift : temp.rankShift, fileShift : temp.fileShift, isUnreferenced : true}]) : null);
-					break;
-				default :
-					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
+					rtn=_playMoveApplyHelper(fen, [args[0], {isMockMove : false, promoteTo : temp.promoteTo, delimiter : temp.delimiter}]);
+					
+					keep_going=false;
+				}
+			//}
+			
+			if(keep_going){
+				board=initBoard({
+					boardName : "board_fenApply",
+					fen : fen,
+					isHidden : true,
+					validOrBreak : true
+				});
+				
+				board_created=boardExists(board);
+				
+				switch(fn_name){
+					case "legalMoves" :
+						rtn=(board_created ? _legalMoves.apply(board, args) : []);
+						break;
+					case "legalSanMoves" :
+						rtn=(board_created ? _legalSanMoves.apply(board, args) : []);
+						break;
+					case "isLegalMove" :
+						rtn=(board_created ? _isLegalMove.apply(board, args) : false);
+						break;
+					case "isLegalFen" :
+						rtn=board_created;
+						break;
+					case "getSquare" :
+						temp=(_isObject(args[1]) ? args[1] : {});
+						
+						rtn=(board_created ? _getSquare.apply(board, [args[0], {rankShift : temp.rankShift, fileShift : temp.fileShift, isUnreferenced : true}]) : null);
+						break;
+					default :
+						_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
+				}
 			}
 			
 			if(board_created){
@@ -2561,14 +2622,14 @@
 			board_created=false;
 			no_errors=true;
 			
-			board=initBoard({
-				boardName : "board_fenGet",
-				fen : fen,
-				isHidden : true,
-				validOrBreak : true
-			});
-			
 			//if(no_errors){
+				board=initBoard({
+					boardName : "board_fenGet",
+					fen : fen,
+					isHidden : true,
+					validOrBreak : true
+				});
+				
 				if(!boardExists(board)){
 					no_errors=false;
 					_consoleLog("Error[fenGet]: invalid FEN");
@@ -2586,7 +2647,7 @@
 					board_keys=_trimSpaces(props).split(" ");
 				}
 				
-				rtn_pre=Object.create(null);
+				rtn_pre={};
 				
 				for(i=0, len=board_keys.length; i<len; i++){//0<len
 					current_key=_formatName(board_keys[i]);
@@ -2678,8 +2739,7 @@
 				castlingChars : _castlingChars,
 				cleanSan : _cleanSan,
 				cloneBoardObjs : _cloneBoardObjs,
-				basicFenTest : _basicFenTest,
-				minimumMutableBoard : _minimumMutableBoard
+				basicFenTest : _basicFenTest
 			}
 		};
 	})(windw);
