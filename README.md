@@ -42,7 +42,7 @@ The variable `Ic` will be added to window.
 Node.js example
 -------------
 
-```
+```js
 const {Ic} = require("isepic-chess");
 
 var board, ascii_diagram, example_pgn;
