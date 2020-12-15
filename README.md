@@ -33,7 +33,7 @@ Then: `const {Ic} = require("isepic-chess");`
 
 <hr>
 
-```
+```html
 # Web browser
 <script src="./isepic-chess.js"></script>
 ```
