@@ -11,6 +11,7 @@ Table of contents
 - [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
 - [Table of contents](https://github.com/ajax333221/isepic-chess#table-of-contents)
 - [Installation](https://github.com/ajax333221/isepic-chess#installation)
+- [Node.js example](https://github.com/ajax333221/isepic-chess#node-js-example)
 - [Demo](https://github.com/ajax333221/isepic-chess#demo-from-isepic-chess-ui)
 - [Features](https://github.com/ajax333221/isepic-chess#features)
 - [Documentation](https://github.com/ajax333221/isepic-chess#documentation)
@@ -37,6 +38,55 @@ Then: `const {Ic} = require("isepic-chess");`
 <script src="./isepic-chess.js"></script>
 ```
 The variable `Ic` will be added to window.
+
+Node.js example
+-------------
+
+```
+const {Ic} = require("isepic-chess");
+
+var board, ascii_diagram, example_pgn;
+
+example_pgn = `[Event "example game"]
+[SetUp "1"]
+[FEN "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2"]
+
+2. Qf3 Nc6 3. Bc4`;
+
+board = Ic.initBoard({
+  boardName : "example_board",
+  pgn : example_pgn
+});
+
+// board.currentMove is set back to 0 when a PGN is parsed,
+// to play moves from the end we navigate to the end.
+board.navLast();
+
+// same than passing a SAN move of "Nd4"
+board.playMove("c6-d4");
+
+// "Qxf7", "Qxf7++", "Q3xf7+", "Qfxf7", "Qf3xf7 {comment}", etc
+board.playMove("Qxf7#");
+
+ascii_diagram = board.ascii();
+
+module.exports = (ascii_diagram+"\nIs Checkmate? = "+board.isCheckmate);
+//    +------------------------+
+//  8 | r  .  b  q  k  b  n  r |
+//  7 | p  p  p  p  .  Q  p  p |
+//  6 | .  .  .  .  .  .  .  . |
+//  5 | .  .  .  .  p  .  .  . |
+//  4 | .  .  B  n  P  .  .  . |
+//  3 | .  .  .  .  .  .  .  . |
+//  2 | P  P  P  P  .  P  P  P |
+//  1 | R  N  B  .  K  .  N  R |
+//    +------------------------+
+//      a  b  c  d  e  f  g  h
+// 
+// Is Checkmate? = true
+
+/* for a graphical user interface see https://github.com/ajax333221/isepic-chess-ui */
+```
 
 Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
 -------------
