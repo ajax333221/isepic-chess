@@ -11,7 +11,7 @@ Table of contents
 - [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
 - [Table of contents](https://github.com/ajax333221/isepic-chess#table-of-contents)
 - [Installation](https://github.com/ajax333221/isepic-chess#installation)
-- [Node.js example](https://github.com/ajax333221/isepic-chess#node-js-example)
+- [Node.js example](https://github.com/ajax333221/isepic-chess#nodejs-example)
 - [Demo](https://github.com/ajax333221/isepic-chess#demo-from-isepic-chess-ui)
 - [Features](https://github.com/ajax333221/isepic-chess#features)
 - [Documentation](https://github.com/ajax333221/isepic-chess#documentation)
