@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.7.1";
+		var _VERSION="4.8.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -165,7 +165,7 @@
 					validOrBreak : true
 				});
 				
-				if(!boardExists(board)){
+				if(board===null){
 					keep_going=false;
 				}
 			//}
@@ -178,6 +178,91 @@
 			
 			if(board_created){
 				removeBoard(board);
+			}
+			
+			return rtn;
+		}
+		
+		function _joinedWrapmoveHelper(mov, p){//{delimiter}
+			var temp, no_errors, rtn;
+			
+			rtn=null;
+			p=(_isObject(p) ? p : {});
+			no_errors=true;
+			
+			//if(no_errors){
+				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
+				p.delimiter=p.delimiter.charAt(0);
+				
+				if((typeof mov)!=="string"){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				mov=_trimSpaces(mov);
+				
+				if(mov.length!==5 || mov.charAt(2)!==p.delimiter){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				temp=_fromToWrapmoveHelper(mov.split(p.delimiter));
+				
+				if(temp===null){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				rtn=temp;
+			}
+			
+			return rtn;
+		}
+		
+		function _fromToWrapmoveHelper(mov){
+			var no_errors, rtn;
+			
+			rtn=null;
+			no_errors=true;
+			
+			//if(no_errors){
+				if(!_isArray(mov) || mov.length!==2){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				if(!isInsideBoard(mov[0]) || !isInsideBoard(mov[1])){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				rtn=mov;
+			}
+			
+			return rtn;
+		}
+		
+		function _moveWrapmoveHelper(mov){
+			var calculated_promote, no_errors, rtn;
+			
+			rtn=null;
+			no_errors=true;
+			
+			//if(no_errors){
+				if(!_isMove(mov)){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				calculated_promote=(mov.InitialVal!==mov.FinalVal ? mov.FinalVal : 0);
+				
+				rtn=[[mov.FromBos, mov.ToBos], calculated_promote];
 			}
 			
 			return rtn;
@@ -641,14 +726,22 @@
 		}
 		
 		function _setCurrentMove(num, is_goto){
-			var len, that, temp, diff, rtn_changed;
+			var len, that, temp, diff, keep_going, rtn_changed;
 			
 			that=this;
 			
 			rtn_changed=false;
-			len=that.moveList.length;
+			keep_going=true;
 			
-			if(len>1){
+			//if(keep_going){
+				len=that.moveList.length;
+				
+				if(len<2){
+					keep_going=false;
+				}
+			//}
+			
+			if(keep_going){
 				if((typeof is_goto)==="boolean"){
 					num=_toInt(num);
 				}else{
@@ -661,14 +754,18 @@
 				
 				temp=_toInt((is_goto ? num : (num+that.currentMove)), 0, (len-1));
 				
-				if(temp!==that.currentMove){
-					rtn_changed=true;
-					
-					that.currentMove=temp;
-					that.readFen(that.moveList[temp].Fen);
-					
-					that.refreshBoard(is_goto ? 0 : num);//autorefresh
+				if(temp===that.currentMove){
+					keep_going=false;
 				}
+			}
+			
+			if(keep_going){
+				rtn_changed=true;
+				
+				that.currentMove=temp;
+				that.readFen(that.moveList[temp].Fen);
+				
+				that.refreshBoard(is_goto ? 0 : num);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -958,7 +1055,7 @@
 						temp=(i ? "8" : "1");
 						
 						if(that.getSquare("e"+temp).val!==current_side.king){
-							error_msg="Error [5] "+(i ? "black" : "white")+" castling rights without king in original position";
+							error_msg="Error [5] "+(i ? "black" : "white")+" castling rights without king in original square";
 						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare("h"+temp).val!==current_side.rook){
 							error_msg="Error [6] "+(i ? "black" : "white")+" short castling rights with missing H-file rook";
 						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare("a"+temp).val!==current_side.rook){
@@ -1283,20 +1380,31 @@
 		}
 		
 		function _isLegalMove(mov, p){//{delimiter}
-			var that, temp, moves, rtn;
+			var that, temp, moves, no_errors, rtn;
 			
 			that=this;
 			
 			rtn=false;
+			no_errors=true;
 			
-			temp=that.convertToWrapmove(mov, p);
+			//if(no_errors){
+				temp=that.getWrappedMove(mov, p);
+				
+				if(temp===null){
+					no_errors=false;
+				}
+			//}
 			
-			if(temp!==null){
+			if(no_errors){
 				moves=that.legalMoves(temp[0][0]);
 				
-				if(moves.length){
-					rtn=_strContains(moves.join(), toBos(temp[0][1]));
+				if(!moves.length){
+					no_errors=false;
 				}
+			}
+			
+			if(no_errors){
+				rtn=_strContains(moves.join(), toBos(temp[0][1]));
 			}
 			
 			return rtn;
@@ -1357,15 +1465,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!boardExists(to_woard)){
+				to_board=getBoard(to_woard);
+				
+				if(to_board===null){
 					no_errors=false;
 					_consoleLog("Error[_isEqualBoard]: to_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
-				to_board=selectBoard(to_woard);
-				
 				rtn=(that===to_board || that.boardHash()===to_board.boardHash());
 			}
 			
@@ -1381,15 +1489,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!boardExists(from_woard)){
+				from_board=getBoard(from_woard);
+				
+				if(from_board===null){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardFrom]: from_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
-				from_board=selectBoard(from_woard);
-				
 				if(that===from_board){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardFrom]: trying to self clone");
@@ -1416,15 +1524,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!boardExists(to_woard)){
+				to_board=getBoard(to_woard);
+				
+				if(to_board===null){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardTo]: to_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
-				to_board=selectBoard(to_woard);
-				
 				if(that===to_board){
 					no_errors=false;
 					_consoleLog("Error[_cloneBoardTo]: trying to self clone");
@@ -1528,133 +1636,25 @@
 			return rtn;
 		}
 		
-		function _joinedWrapmoveHelper(mov, p){//{delimiter}
-			var that, temp, initial_square, final_square, no_errors, rtn;
-			
-			that=this;
-			
-			rtn=null;
-			p=(_isObject(p) ? p : {});
-			no_errors=true;
-			
-			//if(no_errors){
-				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
-				p.delimiter=p.delimiter.charAt(0);
-				
-				if((typeof mov)!=="string"){
-					no_errors=false;
-				}
-			//}
-			
-			if(no_errors){
-				mov=_trimSpaces(mov);
-				
-				if(mov.length!==5 || mov.charAt(2)!==p.delimiter){
-					no_errors=false;
-				}
-			}
-			
-			if(no_errors){
-				temp=mov.split(p.delimiter);
-				
-				initial_square=that.getSquare(temp[0]);
-				
-				if(initial_square===null){
-					no_errors=false;
-				}
-			}
-			
-			if(no_errors){
-				final_square=that.getSquare(temp[1]);
-				
-				if(final_square===null){
-					no_errors=false;
-				}
-			}
-			
-			if(no_errors){
-				rtn=[initial_square, final_square];
-			}
-			
-			return rtn;
-		}
-		
-		function _fromToWrapmoveHelper(mov){
-			var that, initial_square, final_square, no_errors, rtn;
-			
-			that=this;
-			
-			rtn=null;
-			no_errors=true;
-			
-			//if(no_errors){
-				if(!_isArray(mov) || mov.length!==2){
-					no_errors=false;
-				}
-			//}
-			
-			if(no_errors){
-				initial_square=that.getSquare(mov[0]);
-				
-				if(initial_square===null){
-					no_errors=false;
-				}
-			}
-			
-			if(no_errors){
-				final_square=that.getSquare(mov[1]);
-				
-				if(final_square===null){
-					no_errors=false;
-				}
-			}
-			
-			if(no_errors){
-				rtn=[initial_square, final_square];
-			}
-			
-			return rtn;
-		}
-		
-		function _moveWrapmoveHelper(mov){
-			var that, calculated_promote, no_errors, rtn;
-			
-			that=this;
-			
-			rtn=null;
-			no_errors=true;
-			
-			//if(no_errors){
-				if(!_isMove(mov)){
-					no_errors=false;
-				}
-			//}
-			
-			if(no_errors){
-				calculated_promote=(mov.InitialVal!==mov.FinalVal ? mov.FinalVal : 0);
-				
-				rtn=[[mov.FromBos, mov.ToBos], calculated_promote];
-			}
-			
-			return rtn;
-		}
-		
-		function _convertToWrapmove(mov, p){//{promoteTo, delimiter}
+		function _getWrappedMove(mov, p){//{delimiter}
 			var that, temp, bubbling_promoted_to, rtn;
 			
 			that=this;
 			
 			rtn=null;
-			p=(_isObject(p) ? p : {});
 			
 			//if(rtn===null){
 				bubbling_promoted_to=0;
 				
-				rtn=that.joinedWrapmoveHelper(mov, p);
+				rtn=_joinedWrapmoveHelper(mov, p);
 			//}
 			
 			if(rtn===null){
-				temp=that.sanWrapmoveHelper(mov);//always below b.joinedWrapmoveHelper() for better performance
+				rtn=_fromToWrapmoveHelper(mov);
+			}
+			
+			if(rtn===null){
+				temp=_moveWrapmoveHelper(mov);
 				
 				if(temp){
 					bubbling_promoted_to=toAbsVal(temp[1]);
@@ -1664,11 +1664,7 @@
 			}
 			
 			if(rtn===null){
-				rtn=that.fromToWrapmoveHelper(mov);
-			}
-			
-			if(rtn===null){
-				temp=that.moveWrapmoveHelper(mov);
+				temp=that.sanWrapmoveHelper(mov);//place last for better performance
 				
 				if(temp){
 					bubbling_promoted_to=toAbsVal(temp[1]);
@@ -1678,9 +1674,9 @@
 			}
 			
 			if(rtn){
-				temp=(toAbsVal(p.promoteTo) || bubbling_promoted_to || toAbsVal(that.promoteTo) || _QUEEN);
+				temp=(bubbling_promoted_to || toAbsVal(that.promoteTo) || _QUEEN);
 				
-				rtn=[rtn, _toInt(temp, _KNIGHT, _QUEEN)];
+				rtn=[[toBos(rtn[0]), toBos(rtn[1])], _promoteValHelper(temp)];
 			}
 			
 			return rtn;
@@ -1697,11 +1693,12 @@
 			
 			rtn={};
 			no_errors=true;
+			p=(_isObject(p) ? p : {});
 			
 			//if(no_errors){
 				rtn.canMove=false;
 				
-				temp=that.convertToWrapmove(mov, p);
+				temp=that.getWrappedMove(mov, p);
 				
 				if(temp===null){
 					no_errors=false;
@@ -1709,7 +1706,7 @@
 			//}
 			
 			if(no_errors){
-				bubbling_promoted_to=temp[1];
+				bubbling_promoted_to=(toAbsVal(p.promoteTo) || temp[1]);
 				
 				initial_cached_square=that.getSquare(temp[0][0], {
 					isUnreferenced : true
@@ -2014,19 +2011,7 @@
 			_SILENT_MODE=!!val;
 		}
 		
-		function boardExists(woard){
-			var temp, rtn;
-			
-			temp=_SILENT_MODE;
-			
-			setSilentMode(true);
-			rtn=(selectBoard(woard)!==null);
-			setSilentMode(temp);
-			
-			return rtn;
-		}
-		
-		function selectBoard(woard){
+		function getBoard(woard){
 			var is_valid, no_errors, rtn;
 			
 			rtn=null;
@@ -2035,7 +2020,6 @@
 			//if(no_errors){
 				if(!woard){
 					no_errors=false;
-					_consoleLog("Error[selectBoard]: falsy variable");
 				}
 			//}
 			
@@ -2044,7 +2028,6 @@
 				
 				if(!is_valid){
 					no_errors=false;
-					_consoleLog("Error[selectBoard]: invalid variable");
 				}
 			}
 			
@@ -2054,7 +2037,6 @@
 					
 					if((typeof _BOARDS[woard])==="undefined"){
 						no_errors=false;
-						_consoleLog("Error[selectBoard]: board \""+woard+"\" not found");
 					}
 				}
 			}
@@ -2249,10 +2231,10 @@
 			
 			rtn=false;
 			
-			if(boardExists(woard)){
+			del_board=getBoard(woard);
+			
+			if(del_board!==null){//if exists
 				rtn=true;
-				
-				del_board=selectBoard(woard);
 				
 				del_board_name_cache=del_board.boardName;
 				
@@ -2274,15 +2256,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!boardExists(left_woard)){
+				left_board=getBoard(left_woard);
+				
+				if(left_board===null){
 					no_errors=false;
 					_consoleLog("Error[isEqualBoard]: left_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
-				left_board=selectBoard(left_woard);
-				
 				rtn=left_board.isEqualBoard(right_woard);
 			}
 			
@@ -2296,15 +2278,15 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				if(!boardExists(to_woard)){
+				to_board=getBoard(to_woard);
+				
+				if(to_board===null){
 					no_errors=false;
 					_consoleLog("Error[cloneBoard]: to_woard doesn't exist");
 				}
 			//}
 			
 			if(no_errors){
-				to_board=selectBoard(to_woard);
-				
 				rtn=to_board.cloneBoardFrom(from_woard);//autorefresh (sometimes)
 			}
 			
@@ -2345,7 +2327,9 @@
 			//}
 			
 			if(no_errors){
-				if(!boardExists(board_name)){
+				target=getBoard(board_name);
+				
+				if(target===null){
 					_BOARDS[board_name]={
 						boardName : board_name,
 						getSquare : _getSquare,
@@ -2369,10 +2353,7 @@
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
 						sanWrapmoveHelper : _sanWrapmoveHelper,
-						joinedWrapmoveHelper : _joinedWrapmoveHelper,
-						fromToWrapmoveHelper : _fromToWrapmoveHelper,
-						moveWrapmoveHelper : _moveWrapmoveHelper,
-						convertToWrapmove : _convertToWrapmove,
+						getWrappedMove : _getWrappedMove,
 						getPrePgnMoveInfo : _getPrePgnMoveInfo,
 						playMove : _playMove,
 						navFirst : _navFirst,
@@ -2382,9 +2363,9 @@
 						navLinkMove : _navLinkMove,
 						refreshBoard : _refreshBoard
 					};
+					
+					target=getBoard(board_name);
 				}
-				
-				target=_BOARDS[board_name];
 				
 				target.w={
 					//static
@@ -2484,7 +2465,9 @@
 					}
 				}
 				
-				if(!boardExists(board_name)){
+				new_board=getBoard(board_name);
+				
+				if(new_board===null){
 					no_errors=false;
 					_consoleLog("Error[initBoard]: \""+board_name+"\" board selection failure");
 				}
@@ -2492,7 +2475,6 @@
 			
 			if(no_errors){
 				board_created=true;
-				new_board=selectBoard(board_name);
 				
 				new_board.isHidden=true;
 				
@@ -2582,7 +2564,7 @@
 					validOrBreak : true
 				});
 				
-				board_created=boardExists(board);
+				board_created=(board!==null);
 				
 				switch(fn_name){
 					case "legalMoves" :
@@ -2629,7 +2611,7 @@
 					validOrBreak : true
 				});
 				
-				if(!boardExists(board)){
+				if(board===null){
 					no_errors=false;
 					_consoleLog("Error[fenGet]: invalid FEN");
 				}
@@ -2698,8 +2680,7 @@
 		return {
 			version : _VERSION,
 			setSilentMode : setSilentMode,
-			boardExists : boardExists,
-			selectBoard : selectBoard,
+			getBoard : getBoard,
 			toVal : toVal,
 			toAbsVal : toAbsVal,
 			toBal : toBal,

@@ -6,8 +6,7 @@ Ic.setSilentMode(false);
 //
 //+testcase for pgn (validOrBreak true/false) in Ic.initBoard()
 //getBoardNames
-//boardExists (+ que deje igual silent mode)
-//selectBoard
+//getBoard
 //removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
 //
 //(x) isEqualBoard (completado)(es un b.isEqualBoard())
@@ -15,14 +14,14 @@ Ic.setSilentMode(false);
 //(x) setSilentMode (N/A)
 
 describe("Ic methods", () => {
-	var bad_shared_values, bad_shared_positions;
+	var bad_shared_values, bad_shared_squares;
 	
 	//used in: Ic.toVal(), Ic.toAbsVal(), Ic.toBal(), Ic.toAbsBal(), Ic.toClassName(), Ic.getSign()
 	//Note: getSign() skips the 'false' value
 	bad_shared_values=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "err", 0, -0, "*", "xx", "XQ", "BX", "BQxyz"];
 	
 	//used in: Ic.toBos(), Ic.toPos(), Ic.getRankPos(), Ic.getFilePos(), Ic.getRankBos(), Ic.getFileBos(), Ic.isInsideBoard()
-	bad_shared_positions=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz", 0, 1, 8, Infinity, -Infinity, "Infinity", "-Infinity", [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
+	bad_shared_squares=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz", 0, 1, 8, Infinity, -Infinity, "Infinity", "-Infinity", [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
 	
 	describe("Ic.toVal()", () => {
 		test("default value", () => {
@@ -330,8 +329,8 @@ describe("Ic methods", () => {
 		test("default value", () => {
 			var i, len;
 			
-			for(i=0, len=bad_shared_positions.length; i<len; i++){//0<len
-				expect(Ic.toBos(bad_shared_positions[i])).toBeNull();
+			for(i=0, len=bad_shared_squares.length; i<len; i++){//0<len
+				expect(Ic.toBos(bad_shared_squares[i])).toBeNull();
 			}
 		});
 		
@@ -379,8 +378,8 @@ describe("Ic methods", () => {
 		test("default value", () => {
 			var i, len;
 			
-			for(i=0, len=bad_shared_positions.length; i<len; i++){//0<len
-				expect(Ic.toPos(bad_shared_positions[i])).toBeNull();
+			for(i=0, len=bad_shared_squares.length; i<len; i++){//0<len
+				expect(Ic.toPos(bad_shared_squares[i])).toBeNull();
 			}
 		});
 		
@@ -428,8 +427,8 @@ describe("Ic methods", () => {
 		test("default value", () => {
 			var i, len;
 			
-			for(i=0, len=bad_shared_positions.length; i<len; i++){//0<len
-				expect(Ic.getRankPos(bad_shared_positions[i])).toBeNull();
+			for(i=0, len=bad_shared_squares.length; i<len; i++){//0<len
+				expect(Ic.getRankPos(bad_shared_squares[i])).toBeNull();
 			}
 		});
 		
@@ -477,8 +476,8 @@ describe("Ic methods", () => {
 		test("default value", () => {
 			var i, len;
 			
-			for(i=0, len=bad_shared_positions.length; i<len; i++){//0<len
-				expect(Ic.getFilePos(bad_shared_positions[i])).toBeNull();
+			for(i=0, len=bad_shared_squares.length; i<len; i++){//0<len
+				expect(Ic.getFilePos(bad_shared_squares[i])).toBeNull();
 			}
 		});
 		
@@ -526,8 +525,8 @@ describe("Ic methods", () => {
 		test("default value", () => {
 			var i, len;
 			
-			for(i=0, len=bad_shared_positions.length; i<len; i++){//0<len
-				expect(Ic.getRankBos(bad_shared_positions[i])).toBeNull();
+			for(i=0, len=bad_shared_squares.length; i<len; i++){//0<len
+				expect(Ic.getRankBos(bad_shared_squares[i])).toBeNull();
 			}
 		});
 		
@@ -575,8 +574,8 @@ describe("Ic methods", () => {
 		test("default value", () => {
 			var i, len;
 			
-			for(i=0, len=bad_shared_positions.length; i<len; i++){//0<len
-				expect(Ic.getFileBos(bad_shared_positions[i])).toBeNull();
+			for(i=0, len=bad_shared_squares.length; i<len; i++){//0<len
+				expect(Ic.getFileBos(bad_shared_squares[i])).toBeNull();
 			}
 		});
 		
@@ -626,8 +625,8 @@ describe("Ic methods", () => {
 			
 			default_val=false;
 			
-			for(i=0, len=bad_shared_positions.length; i<len; i++){//0<len
-				expect(Ic.isInsideBoard(bad_shared_positions[i])).toBe(default_val);
+			for(i=0, len=bad_shared_squares.length; i<len; i++){//0<len
+				expect(Ic.isInsideBoard(bad_shared_squares[i])).toBe(default_val);
 			}
 		});
 		
@@ -768,7 +767,7 @@ describe("Ic methods", () => {
 		test("original board is overwritten by valid fen and old references still point to the same board", () => {
 			var temp;
 			
-			temp=Ic.selectBoard(board_name);
+			temp=Ic.getBoard(board_name);
 			expect(temp.fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
 			
 			Ic.initBoard({
@@ -779,7 +778,7 @@ describe("Ic methods", () => {
 			});
 			
 			expect(temp.fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
-			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
+			expect(Ic.getBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 		});
 		
 		test("original board is not overwritten by invalid fen and null is returned (validOrBreak=true)", () => {
@@ -796,7 +795,7 @@ describe("Ic methods", () => {
 			
 			Ic.setSilentMode(false);
 			
-			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
+			expect(Ic.getBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 			expect(board_obj).toBeNull();
 		});
 		
@@ -808,7 +807,7 @@ describe("Ic methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(Ic.selectBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
+			expect(Ic.getBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
 		});
 		
 		test("original board is overwritten to default fen by invalid fen (validOrBreak=false)", () => {
@@ -820,7 +819,7 @@ describe("Ic methods", () => {
 				isHidden : true
 			});
 			
-			expect(Ic.selectBoard(board_name).fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			expect(Ic.getBoard(board_name).fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 			expect(board_obj).not.toBeNull();
 		});
 		

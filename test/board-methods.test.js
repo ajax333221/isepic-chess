@@ -14,14 +14,11 @@ Ic.setSilentMode(false);
 //setCurrentMove (return value)
 //toggleActiveNonActive (return value)
 //playMove = via fen apply
-//convertToWrapmove
+//getWrappedMove
 //(?mm) getPrePgnMoveInfo
 //
+//(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
 //(x) legalMovesHelper (se hara por b.legalMoves() y b.legalSanMoves())
-//(x) sanWrapmoveHelper (se hara por b.convertToWrapmove())
-//(x) joinedWrapmoveHelper (se hara por b.convertToWrapmove())
-//(x) fromToWrapmoveHelper (se hara por b.convertToWrapmove())
-//(x) moveWrapmoveHelper (se hara por b.convertToWrapmove())
 //(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())
 //(x) cloneBoardFrom (completado)(es un Ic.utilityMisc.cloneBoardObjs())
 //(x) navFirst (se hara por b.setCurrentMove())
