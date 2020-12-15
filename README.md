@@ -28,7 +28,7 @@ Installation
 # NPM
 npm install isepic-chess
 ```
-Then: `const {Ic} = require("./isepic-chess");`
+Then: `const {Ic} = require("isepic-chess");`
 
 <hr>
 
