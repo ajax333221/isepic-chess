@@ -15,11 +15,11 @@ describe("Misc.", () => {
 			});
 			
 			test("taking enpassant results in self check", () => {
-				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4-d3"])).toEqual(false);
+				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4-d3"])).toBe(false);
 			});
 			
 			test("missing option to remove check via enpassant", () => {
-				expect(Ic.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", ["d4-e3"])).toEqual(true);
+				expect(Ic.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", ["d4-e3"])).toBe(true);
 			});
 			
 			test("enpassant capture discovered double check", () => {
@@ -336,7 +336,7 @@ describe("Misc.", () => {
 				temp2=board_other.getSquare("e4", {isUnreferenced : false});
 				
 				expect(temp.pos).toEqual(temp2.pos);
-				expect(temp.pos===temp2.pos).toEqual(false);
+				expect(temp.pos===temp2.pos).toBe(false);
 				
 				temp.pos=[0, 0];
 				
@@ -345,8 +345,16 @@ describe("Misc.", () => {
 				Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 				
 				expect(temp2.pos).not.toEqual([0, 0]);
-				expect(temp.pos===temp2.pos).toEqual(false);
+				expect(temp.pos===temp2.pos).toBe(false);
 			});
+		});
+		
+		test("Checkmate and 50-move rule", () => {
+			var fen;
+			
+			fen="rnbqkr2/ppppppNp/n5p1/2b5/8/P1N5/1PPPPPPP/R1BQKB1R b KQq - 100 52";
+			
+			expect(Ic.fenGet(fen, "isCheckmate isFiftyMove inDraw")).toEqual({isCheckmate:true, isFiftyMove:true, inDraw:false});
 		});
 	});
 	

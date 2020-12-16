@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.9.0";
+		var _VERSION="4.9.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -31,7 +31,7 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "promoteTo", "manualResult", "selectedBos", "isHidden", "isUnlabeled", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "selectedBos", "isHidden", "isUnlabeled", "squares"];
 		
 		//---------------- helpers
 		
@@ -968,8 +968,6 @@
 				}
 			}
 			
-			that.isFiftyMove=(that.halfMove>=100);
-			
 			total_pieces=countPieces(clockless_fen);
 			that.isInsufficientMaterial=false;
 			
@@ -986,7 +984,9 @@
 				}
 			}
 			
-			that.inDraw=(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial);
+			that.isFiftyMove=(that.halfMove>=100);
+			
+			that.inDraw=(!that.isCheckmate && (that.isStalemate || that.isThreefold || that.isInsufficientMaterial || that.isFiftyMove));
 			
 			that.w.materialDiff=[];
 			that.b.materialDiff=[];
@@ -2466,8 +2466,8 @@
 				target.isCheckmate=null;
 				target.isStalemate=null;
 				target.isThreefold=null;
-				target.isFiftyMove=null;
 				target.isInsufficientMaterial=null;
+				target.isFiftyMove=null;
 				target.inDraw=null;
 				target.promoteTo=null;
 				target.manualResult=null;

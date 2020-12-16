@@ -4,7 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//manualResult
+//manualResult (no con fenGet)
 //promoteTo (no con fenGet) poner muchos advanced pawns y promoverlos todos (solo checkar el Fen final)
 //moveList (no con fenGet) en misc hay PGNmove y PGNend, buscar un ejemplo completo (e.g. promotion)
 //currentMove (no con fenGet) test de movelist split cuando currentMove no esta al final
@@ -14,7 +14,7 @@ Ic.setSilentMode(false);
 //
 //(x) isRotated (completado)(b.ascii() en board-methods.test.js + hasta se le hizo test por board hash)
 //(x) selectedBos (N/A)(siempre empty_string + solo cambia por ui)
-//(x) inDraw = (N/A)(that.isStalemate || that.isThreefold || that.isFiftyMove || that.isInsufficientMaterial)
+//(x) inDraw = (N/A)(solo un caso edge de checkmate + 50move rule, pero ya en regression test)
 
 describe("Board properties", () => {
 	describe("w, b, activeColor, nonActiveColor, halfMove and fullMove", () => {

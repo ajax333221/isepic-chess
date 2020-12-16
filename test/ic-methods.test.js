@@ -10,7 +10,7 @@ Ic.setSilentMode(false);
 //removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
 //
 //(x) isEqualBoard (completado)(es un b.isEqualBoard())
-//(x) cloneBoard (completado)(es un b.cloneBoardFrom() = es un Ic.utilityMisc.cloneBoardObjs())
+//(x) cloneBoard (completado)(es un Ic.utilityMisc.cloneBoardObjs())
 //(x) setSilentMode (N/A)
 
 describe("Ic methods", () => {
