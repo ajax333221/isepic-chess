@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.8.1";
+		var _VERSION="4.9.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -31,12 +31,26 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "promoteTo", "selectedBos", "isHidden", "isUnlabeled", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isFiftyMove", "isInsufficientMaterial", "inDraw", "promoteTo", "manualResult", "selectedBos", "isHidden", "isUnlabeled", "squares"];
 		
 		//---------------- helpers
 		
 		function _promoteValHelper(qal){
 			return _toInt((toAbsVal(qal) || _QUEEN), _KNIGHT, _QUEEN);
+		}
+		
+		function _pgnResultHelper(str){
+			var rtn;
+			
+			rtn="";
+			
+			str=(""+str).replace(/\s/g, "").replace(/o/gi, "0").replace(/½/g, "1/2");
+			
+			if(str==="*" || str==="1-0" || str==="0-1" || str==="1/2-1/2"){
+				rtn=str;
+			}
+			
+			return rtn;
 		}
 		
 		function _strToValHelper(str){
@@ -124,23 +138,23 @@
 			}
 			
 			if(last_index!==-1){
-				temp=temp.replace(/\s/g, "").replace(/o/gi, "0").replace(/½/g, "1/2");
+				game_result="*";
 				
-				if(temp==="*" || temp==="1-0" || temp==="0-1" || temp==="1/2-1/2"){
+				temp=_pgnResultHelper(temp);
+				
+				if(temp){
 					move_list.pop();
 					
 					game_result=temp;
-				}else{
-					game_result="*";
+				}
+				
+				if(meta_tags.Result){
+					temp=_pgnResultHelper(meta_tags.Result);
 					
-					if(meta_tags.Result){
-						temp=meta_tags.Result.replace(/\s/g, "").replace(/o/gi, "0").replace(/½/g, "1/2");
+					if(temp){
+						meta_tags.Result=temp;
 						
-						if(temp==="*" || temp==="1-0" || temp==="0-1" || temp==="1/2-1/2"){
-							meta_tags.Result=temp;
-							
-							game_result=temp;
-						}
+						game_result=temp;
 					}
 				}
 				
@@ -183,7 +197,8 @@
 			return rtn;
 		}
 		
-		function _joinedWrapmoveHelper(mov, p){//{delimiter}
+		//p = {delimiter}
+		function _joinedWrapmoveHelper(mov, p){
 			var temp, no_errors, rtn;
 			
 			rtn=null;
@@ -312,7 +327,7 @@
 		}
 		
 		function _strContains(str, str_to_find){
-			return (str.indexOf(str_to_find)!==-1);
+			return ((""+str).indexOf(str_to_find)!==-1);
 		}
 		
 		function _occurrences(str, str_rgxp){
@@ -550,7 +565,8 @@
 		
 		//---------------- board
 		
-		function _getSquare(qos, p){//{rankShift, fileShift, isUnreferenced}
+		//p = {rankShift, fileShift, isUnreferenced}
+		function _getSquare(qos, p){
 			var that, temp_pos, pre_validated_pos, rtn;
 			
 			that=this;
@@ -718,6 +734,25 @@
 				rtn_changed=true;
 				
 				that.promoteTo=temp;
+				
+				that.refreshBoard(0);//autorefresh
+			}
+			
+			return rtn_changed;
+		}
+		
+		function _setManualResult(str){
+			var that, temp, rtn_changed;
+			
+			that=this;
+			
+			rtn_changed=false;
+			temp=(_pgnResultHelper(str) || "*");
+			
+			if(temp!==that.manualResult){
+				rtn_changed=true;
+				
+				that.manualResult=temp;
 				
 				that.refreshBoard(0);//autorefresh
 			}
@@ -1159,7 +1194,8 @@
 			return rtn;
 		}
 		
-		function _legalMovesHelper(target_qos, p){//{returnType (!= san), squareType, delimiter}
+		//p = {returnType (!= san), squareType, delimiter}
+		function _legalMovesHelper(target_qos, p){
 			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
@@ -1326,7 +1362,8 @@
 			return rtn;
 		}
 		
-		function _legalMoves(target_qos, p){//{returnType, squareType, delimiter}
+		//p = {returnType, squareType, delimiter}
+		function _legalMoves(target_qos, p){
 			var that, convert_to_san;
 			
 			that=this;
@@ -1379,7 +1416,8 @@
 			return rtn;
 		}
 		
-		function _isLegalMove(mov, p){//{delimiter}
+		//p = {delimiter}
+		function _isLegalMove(mov, p){
 			var that, temp, moves, no_errors, rtn;
 			
 			that=this;
@@ -1636,7 +1674,8 @@
 			return rtn;
 		}
 		
-		function _getWrappedMove(mov, p){//{delimiter}
+		//p = {delimiter}
+		function _getWrappedMove(mov, p){
 			var that, temp, bubbling_promoted_to, rtn;
 			
 			that=this;
@@ -1682,7 +1721,8 @@
 			return rtn;
 		}
 		
-		function _getPrePgnMoveInfo(mov, p){//{promoteTo, delimiter}
+		//p = {promoteTo, delimiter}
+		function _getPrePgnMoveInfo(mov, p){
 			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, pgn_move, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, no_errors, rtn;
 			
 			that=this;
@@ -1871,7 +1911,8 @@
 			return rtn;
 		}
 		
-		function _playMove(mov, p){//{isMockMove, promoteTo, delimiter}
+		//p = {isMockMove, promoteTo, delimiter}
+		function _playMove(mov, p){
 			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, keep_going, rtn_move_obj;
 			
 			that=this;
@@ -2293,7 +2334,8 @@
 			return rtn;
 		}
 		
-		function initBoard(p){//{boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, validOrBreak}
+		//p = {boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, manualResult, validOrBreak}
+		function initBoard(p){
 			var i, j, len, temp, board_created, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
 			
 			rtn=null;
@@ -2338,6 +2380,7 @@
 						toggleActiveNonActive : _toggleActiveNonActive,
 						toggleIsRotated : _toggleIsRotated,
 						setPromoteTo : _setPromoteTo,
+						setManualResult : _setManualResult,
 						setCurrentMove : _setCurrentMove,
 						readFen : _readFen,
 						updateFenAndMisc : _updateFenAndMisc,
@@ -2427,6 +2470,7 @@
 				target.isInsufficientMaterial=null;
 				target.inDraw=null;
 				target.promoteTo=null;
+				target.manualResult=null;
 				target.selectedBos=null;
 				target.isHidden=null;
 				target.isUnlabeled=null;
@@ -2477,6 +2521,7 @@
 				board_created=true;
 				
 				new_board.isHidden=true;
+				new_board.selectedBos="";
 				
 				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
 				new_board.currentMove=0;
@@ -2513,6 +2558,10 @@
 						no_errors=false;
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
 					}else{
+						if(p.pgn[2]!=="*"){
+							p.manualResult=(_pgnResultHelper(p.manualResult) || p.pgn[2]);
+						}
+						
 						new_board.navFirst();
 					}
 				}
@@ -2524,6 +2573,7 @@
 				new_board.isRotated=p.isRotated;
 				new_board.isUnlabeled=p.isUnlabeled;
 				new_board.setPromoteTo(p.promoteTo);
+				new_board.setManualResult(p.manualResult);
 				
 				new_board.isHidden=p.isHidden;
 				

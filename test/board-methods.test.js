@@ -11,6 +11,7 @@ Ic.setSilentMode(false);
 //testCollision
 //toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
 //setPromoteTo (return value)
+//setManualResult (return value)
 //setCurrentMove (return value)
 //toggleActiveNonActive (return value)
 //playMove = via fen apply
@@ -45,7 +46,7 @@ describe("Board methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(-930413558);
+			expect(board_obj.boardHash()).toBe(-249949178);
 		});
 		
 		test("other position and board name not used in the hash", () => {
@@ -70,7 +71,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(2123953790);
+			expect(hash_a).toBe(1655058268);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});

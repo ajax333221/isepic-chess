@@ -4,6 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
+//manualResult
 //promoteTo (no con fenGet) poner muchos advanced pawns y promoverlos todos (solo checkar el Fen final)
 //moveList (no con fenGet) en misc hay PGNmove y PGNend, buscar un ejemplo completo (e.g. promotion)
 //currentMove (no con fenGet) test de movelist split cuando currentMove no esta al final
