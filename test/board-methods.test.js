@@ -16,7 +16,7 @@ Ic.setSilentMode(false);
 //toggleActiveNonActive (return value)
 //playMove = via fen apply
 //getWrappedMove
-//(?mm) getPrePgnMoveInfo
+//(?mm) draftMove
 //
 //(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
 //(x) legalMovesHelper (se hara por b.legalMoves() y b.legalSanMoves())
@@ -46,7 +46,7 @@ describe("Board methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(-249949178);
+			expect(board_obj.boardHash()).toBe(1730284165);
 		});
 		
 		test("other position and board name not used in the hash", () => {
@@ -71,7 +71,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(1655058268);
+			expect(hash_a).toBe(298559451);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});

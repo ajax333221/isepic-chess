@@ -230,7 +230,7 @@ describe("Ic utility methods", () => {
 		
 		Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 		
-		expect(board_other.moveList[1].PGNmove).toBe("Ne4");
+		expect(board_other.moveList[1].San).toBe("Ne4");
 		expect(!!board_other.moveList[2]).toBe(false);
 		expect(board_other.getSquare("e4").val).toBe(2);
 		

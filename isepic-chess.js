@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.9.1";
+		var _VERSION="4.9.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1401,7 +1401,7 @@
 						break;
 					}
 					
-					legal_san_moves.push(temp.PGNmove);
+					legal_san_moves.push(temp.San);
 				}
 				
 				if(legal_san_moves.length!==legal_moves.length){
@@ -1644,7 +1644,7 @@
 						temp=that.legalMoves(current_square, {returnType : "fromToSquares"});
 						
 						for(k=0, len=temp.length; k<len; k++){//0<len
-							pgn_obj=that.getPrePgnMoveInfo(temp[k]);/*NO pass unnecessary promoteTo*/
+							pgn_obj=that.draftMove(temp[k]);/*NO pass unnecessary promoteTo*/
 							
 							if(!pgn_obj.canMove){
 								continue;
@@ -1722,8 +1722,8 @@
 		}
 		
 		//p = {promoteTo, delimiter}
-		function _getPrePgnMoveInfo(mov, p){
-			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, pgn_move, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, no_errors, rtn;
+		function _draftMove(mov, p){
+			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, no_errors, rtn;
 			
 			that=this;
 			
@@ -1805,22 +1805,22 @@
 					}
 				}
 				
-				pgn_move="";
+				partial_san="";
 				with_overdisambiguated=[];
 				
 				if(king_castled){//castling king
-					pgn_move+=(king_castled===_LONG_CASTLE ? "O-O-O" : "O-O");
-					with_overdisambiguated.push(pgn_move);
+					partial_san+=(king_castled===_LONG_CASTLE ? "O-O-O" : "O-O");
+					with_overdisambiguated.push(partial_san);
 				}else if(pawn_moved){//pawn move
 					if(initial_cached_square.fileBos!==final_cached_square.fileBos){
-						pgn_move+=(initial_cached_square.fileBos+"x");
+						partial_san+=(initial_cached_square.fileBos+"x");
 					}
 					
-					pgn_move+=final_cached_square.bos;
-					with_overdisambiguated.push(pgn_move);
+					partial_san+=final_cached_square.bos;
+					with_overdisambiguated.push(partial_san);
 					
 					if(promoted_val){
-						pgn_move+="="+toAbsBal(promoted_val);
+						partial_san+="="+toAbsBal(promoted_val);
 					}
 				}else{//knight, bishop, rook, queen, non-castling king
 					extra_file_bos="";
@@ -1880,14 +1880,14 @@
 					
 					if(needs_extra){
 						if(!temp2){
-							pgn_move+=initial_cached_square.absBal+initial_cached_square.fileBos+temp;
+							partial_san+=initial_cached_square.absBal+initial_cached_square.fileBos+temp;
 						}else{
-							pgn_move+=initial_cached_square.absBal+extra_file_bos+extra_rank_bos+temp;
-							with_overdisambiguated.push(pgn_move);
+							partial_san+=initial_cached_square.absBal+extra_file_bos+extra_rank_bos+temp;
+							with_overdisambiguated.push(partial_san);
 						}
 					}else{
-						pgn_move+=initial_cached_square.absBal+temp;
-						with_overdisambiguated.push(pgn_move);
+						partial_san+=initial_cached_square.absBal+temp;
+						with_overdisambiguated.push(partial_san);
 					}
 					
 					if(!temp2){//0
@@ -1903,8 +1903,7 @@
 				rtn.pawnMoved=pawn_moved;
 				rtn.newEnPassantBos=new_en_passant_bos;
 				rtn.promotedVal=promoted_val;
-				rtn.kingCastled=king_castled;
-				rtn.pgnMove=pgn_move;
+				rtn.partialSan=partial_san;
 				rtn.withOverdisambiguated=with_overdisambiguated;
 			}
 			
@@ -1913,7 +1912,7 @@
 		
 		//p = {isMockMove, promoteTo, delimiter}
 		function _playMove(mov, p){
-			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, pgn_move_full, pgn_end, active_side, non_active_side, current_side, keep_going, rtn_move_obj;
+			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, complete_san, pgn_end, active_side, non_active_side, current_side, keep_going, rtn_move_obj;
 			
 			that=this;
 			
@@ -1934,7 +1933,7 @@
 			//}
 			
 			if(keep_going){
-				pgn_obj=that.getPrePgnMoveInfo(mov, p);
+				pgn_obj=that.draftMove(mov, p);
 				
 				if(!pgn_obj.canMove){
 					keep_going=false;
@@ -2004,15 +2003,15 @@
 				that.currentMove++;/*NO move below updateFenAndMisc()*/
 				that.updateFenAndMisc();
 				
-				pgn_move_full=pgn_obj.pgnMove;
+				complete_san=pgn_obj.partialSan;
 				pgn_end="";
 				
 				if(that.isCheck){
 					if(that.isCheckmate){
-						pgn_move_full+="#";
+						complete_san+="#";
 						pgn_end=(non_active_side.isBlack ? "1-0" : "0-1");//non_active_side is toggled
 					}else{
-						pgn_move_full+="+";
+						complete_san+="+";
 					}
 				}else{
 					if(that.isStalemate){
@@ -2020,13 +2019,13 @@
 					}
 				}
 				
-				rtn_move_obj={Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled};
+				rtn_move_obj={Fen : that.fen, San : complete_san, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
 				
 				if(that.currentMove!==that.moveList.length){
 					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
-				that.moveList.push({Fen : that.fen, PGNmove : pgn_move_full, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val), KingCastled : pgn_obj.kingCastled});/*NO push  referenced rtn_move_obj*/
+				that.moveList.push({Fen : that.fen, San : complete_san, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
 				
 				that.refreshBoard(1);//autorefresh
 			}
@@ -2397,7 +2396,7 @@
 						cloneBoardTo : _cloneBoardTo,
 						sanWrapmoveHelper : _sanWrapmoveHelper,
 						getWrappedMove : _getWrappedMove,
-						getPrePgnMoveInfo : _getPrePgnMoveInfo,
+						draftMove : _draftMove,
 						playMove : _playMove,
 						navFirst : _navFirst,
 						navPrevious : _navPrevious,
@@ -2526,7 +2525,7 @@
 				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
 				new_board.currentMove=0;
 				new_board.readFen(temp);
-				new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
+				new_board.moveList=[{Fen : new_board.fen, San : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -2541,7 +2540,7 @@
 					temp=_DEFAULT_FEN;/*NO refactor to a function*/
 					new_board.currentMove=0;
 					new_board.readFen(temp);
-					new_board.moveList=[{Fen : new_board.fen, PGNmove : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0, KingCastled : 0}];
+					new_board.moveList=[{Fen : new_board.fen, San : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
 				}
 				
 				if(p.pgn){

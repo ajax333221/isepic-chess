@@ -225,7 +225,7 @@ describe("Misc.", () => {
 			board_other.playMove("b6-b8");
 			
 			//checkmake (white win)
-			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qb8#");
+			expect(board_other.moveList[board_other.moveList.length-1].San).toBe("Qb8#");
 			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1-0");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
@@ -236,7 +236,7 @@ describe("Misc.", () => {
 			board_other.playMove("b3-b1");
 			
 			//checkmake (black win)
-			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qb1#");
+			expect(board_other.moveList[board_other.moveList.length-1].San).toBe("Qb1#");
 			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("0-1");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
@@ -244,7 +244,7 @@ describe("Misc.", () => {
 			board_other.playMove("e3-e4");
 			
 			//check (white performs check)
-			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qe4+");
+			expect(board_other.moveList[board_other.moveList.length-1].San).toBe("Qe4+");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
@@ -252,7 +252,7 @@ describe("Misc.", () => {
 			board_other.playMove("e6-e5");
 			
 			//check (black performs check)
-			expect(board_other.moveList[board_other.moveList.length-1].PGNmove).toBe("Qe5+");
+			expect(board_other.moveList[board_other.moveList.length-1].San).toBe("Qe5+");
 		});
 		
 		test("Ic.toPos() returns a reference", () => {
@@ -480,7 +480,7 @@ describe("Misc.", () => {
 			board_obj.playMove("g7-f8");
 			
 			//SAN underpromote to rook
-			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("gxf8=R");
+			expect(board_obj.moveList[board_obj.moveList.length-1].San).toBe("gxf8=R");
 			
 			board_obj.playMove("a5-a4");
 			board_obj.playMove("f7-g6");
@@ -503,7 +503,7 @@ describe("Misc.", () => {
 			expect(board_obj.legalMoves("a2").sort()).toEqual(["a3"].sort());
 			
 			//pgn disambiguation
-			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("Rab6");
+			expect(board_obj.moveList[board_obj.moveList.length-1].San).toBe("Rab6");
 			
 			//two squares pawn movement
 			expect(board_obj.legalMoves("b2").sort()).toEqual(["b3", "b4"].sort());
@@ -529,7 +529,7 @@ describe("Misc.", () => {
 			board_obj.playMove("b6-a6");
 			
 			//no pgn disambiguation needed
-			expect(board_obj.moveList[board_obj.moveList.length-1].PGNmove).toBe("Ra6");
+			expect(board_obj.moveList[board_obj.moveList.length-1].San).toBe("Ra6");
 			
 			//single square pawn movement
 			expect(board_obj.legalMoves("b4").sort()).toEqual(["b5"].sort());
