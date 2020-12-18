@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.9.2";
+		var _VERSION="4.10.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1912,7 +1912,7 @@
 		
 		//p = {isMockMove, promoteTo, delimiter}
 		function _playMove(mov, p){
-			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, complete_san, pgn_end, active_side, non_active_side, current_side, keep_going, rtn_move_obj;
+			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, keep_going, rtn_move_obj;
 			
 			that=this;
 			
@@ -2004,28 +2004,42 @@
 				that.updateFenAndMisc();
 				
 				complete_san=pgn_obj.partialSan;
-				pgn_end="";
+				move_res="";
 				
 				if(that.isCheck){
 					if(that.isCheckmate){
 						complete_san+="#";
-						pgn_end=(non_active_side.isBlack ? "1-0" : "0-1");//non_active_side is toggled
+						move_res=(non_active_side.isBlack ? "1-0" : "0-1");//non_active_side is toggled
 					}else{
 						complete_san+="+";
 					}
 				}else{
 					if(that.isStalemate){
-						pgn_end="1/2-1/2";
+						move_res="1/2-1/2";
 					}
 				}
 				
-				rtn_move_obj={Fen : that.fen, San : complete_san, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
+				autogen_comment="";
+				
+				if(that.inDraw){
+					if(that.isStalemate){
+						autogen_comment="{Stalemate}";
+					}else if(that.isThreefold){
+						autogen_comment="{3-fold repetition}";
+					}else if(that.isInsufficientMaterial){
+						autogen_comment="{Insufficient material}";
+					}else if(that.isFiftyMove){//no need to !b.isCheckmate since b.inDraw=true
+						autogen_comment="{50 moves rule}";
+					}
+				}
+				
+				rtn_move_obj={Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
 				
 				if(that.currentMove!==that.moveList.length){
 					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
-				that.moveList.push({Fen : that.fen, San : complete_san, PGNend : pgn_end, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
+				that.moveList.push({Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
 				
 				that.refreshBoard(1);//autorefresh
 			}
@@ -2525,7 +2539,7 @@
 				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
 				new_board.currentMove=0;
 				new_board.readFen(temp);
-				new_board.moveList=[{Fen : new_board.fen, San : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
+				new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -2540,7 +2554,7 @@
 					temp=_DEFAULT_FEN;/*NO refactor to a function*/
 					new_board.currentMove=0;
 					new_board.readFen(temp);
-					new_board.moveList=[{Fen : new_board.fen, San : "", PGNend : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
+					new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
 				}
 				
 				if(p.pgn){

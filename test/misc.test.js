@@ -207,7 +207,7 @@ describe("Misc.", () => {
 			board_other.playMove("e6-b3");
 			
 			//stalemate (white turn)
-			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1/2-1/2");
+			expect(board_other.moveList[board_other.moveList.length-1].MoveResult).toBe("1/2-1/2");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
@@ -216,7 +216,7 @@ describe("Misc.", () => {
 			board_other.playMove("d4-b6");
 			
 			//stalemate (black turn)
-			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1/2-1/2");
+			expect(board_other.moveList[board_other.moveList.length-1].MoveResult).toBe("1/2-1/2");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
@@ -224,9 +224,9 @@ describe("Misc.", () => {
 			board_other.playMove("e6-h3");
 			board_other.playMove("b6-b8");
 			
-			//checkmake (white win)
+			//checkmate (white win)
 			expect(board_other.moveList[board_other.moveList.length-1].San).toBe("Qb8#");
-			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("1-0");
+			expect(board_other.moveList[board_other.moveList.length-1].MoveResult).toBe("1-0");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
@@ -235,9 +235,9 @@ describe("Misc.", () => {
 			board_other.playMove("f4-h6");
 			board_other.playMove("b3-b1");
 			
-			//checkmake (black win)
+			//checkmate (black win)
 			expect(board_other.moveList[board_other.moveList.length-1].San).toBe("Qb1#");
-			expect(board_other.moveList[board_other.moveList.length-1].PGNend).toBe("0-1");
+			expect(board_other.moveList[board_other.moveList.length-1].MoveResult).toBe("0-1");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
