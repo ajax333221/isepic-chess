@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.10.0";
+		var _VERSION="4.10.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -383,7 +383,7 @@
 			while(rtn!=(rtn=rtn.replace(/\([^()]*\)/g, "")));
 			
 			rtn=rtn.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
-			rtn=rtn.replace(/[\(\{+#!?]/g, "");
+			rtn=rtn.replace(/[^a-h0-8nrqkxo ½=-]/gi, "");//no planned support for P and e.p.
 			rtn=rtn.replace(/\s*\-\s*/g, "-");
 			rtn=rtn.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
 			rtn=rtn.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
