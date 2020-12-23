@@ -96,7 +96,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 Features
 -------------
 
-- PGN viewer
+- PGN import / export
 - Advanced FEN validation
 - Get legal moves
 - Material difference
@@ -198,7 +198,8 @@ Function | Parameters | Return | Board refresh? | Description
 **navLinkMove**(<br>*moveIndex*<br>) | <ul><li>moveIndex (Number)</li></ul> | Boolean | Yes | Performs a `board.setCurrentMove(moveIndex)`.<hr>Examples:<ul><li>`board.navLinkMove(2) //true`</li><li>`board.navLinkMove(2) //false`</li></ul>
 **cloneBoardFrom**(<br>*fromBoard*<br>) | <ul><li>fromBoard:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li></ul> | Boolean | Yes | (... *temporal-draft*: copies all the board properties (except `board.boardName`) from another board into this board ...)
 **cloneBoardTo**(<br>*toBoard*<br>) | <ul><li>toBoard:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li></ul> | Boolean | Yes | (... *temporal-draft*: copies all the board properties (except `board.boardName`) from this board into another board ...)
-**ascii**(<br>*isRotated*<br>) | <ul><li>:eight_pointed_black_star:isRotated (Boolean):</li></ul><hr>:eight_pointed_black_star:Optional Parameter | String | No | Returns a **chess diagram** made of text.<br><br>Boolean parameters will take precedence over the **board property** of `board.isRotated`.<br><br>A line feed `\n` is used as the line break character.
+**pgnExport**() | - | String | No | Returns the **PGN** as text.<br><br>A line feed `\n` is used as the line break character.
+**ascii**(<br>*isRotated*<br>) | <ul><li>:eight_pointed_black_star:isRotated (Boolean):</li></ul><hr>:eight_pointed_black_star:Optional Parameter | String | No | Returns the **chess diagram** as text.<br><br>Boolean parameters will take precedence over the **board property** of `board.isRotated`.<br><br>A line feed `\n` is used as the line break character.
 **getSquare**(<br>*qos*,<br>*p*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li><li>:eight_pointed_black_star:p (Object):<ul><li>:eight_spoked_asterisk:rankShift (Number): `-7 to 7`</li><li>:eight_spoked_asterisk:fileShift (Number): `-7 to 7`</li><li>:eight_spoked_asterisk:isUnreferenced (Boolean)</li></ul></li></ul><hr>:eight_pointed_black_star:Optional Parameter<br>:eight_spoked_asterisk:Optional Object key | Success:<ul><li>**square** (Object)</li></ul><hr>Error:<ul><li>null</li></ul> | No | Returns a :pushpin:**square**.<br><br>If the **square** is invalid (before or after shifting by `rankShift` and `fileShift`), then `null` will be returned.<br><br>`isUnreferenced = true` means that the returned **square** will not be referenced (updates made to the **board** can't affect these unreferenced copies).<hr>Examples:<ul><li>`board.getSquare("e4") //Object{...}`</li><li>`board.getSquare("a1", {rankShift:-7, fileShift:7}) //Object{...}`</li><li>`board.getSquare("0invalidsquare0") //null`</li></ul><hr>:pushpin:Square documentation link:<ul><li>[square properties](https://github.com/ajax333221/isepic-chess#list-of-squareproperties).</li></ul>
 **setSquare**(<br>*qos*,<br>*qal*,<br>*p*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li><li>qal:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li><li>:eight_pointed_black_star:p (Object):<ul><li>:eight_spoked_asterisk:rankShift (Number): `-7 to 7`</li><li>:eight_spoked_asterisk:fileShift (Number): `-7 to 7`</li></ul></li></ul><hr>:eight_pointed_black_star:Optional Parameter<br>:eight_spoked_asterisk:Optional Object key | Boolean | No | (... *temporal-draft*: changes the **board property** of `board.squares.x`, the **square** object will have every non-static property updated, supports the rank/file shifting like `board.getSquare()`, Note: no validation happens, no castle rights get updated and no ui refresh occurs ...)
 **countAttacks**(<br>*qos*,<br>*earlyBreak*<br>) | <ul><li>:eight_pointed_black_star:qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li><li>:eight_pointed_black_star:earlyBreak (Boolean)</li></ul><hr>:eight_pointed_black_star:Optional Parameter | Number | No | (... *temporal-draft*: this can be called to know how many times enemy pieces are attacking a square, you can pass a boolean to short-circuit and stop looking after a single attack on the square and you will get 0 or 1, it is a waste of resources to re-count the times attacked to the king square as this information is already calculated and stored in `board.checks`, the active side king bos will be used as default if the optional qos is missing ...)
@@ -241,9 +242,9 @@ To do
 -------------
 
 - **Relocate the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple
+- **PGN export** (export imported tags)
 - **PGN viewer** (keep comments instead of deleting them)
 - **Parse multiple games** (currently the parser can only handle one game at a time)
-- **PGN export** (a real export that includes the tags would be good to have)
 
 Copyright and license
 -------------

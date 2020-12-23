@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.10.1";
+		var _VERSION="4.10.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1448,6 +1448,77 @@
 			return rtn;
 		}
 		
+		function _pgnExport(){/*2020 p options: remove comments, max line len, tag white-list*/
+			var i, len, that, header, ordered_tags, result_tag_ow, move_list, black_starts, initial_full_move, manual_termination, text_game, rtn;
+			
+			that=this;
+			
+			rtn="";
+			
+			header=(_isObject(header) ? header : {});/*2020 header de _parserHelper()*/
+			
+			move_list=that.moveList;
+			
+			black_starts=_strContains(move_list[0].Fen, " b ");
+			
+			initial_full_move=(that.fullMove-Math.floor((that.currentMove+black_starts-1)/2)+(black_starts===!(that.currentMove%2))-1);
+			
+			manual_termination=(that.manualResult!=="*");
+			result_tag_ow="*";
+			
+			text_game="";
+			
+			for(i=1, len=move_list.length; i<len; i++){//1<len
+				text_game+=(i!==1 ? " " : "");
+				
+				text_game+=(black_starts===!(i%2) ? ((initial_full_move+Math.floor((i+black_starts-1)/2))+". ") : "");
+				
+				text_game+=move_list[i].San;
+				
+				if(move_list[i].Comment){
+					text_game+=" "+move_list[i].Comment;
+				}
+				
+				if(!manual_termination && move_list[i].MoveResult){
+					text_game+=" "+move_list[i].MoveResult;
+					
+					result_tag_ow=move_list[i].MoveResult;
+				}
+			}
+			
+			if(text_game){
+				if(black_starts){
+					text_game=initial_full_move+"..."+text_game;
+				}
+				
+				if(manual_termination){
+					text_game+=" "+that.manualResult;
+					
+					result_tag_ow=that.manualResult;
+				}
+			}
+			
+			text_game=(text_game || "*");
+			
+			ordered_tags=[["Event", (header.Event || "Demo")], ["Site", (header.Site || "?")], ["Date", (header.Date || "????.??.??")], ["Round", (header.Round || "?")], ["White", (header.White || "?")], ["Black", (header.Black || "?")], ["Result", result_tag_ow]];
+			
+			if(that.fen!==_DEFAULT_FEN){
+				/*2020 revisar que fen ya tenga los clocks, parece que si mm*/
+				ordered_tags.push(["SetUp", "1"]);
+				ordered_tags.push(["FEN", that.fen]);
+			}
+			
+			//por cada key que no sea los ordered_tags (ni SetUp o FEN), ya que pueda tener otras keys del parser
+			
+			for(i=0, len=ordered_tags.length; i<len; i++){//0<len
+				rtn+="["+ordered_tags[i][0]+" \""+ordered_tags[i][1]+"\"]\n";
+			}
+			
+			rtn+="\n"+text_game;
+			
+			return rtn;
+		}
+		
 		function _ascii(is_rotated){
 			var i, j, that, bottom_label, current_square, rtn;
 			
@@ -2403,6 +2474,7 @@
 						legalMovesHelper : _legalMovesHelper,
 						legalMoves : _legalMoves,
 						legalSanMoves : _legalSanMoves,
+						pgnExport : _pgnExport,
 						ascii : _ascii,
 						boardHash : _boardHash,
 						isEqualBoard : _isEqualBoard,

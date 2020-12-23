@@ -4,6 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
+//pgnExport
 //setSquare
 //readFen
 //updateFenAndMisc
