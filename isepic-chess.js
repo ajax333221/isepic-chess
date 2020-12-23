@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.10.2";
+		var _VERSION="4.10.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1449,7 +1449,7 @@
 		}
 		
 		function _pgnExport(){/*2020 p options: remove comments, max line len, tag white-list*/
-			var i, len, that, header, ordered_tags, result_tag_ow, move_list, black_starts, initial_full_move, manual_termination, text_game, rtn;
+			var i, len, that, header, ordered_tags, result_tag_ow, move_list, black_starts, initial_fen, initial_full_move, text_game, rtn;
 			
 			that=this;
 			
@@ -1459,11 +1459,12 @@
 			
 			move_list=that.moveList;
 			
-			black_starts=_strContains(move_list[0].Fen, " b ");
+			initial_fen=move_list[0].Fen;
+			
+			black_starts=_strContains(initial_fen, " b ");
 			
 			initial_full_move=(that.fullMove-Math.floor((that.currentMove+black_starts-1)/2)+(black_starts===!(that.currentMove%2))-1);
 			
-			manual_termination=(that.manualResult!=="*");
 			result_tag_ow="*";
 			
 			text_game="";
@@ -1479,11 +1480,19 @@
 					text_game+=" "+move_list[i].Comment;
 				}
 				
-				if(!manual_termination && move_list[i].MoveResult){
-					text_game+=" "+move_list[i].MoveResult;
-					
+				if(move_list[i].MoveResult){
 					result_tag_ow=move_list[i].MoveResult;
 				}
+			}
+			
+			//if current move = max move and unknown result and in draw
+			//export as if the draw was claimed (before manual result overwrite)
+			if(false){//use fenGet() "inDraw"
+				/*2020 result_tag_ow="1/2-1/2";*/
+			}
+			
+			if(that.manualResult!=="*"){
+				result_tag_ow=that.manualResult;
 			}
 			
 			if(text_game){
@@ -1491,28 +1500,23 @@
 					text_game=initial_full_move+"..."+text_game;
 				}
 				
-				if(manual_termination){
-					text_game+=" "+that.manualResult;
-					
-					result_tag_ow=that.manualResult;
-				}
+				text_game+=" "+result_tag_ow;
 			}
 			
 			text_game=(text_game || "*");
 			
-			ordered_tags=[["Event", (header.Event || "Demo")], ["Site", (header.Site || "?")], ["Date", (header.Date || "????.??.??")], ["Round", (header.Round || "?")], ["White", (header.White || "?")], ["Black", (header.Black || "?")], ["Result", result_tag_ow]];
+			ordered_tags=[["Event", (header.Event || "Chess game")], ["Site", (header.Site || "?")], ["Date", (header.Date || "????.??.??")], ["Round", (header.Round || "?")], ["White", (header.White || "?")], ["Black", (header.Black || "?")], ["Result", result_tag_ow]];
 			
-			if(that.fen!==_DEFAULT_FEN){
-				/*2020 revisar que fen ya tenga los clocks, parece que si mm*/
+			if(initial_fen!==_DEFAULT_FEN){
 				ordered_tags.push(["SetUp", "1"]);
-				ordered_tags.push(["FEN", that.fen]);
+				ordered_tags.push(["FEN", initial_fen]);
 			}
-			
-			//por cada key que no sea los ordered_tags (ni SetUp o FEN), ya que pueda tener otras keys del parser
 			
 			for(i=0, len=ordered_tags.length; i<len; i++){//0<len
 				rtn+="["+ordered_tags[i][0]+" \""+ordered_tags[i][1]+"\"]\n";
 			}
+			
+			//tener cuidado para que las 7 + setup + fen salgan en orden y sin duplicar
 			
 			rtn+="\n"+text_game;
 			
