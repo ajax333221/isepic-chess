@@ -47,7 +47,7 @@ describe("Board methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(-361720168);
+			expect(board_obj.boardHash()).toBe(310579461);
 		});
 		
 		test("other position and board name not used in the hash", () => {
@@ -72,7 +72,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(-497418228);
+			expect(hash_a).toBe(1663179513);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});

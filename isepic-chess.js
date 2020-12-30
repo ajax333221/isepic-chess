@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="4.10.4";
+		var _VERSION="5.0.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1469,15 +1469,17 @@
 			
 			text_game="";
 			
-			for(i=1, len=move_list.length; i<len; i++){//1<len
-				text_game+=(i!==1 ? " " : "");
-				
-				text_game+=(black_starts===!(i%2) ? ((initial_full_move+Math.floor((i+black_starts-1)/2))+". ") : "");
-				
-				text_game+=move_list[i].San;
-				
-				if(move_list[i].Comment){
-					text_game+=" "+move_list[i].Comment;
+			for(i=0, len=move_list.length; i<len; i++){//0<len
+				if(i){
+					text_game+=(i!==1 ? " " : "");
+					
+					text_game+=(black_starts===!(i%2) ? ((initial_full_move+Math.floor((i+black_starts-1)/2))+". ") : "");
+					
+					text_game+=move_list[i].San;
+					
+					if(move_list[i].Comment){
+						text_game+=" "+move_list[i].Comment;
+					}
 				}
 				
 				if(move_list[i].MoveResult){
@@ -1485,10 +1487,10 @@
 				}
 			}
 			
-			//if current move = max move and unknown result and in draw
-			//export as if the draw was claimed (before manual result overwrite)
-			if(false){//use fenGet() "inDraw"
-				/*2020 result_tag_ow="1/2-1/2";*/
+			if(result_tag_ow==="*"){
+				if(move_list[move_list.length-1].CanDraw){
+					result_tag_ow="1/2-1/2";
+				}
 			}
 			
 			if(that.manualResult!=="*"){
@@ -1501,6 +1503,8 @@
 				}
 				
 				text_game+=" "+result_tag_ow;
+			}else{
+				text_game+=result_tag_ow;
 			}
 			
 			text_game=(text_game || "*");
@@ -2108,13 +2112,13 @@
 					}
 				}
 				
-				rtn_move_obj={Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
+				rtn_move_obj={Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, CanDraw : that.inDraw, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
 				
 				if(that.currentMove!==that.moveList.length){
 					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
-				that.moveList.push({Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
+				that.moveList.push({Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, CanDraw : that.inDraw, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
 				
 				that.refreshBoard(1);//autorefresh
 			}
@@ -2372,7 +2376,7 @@
 				
 				delete _BOARDS[del_board_name_cache];
 				
-				/*2020 autorefresh when removing current board. EDIT: can't easily select a non-hidden board*/
+				/*2020 ui problem: autorefresh when removing loaded board. EDIT: can't easily select a non-hidden board*/
 			}
 			
 			return rtn;
@@ -2615,7 +2619,16 @@
 				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
 				new_board.currentMove=0;
 				new_board.readFen(temp);
-				new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
+				
+				temp="";
+				
+				if(new_board.isCheckmate){
+					temp=(new_board[new_board.activeColor].isBlack ? "1-0" : "0-1");
+				}else if(new_board.isStalemate){
+					temp="1/2-1/2";
+				}
+				
+				new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : temp, CanDraw : new_board.inDraw, FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -2630,7 +2643,16 @@
 					temp=_DEFAULT_FEN;/*NO refactor to a function*/
 					new_board.currentMove=0;
 					new_board.readFen(temp);
-					new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : "", FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
+					
+					temp="";
+					
+					if(new_board.isCheckmate){
+						temp=(new_board[new_board.activeColor].isBlack ? "1-0" : "0-1");
+					}else if(new_board.isStalemate){
+						temp="1/2-1/2";
+					}
+					
+					new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : temp, CanDraw : new_board.inDraw, FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
 				}
 				
 				if(p.pgn){
