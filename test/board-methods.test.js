@@ -4,7 +4,6 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//pgnExport
 //setSquare
 //readFen
 //updateFenAndMisc
@@ -257,6 +256,282 @@ describe("Board methods", () => {
 			
 			board_obj.setPromoteTo(-1);
 			expect(board_obj.promoteTo).toBe(2);
+		});
+	});
+	
+	describe("b.pgnExport()", () => {
+		var board_name, shared_fen, w_win_pgn, b_win_pgn, stalemate_pgn, unfinished_pgn, pgn_base;
+		
+		board_name="board_pgn_export";
+		
+		shared_fen="1k6/8/K7/3Q4/8/8/p7/8 w - - 0 1";
+		
+		w_win_pgn=`1. Ka5 Kc8 2. Ka6 Kb8 3. Qb7#`;//1-0
+		b_win_pgn=`1. Qb3+ Kc8 2. Ka7 a1=Q+ 3. Qa3 Kc7 4. Qa2 Qxa2#`;//0-1
+		stalemate_pgn=`1. Qxa2 Ka8 2. Kb6+ Kb8 3. Qa6`;//½-½
+		unfinished_pgn=`1. Ka5 Kc7 2. Qh5 Kd7 3. Kb5`;//unfinished
+		
+		pgn_base=`[Event "Chess game"]
+[Site "?"]
+[Date "????.??.??"]
+[Round "?"]
+[White "?"]
+[Black "?"]
+[Result "_RESULT_"]
+[SetUp "1"]
+[FEN "1k6/8/K7/3Q4/8/8/p7/8 w - - 0 1"]
+
+_MOVES_`;
+		
+		test("MoveResult 1-0 in index 0 and n", () => {
+			var board_obj, pgn_to_compare;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : shared_fen,
+				pgn : w_win_pgn,
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1-0").replace("_MOVES_", (w_win_pgn+" 1-0"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1-0");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1-0").replace("_MOVES_", (w_win_pgn+" 1-0"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("0-1");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "0-1").replace("_MOVES_", (w_win_pgn+" 0-1"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1/2-1/2");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", (w_win_pgn+" 1/2-1/2"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("*");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1-0").replace("_MOVES_", (w_win_pgn+" 1-0"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+		});
+		
+		test("MoveResult 0-1 in index 0 and n", () => {
+			var board_obj, pgn_to_compare;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : shared_fen,
+				pgn : b_win_pgn,
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			pgn_to_compare=pgn_base.replace("_RESULT_", "0-1").replace("_MOVES_", (b_win_pgn+" 0-1"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1-0");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1-0").replace("_MOVES_", (b_win_pgn+" 1-0"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("0-1");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "0-1").replace("_MOVES_", (b_win_pgn+" 0-1"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1/2-1/2");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", (b_win_pgn+" 1/2-1/2"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("*");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "0-1").replace("_MOVES_", (b_win_pgn+" 0-1"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+		});
+		
+		test("MoveResult 1/2-1/2 in index 0 and n", () => {
+			var board_obj, pgn_to_compare;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : shared_fen,
+				pgn : stalemate_pgn,
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", (stalemate_pgn+" {Stalemate} 1/2-1/2"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1-0");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1-0").replace("_MOVES_", (stalemate_pgn+" {Stalemate} 1-0"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("0-1");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "0-1").replace("_MOVES_", (stalemate_pgn+" {Stalemate} 0-1"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1/2-1/2");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", (stalemate_pgn+" {Stalemate} 1/2-1/2"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("*");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", (stalemate_pgn+" {Stalemate} 1/2-1/2"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+		});
+		
+		test("MoveResult empty in index 0 and n", () => {
+			var board_obj, pgn_to_compare;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : shared_fen,
+				pgn : unfinished_pgn,
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			pgn_to_compare=pgn_base.replace("_RESULT_", "*").replace("_MOVES_", (unfinished_pgn+" *"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1-0");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1-0").replace("_MOVES_", (unfinished_pgn+" 1-0"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("0-1");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "0-1").replace("_MOVES_", (unfinished_pgn+" 0-1"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("1/2-1/2");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", (unfinished_pgn+" 1/2-1/2"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.setManualResult("*");
+			pgn_to_compare=pgn_base.replace("_RESULT_", "*").replace("_MOVES_", (unfinished_pgn+" *"));
+			
+			board_obj.navFirst();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.navLast();
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+		});
+		
+		test("auto-claim draw when CanDraw", () => {
+			var board_obj, pgn_to_compare;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102",
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			pgn_to_compare=pgn_base.replace("_RESULT_", "*").replace("_MOVES_", "*").replace("1k6/8/K7/3Q4/8/8/p7/8 w - - 0 1", "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102");
+			
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.playMove("g2-b2");
+			
+			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", "102. Rb2 {50 moves rule} 1/2-1/2").replace("1k6/8/K7/3Q4/8/8/p7/8 w - - 0 1", "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102");
+			
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
+			
+			board_obj.playMove("b6-b2");
+			
+			pgn_to_compare=pgn_base.replace("_RESULT_", "*").replace("_MOVES_", "102. Rb2 {50 moves rule} Rxb2 *").replace("1k6/8/K7/3Q4/8/8/p7/8 w - - 0 1", "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102");
+			
+			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 		});
 	});
 });
