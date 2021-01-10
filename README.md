@@ -3,8 +3,6 @@ isepic-chess.js
 
 `isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
 
-> **Note:** As of `v2.6.0` <sup>(April, 2020)</sup>, everything visual (HTML board, piece animations, etc.) is now developed separately at [isepic-chess-ui (GitHub repo)](https://github.com/ajax333221/isepic-chess-ui), this means that the core library no longer depends on jQuery (or any other dependency).
-
 Table of contents
 -------------
 
@@ -249,6 +247,6 @@ To do
 Copyright and license
 -------------
 
-Copyright © 2020 Ajax Isepic (ajax333221)
+Copyright © 2021 Ajax Isepic (ajax333221)
 
 Licensed under MIT License: http://opensource.org/licenses/mit-license.php

@@ -1,10 +1,10 @@
-/** Copyright (c) 2020 Ajax Isepic (ajax333221) Licensed MIT */
+/** Copyright (c) 2021 Ajax Isepic (ajax333221) Licensed MIT */
 
 /* jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.0.2";
+		var _VERSION="5.0.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
