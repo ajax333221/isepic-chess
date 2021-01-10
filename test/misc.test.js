@@ -402,6 +402,47 @@ describe("Misc.", () => {
 			"rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"
 		];
 		
+		/*2020 move these to b.refinedFenTest()*/
+		
+		//"more than 8 wp"
+		arr.push("rnbqkbnr/pppppppp/8/8/8/P7/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppp1ppp/8/4p3/1P6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+		
+		//"more than 8 bp"
+		arr.push("rnbqkbnr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppp1ppp/8/4p3/1p6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+		
+		//"more promoted pieces than possible (w)"
+		arr.push("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBRR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppp1ppp/8/4p3/8/PP6/1NPRPPBR/RNBQKBNR w KQkq - 0 1");
+		arr.push("4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRQQ w - - 0 1");
+		arr.push("4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRRR w - - 0 1");
+		arr.push("rnbqkbnr/1ppppppp/p7/8/7Q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPNPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppp1ppp/8/4p3/7B/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppppppp/8/8/8/R7/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		
+		//"more promoted pieces than possible (b)"
+		arr.push("rrbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/1ppppppp/p7/8/7q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPnPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppp1ppp/8/4p3/7b/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+		arr.push("rnbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		
+		//"light and dark squared bishops taken into account (w)"
+		arr.push("r3k2r/3ppp2/8/8/8/3PP3/PPPB1PPP/RNBQK1NR w KQkq - 0 1");
+		arr.push("r3k2r/3ppp2/8/8/8/3PP3/PPP1BPPP/RN1QKBNR w KQkq - 0 1");
+		
+		//"light and dark squared bishops taken into account (b)"
+		arr.push("rnbqk1nr/pppb1ppp/3pp3/8/8/8/3PPP2/R3K2R b KQkq - 0 1");
+		arr.push("rn1qkbnr/ppp1bppp/3pp3/8/8/8/3PPP2/R3K2R b KQkq - 0 1");
+		
+		//"promoted pieces with other side total 16 (w)"
+		arr.push("rn3rk1/pbppqpbp/1p2pnp1/8/8/8/PPPPPQPP/RNBQKBNR w KQ - 0 1");
+		
+		//"promoted pieces with other side total 16 (b)"
+		arr.push("rnbqkbnr/pppppqpp/8/8/8/1P2PNP1/PBPPQPBP/RN3RK1 b kq - 0 1");
+		
 		for(i=0, len=arr.length; i<len; i++){//0<len
 			Ic.setSilentMode(true);
 			expect(Ic.fenApply(arr[i], "isLegalFen")).toBe(false);

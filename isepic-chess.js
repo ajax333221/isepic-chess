@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.0.0";
+		var _VERSION="5.0.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -379,8 +379,8 @@
 			
 			rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
 			
-			while(rtn!=(rtn=rtn.replace(/\{[^{}]*\}/g, "")));
-			while(rtn!=(rtn=rtn.replace(/\([^()]*\)/g, "")));
+			while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "")));
+			while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "")));
 			
 			rtn=rtn.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
 			rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
@@ -481,7 +481,7 @@
 		}
 		
 		function _basicFenTest(fen){
-			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board_arr, total_pieces, total_files_in_current_rank, current_side, error_msg;
+			var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board, fen_board_arr, total_files_in_current_rank, error_msg;
 			
 			error_msg="";
 			
@@ -510,7 +510,8 @@
 			}
 			
 			if(!error_msg){
-				fen_board_arr=fen.split(" ")[0].split("/");
+				fen_board=fen.split(" ")[0];
+				fen_board_arr=fen_board.split("/");
 				
 				outer:
 				for(i=0; i<8; i++){//0...7
@@ -538,25 +539,14 @@
 			}
 			
 			if(!error_msg){
-				total_pieces=countPieces(fen);
-				
-				for(i=0; i<2; i++){//0...1
-					current_side=(i ? total_pieces.b : total_pieces.w);
-					
-					if(current_side.k!==1){
-						error_msg="Error ["+(i+5)+"] board without exactly one king";
-						break;
-					}
-					
-					if(current_side.p>8){
-						error_msg="Error ["+(i+7)+"] more than 8 pawns";
-						break;
-					}
-					
-					if((Math.max((current_side.n-2), 0)+Math.max((current_side.b-2), 0)+Math.max((current_side.r-2), 0)+Math.max((current_side.q-1), 0))>(8-current_side.p)){
-						error_msg="Error ["+(i+9)+"] promoted pieces exceed the number of missing pawns";
-						break;
-					}
+				if(_occurrences(fen_board, "K")!==1){
+					error_msg="Error [5] board without exactly one white king";
+				}
+			}
+			
+			if(!error_msg){
+				if(_occurrences(fen_board, "k")!==1){
+					error_msg="Error [6] board without exactly one black king";
 				}
 			}
 			
@@ -1005,7 +995,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, en_passant_square, behind_ep_val, infront_ep_is_empty, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, error_msg;
+			var i, j, k, that, temp, current_square, en_passant_square, behind_ep_val, infront_ep_is_empty, total_pieces, bishop_count, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, current_other_side, current_bishop_count, current_promoted_count, error_msg;
 			
 			that=this;
 			
@@ -1055,6 +1045,51 @@
 			}
 			
 			if(!error_msg){
+				bishop_count={w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}};
+				
+				for(i=0; i<8; i++){//0...7
+					for(j=0; j<8; j++){//0...7
+						current_square=that.getSquare([i, j]);
+						
+						if(current_square.isBishop){
+							current_side=(current_square.sign>0 ? bishop_count.w : bishop_count.b);
+							
+							if((i+j)%2){
+								current_side.darkSquaredBishops++;
+							}else{
+								current_side.lightSquaredBishops++;
+							}
+						}
+					}
+				}
+				
+				total_pieces=countPieces(that.fen);
+				
+				for(i=0; i<2; i++){//0...1
+					current_side=(i ? total_pieces.b : total_pieces.w);
+					current_other_side=(i ? total_pieces.w : total_pieces.b);
+					
+					current_bishop_count=(i ? bishop_count.b : bishop_count.w);
+					
+					//if(current_side.k!==1){...} done in _basicFenTest
+					
+					if(current_side.p>8){
+						error_msg="Error ["+(i+4)+"] more than 8 pawns";
+						break;
+					}
+					
+					temp=(current_other_side.p+current_other_side.n+current_other_side.b+current_other_side.r+current_other_side.q+current_other_side.k);
+					
+					current_promoted_count=(Math.max((current_side.n-2), 0)+Math.max((current_bishop_count.lightSquaredBishops-1), 0)+Math.max((current_bishop_count.darkSquaredBishops-1), 0)+Math.max((current_side.r-2), 0)+Math.max((current_side.q-1), 0));
+					
+					if((temp===16 && current_promoted_count) || (current_promoted_count>(8-current_side.p))){
+						error_msg="Error ["+(i+6)+"] promoted pieces exceed the number of missing pawns";
+						break;
+					}
+				}
+			}
+			
+			if(!error_msg){
 				fen_board=that.fen.split(" ")[0];
 				
 				for(i=0; i<2; i++){//0...1
@@ -1076,7 +1111,7 @@
 					}
 					
 					if(min_captured>(15-_occurrences(fen_board, (i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
-						error_msg="Error [4] not enough captured pieces to support the total doubled pawns";
+						error_msg="Error [8] not enough captured pieces to support the total doubled pawns";
 						break;
 					}
 				}
@@ -1090,11 +1125,11 @@
 						temp=(i ? "8" : "1");
 						
 						if(that.getSquare("e"+temp).val!==current_side.king){
-							error_msg="Error [5] "+(i ? "black" : "white")+" castling rights without king in original square";
+							error_msg="Error [9] "+(i ? "black" : "white")+" castling rights without king in original square";
 						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare("h"+temp).val!==current_side.rook){
-							error_msg="Error [6] "+(i ? "black" : "white")+" short castling rights with missing H-file rook";
+							error_msg="Error [10] "+(i ? "black" : "white")+" short castling rights with missing H-file rook";
 						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare("a"+temp).val!==current_side.rook){
-							error_msg="Error [7] "+(i ? "black" : "white")+" long castling rights with missing A-file rook";
+							error_msg="Error [11] "+(i ? "black" : "white")+" long castling rights with missing A-file rook";
 						}
 						
 						if(error_msg){

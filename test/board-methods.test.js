@@ -7,7 +7,7 @@ Ic.setSilentMode(false);
 //setSquare
 //readFen
 //updateFenAndMisc
-//refinedFenTest
+//refinedFenTest (hay unos fen en misc.)
 //testCollision
 //toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
 //setPromoteTo (return value)
