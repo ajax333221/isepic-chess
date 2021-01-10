@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.0.1";
+		var _VERSION="5.0.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -995,7 +995,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, current_square, en_passant_square, behind_ep_val, infront_ep_is_empty, total_pieces, bishop_count, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, current_other_side, current_bishop_count, current_promoted_count, error_msg;
+			var i, j, k, that, temp, current_square, en_passant_square, behind_ep_val, infront_ep_is_empty, bishop_count, total_pieces, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, current_other_side, current_bishop_count, current_promoted_count, error_msg;
 			
 			that=this;
 			
@@ -1078,12 +1078,17 @@
 						break;
 					}
 					
-					temp=(current_other_side.p+current_other_side.n+current_other_side.b+current_other_side.r+current_other_side.q+current_other_side.k);
-					
 					current_promoted_count=(Math.max((current_side.n-2), 0)+Math.max((current_bishop_count.lightSquaredBishops-1), 0)+Math.max((current_bishop_count.darkSquaredBishops-1), 0)+Math.max((current_side.r-2), 0)+Math.max((current_side.q-1), 0));
 					
-					if((temp===16 && current_promoted_count) || (current_promoted_count>(8-current_side.p))){
-						error_msg="Error ["+(i+6)+"] promoted pieces exceed the number of missing pawns";
+					temp=(current_other_side.p+current_other_side.n+current_other_side.b+current_other_side.r+current_other_side.q+current_other_side.k);
+					
+					if(temp===16 && current_promoted_count){
+						error_msg="Error ["+(i+6)+"] promoted pieces without capturing any piece";
+						break;
+					}
+					
+					if(current_promoted_count>(8-current_side.p)){
+						error_msg="Error ["+(i+8)+"] promoted pieces exceed the number of missing pawns";
 						break;
 					}
 				}
@@ -1111,7 +1116,7 @@
 					}
 					
 					if(min_captured>(15-_occurrences(fen_board, (i ? "P|N|B|R|Q" : "p|n|b|r|q")))){
-						error_msg="Error [8] not enough captured pieces to support the total doubled pawns";
+						error_msg="Error [10] not enough captured pieces to support the total doubled pawns";
 						break;
 					}
 				}
@@ -1125,11 +1130,11 @@
 						temp=(i ? "8" : "1");
 						
 						if(that.getSquare("e"+temp).val!==current_side.king){
-							error_msg="Error [9] "+(i ? "black" : "white")+" castling rights without king in original square";
+							error_msg="Error [11] "+(i ? "black" : "white")+" castling rights without king in original square";
 						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare("h"+temp).val!==current_side.rook){
-							error_msg="Error [10] "+(i ? "black" : "white")+" short castling rights with missing H-file rook";
+							error_msg="Error [12] "+(i ? "black" : "white")+" short castling rights with missing H-file rook";
 						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare("a"+temp).val!==current_side.rook){
-							error_msg="Error [11] "+(i ? "black" : "white")+" long castling rights with missing A-file rook";
+							error_msg="Error [13] "+(i ? "black" : "white")+" long castling rights with missing A-file rook";
 						}
 						
 						if(error_msg){
