@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.0.3";
+		var _VERSION="5.1.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -206,7 +206,7 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
+				p.delimiter=(((typeof p.delimiter)==="string" && p.delimiter) ? p.delimiter : "-");
 				p.delimiter=p.delimiter.charAt(0);
 				
 				if((typeof mov)!=="string"){
@@ -643,7 +643,7 @@
 			return rtn_set;
 		}
 		
-		function _countAttacks(king_qos, early_break){
+		function _countAttacks(target_qos, early_break){
 			var i, j, that, as_knight, active_side, rtn_total_checks;
 			
 			that=this;
@@ -655,14 +655,14 @@
 			rtn_total_checks=0;
 			
 			active_side=that[that.activeColor];
-			king_qos=(king_qos || active_side.kingBos);
+			target_qos=(target_qos || active_side.kingBos);
 			
 			outer:
 			for(i=0; i<2; i++){//0...1
 				as_knight=!!i;
 				
 				for(j=1; j<9; j++){//1...8
-					if(_isAttacked(king_qos, j, as_knight)){
+					if(_isAttacked(target_qos, j, as_knight)){
 						rtn_total_checks++;
 						
 						if(early_break){
@@ -767,15 +767,15 @@
 			//}
 			
 			if(keep_going){
-				if((typeof is_goto)==="boolean"){
-					num=_toInt(num);
-				}else{
+				if((typeof is_goto)!=="boolean"){
 					num=_toInt(num, 0, (len-1));
 					diff=(num-that.currentMove);
 					is_goto=(Math.abs(diff)!==1);
 					
 					num=(is_goto ? num : diff);
 				}
+				
+				num=_toInt(num);
 				
 				temp=_toInt((is_goto ? num : (num+that.currentMove)), 0, (len-1));
 				
@@ -788,7 +788,7 @@
 				rtn_changed=true;
 				
 				that.currentMove=temp;
-				that.readFen(that.moveList[temp].Fen);
+				that.readValidatedFen(that.moveList[temp].Fen);
 				
 				that.refreshBoard(is_goto ? 0 : num);//autorefresh
 			}
@@ -836,7 +836,7 @@
 			return that.setCurrentMove(move_index);//autorefresh (sometimes)
 		}
 		
-		function _readFen(fen){
+		function _readValidatedFen(fen){
 			var i, j, len, that, fen_parts, current_file, current_char, fen_board_arr, skip_files;
 			
 			that=this;
@@ -886,7 +886,6 @@
 			that=this;
 			
 			new_fen_board="";
-			bishop_count={w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}};
 			
 			for(i=0; i<8; i++){//0...7
 				consecutive_empty_squares=0;
@@ -899,14 +898,6 @@
 							current_side=(current_square.sign===that[that.activeColor].sign ? that[that.activeColor] : that[that.nonActiveColor]);
 							
 							current_side.kingBos=current_square.bos;
-						}else if(current_square.isBishop){
-							current_side=(current_square.sign>0 ? bishop_count.w : bishop_count.b);
-							
-							if((i+j)%2){
-								current_side.darkSquaredBishops++;
-							}else{
-								current_side.lightSquaredBishops++;
-							}
 						}
 						
 						new_fen_board+=(consecutive_empty_squares || "")+current_square.bal;
@@ -965,6 +956,8 @@
 				if(total_pieces.w.n+total_pieces.b.n){
 					that.isInsufficientMaterial=((total_pieces.w.n+total_pieces.b.n+total_pieces.w.b+total_pieces.b.b)===1);//k vs kn
 				}else if(total_pieces.w.b+total_pieces.b.b){
+					bishop_count=that.countLightDarkBishops();
+					
 					at_least_one_light=!!(bishop_count.w.lightSquaredBishops+bishop_count.b.lightSquaredBishops);
 					at_least_one_dark=!!(bishop_count.w.darkSquaredBishops+bishop_count.b.darkSquaredBishops);
 					
@@ -995,7 +988,7 @@
 		}
 		
 		function _refinedFenTest(){
-			var i, j, k, that, temp, current_square, en_passant_square, behind_ep_val, infront_ep_is_empty, bishop_count, total_pieces, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, current_other_side, current_bishop_count, current_promoted_count, error_msg;
+			var i, j, k, that, temp, en_passant_square, behind_ep_val, infront_ep_is_empty, bishop_count, total_pieces, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, current_other_side, current_bishop_count, current_promoted_count, error_msg;
 			
 			that=this;
 			
@@ -1045,25 +1038,8 @@
 			}
 			
 			if(!error_msg){
-				bishop_count={w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}};
-				
-				for(i=0; i<8; i++){//0...7
-					for(j=0; j<8; j++){//0...7
-						current_square=that.getSquare([i, j]);
-						
-						if(current_square.isBishop){
-							current_side=(current_square.sign>0 ? bishop_count.w : bishop_count.b);
-							
-							if((i+j)%2){
-								current_side.darkSquaredBishops++;
-							}else{
-								current_side.lightSquaredBishops++;
-							}
-						}
-					}
-				}
-				
 				total_pieces=countPieces(that.fen);
+				bishop_count=that.countLightDarkBishops();
 				
 				for(i=0; i<2; i++){//0...1
 					current_side=(i ? total_pieces.b : total_pieces.w);
@@ -1702,6 +1678,32 @@
 				_cloneBoardObjs(to_board, that);
 				
 				to_board.refreshBoard(0);//autorefresh
+			}
+			
+			return rtn;
+		}
+		
+		function _countLightDarkBishops(){
+			var i, j, that, current_square, current_side, rtn;
+			
+			that=this;
+			
+			rtn={w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}};
+			
+			for(i=0; i<8; i++){//0...7
+				for(j=0; j<8; j++){//0...7
+					current_square=that.getSquare([i, j]);
+					
+					if(current_square.isBishop){
+						current_side=(current_square.sign>0 ? rtn.w : rtn.b);
+						
+						if((i+j)%2){
+							current_side.darkSquaredBishops++;
+						}else{
+							current_side.lightSquaredBishops++;
+						}
+					}
+				}
 			}
 			
 			return rtn;
@@ -2476,7 +2478,7 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				p.boardName=(((typeof p.boardName)==="string" && _trimSpaces(p.boardName).length) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
+				p.boardName=(((typeof p.boardName)==="string" && _trimSpaces(p.boardName)) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
 				board_name=p.boardName;
 				
 				p.isRotated=(p.isRotated===true);
@@ -2484,7 +2486,7 @@
 				p.isUnlabeled=(p.isUnlabeled===true);
 				p.validOrBreak=(p.validOrBreak===true);
 				
-				p.pgn=(((typeof p.pgn)==="string" && _trimSpaces(p.pgn).length) ? _parserHelper(p.pgn) : null);
+				p.pgn=(((typeof p.pgn)==="string" && _trimSpaces(p.pgn)) ? _parserHelper(p.pgn) : null);
 				
 				if(p.pgn){
 					p.fen=(p.fen || p.pgn[0].FEN);
@@ -2514,7 +2516,7 @@
 						setPromoteTo : _setPromoteTo,
 						setManualResult : _setManualResult,
 						setCurrentMove : _setCurrentMove,
-						readFen : _readFen,
+						readValidatedFen : _readValidatedFen,
 						updateFenAndMisc : _updateFenAndMisc,
 						refinedFenTest : _refinedFenTest,
 						testCollision : _testCollision,
@@ -2528,6 +2530,7 @@
 						isEqualBoard : _isEqualBoard,
 						cloneBoardFrom : _cloneBoardFrom,
 						cloneBoardTo : _cloneBoardTo,
+						countLightDarkBishops : _countLightDarkBishops,
 						sanWrapmoveHelper : _sanWrapmoveHelper,
 						getWrappedMove : _getWrappedMove,
 						draftMove : _draftMove,
@@ -2658,7 +2661,7 @@
 				
 				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
 				new_board.currentMove=0;
-				new_board.readFen(temp);
+				new_board.readValidatedFen(temp);
 				
 				temp="";
 				
@@ -2682,7 +2685,7 @@
 				if(!postfen_was_valid){
 					temp=_DEFAULT_FEN;/*NO refactor to a function*/
 					new_board.currentMove=0;
-					new_board.readFen(temp);
+					new_board.readValidatedFen(temp);
 					
 					temp="";
 					
@@ -2825,7 +2828,7 @@
 				
 				if(_isArray(props)){
 					board_keys=props;
-				}else if((typeof props)==="string" && _trimSpaces(props).length){
+				}else if((typeof props)==="string" && _trimSpaces(props)){
 					board_keys=_trimSpaces(props).split(" ");
 				}
 				

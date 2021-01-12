@@ -5,7 +5,7 @@ Ic.setSilentMode(false);
 //---to do:
 //
 //setSquare
-//readFen
+//readValidatedFen
 //updateFenAndMisc
 //refinedFenTest (hay unos fen en misc.)
 //testCollision
@@ -16,6 +16,7 @@ Ic.setSilentMode(false);
 //toggleActiveNonActive (return value)
 //playMove = via fen apply
 //getWrappedMove
+//(?mm) countLightDarkBishops
 //(?mm) draftMove
 //
 //(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
