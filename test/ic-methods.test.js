@@ -837,9 +837,9 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("r1bqkbnr/pppppppp/2n5/8/P7/5N2/1PPPPPPP/RNBQKB1R b KQkq a3 0 2");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
 		
 		test("initing from a PGN (complete) (default fen=true) (validOrBreak=false)", () => {
@@ -855,9 +855,9 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("r1bqkbnr/pppppppp/2n5/8/P7/5N2/1PPPPPPP/RNBQKB1R b KQkq a3 0 2");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
 		
 		test("initing from a PGN (partial) (default fen=true) (validOrBreak=true)", () => {
@@ -893,9 +893,9 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
 		
 		test("initing from a PGN (complete) (default fen=false) (validOrBreak=true)", () => {
@@ -914,9 +914,9 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("1rbqkbn1/ppppppp1/2n4r/P6p/8/2N2N2/1PPPPPPP/R1BQKB1R w KQ - 5 5");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
 		});
 		
 		test("initing from a PGN (complete) (default fen=false) (validOrBreak=false)", () => {
@@ -934,9 +934,9 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("1rbqkbn1/ppppppp1/2n4r/P6p/8/2N2N2/1PPPPPPP/R1BQKB1R w KQ - 5 5");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
 		});
 		
 		test("initing from a PGN (partial) (default fen=false) (validOrBreak=true)", () => {
@@ -976,9 +976,9 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("r1bqkbn1/ppppppp1/2n4r/P6p/8/2N5/1PPPPPPP/R1BQKBNR w KQq - 3 4");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
 		});
 		
 		test("initing from a PGN, using the fen property instead of a pgn tag", () => {
@@ -993,9 +993,9 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("1rbqkbn1/ppppppp1/2n4r/P6p/8/2N2N2/1PPPPPPP/R1BQKB1R w KQ - 5 5");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
 		});
 		
 		test("initing from a PGN, the fen property should take precedence over a pgn tag", () => {
@@ -1014,11 +1014,11 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/7p/P7/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
-			expect(board_obj.fen).not.toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("1rbqkbn1/ppppppp1/2n4r/7p/P7/2N2N2/1PPPPPPP/R1BQKB1R w KQ - 5 5");
 			expect(board_obj.fen).not.toBe("1rbqkbn1/ppppppp1/2n4r/P6p/8/2N2N2/1PPPPPPP/R1BQKB1R w KQ - 5 5");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbn1/ppppppp1/7r/7p/P7/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
+			expect(board_obj.fen).not.toBe("rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3");
 		});
 		
 		test("initing from a sloppy PGN", () => {
@@ -1047,9 +1047,9 @@ Rb7 24. Rd3 Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
-			board_obj.navLast();
 			expect(board_obj.fen).toBe("8/R1bk2pp/2p1p3/5p2/8/1P3P1P/5P2/4n1K1 w - - 12 37");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
 		});
 	});
 	

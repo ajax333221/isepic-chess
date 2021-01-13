@@ -166,6 +166,40 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.toInt(true)).toBe(1);
 	});
 	
+	describe("Ic.utilityMisc.isIntOrStrInt()", () => {
+		expect(Ic.utilityMisc.isIntOrStrInt(0)).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt("0")).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt(-0)).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt("4")).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt(-4)).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt("-4")).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt(4.0)).toBe(true);//4.0===4
+		expect(Ic.utilityMisc.isIntOrStrInt(-4.0)).toBe(true);//-4.0===-4
+		expect(Ic.utilityMisc.isIntOrStrInt(-Infinity)).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt("-Infinity")).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt(Infinity)).toBe(true);
+		expect(Ic.utilityMisc.isIntOrStrInt("Infinity")).toBe(true);
+		
+		expect(Ic.utilityMisc.isIntOrStrInt("")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("x")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("x"*9)).toBe(false);//NaN
+		expect(Ic.utilityMisc.isIntOrStrInt()).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt(undefined)).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("undefined")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt(true)).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt(false)).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("true")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("false")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("-0")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt(4.1)).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("4.1")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt(-4.1)).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("-4.1")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("4.0")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("-4.0")).toBe(false);
+		expect(Ic.utilityMisc.isIntOrStrInt("04")).toBe(false);
+	});
+	
 	describe("Ic.utilityMisc.hashCode()", () => {
 		test("default value", () => {
 			var i, len, arr, default_val;

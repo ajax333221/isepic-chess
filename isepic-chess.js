@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.1.1";
+		var _VERSION="5.2.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -67,7 +67,7 @@
 			}else if(/^[pnbrqk]$/i.test(str)){
 				temp=str.toLowerCase();
 				rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
-			}else if((""+_toInt(str))===str){
+			}else if(_isIntOrStrInt(str)){
 				rtn=str;
 			}
 			
@@ -354,6 +354,10 @@
 			max_val=((Number.isNaN(max_val) ? Infinity : max_val) || 0);
 			
 			return Math.min(Math.max(num, min_val), max_val);
+		}
+		
+		function _isIntOrStrInt(num){
+			return ((""+_toInt(num))===(""+num));
 		}
 		
 		function _hashCode(val){
@@ -2474,7 +2478,7 @@
 			return rtn;
 		}
 		
-		//p = {boardName, fen, pgn, isRotated, isHidden, isUnlabeled, promoteTo, manualResult, validOrBreak}
+		//p = {boardName, fen, pgn, moveIndex, isRotated, isHidden, isUnlabeled, promoteTo, manualResult, validOrBreak}
 		function initBoard(p){
 			var i, j, len, temp, board_created, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
 			
@@ -2721,14 +2725,15 @@
 						if(p.pgn[2]!=="*"){
 							p.manualResult=(_pgnResultHelper(p.manualResult) || p.pgn[2]);
 						}
-						
-						new_board.navFirst();
 					}
 				}
 			}
 			
 			if(no_errors){
 				rtn=new_board;
+				
+				p.moveIndex=(_isIntOrStrInt(p.moveIndex) ? p.moveIndex : (new_board.moveList.length-1));
+				new_board.setCurrentMove(p.moveIndex, true);
 				
 				new_board.isRotated=p.isRotated;
 				new_board.isUnlabeled=p.isUnlabeled;
@@ -2925,6 +2930,7 @@
 				strContains : _strContains,
 				occurrences : _occurrences,
 				toInt : _toInt,
+				isIntOrStrInt : _isIntOrStrInt,
 				hashCode : _hashCode,
 				castlingChars : _castlingChars,
 				cleanSan : _cleanSan,
