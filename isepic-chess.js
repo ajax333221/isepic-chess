@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.1.0";
+		var _VERSION="5.1.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -881,7 +881,7 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, len, that, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, is_stale, bishop_count, at_least_one_light, at_least_one_dark, current_side;
+			var i, j, len, that, temp, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, is_stale, bishop_count, at_least_one_light, at_least_one_dark, current_side;
 			
 			that=this;
 			
@@ -934,17 +934,23 @@
 			
 			that.isThreefold=false;
 			
-			if(that.currentMove>7){
+			if(that.currentMove>7 && that.halfMove>7){
 				times_found=1;
 				
 				for(i=(that.currentMove-1); i>=0; i--){//(len-1)...0
-					if(that.moveList[i].Fen.split(" ").slice(0, 4).join(" ")===clockless_fen){
+					temp=that.moveList[i].Fen.split(" ");
+					
+					if(temp.slice(0, 4).join(" ")===clockless_fen){
 						times_found++;
 						
 						if(times_found>2){
 							that.isThreefold=true;
 							break;
 						}
+					}
+					
+					if(temp[4]==="0"){
+						break;
 					}
 				}
 			}
