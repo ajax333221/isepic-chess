@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.2.1";
+		var _VERSION="5.3.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -710,7 +710,7 @@
 				
 				that.isRotated=temp;
 				
-				that.refreshBoard(0);//autorefresh
+				that.refreshUi(0);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -729,7 +729,7 @@
 				
 				that.promoteTo=temp;
 				
-				that.refreshBoard(0);//autorefresh
+				that.refreshUi(0);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -748,7 +748,7 @@
 				
 				that.manualResult=temp;
 				
-				that.refreshBoard(0);//autorefresh
+				that.refreshUi(0);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -794,7 +794,7 @@
 				that.currentMove=temp;
 				that.readValidatedFen(that.moveList[temp].Fen);
 				
-				that.refreshBoard(is_goto ? 0 : num);//autorefresh
+				that.refreshUi(is_goto ? 0 : num);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -1652,7 +1652,7 @@
 				
 				_cloneBoardObjs(that, from_board);
 				
-				that.refreshBoard(0);//autorefresh
+				that.refreshUi(0);//autorefresh
 			}
 			
 			return rtn;
@@ -1687,7 +1687,7 @@
 				
 				_cloneBoardObjs(to_board, that);
 				
-				to_board.refreshBoard(0);//autorefresh
+				to_board.refreshUi(0);//autorefresh
 			}
 			
 			return rtn;
@@ -2172,7 +2172,7 @@
 				
 				that.moveList.push({Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, CanDraw : that.inDraw, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
 				
-				that.refreshBoard(1);//autorefresh
+				that.refreshUi(1);//autorefresh
 			}
 			
 			return rtn_move_obj;
@@ -2180,13 +2180,13 @@
 		
 		//---------------- board (using IcUi)
 		
-		function _refreshBoard(animate_move){
+		function _refreshUi(animate_move){
 			var that;
 			
 			that=this;
 			
-			if(_WIN && _WIN.IcUi && _WIN.IcUi.refreshBoard){
-				_WIN.IcUi.refreshBoard.apply(that, [animate_move]);
+			if(_WIN && _WIN.IcUi && _WIN.IcUi.refreshUi){
+				_WIN.IcUi.refreshUi.apply(that, [animate_move]);
 			}
 		}
 		
@@ -2550,7 +2550,7 @@
 						navNext : _navNext,
 						navLast : _navLast,
 						navLinkMove : _navLinkMove,
-						refreshBoard : _refreshBoard
+						refreshUi : _refreshUi
 					};
 					
 					target=getBoard(board_name);
@@ -2742,7 +2742,7 @@
 				
 				new_board.isHidden=p.isHidden;
 				
-				new_board.refreshBoard(0);//autorefresh
+				new_board.refreshUi(0);//autorefresh
 			}
 			
 			if(board_created && !no_errors){

@@ -28,7 +28,7 @@ Ic.setSilentMode(false);
 //(x) navNext (se hara por b.setCurrentMove())
 //(x) navLast (se hara por b.setCurrentMove())
 //(x) navLinkMove (se hara por b.setCurrentMove())
-//(x) refreshBoard (N/A)(ui only)
+//(x) refreshUi (N/A)(ui only)
 
 describe("Board methods", () => {
 	describe("b.boardHash()", () => {
