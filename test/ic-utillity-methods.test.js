@@ -79,10 +79,15 @@ describe("Ic utility methods", () => {
 	
 	test("Ic.utilityMisc.formatName()", () => {
 		expect(Ic.utilityMisc.formatName(" a  Bc ")).toBe("a_Bc");
-		expect(Ic.utilityMisc.formatName("0ñ2(4) á")).toBe("0_2_4___");
 		expect(Ic.utilityMisc.formatName(" ")).toBe("");
 		expect(Ic.utilityMisc.formatName("")).toBe("");
 		expect(Ic.utilityMisc.formatName("ñ")).toBe("_");
+		expect(Ic.utilityMisc.formatName("ññ")).toBe("_");
+		expect(Ic.utilityMisc.formatName("ña")).toBe("_a");
+		expect(Ic.utilityMisc.formatName("añ")).toBe("a_");
+		expect(Ic.utilityMisc.formatName("_ñañ_")).toBe("_a_");
+		expect(Ic.utilityMisc.formatName("ñ_ñañ_ñ")).toBe("_a_");
+		expect(Ic.utilityMisc.formatName("a_ñ_a")).toBe("a_a");
 	});
 	
 	test("Ic.utilityMisc.strContains()", () => {

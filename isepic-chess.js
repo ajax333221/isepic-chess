@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.2.0";
+		var _VERSION="5.2.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -323,7 +323,7 @@
 		}
 		
 		function _formatName(str){
-			return _trimSpaces(str).replace(/[^a-z0-9]/gi, "_");
+			return _trimSpaces(str).replace(/[^a-z0-9]/gi, "_").replace(/__+/g, "_");
 		}
 		
 		function _strContains(str, str_to_find){
@@ -2220,7 +2220,7 @@
 				if((typeof woard)==="string"){
 					woard=_formatName(woard);
 					
-					if((typeof _BOARDS[woard])==="undefined"){
+					if(!woard || (typeof _BOARDS[woard])==="undefined"){
 						no_errors=false;
 					}
 				}
