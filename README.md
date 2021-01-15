@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess"><img width="100" src="/ajax333221/isepic-chess-ui/raw/master/css/images/ic_logo.png" alt="Ic.js logo"></a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess"><img width="100" src="https://github.com/ajax333221/isepic-chess-ui/raw/master/css/images/ic_logo.png" alt="Ic.js logo"></a></p>
 
 <h1 align="center">isepic-chess.js</h1>
 
@@ -10,7 +10,7 @@
 - [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
 - [Table of contents](https://github.com/ajax333221/isepic-chess#pushpin-table-of-contents)
 - [Installation](https://github.com/ajax333221/isepic-chess#computer_mouse-installation)
-- [Node.js example](https://github.com/ajax333221/isepic-chess#green-square-nodejs-example)
+- [Node.js example](https://github.com/ajax333221/isepic-chess#green_square-nodejs-example)
 - [Demo](https://github.com/ajax333221/isepic-chess#eye-demo-from-isepic-chess-ui)
 - [Features](https://github.com/ajax333221/isepic-chess#rocket-features)
 - [Documentation](https://github.com/ajax333221/isepic-chess#book-documentation)
