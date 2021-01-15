@@ -1,26 +1,27 @@
-isepic-chess.js
-================
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess"><img width="100" src="/ajax333221/isepic-chess-ui/raw/master/css/images/ic_logo.png" alt="Ic.js logo"></a></p>
+
+<h1 align="center">isepic-chess.js</h1>
 
 `isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
 
-Table of contents
+:pushpin: Table of contents
 -------------
 
 - [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
-- [Table of contents](https://github.com/ajax333221/isepic-chess#table-of-contents)
-- [Installation](https://github.com/ajax333221/isepic-chess#installation)
-- [Node.js example](https://github.com/ajax333221/isepic-chess#nodejs-example)
-- [Demo](https://github.com/ajax333221/isepic-chess#demo-from-isepic-chess-ui)
-- [Features](https://github.com/ajax333221/isepic-chess#features)
-- [Documentation](https://github.com/ajax333221/isepic-chess#documentation)
+- [Table of contents](https://github.com/ajax333221/isepic-chess#pushpin-table-of-contents)
+- [Installation](https://github.com/ajax333221/isepic-chess#computer_mouse-installation)
+- [Node.js example](https://github.com/ajax333221/isepic-chess#green-square-nodejs-example)
+- [Demo](https://github.com/ajax333221/isepic-chess#eye-demo-from-isepic-chess-ui)
+- [Features](https://github.com/ajax333221/isepic-chess#rocket-features)
+- [Documentation](https://github.com/ajax333221/isepic-chess#book-documentation)
 	- [Ic methods](https://github.com/ajax333221/isepic-chess#list-of-icmethods)
 	- [Board properties](https://github.com/ajax333221/isepic-chess#list-of-boardproperties)
 	- [Board methods](https://github.com/ajax333221/isepic-chess#list-of-boardmethods)
 	- [Square properties](https://github.com/ajax333221/isepic-chess#list-of-squareproperties)
-- [To do](https://github.com/ajax333221/isepic-chess#to-do)
-- [Copyright and license](https://github.com/ajax333221/isepic-chess#copyright-and-license)
+- [To do](https://github.com/ajax333221/isepic-chess#telescope-to-do)
+- [Copyright and license](https://github.com/ajax333221/isepic-chess#page_facing_up-copyright-and-license)
 
-Installation
+:computer_mouse: Installation
 -------------
 
 ```
@@ -37,7 +38,7 @@ Then: `const {Ic} = require("isepic-chess");`
 ```
 The variable `Ic` will be added to window.
 
-Node.js example
+:green_square: Node.js example
 -------------
 
 ```js
@@ -82,12 +83,12 @@ module.exports = (ascii_diagram + "\nIs Checkmate? = " + board.isCheckmate);
 /* for a graphical user interface see https://github.com/ajax333221/isepic-chess-ui */
 ```
 
-Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
+:eye: Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
 -------------
 
 https://ajax333221.github.io/isepic-chess-ui/
 
-Features
+:rocket: Features
 -------------
 
 - PGN import / export
@@ -101,7 +102,7 @@ Features
 - ASCII diagram
 - Extense parameter-flexibility
 
-Documentation
+:book: Documentation
 -------------
 
 #### List of `Ic.<methods>(...)`:
@@ -232,7 +233,7 @@ Property | Type | Description
 **isQueen** | Boolean | `true` when the **square abs val** is `5`
 **isKing** | Boolean | `true` when the **square abs val** is `6`
 
-To do
+:telescope: To do
 -------------
 
 - **Relocate the documentation** to `./docs` <sup>(path ignored in the npm package)</sup> and keep the `README.md` simple
@@ -240,7 +241,7 @@ To do
 - **PGN viewer** (keep comments instead of deleting them)
 - **Parse multiple games** (currently the parser can only handle one game at a time)
 
-Copyright and license
+:page_facing_up: Copyright and license
 -------------
 
 Copyright © 2021 Ajax Isepic (ajax333221)
