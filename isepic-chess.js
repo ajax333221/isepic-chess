@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.0";
+		var _VERSION="5.3.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2753,7 +2753,7 @@
 		}
 		
 		function fenApply(fen, fn_name, args){
-			var temp, board, board_created, keep_going, rtn;
+			var temp, board, board_created, silent_mode_cache, keep_going, rtn;
 			
 			rtn=null;
 			board_created=false;
@@ -2772,12 +2772,22 @@
 			//}
 			
 			if(keep_going){
+				silent_mode_cache=_SILENT_MODE;
+				
+				if(fn_name==="isLegalFen"){
+					setSilentMode(true);
+				}
+				
 				board=initBoard({
 					boardName : "board_fenApply",
 					fen : fen,
 					isHidden : true,
 					validOrBreak : true
 				});
+				
+				if(fn_name==="isLegalFen"){
+					setSilentMode(silent_mode_cache);
+				}
 				
 				board_created=(board!==null);
 				

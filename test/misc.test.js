@@ -444,9 +444,7 @@ describe("Misc.", () => {
 		arr.push("rnbqkbnr/pppppqpp/8/8/8/1P2PNP1/PBPPQPBP/RN3RK1 b kq - 0 1");
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
-			Ic.setSilentMode(true);
 			expect(Ic.fenApply(arr[i], "isLegalFen")).toBe(false);
-			Ic.setSilentMode(false);
 			
 			expect(Ic.utilityMisc.basicFenTest(arr[i])).toBe("");
 		}

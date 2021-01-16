@@ -1063,7 +1063,11 @@ Rb7 24. Rd3 Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			
 			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2-a3"])).toBe(false);
 			
+			Ic.setSilentMode(false);
+			
 			expect(Ic.fenApply("0invalidfen0", "isLegalFen")).toBe(false);
+			
+			Ic.setSilentMode(true);
 			
 			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();
 			
@@ -1073,13 +1077,9 @@ Rb7 24. Rd3 Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		});
 		
 		test("isLegalFen", () => {//this belong here (it's not a board method)
-			Ic.setSilentMode(true);
-			
 			expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")).toBe(true);
 			
 			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalFen")).toBe(false);
-			
-			Ic.setSilentMode(false);
 		});
 	});
 	
