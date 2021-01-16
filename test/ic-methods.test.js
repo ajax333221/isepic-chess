@@ -14,7 +14,7 @@ Ic.setSilentMode(false);
 //(x) setSilentMode (N/A)
 
 describe("Ic methods", () => {
-	var bad_shared_values, bad_shared_squares;
+	var bad_shared_values, bad_shared_squares, bad_shared_fen;
 	
 	//used in: Ic.toVal(), Ic.toAbsVal(), Ic.toBal(), Ic.toAbsBal(), Ic.toClassName(), Ic.getSign()
 	//Note: getSign() skips the 'false' value
@@ -22,6 +22,9 @@ describe("Ic methods", () => {
 	
 	//used in: Ic.toBos(), Ic.toPos(), Ic.getRankPos(), Ic.getFilePos(), Ic.getRankBos(), Ic.getFileBos(), Ic.isInsideBoard()
 	bad_shared_squares=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "z1", "z9", "a9", "ABCxyz", 0, 1, 8, Infinity, -Infinity, "Infinity", "-Infinity", [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
+	
+	//used in: Ic.fenApply()
+	bad_shared_fen=["", " ", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], "err", 0, -0, "*", 99, -99, Infinity, -Infinity, "Infinity", "-Infinity"];
 	
 	describe("Ic.toVal()", () => {
 		test("default value", () => {
@@ -1076,10 +1079,20 @@ Rb7 24. Rd3 Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			Ic.setSilentMode(false);
 		});
 		
-		test("isLegalFen", () => {//this belong here (it's not a board method)
-			expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")).toBe(true);
+		describe("isLegalFen", () => {//this belong here (it's not a board method)
+			test("default value", () => {
+				var i, len, default_val;
+				
+				default_val=false;
+				
+				for(i=0, len=bad_shared_fen.length; i<len; i++){//0<len
+					expect(Ic.fenApply(bad_shared_fen[i], "isLegalFen")).toBe(default_val);
+				}
+			});
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/1P6/1PPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalFen")).toBe(false);
+			test("normal inputs", () => {
+				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")).toBe(true);
+			});
 		});
 	});
 	

@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.1";
+		var _VERSION="5.3.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2499,10 +2499,8 @@
 				p.pgn=(((typeof p.pgn)==="string" && _trimSpaces(p.pgn)) ? _parserHelper(p.pgn) : null);
 				
 				if(p.pgn){
-					p.fen=(p.fen || p.pgn[0].FEN);
+					p.fen=(p.fen || p.pgn[0].FEN || _DEFAULT_FEN);
 				}
-				
-				p.fen=(p.fen || _DEFAULT_FEN);
 				
 				fen_was_valid=!_basicFenTest(p.fen);
 				
