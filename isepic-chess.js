@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.2";
+		var _VERSION="5.3.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -206,10 +206,10 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				p.delimiter=(((typeof p.delimiter)==="string" && p.delimiter) ? p.delimiter : "-");
+				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter : "-");
 				p.delimiter=p.delimiter.charAt(0);
 				
-				if((typeof mov)!=="string"){
+				if(!_isNonBlankStr(mov)){
 					no_errors=false;
 				}
 			//}
@@ -335,7 +335,7 @@
 			
 			rtn=0;
 			
-			if((typeof str)==="string" && (typeof str_rgxp)==="string" && str_rgxp){
+			if(_isNonEmptyStr(str) && _isNonEmptyStr(str_rgxp)){
 				rtn=(str.match(RegExp(str_rgxp, "g")) || []).length;
 			}
 			
@@ -360,11 +360,19 @@
 			return ((""+_toInt(num))===(""+num));
 		}
 		
+		function _isNonEmptyStr(val){
+			return !!((typeof val)==="string" && val);
+		}
+		
+		function _isNonBlankStr(val){
+			return !!((typeof val)==="string" && _trimSpaces(val));
+		}
+		
 		function _hashCode(val){
 			var i, len, hash;
 			
 			hash=0;
-			val=((typeof val)==="string" ? val : "");
+			val=(_isNonEmptyStr(val) ? val : "");
 			
 			for(i=0, len=val.length; i<len; i++){//0<len
 				hash=((hash<<5)-hash)+val.charCodeAt(i);
@@ -379,20 +387,24 @@
 		}
 		
 		function _cleanSan(rtn){
-			rtn=((typeof rtn)==="string" ? rtn : "");
+			rtn=(_isNonBlankStr(rtn) ? rtn : "");
 			
-			rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
+			if(rtn){
+				rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
+				
+				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "")));
+				while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "")));
+				
+				rtn=rtn.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
+				rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
+				rtn=rtn.replace(/\s*\-\s*/g, "-");
+				rtn=rtn.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
+				rtn=rtn.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
+				
+				rtn=_trimSpaces(rtn);
+			}
 			
-			while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "")));
-			while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "")));
-			
-			rtn=rtn.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
-			rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
-			rtn=rtn.replace(/\s*\-\s*/g, "-");
-			rtn=rtn.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
-			rtn=rtn.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
-			
-			return _trimSpaces(rtn);
+			return rtn;
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
@@ -490,14 +502,14 @@
 			error_msg="";
 			
 			//if(!error_msg){
-				fen=_trimSpaces(fen);
-				
-				if(!fen){
+				if(!_isNonBlankStr(fen)){
 					error_msg="Error [0] falsy value after trim";
 				}
 			//}
 			
 			if(!error_msg){
+				fen=_trimSpaces(fen);
+				
 				optional_clocks=fen.replace(/^([rnbqkRNBQK1-8]+\/)([rnbqkpRNBQKP1-8]+\/){6}([rnbqkRNBQK1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])($|\s)/, "");
 				
 				if(fen.length===optional_clocks.length){
@@ -1235,11 +1247,11 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				p.returnType=((typeof p.returnType)==="string" ? p.returnType : "toSquare");
+				p.returnType=(_isNonEmptyStr(p.returnType) ? p.returnType : "toSquare");
 				
-				p.squareType=((typeof p.squareType)==="string" ? p.squareType : "bos");
+				p.squareType=(_isNonEmptyStr(p.squareType) ? p.squareType : "bos");
 				
-				p.delimiter=((typeof p.delimiter)==="string" ? p.delimiter : "-");
+				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter : "-");
 				p.delimiter=p.delimiter.charAt(0);
 				
 				target_cached_square=that.getSquare(target_qos, {
@@ -1390,15 +1402,13 @@
 		
 		//p = {returnType, squareType, delimiter}
 		function _legalMoves(target_qos, p){
-			var that, convert_to_san;
+			var that;
 			
 			that=this;
 			
 			p=(_isObject(p) ? p : {});
 			
-			convert_to_san=((typeof p.returnType)==="string" && p.returnType==="san");
-			
-			return (convert_to_san ? that.legalSanMoves(target_qos) : that.legalMovesHelper(target_qos, p));
+			return (p.returnType==="san" ? that.legalSanMoves(target_qos) : that.legalMovesHelper(target_qos, p));
 		}
 		
 		function _legalSanMoves(target_qos){
@@ -1731,7 +1741,7 @@
 				validated_move=null;
 				parsed_promote="";
 				
-				if((typeof mov)!=="string"){
+				if(!_isNonBlankStr(mov)){
 					no_errors=false;
 				}
 			//}
@@ -2209,7 +2219,7 @@
 			//}
 			
 			if(no_errors){
-				is_valid=((typeof woard)==="string" || _isBoard(woard));
+				is_valid=(_isNonBlankStr(woard) || _isBoard(woard));
 				
 				if(!is_valid){
 					no_errors=false;
@@ -2217,7 +2227,7 @@
 			}
 			
 			if(no_errors){
-				if((typeof woard)==="string"){
+				if(_isNonBlankStr(woard)){
 					woard=_formatName(woard);
 					
 					if(!woard || (typeof _BOARDS[woard])==="undefined"){
@@ -2396,7 +2406,7 @@
 			
 			rtn={w:{p:0, n:0, b:0, r:0, q:0, k:0}, b:{p:0, n:0, b:0, r:0, q:0, k:0}};
 			
-			if((typeof fen)==="string"){
+			if(_isNonBlankStr(fen)){
 				fen_board=_trimSpaces(fen).split(" ")[0];
 				
 				for(i=1; i<7; i++){//1...6
@@ -2488,7 +2498,7 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				p.boardName=(((typeof p.boardName)==="string" && _trimSpaces(p.boardName)) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
+				p.boardName=(_isNonBlankStr(p.boardName) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
 				board_name=p.boardName;
 				
 				p.isRotated=(p.isRotated===true);
@@ -2496,7 +2506,7 @@
 				p.isUnlabeled=(p.isUnlabeled===true);
 				p.validOrBreak=(p.validOrBreak===true);
 				
-				p.pgn=(((typeof p.pgn)==="string" && _trimSpaces(p.pgn)) ? _parserHelper(p.pgn) : null);
+				p.pgn=(_isNonBlankStr(p.pgn) ? _parserHelper(p.pgn) : null);
 				
 				if(p.pgn){
 					p.fen=(p.fen || p.pgn[0].FEN || _DEFAULT_FEN);
@@ -2847,7 +2857,7 @@
 				
 				if(_isArray(props)){
 					board_keys=props;
-				}else if((typeof props)==="string" && _trimSpaces(props)){
+				}else if(_isNonBlankStr(props)){
 					board_keys=_trimSpaces(props).split(" ");
 				}
 				
@@ -2939,6 +2949,8 @@
 				occurrences : _occurrences,
 				toInt : _toInt,
 				isIntOrStrInt : _isIntOrStrInt,
+				isNonEmptyStr : _isNonEmptyStr,
+				isNonBlankStr : _isNonBlankStr,
 				hashCode : _hashCode,
 				castlingChars : _castlingChars,
 				cleanSan : _cleanSan,

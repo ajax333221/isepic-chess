@@ -122,6 +122,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.occurrences(str_base, " ")).toBe(4);
 		expect(Ic.utilityMisc.occurrences(str_base, str_base)).toBe(1);
 		expect(Ic.utilityMisc.occurrences("", "a")).toBe(0);
+		expect(Ic.utilityMisc.occurrences("", "")).toBe(0);
 		expect(Ic.utilityMisc.occurrences(str_base, "x")).toBe(0);
 		expect(Ic.utilityMisc.occurrences(str_base, "a")).toBe(4);
 		expect(Ic.utilityMisc.occurrences(str_base, "ba")).toBe(2);
@@ -203,6 +204,48 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.isIntOrStrInt("4.0")).toBe(false);
 		expect(Ic.utilityMisc.isIntOrStrInt("-4.0")).toBe(false);
 		expect(Ic.utilityMisc.isIntOrStrInt("04")).toBe(false);
+	});
+	
+	describe("Ic.utilityMisc.isNonEmptyStr()", () => {
+		expect(Ic.utilityMisc.isNonEmptyStr("a")).toBe(true);
+		expect(Ic.utilityMisc.isNonEmptyStr("  ")).toBe(true);
+		expect(Ic.utilityMisc.isNonEmptyStr(" ")).toBe(true);
+		
+		expect(Ic.utilityMisc.isNonEmptyStr("")).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr()).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(undefined)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(true)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(false)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr("x"*9)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(0)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(4)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(-Infinity)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(Infinity)).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr([])).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr(["a"])).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr({})).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr({a : "a"})).toBe(false);
+	});
+	
+	describe("Ic.utilityMisc.isNonBlankStr()", () => {
+		expect(Ic.utilityMisc.isNonBlankStr("a")).toBe(true);
+		
+		expect(Ic.utilityMisc.isNonBlankStr("  ")).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(" ")).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr("")).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr()).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(undefined)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(true)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(false)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr("x"*9)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(0)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(4)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(-Infinity)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(Infinity)).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr([])).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr(["a"])).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr({})).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr({a : "a"})).toBe(false);
 	});
 	
 	describe("Ic.utilityMisc.hashCode()", () => {
