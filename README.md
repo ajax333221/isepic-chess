@@ -10,7 +10,7 @@
 - [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
 - [Table of contents](https://github.com/ajax333221/isepic-chess#pushpin-table-of-contents)
 - [Installation](https://github.com/ajax333221/isepic-chess#computer_mouse-installation)
-- [Node.js example](https://github.com/ajax333221/isepic-chess#green_square-nodejs-example)
+- [Node.js example](https://github.com/ajax333221/isepic-chess#green_heart-nodejs-example)
 - [Demo](https://github.com/ajax333221/isepic-chess#eye-demo-from-isepic-chess-ui)
 - [Features](https://github.com/ajax333221/isepic-chess#rocket-features)
 - [Documentation](https://github.com/ajax333221/isepic-chess#book-documentation)
@@ -38,7 +38,7 @@ Then: `const {Ic} = require("isepic-chess");`
 ```
 The variable `Ic` will be added to window.
 
-:green_square: Node.js example
+:green_heart: Node.js example
 -------------
 
 ```js
