@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.3";
+		var _VERSION="5.3.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -112,6 +112,8 @@
 			meta_tags={};
 			last_index=-1;
 			rgxp=/\[\s*\w+\s+\"[^\"]*\"\s*\]/g;
+			
+			str=str.replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "");
 			
 			while(mtch=rgxp.exec(str)){
 				last_index=rgxp.lastIndex;
@@ -2147,17 +2149,13 @@
 				complete_san=pgn_obj.partialSan;
 				move_res="";
 				
-				if(that.isCheck){
-					if(that.isCheckmate){
-						complete_san+="#";
-						move_res=(non_active_side.isBlack ? "1-0" : "0-1");//non_active_side is toggled
-					}else{
-						complete_san+="+";
-					}
-				}else{
-					if(that.isStalemate){
-						move_res="1/2-1/2";
-					}
+				if(that.isCheckmate){
+					complete_san+="#";
+					move_res=(non_active_side.isBlack ? "1-0" : "0-1");//non_active_side is toggled
+				}else if(that.isStalemate){
+					move_res="1/2-1/2";
+				}else if(that.isCheck){//check but not checkmate
+					complete_san+="+";
 				}
 				
 				autogen_comment="";

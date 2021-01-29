@@ -1054,6 +1054,27 @@ Rb7 24. Rd3 Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			board_obj.navFirst();
 			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
 		});
+		
+		test("initing from a PGN with (%) Escape mechanism", () => {
+			var board_obj, game_pgn;
+			
+			game_pgn=`[Event "test"]
+% [SetUp "1"]
+% [FEN "rnbqkbnr/2pppppp/p7/Pp6/8/8/RPPPPPPP/1NBQKBNR w Kkq - 0 4"]
+
+1. a4`;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				pgn : game_pgn,
+				validOrBreak : true
+			});
+			
+			expect(board_obj).not.toBeNull();
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		});
 	});
 	
 	describe("Ic.fenApply()", () => {
