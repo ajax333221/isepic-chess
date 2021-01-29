@@ -2,7 +2,7 @@
 
 <h1 align="center">isepic-chess.js</h1>
 
-`isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#features)).
+`isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#rocket-features)).
 
 :pushpin: Table of contents
 -------------
