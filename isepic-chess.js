@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.4";
+		var _VERSION="5.3.5";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -113,7 +113,7 @@
 			last_index=-1;
 			rgxp=/\[\s*\w+\s+\"[^\"]*\"\s*\]/g;
 			
-			str=str.replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "");
+			str=str.replace(/(\r?\n)|(\r\n?)/g, "\n").replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "");
 			
 			while(mtch=rgxp.exec(str)){
 				last_index=rgxp.lastIndex;
