@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.6";
+		var _VERSION="5.3.7";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -204,7 +204,7 @@
 			var temp, no_errors, rtn;
 			
 			rtn=null;
-			p=(_isObject(p) ? p : {});
+			p=_unreferenceP(p);
 			no_errors=true;
 			
 			//if(no_errors){
@@ -635,7 +635,7 @@
 			}
 			
 			rtn=null;
-			p=(_isObject(p) ? p : {});
+			p=_unreferenceP(p);
 			temp_pos=toPos(qos);
 			
 			if(temp_pos!==null){
@@ -1265,7 +1265,7 @@
 			}
 			
 			rtn=[];
-			p=(_isObject(p) ? p : {});
+			p=_unreferenceP(p);
 			no_errors=true;
 			
 			//if(no_errors){
@@ -1428,7 +1428,7 @@
 			
 			that=this;
 			
-			p=(_isObject(p) ? p : {});
+			p=_unreferenceP(p);
 			
 			return (p.returnType==="san" ? that.legalSanMoves(target_qos) : that.legalMovesHelper(target_qos, p));
 		}
@@ -1513,7 +1513,7 @@
 			
 			rtn="";
 			
-			header=(_isObject(header) ? header : {});/*2020 header de _parserHelper()*/
+			header=_unreferenceP(header);/*2020 header de _parserHelper()*/
 			
 			move_list=that.moveList;
 			
@@ -1895,8 +1895,8 @@
 			}
 			
 			rtn={};
+			p=_unreferenceP(p);
 			no_errors=true;
-			p=(_isObject(p) ? p : {});
 			
 			//if(no_errors){
 				rtn.canMove=false;
@@ -2080,7 +2080,7 @@
 			that=this;
 			
 			rtn_move_obj=null;
-			p=(_isObject(p) ? p : {});
+			p=_unreferenceP(p);
 			keep_going=true;
 			
 			//if(keep_going){
@@ -2511,7 +2511,7 @@
 			var i, j, len, temp, board_created, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
 			
 			rtn=null;
-			p=(_isObject(p) ? p : {});
+			p=_unreferenceP(p);
 			board_created=false;
 			no_errors=true;
 			
@@ -2779,7 +2779,7 @@
 		}
 		
 		function fenApply(fen, fn_name, args){
-			var temp, board, board_created, silent_mode_cache, keep_going, rtn;
+			var board, board_created, silent_mode_cache, keep_going, rtn;
 			
 			rtn=null;
 			board_created=false;
@@ -2789,9 +2789,7 @@
 				fn_name=_formatName(fn_name);
 				
 				if(fn_name==="playMove"){
-					temp=(_isObject(args[1]) ? args[1] : {});
-					
-					rtn=_playMoveApplyHelper(fen, [args[0], {isMockMove : false, promoteTo : temp.promoteTo, delimiter : temp.delimiter}]);
+					rtn=_playMoveApplyHelper(fen, [args[0], _unreferenceP(args[1], [["isMockMove", false]])]);
 					
 					keep_going=false;
 				}
@@ -2831,9 +2829,7 @@
 						rtn=board_created;
 						break;
 					case "getSquare" :
-						temp=(_isObject(args[1]) ? args[1] : {});
-						
-						rtn=(board_created ? _getSquare.apply(board, [args[0], {rankShift : temp.rankShift, fileShift : temp.fileShift, isUnreferenced : true}]) : null);
+						rtn=(board_created ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [["isUnreferenced", true]])]) : null);
 						break;
 					default :
 						_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
