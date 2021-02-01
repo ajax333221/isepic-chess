@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.7";
+		var _VERSION="5.3.8";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -130,7 +130,7 @@
 			
 			move_list=[];
 			last_index=-1;
-			rgxp=/\s\d*\s*\.*\s*\.*\s*([^\s]+)/g;
+			rgxp=/\s+\d*\s*\.*\s*\.*\s*([^\s]+)/g;
 			
 			while(mtch=rgxp.exec(p)){
 				last_index=rgxp.lastIndex;
@@ -417,11 +417,16 @@
 				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "")));
 				while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "")));
 				
-				rtn=rtn.replace(/\-{2,}/g, "").replace(/(\-)*\+(\-)*/g, "+");
 				rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
-				rtn=rtn.replace(/\s*\-\s*/g, "-");
-				rtn=rtn.replace(/0-0-0/g, "O-O-O").replace(/0-0/g, "O-O");
-				rtn=rtn.replace(/o-o-o/g, "O-O-O").replace(/o-o/g, "O-O");
+				rtn=rtn.replace(/\-\-+/g, "-").replace(/\s*\-\s*/g, "-");
+				rtn=rtn.replace(/0-0-0/g, "w").replace(/0-0/g, "v");
+				rtn=rtn.replace(/o-o-o/gi, "w").replace(/o-o/gi, "v");
+				rtn=rtn.replace(/o/gi, "0").replace(/½/g, "1/2");
+				rtn=rtn.replace(/1\-0/g, " i ").replace(/0\-1/g, " j ").replace(/1\/2\-1\/2/g, " z ");
+				
+				rtn=rtn.replace(/\-/g, " ");
+				rtn=rtn.replace(/w/g, "O-O-O").replace(/v/g, "O-O");
+				rtn=rtn.replace(/i/g, "1-0").replace(/j/g, "0-1").replace(/z/g, "1/2-1/2");
 				
 				rtn=_trimSpaces(rtn);
 			}
@@ -1762,6 +1767,8 @@
 			//if(no_errors){
 				validated_move=null;
 				parsed_promote="";
+				
+				mov=(" "+mov).replace(/^\s+\d*\s*\.*\s*\.*\s*/, "");
 				
 				if(!_isNonBlankStr(mov)){
 					no_errors=false;
