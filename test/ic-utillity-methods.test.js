@@ -284,6 +284,32 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.castlingChars(true)).toBe("k");
 	});
 	
+	describe("Ic.utilityMisc.unreferenceP()", () => {
+		test("default value", () => {
+			var i, len, arr, default_val;
+			
+			default_val={};
+			
+			arr=["", false, true, , null, ("x"*9), {}, [], [1], [1, 1, 1], 0, 1, 8, -0, -1, -8, Infinity, -Infinity, [3, 8], [8, 3], [8, 8], [3, -1], [-1, 3], [-1, -1]];
+			
+			for(i=0, len=arr.length; i<len; i++){//0<len
+				Ic.setSilentMode(true);
+				expect(Ic.utilityMisc.unreferenceP(arr[i])).toEqual(default_val);
+				Ic.setSilentMode(false);
+			}
+		});
+		
+		test("normal inputs", () => {
+			expect(Ic.utilityMisc.unreferenceP({}, [["henlo", "frend"]])).toEqual({henlo : "frend"});
+			expect(Ic.utilityMisc.unreferenceP({henlo : "worlmnd"}, [["henlo", "frend"]])).toEqual({henlo : "frend"});
+			expect(Ic.utilityMisc.unreferenceP({a : "x"}, [["a", "y"], ["a", "z"]])).toEqual({a : "z"});
+			
+			Ic.setSilentMode(true);
+			expect(Ic.utilityMisc.unreferenceP({henlo : "worlmnd", other : true, unchanged : 3}, [["henlo", "frend"], ["three", "get", "skipped"], ["other", false]])).toEqual({henlo : "frend", other : false, unchanged : 3});
+			Ic.setSilentMode(false);
+		});
+	});
+	
 	describe("Ic.utilityMisc.cloneBoardObjs()", () => {
 		var board_name, other_board_name, board_obj, board_other;
 		

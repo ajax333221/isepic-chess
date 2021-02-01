@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.5";
+		var _VERSION="5.3.6";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -388,6 +388,26 @@
 			return ["", "k", "q", "kq"][_toInt(num, 0, 3)];
 		}
 		
+		function _unreferenceP(p, changes){
+			var i, len, rtn;
+			
+			rtn=(_isObject(p) ? {...p} : {});
+			
+			if(_isArray(changes)){
+				for(i=0, len=changes.length; i<len; i++){
+					if(!_isArray(changes[i]) || changes[i].length!==2 || !_isNonBlankStr(changes[i][0])){
+						_consoleLog("Error[_unreferenceP]: unexpected format");
+						
+						continue;
+					}
+					
+					rtn[_trimSpaces(changes[i][0])]=changes[i][1];
+				}
+			}
+			
+			return rtn;
+		}
+		
 		function _cleanSan(rtn){
 			rtn=(_isNonBlankStr(rtn) ? rtn : "");
 			
@@ -635,7 +655,7 @@
 			that=this;
 			
 			rtn_set=false;
-			target_square=that.getSquare(qos, p);
+			target_square=that.getSquare(qos, _unreferenceP(p, [["isUnreferenced", false]]));
 			
 			if(target_square!==null){
 				rtn_set=true;
@@ -2951,6 +2971,7 @@
 				isNonBlankStr : _isNonBlankStr,
 				hashCode : _hashCode,
 				castlingChars : _castlingChars,
+				unreferenceP : _unreferenceP,
 				cleanSan : _cleanSan,
 				cloneBoardObjs : _cloneBoardObjs,
 				basicFenTest : _basicFenTest
