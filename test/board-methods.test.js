@@ -50,7 +50,7 @@ describe("Board methods", () => {
 			expect(board_obj.boardHash()).toBe(310579461);
 		});
 		
-		test("other position and board name not used in the hash", () => {
+		test("boardName and selectedBos not used in the hash", () => {
 			var board_a, board_b, hash_a, hash_b, shared_fen;
 			
 			shared_fen="Bnb1kb1r/2qpppp1/1pp5/p6p/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b k d3 0 8";
@@ -68,6 +68,8 @@ describe("Board methods", () => {
 				isHidden : true,
 				validOrBreak : true
 			});
+			
+			board_a.selectedBos="a2";
 			
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();

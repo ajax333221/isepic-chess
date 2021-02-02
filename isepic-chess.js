@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.8";
+		var _VERSION="5.3.9";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -160,7 +160,11 @@
 					}
 				}
 				
-				rtn=[meta_tags, move_list, game_result];
+				rtn={
+					tags : meta_tags,
+					sanMoves : move_list,
+					result : game_result
+				};
 			}
 			
 			return rtn;
@@ -418,7 +422,7 @@
 				while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "")));
 				
 				rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
-				rtn=rtn.replace(/\-\-+/g, "-").replace(/\s*\-\s*/g, "-");
+				rtn=rtn.replace(/\s*\-+\s*/g, "-");
 				rtn=rtn.replace(/0-0-0/g, "w").replace(/0-0/g, "v");
 				rtn=rtn.replace(/o-o-o/gi, "w").replace(/o-o/gi, "v");
 				rtn=rtn.replace(/o/gi, "0").replace(/½/g, "1/2");
@@ -2534,7 +2538,7 @@
 				p.pgn=(_isNonBlankStr(p.pgn) ? _parserHelper(p.pgn) : null);
 				
 				if(p.pgn){
-					p.fen=(p.fen || p.pgn[0].FEN || _DEFAULT_FEN);
+					p.fen=(p.fen || p.pgn.tags.FEN || _DEFAULT_FEN);
 				}
 				
 				fen_was_valid=!_basicFenTest(p.fen);
@@ -2744,8 +2748,8 @@
 				if(p.pgn){
 					everything_parsed=true;
 					
-					for(i=0, len=p.pgn[1].length; i<len; i++){//0<len
-						if(new_board.playMove(p.pgn[1][i])===null){
+					for(i=0, len=p.pgn.sanMoves.length; i<len; i++){//0<len
+						if(new_board.playMove(p.pgn.sanMoves[i])===null){
 							everything_parsed=false;
 							break;
 						}
@@ -2755,8 +2759,8 @@
 						no_errors=false;
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
 					}else{
-						if(p.pgn[2]!=="*"){
-							p.manualResult=(_pgnResultHelper(p.manualResult) || p.pgn[2]);
+						if(p.pgn.result!=="*"){
+							p.manualResult=(_pgnResultHelper(p.manualResult) || p.pgn.result);
 						}
 					}
 				}

@@ -1,11 +1,11 @@
 {
   "name": "isepic-chess",
-  "version": "5.3.8",
+  "version": "5.3.9",
   "title": "isepic-chess.js",
   "description": "Chess utility library written in JavaScript",
   "main": "isepic-chess.js",
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "jest --runInBand --coverage"
   },
   "repository": {
     "type": "git",

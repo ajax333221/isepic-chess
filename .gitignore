@@ -5,5 +5,8 @@ Thumbs.db
 # Node modules
 node_modules/
 
+# Jest test coverage
+coverage/
+
 # Not really needed for our 0 dependencies
 package-lock.json
