@@ -115,16 +115,179 @@ describe("Board methods", () => {
 		});
 	});
 	
-	test("b.legalMoves()", () => {
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"]).sort()).toEqual(["a2", "d2", "b2"].sort());
+	describe("b.legalMoves()", () => {
+		test("returnType=(default)toSquare, squareType=(default)bos", () => {
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"]).sort()).toEqual(["a2", "d2", "b2"].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"]).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5"]).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"])]).sort()).toEqual(["a3", "a4"].sort());
+		});
 		
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"]).sort()).toEqual([].sort());
+		test("returnType=(default)toSquare, squareType=square", () => {
+			var p, temp;
+			
+			p={squareType : "square"};
+			
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]);
+			expect(temp.length).toBe(3);
+			expect(Ic.utilityMisc.isSquare(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isSquare(temp[1])).toBe(true);
+			expect(Ic.utilityMisc.isSquare(temp[2])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["a2", "d2", "b2"].sort());
+			
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]);
+			expect(temp.length).toBe(0);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual([].sort());
+			
+			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]);
+			expect(temp.length).toBe(4);
+			expect(Ic.utilityMisc.isSquare(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isSquare(temp[1])).toBe(true);
+			expect(Ic.utilityMisc.isSquare(temp[2])).toBe(true);
+			expect(Ic.utilityMisc.isSquare(temp[3])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
+			
+			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]);
+			expect(temp.length).toBe(2);
+			expect(Ic.utilityMisc.isSquare(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isSquare(temp[1])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["a3", "a4"].sort());
+		});
 		
-		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5"]).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
+		test("returnType=(default)toSquare, squareType=pos", () => {
+			var p, temp;
+			
+			p={squareType : "pos"};
+			
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]);
+			expect(temp.length).toBe(3);
+			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["a2", "d2", "b2"].sort());
+			
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]);
+			expect(temp.length).toBe(0);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual([].sort());
+			
+			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]);
+			expect(temp.length).toBe(4);
+			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[3])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
+			
+			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]);
+			expect(temp.length).toBe(2);
+			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["a3", "a4"].sort());
+		});
 		
-		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"])]).sort()).toEqual(["a3", "a4"].sort());
+		test("returnType=joined, delimiter=(default)-", () => {
+			var p;
+			
+			p={returnType : "joined"};
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]).sort()).toEqual(["c2-a2", "c2-d2", "c2-b2"].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]).sort()).toEqual(["b5-c6", "b5-d7", "b5-c4", "b5-a6"].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]).sort()).toEqual(["a2-a3", "a2-a4"].sort());
+		});
 		
-		/*agregar unos de Checkmate, y quizas de disamb tambien*/
+		test("returnType=joined, delimiter=_", () => {
+			var p;
+			
+			p={returnType : "joined", delimiter : "_"};
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]).sort()).toEqual(["c2_a2", "c2_d2", "c2_b2"].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]).sort()).toEqual(["b5_c6", "b5_d7", "b5_c4", "b5_a6"].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]).sort()).toEqual(["a2_a3", "a2_a4"].sort());
+		});
+		
+		test("returnType=fromToSquares, squareType=(default)bos", () => {
+			var p;
+			
+			p={returnType : "fromToSquares"};
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]).sort()).toEqual([["c2", "a2"], ["c2", "d2"], ["c2", "b2"]].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]).sort()).toEqual([["b5", "c6"], ["b5", "d7"], ["b5", "c4"], ["b5", "a6"]].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]).sort()).toEqual([["a2", "a3"], ["a2", "a4"]].sort());
+		});
+		
+		test("returnType=fromToSquares, squareType=pos", () => {
+			var p;
+			
+			p={returnType : "fromToSquares", squareType : "pos"};
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]).sort()).toEqual([[[6, 2], [6, 0]], [[6, 2], [6, 3]], [[6, 2], [6, 1]]].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]).sort()).toEqual([[[3, 1], [2, 2]], [[3, 1], [1, 3]], [[3, 1], [4, 2]], [[3, 1], [2, 0]]].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]).sort()).toEqual([[[6, 0], [5, 0]], [[6, 0], [4, 0]]].sort());
+		});
+		
+		test("returnType=fromToSquares, squareType=square", () => {
+			var p, temp;
+			
+			p={returnType : "fromToSquares", squareType : "square"};
+			
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]);
+			expect(temp.length).toBe(3);
+			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual(["a2", "d2", "b2"].sort());
+			
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]);
+			expect(temp.length).toBe(0);
+			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual([].sort());
+			
+			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]);
+			expect(temp.length).toBe(4);
+			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[3])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
+			
+			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]);
+			expect(temp.length).toBe(2);
+			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
+			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
+			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual(["a3", "a4"].sort());
+		});
+		
+		test("returnType=(x)san", () => {
+			var p;
+			
+			p={returnType : "san"};
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p]).sort()).toEqual(["Rd2", "Rb2", "Rxa2"].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p]).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p]).sort()).toEqual(["Bc6", "Bxd7+", "Bxc4", "Ba6"].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"]), p]).sort()).toEqual(["a3", "a4"].sort());
+		});
 	});
 	
 	test("b.legalSanMoves()", () => {
@@ -135,8 +298,6 @@ describe("Board methods", () => {
 		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalSanMoves", ["b5"]).sort()).toEqual(["Bc6", "Bxd7+", "Bxc4", "Ba6"].sort());
 		
 		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalSanMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"])]).sort()).toEqual(["a3", "a4"].sort());
-		
-		/*agregar unos de Checkmate, y quizas de disamb tambien*/
 	});
 	
 	test("b.isLegalMove()", () => {

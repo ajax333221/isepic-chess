@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.9";
+		var _VERSION="5.3.10";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -658,6 +658,7 @@
 			return rtn;
 		}
 		
+		//p = {rankShift, fileShift}
 		function _setSquare(qos, new_qal, p){
 			var that, target_square, new_val, new_abs_val, rtn_set;
 			
