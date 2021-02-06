@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.3.10";
+		var _VERSION="5.4.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -165,39 +165,6 @@
 					sanMoves : move_list,
 					result : game_result
 				};
-			}
-			
-			return rtn;
-		}
-		
-		function _playMoveApplyHelper(fen, args){
-			var board, board_created, keep_going, rtn;
-			
-			rtn=null;
-			board_created=false;
-			keep_going=true;
-			
-			//if(keep_going){
-				board=initBoard({
-					boardName : "board_playMoveApplyHelper",
-					fen : fen,
-					isHidden : true,
-					validOrBreak : true
-				});
-				
-				if(board===null){
-					keep_going=false;
-				}
-			//}
-			
-			if(keep_going){
-				board_created=true;
-				
-				rtn=_playMove.apply(board, args);
-			}
-			
-			if(board_created){
-				removeBoard(board);
 			}
 			
 			return rtn;
@@ -646,6 +613,8 @@
 			rtn=null;
 			p=_unreferenceP(p);
 			temp_pos=toPos(qos);
+			
+			p.isUnreferenced=(p.isUnreferenced===true);
 			
 			if(temp_pos!==null){
 				pre_validated_pos=[(temp_pos[0]+_toInt(p.rankShift)), (temp_pos[1]+_toInt(p.fileShift))];
@@ -2099,8 +2068,6 @@
 				p.isMockMove=(p.isMockMove===true);
 				
 				if(p.isMockMove){
-					p.isMockMove=false;
-					
 					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p]);
 					
 					keep_going=false;
@@ -2791,61 +2758,52 @@
 		}
 		
 		function fenApply(fen, fn_name, args){
-			var board, board_created, silent_mode_cache, keep_going, rtn;
+			var board, board_created, silent_mode_cache, rtn;
 			
 			rtn=null;
 			board_created=false;
-			keep_going=true;
 			
-			//if(keep_going){
-				fn_name=_formatName(fn_name);
-				
-				if(fn_name==="playMove"){
-					rtn=_playMoveApplyHelper(fen, [args[0], _unreferenceP(args[1], [["isMockMove", false]])]);
-					
-					keep_going=false;
-				}
-			//}
+			silent_mode_cache=_SILENT_MODE;
+			fn_name=_formatName(fn_name);
 			
-			if(keep_going){
-				silent_mode_cache=_SILENT_MODE;
-				
-				if(fn_name==="isLegalFen"){
-					setSilentMode(true);
-				}
-				
-				board=initBoard({
-					boardName : "board_fenApply",
-					fen : fen,
-					isHidden : true,
-					validOrBreak : true
-				});
-				
-				if(fn_name==="isLegalFen"){
-					setSilentMode(silent_mode_cache);
-				}
-				
-				board_created=(board!==null);
-				
-				switch(fn_name){
-					case "legalMoves" :
-						rtn=(board_created ? _legalMoves.apply(board, args) : []);
-						break;
-					case "legalSanMoves" :
-						rtn=(board_created ? _legalSanMoves.apply(board, args) : []);
-						break;
-					case "isLegalMove" :
-						rtn=(board_created ? _isLegalMove.apply(board, args) : false);
-						break;
-					case "isLegalFen" :
-						rtn=board_created;
-						break;
-					case "getSquare" :
-						rtn=(board_created ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [["isUnreferenced", true]])]) : null);
-						break;
-					default :
-						_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
-				}
+			if(fn_name==="isLegalFen"){
+				setSilentMode(true);
+			}
+			
+			board=initBoard({
+				boardName : ("board_fenApply_"+fn_name),
+				fen : fen,
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			if(fn_name==="isLegalFen"){
+				setSilentMode(silent_mode_cache);
+			}
+			
+			board_created=(board!==null);
+			
+			switch(fn_name){
+				case "playMove" :
+					rtn=(board_created ? _playMove.apply(board, [args[0], _unreferenceP(args[1], [["isMockMove", false]])]) : null);
+					break;
+				case "legalMoves" :
+					rtn=(board_created ? _legalMoves.apply(board, args) : []);
+					break;
+				case "legalSanMoves" :
+					rtn=(board_created ? _legalSanMoves.apply(board, args) : []);
+					break;
+				case "isLegalMove" :
+					rtn=(board_created ? _isLegalMove.apply(board, args) : false);
+					break;
+				case "isLegalFen" :
+					rtn=board_created;
+					break;
+				case "getSquare" :
+					rtn=(board_created ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [["isUnreferenced", true]])]) : null);
+					break;
+				default :
+					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
 			}
 			
 			if(board_created){
