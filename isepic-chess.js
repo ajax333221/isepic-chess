@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.4.0";
+		var _VERSION="5.4.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -565,6 +565,47 @@
 			}
 			
 			return error_msg;
+		}
+		
+		function _perft(woard, depth, ply){
+			var i, j, k, len, count, legal_moves, keep_going, rtn;
+			
+			rtn=1;
+			keep_going=true;
+			
+			//if(keep_going){
+				if(depth<1){
+					keep_going=false;
+				}
+			//}
+			
+			if(keep_going){
+				board=getBoard(woard);
+				
+				if(board===null){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				count=0;
+				
+				for(i=0; i<8; i++){//0...7
+					for(j=0; j<8; j++){//0...7
+						legal_moves=board.legalMoves([i, j], {returnType : "fromToSquares", squareType : "pos"});
+						
+						for(k=0, len=legal_moves.length; k<len; k++){//0<len
+							board.playMove(legal_moves[k]);
+							count+=_perft(board, (depth-1), (ply+1));
+							board.navLinkMove(ply-1);
+						}
+					}
+				}
+				
+				rtn=count;
+			}
+			
+			return rtn;
 		}
 		
 		//---------------- board
@@ -2940,7 +2981,8 @@
 				unreferenceP : _unreferenceP,
 				cleanSan : _cleanSan,
 				cloneBoardObjs : _cloneBoardObjs,
-				basicFenTest : _basicFenTest
+				basicFenTest : _basicFenTest,
+				perft : _perft
 			}
 		};
 	})(windw);

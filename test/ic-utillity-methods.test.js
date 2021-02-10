@@ -555,4 +555,11 @@ describe("Ic utility methods", () => {
 			});
 		});
 	});
+	
+	describe("Ic.utilityMisc.perft()", () => {
+		expect(Ic.utilityMisc.perft(Ic.initBoard({isHidden : true}), 0, 1)).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({isHidden : true}), 1, 1)).toBe(20);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({isHidden : true}), 2, 1)).toBe(400);
+		//expect(Ic.utilityMisc.perft(Ic.initBoard({isHidden : true}), 3, 1)).toBe(8902);
+	});
 });
