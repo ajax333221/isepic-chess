@@ -47,7 +47,7 @@ describe("Board methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(310579461);
+			expect(board_obj.boardHash()).toBe(-1606863643);
 		});
 		
 		test("boardName and selectedBos not used in the hash", () => {
@@ -74,7 +74,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(1663179513);
+			expect(hash_a).toBe(65443545);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});
@@ -447,7 +447,7 @@ describe("Board methods", () => {
 
 _MOVES_`;
 		
-		test("MoveResult 1-0 in index 0 and n", () => {
+		test("moveResult 1-0 in index 0 and n", () => {
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
@@ -503,7 +503,7 @@ _MOVES_`;
 			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 		});
 		
-		test("MoveResult 0-1 in index 0 and n", () => {
+		test("moveResult 0-1 in index 0 and n", () => {
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
@@ -559,7 +559,7 @@ _MOVES_`;
 			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 		});
 		
-		test("MoveResult 1/2-1/2 in index 0 and n", () => {
+		test("moveResult 1/2-1/2 in index 0 and n", () => {
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
@@ -615,7 +615,7 @@ _MOVES_`;
 			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 		});
 		
-		test("MoveResult empty in index 0 and n", () => {
+		test("moveResult empty in index 0 and n", () => {
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
@@ -671,7 +671,7 @@ _MOVES_`;
 			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 		});
 		
-		test("auto-claim draw when CanDraw", () => {
+		test("auto-claim draw when canDraw", () => {
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({

@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.4.1";
+		var _VERSION="5.5.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -248,9 +248,9 @@
 			//}
 			
 			if(no_errors){
-				calculated_promote=(mov.InitialVal!==mov.FinalVal ? mov.FinalVal : 0);
+				calculated_promote=(mov.initialVal!==mov.finalVal ? mov.finalVal : 0);
 				
-				rtn=[[mov.FromBos, mov.ToBos], calculated_promote];
+				rtn=[[mov.fromBos, mov.toBos], calculated_promote];
 			}
 			
 			return rtn;
@@ -288,7 +288,7 @@
 		}
 		
 		function _isMove(obj){
-			return (_isObject(obj) && (typeof obj.FromBos)==="string" && (typeof obj.ToBos)==="string");
+			return (_isObject(obj) && (typeof obj.fromBos)==="string" && (typeof obj.toBos)==="string");
 		}
 		
 		function _trimSpaces(str){
@@ -568,7 +568,7 @@
 		}
 		
 		function _perft(woard, depth, ply){
-			var i, j, k, len, count, legal_moves, keep_going, rtn;
+			var i, j, k, len, board, count, legal_moves, keep_going, rtn;
 			
 			rtn=1;
 			keep_going=true;
@@ -846,7 +846,7 @@
 				rtn_changed=true;
 				
 				that.currentMove=temp;
-				that.readValidatedFen(that.moveList[temp].Fen);
+				that.readValidatedFen(that.moveList[temp].fen);
 				
 				that.refreshUi(is_goto ? 0 : num);//autorefresh
 			}
@@ -996,7 +996,7 @@
 				times_found=1;
 				
 				for(i=(that.currentMove-1); i>=0; i--){//(len-1)...0
-					temp=that.moveList[i].Fen.split(" ");
+					temp=that.moveList[i].fen.split(" ");
 					
 					if(temp.slice(0, 4).join(" ")===clockless_fen){
 						times_found++;
@@ -1479,7 +1479,7 @@
 						break;
 					}
 					
-					legal_san_moves.push(temp.San);
+					legal_san_moves.push(temp.san);
 				}
 				
 				if(legal_san_moves.length!==legal_moves.length){
@@ -1537,7 +1537,7 @@
 			
 			move_list=that.moveList;
 			
-			initial_fen=move_list[0].Fen;
+			initial_fen=move_list[0].fen;
 			
 			black_starts=_strContains(initial_fen, " b ");
 			
@@ -1553,20 +1553,20 @@
 					
 					text_game+=(black_starts===!(i%2) ? ((initial_full_move+Math.floor((i+black_starts-1)/2))+". ") : "");
 					
-					text_game+=move_list[i].San;
+					text_game+=move_list[i].san;
 					
-					if(move_list[i].Comment){
-						text_game+=" "+move_list[i].Comment;
+					if(move_list[i].comment){
+						text_game+=" "+move_list[i].comment;
 					}
 				}
 				
-				if(move_list[i].MoveResult){
-					result_tag_ow=move_list[i].MoveResult;
+				if(move_list[i].moveResult){
+					result_tag_ow=move_list[i].moveResult;
 				}
 			}
 			
 			if(result_tag_ow==="*"){
-				if(move_list[move_list.length-1].CanDraw){
+				if(move_list[move_list.length-1].canDraw){
 					result_tag_ow="1/2-1/2";
 				}
 			}
@@ -2212,13 +2212,13 @@
 					}
 				}
 				
-				rtn_move_obj={Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, CanDraw : that.inDraw, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
+				rtn_move_obj={fen : that.fen, san : complete_san, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, initialVal : initial_cached_square.val, finalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
 				
 				if(that.currentMove!==that.moveList.length){
 					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
-				that.moveList.push({Fen : that.fen, San : complete_san, Comment : autogen_comment, MoveResult : move_res, CanDraw : that.inDraw, FromBos : initial_cached_square.bos, ToBos : final_cached_square.bos, InitialVal : initial_cached_square.val, FinalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
+				that.moveList.push({fen : that.fen, san : complete_san, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, initialVal : initial_cached_square.val, finalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
 				
 				that.refreshUi(1);//autorefresh
 			}
@@ -2727,7 +2727,7 @@
 					temp="1/2-1/2";
 				}
 				
-				new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : temp, CanDraw : new_board.inDraw, FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
+				new_board.moveList=[{fen : new_board.fen, san : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", initialVal : 0, finalVal : 0}];
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -2751,7 +2751,7 @@
 						temp="1/2-1/2";
 					}
 					
-					new_board.moveList=[{Fen : new_board.fen, San : "", Comment : "", MoveResult : temp, CanDraw : new_board.inDraw, FromBos : "", ToBos : "", InitialVal : 0, FinalVal : 0}];
+					new_board.moveList=[{fen : new_board.fen, san : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", initialVal : 0, finalVal : 0}];
 				}
 				
 				if(p.pgn){
