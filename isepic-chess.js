@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.5.0";
+		var _VERSION="5.5.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -113,7 +113,7 @@
 			last_index=-1;
 			rgxp=/\[\s*\w+\s+\"[^\"]*\"\s*\]/g;
 			
-			str=str.replace(/(\r?\n)|(\r\n?)/g, "\n").replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "");
+			str=str.replace(/(\r?\n)|(\r\n?)/g, "\n").replace(/“|”/g, "\"").replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "");
 			
 			while(mtch=rgxp.exec(str)){
 				last_index=rgxp.lastIndex;
@@ -385,9 +385,11 @@
 			if(rtn){
 				rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
 				
-				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "")));
+				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "")));/*to-do: keep comment*/
 				while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "")));
+				while(rtn!==(rtn=rtn.replace(/\<[^<>]*\>/g, "")));
 				
+				rtn=rtn.replace(/\$\d+/g, " ");/*to-do: keep NAG*/
 				rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
 				rtn=rtn.replace(/\s*\-+\s*/g, "-");
 				rtn=rtn.replace(/0-0-0/g, "w").replace(/0-0/g, "v");
