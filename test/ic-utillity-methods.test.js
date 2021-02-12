@@ -318,14 +318,12 @@ describe("Ic utility methods", () => {
 		
 		board_obj=Ic.initBoard({
 			boardName : board_name,
-			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-			isHidden : true
+			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
 		});
 		
 		board_other=Ic.initBoard({
 			boardName : other_board_name,
-			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-			isHidden : true
+			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2"
 		});
 		
 		board_obj.playMove("c3-e4");
@@ -560,39 +558,39 @@ describe("Ic utility methods", () => {
 		var current_fen;
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 0, 1)).toBe(1);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 1, 1)).toBe(20);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 2, 1)).toBe(400);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1)).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1)).toBe(20);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1)).toBe(400);
 		//depth=3 ... toBe(8902) ... [v5.4.1 = passed]
 		//depth=4 ... toBe(197281) ... [v5.4.1 = passed]
 		//depth=5 ... toBe(4865609) ... [untested]
 		
 		current_fen="r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1";
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 0, 1)).toBe(1);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 1, 1)).toBe(48);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1)).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1)).toBe(48);
 		//depth=2 ... toBe(2039) ... [v5.4.1 = passed]
 		//depth=3 ... toBe(97862) ... [v5.4.1 = passed]
 		//depth=4 ... toBe(4085603) ... [untested]
 		
 		current_fen="8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1";
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 0, 1)).toBe(1);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 1, 1)).toBe(14);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 2, 1)).toBe(191);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1)).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1)).toBe(14);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1)).toBe(191);
 		//depth=3 ... toBe(2812) ... [v5.4.1 = passed]
 		//depth=4 ... toBe(43238) ... [v5.4.1 = passed]
 		//depth=5 ... toBe(674624) ... [untested]
 		
 		current_fen="r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10";
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 0, 1)).toBe(1);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 1, 1)).toBe(46);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1)).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1)).toBe(46);
 		//depth=2 ... toBe(2079) ... [v5.4.1 = passed]
 		//depth=3 ... toBe(89890) ... [v5.4.1 = passed]
 		//depth=4 ... toBe(3894594) ... [untested]
 		
 		current_fen="rnbqk1nr/p1pp1ppp/1p6/2b1p1B1/8/1QPP4/PP2PPPP/RN2KBNR b KQkq - 2 4";
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 0, 1)).toBe(1);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 1, 1)).toBe(31);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen, isHidden : true}), 2, 1)).toBe(1116);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1)).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1)).toBe(31);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1)).toBe(1116);
 		//depth=3 ... toBe(33828) ... [v5.4.1 = passed]
 		//depth=4 ... toBe(1184142) ... [untested]
 	});

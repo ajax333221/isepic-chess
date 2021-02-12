@@ -760,7 +760,6 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "8/r6k/8/8/8/R6K/8/8 w - -",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -776,7 +775,6 @@ describe("Ic methods", () => {
 			Ic.initBoard({
 				boardName : board_name,
 				fen : "8/1r5k/8/8/8/1R5K/8/8 w - - 0 1",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -792,7 +790,6 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "0invalidfen0",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -806,7 +803,6 @@ describe("Ic methods", () => {
 			Ic.initBoard({
 				boardName : other_board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -818,8 +814,7 @@ describe("Ic methods", () => {
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
-				fen : "0invalidfen0",
-				isHidden : true
+				fen : "0invalidfen0"
 			});
 			
 			expect(Ic.getBoard(board_name).fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -1054,27 +1049,6 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			expect(board_obj.fen).toBe("8/R1bk2pp/2p1p3/5p2/8/1P3P1P/5P2/4n1K1 w - - 12 37");
 			board_obj.navFirst();
 			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
-		});
-		
-		test("initing from a PGN with (%) Escape mechanism", () => {
-			var board_obj, game_pgn;
-			
-			game_pgn=`[Event "test"]
-% [SetUp "1"]
-% [FEN "rnbqkbnr/2pppppp/p7/Pp6/8/8/RPPPPPPP/1NBQKBNR w Kkq - 0 4"]
-
-1. a4`;
-			
-			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				validOrBreak : true
-			});
-			
-			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1");
-			board_obj.navFirst();
-			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
 	});
 	

@@ -28,7 +28,6 @@ describe("Misc.", () => {
 				board_obj=Ic.initBoard({
 					boardName : board_name,
 					fen : "8/8/7k/6pP/5BKR/8/8/8 w - g6 0 1",
-					isHidden : true,
 					validOrBreak : true
 				});
 				
@@ -83,14 +82,12 @@ describe("Misc.", () => {
 				board_obj=Ic.initBoard({
 					boardName : board_name,
 					fen : "r3k2r/4p3/8/3bb3/8/8/Q3P2Q/R3K2R w KQkq - 0 1",
-					isHidden : true,
 					validOrBreak : true
 				});
 				
 				board_other=Ic.initBoard({
 					boardName : other_board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					isHidden : true,
 					validOrBreak : true
 				});
 				
@@ -193,7 +190,6 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "k7/P7/4q3/8/8/4Q3/p7/K7 w - - 0 1",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -261,7 +257,6 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -276,14 +271,12 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
 			board_other=Ic.initBoard({
 				boardName : other_board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -321,14 +314,12 @@ describe("Misc.", () => {
 				board_obj=Ic.initBoard({
 					boardName : board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					isHidden : true,
 					validOrBreak : true
 				});
 				
 				board_other=Ic.initBoard({
 					boardName : other_board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					isHidden : true,
 					validOrBreak : true
 				});
 				
@@ -347,6 +338,28 @@ describe("Misc.", () => {
 				expect(temp2.pos).not.toEqual([0, 0]);
 				expect(temp.pos===temp2.pos).toBe(false);
 			});
+		});
+		
+		test("Mixed PGN Comments and Escape mechanism", () => {
+			var board_obj, game_pgn;
+			
+			game_pgn=`[Event "test"]
+
+% a4 a5
+1. e4 {;} 1... e5 2. Nf3 d6 ; d4 x y {
+% 2... Nc6 } 3. d3 d5 ;} 2... Na6
+4. d4 Nh6 {}{} 5. Rg1`;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				pgn : game_pgn,
+				validOrBreak : true
+			});
+			
+			expect(board_obj).not.toBeNull();
+			expect(board_obj.fen).toBe("rnbqkb1r/ppp2ppp/7n/3pp3/3PP3/5N2/PPP2PPP/RNBQKBR1 b Qkq - 2 5");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
 		
 		test("Checkmate and 50-move rule", () => {
@@ -463,7 +476,6 @@ describe("Misc.", () => {
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
 				isRotated : true,
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -581,7 +593,6 @@ describe("Misc.", () => {
 				boardName : board_name,
 				fen : "r3k2r/4p3/3B1P2/2NpN1N1/1Pn1n1n1/3b1p2/4P3/R3K2R w KQkq - 0 1",
 				isRotated : true,
-				isHidden : true,
 				validOrBreak : true
 			});
 			

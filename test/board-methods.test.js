@@ -43,11 +43,10 @@ describe("Board methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(-1606863643);
+			expect(board_obj.boardHash()).toBe(1765615174);
 		});
 		
 		test("boardName and selectedBos not used in the hash", () => {
@@ -58,14 +57,12 @@ describe("Board methods", () => {
 			board_a=Ic.initBoard({
 				boardName : board_name,
 				fen : shared_fen,
-				isHidden : true,
 				validOrBreak : true
 			});
 			
 			board_b=Ic.initBoard({
 				boardName : other_board_name,
 				fen : shared_fen,
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -74,7 +71,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(65443545);
+			expect(hash_a).toBe(-1551420452);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});
@@ -90,14 +87,12 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				isHidden : true
+				boardName : board_name
 			});
 			
 			board_b=Ic.initBoard({
 				boardName : other_board_name,
-				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isHidden : true
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 			});
 			
 			expect(board_a.isEqualBoard(board_b)).toBe(true);
@@ -353,7 +348,6 @@ describe("Board methods", () => {
 				fen : "8/2PR4/8/p5PK/P1Q2n2/3PNp2/5q1r/4nb1k w - - 0 1",
 				isRotated : true,
 				promoteTo : "b",
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -454,7 +448,6 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : w_win_pgn,
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -510,7 +503,6 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : b_win_pgn,
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -566,7 +558,6 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : stalemate_pgn,
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -622,7 +613,6 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : unfinished_pgn,
-				isHidden : true,
 				validOrBreak : true
 			});
 			
@@ -677,7 +667,6 @@ _MOVES_`;
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102",
-				isHidden : true,
 				validOrBreak : true
 			});
 			

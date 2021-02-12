@@ -311,7 +311,6 @@ describe("Board properties", () => {
 		board_obj=Ic.initBoard({
 			boardName : board_name,
 			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			isHidden : true,
 			validOrBreak : true
 		});
 		

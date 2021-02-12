@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.5.2";
+		var _VERSION="5.5.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -105,34 +105,33 @@
 		}
 		
 		function _parserHelper(str){
-			var p, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index, rtn;
+			var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index, rtn;
 			
 			rtn=null;
 			
 			meta_tags={};
 			last_index=-1;
-			rgxp=/\[\s*\w+\s+\"[^\"]*\"\s*\]/g;
+			rgxp=/\[\s*(\w+)\s+\"([^\"]*)\"\s*\]/g;
 			
-			str=str.replace(/(\r?\n)|(\r\n?)/g, "\n").replace(/“|”/g, "\"").replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "").replace(/;+[^\n]*(\n|$)/g, " ");
+			str=str.replace(/“|”/g, "\"");
 			
 			while(mtch=rgxp.exec(str)){
 				last_index=rgxp.lastIndex;
 				
-				temp=mtch[0].slice(1, -1).split("\"");
-				meta_tags[_trimSpaces(temp[0])]=_trimSpaces(temp[1]);
+				meta_tags[_trimSpaces(mtch[1])]=_trimSpaces(mtch[2]);
 			}
 			
 			if(last_index===-1){
 				last_index=0;
 			}
 			
-			p=(" "+_cleanSan(str.slice(last_index)));
+			g=(" "+_cleanSan(str.slice(last_index)));
 			
 			move_list=[];
 			last_index=-1;
 			rgxp=/\s+\d*\s*\.*\s*\.*\s*([^\s]+)/g;
 			
-			while(mtch=rgxp.exec(p)){
+			while(mtch=rgxp.exec(g)){
 				last_index=rgxp.lastIndex;
 				
 				temp=mtch[0];
@@ -383,11 +382,15 @@
 			rtn=(_isNonBlankStr(rtn) ? rtn : "");
 			
 			if(rtn){
-				rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, " ");
+				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "\n")));/*to-do: keep comment*/
+				while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "\n")));
+				while(rtn!==(rtn=rtn.replace(/\<[^<>]*\>/g, "\n")));
 				
-				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "")));/*to-do: keep comment*/
-				while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "")));
-				while(rtn!==(rtn=rtn.replace(/\<[^<>]*\>/g, "")));
+				rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, "\n");
+				
+				rtn=rtn.replace(/;+[^\n]*(\n|$)/g, "\n");/*to-do: keep comment*/
+				
+				rtn=rtn.replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "").replace(/\n/g, " ");
 				
 				rtn=rtn.replace(/\$\d+/g, " ");/*to-do: keep NAG*/
 				rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
