@@ -1034,14 +1034,15 @@ describe("Ic methods", () => {
 3... cxd5 (abc) 00400. c4 {	Later in "quote" i'm: 3 exd5 cxd5
 is another player x before anyone had heard of x! 	} 4...Ng8f6 <xyz> 5. N1c3 Nbc6 6. Ng1f3 Bg4 7. cxd5
 Nxd5+- 8.Bb5 Qa5-+ 9. Qb3 {!} 9. ... Bxf3 10. gxf3 Nxc3 11. Bxc6+ $1 {? It
-was Alekhine that improved with 11 bxc3 e6 12 d5! } $1 11 ... bxc6 12. Qb7 {?} Nd5+
-13. Bd2 Qb6 {!} 14. Qxa8+ Kd7 15. 0 - 0 {If 15 a4 Nc7 $1 16 a5 $2 $999 Qxb2
-17 Qxa7 Qxa1+ } 15 . ...Nc7 16. Ba5 Nxa8 17. Bxb6 Nxb6 18. Rfc1
-e6 19. Rc2- Be7 20. -Rac1 Bg5 21. Rd1-Rb8 22. $1 Rc5 - Nd5 23. Ra5
+was Alekhine that improved with 11 bxc3 e6 12 d5! } $1 11 ... bxc6 12. Qb7 {?} Nd5+ ;rest;;
+13. Bd2 Qb6 {!} 14. Qxa8+ Kd7 15. 0 - 0 {If 15 a4 Nc7 $1 16 a5 $2 $999 Qxb2 ; rest
+17 Qxa7 Qxa1+ } 15 . ...Nc7 16. Ba5 Nxa8 17. Bxb6 Nxb6 18. Rfc1;;
+e6 19. Rc2- Be7 20. -Rac1;rest of line comment
+Bg5 21. Rd1-Rb8 22. $1 Rc5 - Nd5 23. Ra5
 Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 28. Rb7   {	If  28  Ra4 Nb5! }  28 ...Bxd4 29. Rb8 Bxb2 30. h3 f5
 31. Kf1 Nd5 32. Kg2 +-- Be5 33. Ra8++ Nf4-- 34 . Kh2-+++ Nd3+--- 35 .Kg1--++ Ne1 ++--
-366666 ..... Ra7+!? Bc7 $5 o ---  1`;
+366666 ..... Ra7+!? Bc7 $5 o ---  1;rest`;
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
