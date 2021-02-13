@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.5.4";
+		var _VERSION="5.6.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1475,7 +1475,7 @@
 		}
 		
 		function _legalSanMoves(target_qos){
-			var i, len, that, temp, legal_moves, legal_san_moves, no_errors, rtn;
+			var i, j, len, that, temp, temp2, legal_moves, legal_san_moves, extra_promos, no_errors, rtn;
 			
 			that=this;
 			
@@ -1492,18 +1492,28 @@
 			
 			if(no_errors){
 				legal_san_moves=[];
+				extra_promos=0;
 				
 				for(i=0, len=legal_moves.length; i<len; i++){//0<len
 					temp=that.playMove(legal_moves[i], {isMockMove : true});
 					
-					if(temp===null){
-						break;
-					}
-					
 					legal_san_moves.push(temp.san);
+					
+					if(temp.initialVal!==temp.finalVal){//promotion
+						for(j=_KNIGHT; j<_KING; j++){//2...5
+							if(toAbsVal(temp.finalVal)===j){
+								continue;
+							}
+							
+							temp2=that.playMove(legal_moves[i], {isMockMove : true, promoteTo : j});
+							
+							legal_san_moves.push(temp2.san);
+							extra_promos++;
+						}
+					}
 				}
 				
-				if(legal_san_moves.length!==legal_moves.length){
+				if((legal_san_moves.length-extra_promos)!==legal_moves.length){
 					no_errors=false;
 				}
 			}
