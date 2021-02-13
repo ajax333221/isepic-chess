@@ -593,5 +593,16 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1)).toBe(1116);
 		//depth=3 ... toBe(33828) ... [v5.4.1 = passed]
 		//depth=4 ... toBe(1184142) ... [untested]
+		
+		current_fen="rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8";
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1, "d7-c8")).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1)).toBe(1);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1, "d7-c8")).toBe(4);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1)).toBe(44);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1, "d7-c8")).toBe(144);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1)).toBe(1486);
+		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 3, 1, "d7-c8")).toBe(6030);
+		//depth=3 ... toBe(62379) ... [v5.6.0 = passed]
+		//depth=4 ... toBe(2103487 ) ... [untested]
 	});
 });

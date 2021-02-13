@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.5.3";
+		var _VERSION="5.5.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -572,8 +572,8 @@
 			return error_msg;
 		}
 		
-		function _perft(woard, depth, ply){
-			var i, j, k, len, board, count, legal_moves, keep_going, rtn;
+		function _perft(woard, depth, ply, joined_move_dash){
+			var i, j, k, m, len, temp, board, count, legal_moves, keep_going, rtn;
 			
 			rtn=1;
 			keep_going=true;
@@ -600,9 +600,25 @@
 						legal_moves=board.legalMoves([i, j], {returnType : "fromToSquares", squareType : "pos"});
 						
 						for(k=0, len=legal_moves.length; k<len; k++){//0<len
-							board.playMove(legal_moves[k]);
+							if(_isNonEmptyStr(joined_move_dash) && joined_move_dash!==(toBos(legal_moves[k][0])+"-"+toBos(legal_moves[k][1]))){
+								continue;
+							}
+							
+							temp=board.playMove(legal_moves[k]);
 							count+=_perft(board, (depth-1), (ply+1));
 							board.navLinkMove(ply-1);
+							
+							if(temp.initialVal!==temp.finalVal){//promotion
+								for(m=_KNIGHT; m<_KING; m++){//2...5
+									if(toAbsVal(temp.finalVal)===m){
+										continue;
+									}
+									
+									board.playMove(legal_moves[k], {promoteTo : m});
+									count+=_perft(board, (depth-1), (ply+1));
+									board.navLinkMove(ply-1);
+								}
+							}
 						}
 					}
 				}
