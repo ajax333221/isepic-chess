@@ -601,8 +601,8 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 1, 1)).toBe(44);
 		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1, "d7-c8")).toBe(144);
 		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 2, 1)).toBe(1486);
-		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 3, 1, "d7-c8")).toBe(6030);
-		//depth=3 ... toBe(62379) ... [v5.6.0 = passed]
-		//depth=4 ... toBe(2103487 ) ... [untested]
+		//[d7-c8] depth=3 ... toBe(6030) ... [v5.5.4 = passed]
+		//depth=3 ... toBe(62379) ... [v5.5.4 = passed]
+		//depth=4 ... toBe(2103487) ... [untested]
 	});
 });
