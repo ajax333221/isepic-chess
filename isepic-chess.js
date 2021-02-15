@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.6.1";
+		var _VERSION="5.6.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2149,7 +2149,7 @@
 				p.isMockMove=(p.isMockMove===true);
 				
 				if(p.isMockMove){
-					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p]);
+					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p], {promoteTo : that.promoteTo});
 					
 					keep_going=false;
 				}
@@ -2838,10 +2838,12 @@
 			return rtn;
 		}
 		
-		function fenApply(fen, fn_name, args){
+		//p = {promoteTo}
+		function fenApply(fen, fn_name, args, p){
 			var board, board_created, silent_mode_cache, rtn;
 			
 			rtn=null;
+			p=_unreferenceP(p);
 			board_created=false;
 			
 			silent_mode_cache=_SILENT_MODE;
@@ -2854,6 +2856,7 @@
 			board=initBoard({
 				boardName : ("board_fenApply_"+fn_name),
 				fen : fen,
+				promoteTo : p.promoteTo,
 				isHidden : true,
 				validOrBreak : true
 			});

@@ -50,8 +50,23 @@ describe("Misc.", () => {
 				
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8"]).san).toBe("bxa8=Q");
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8="]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8= "]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=0"]).san).toBe("bxa8=Q");
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=_"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=x"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X"]).san).toBe("bxa8=Q");
+			});
+			
+			test("valid SAN should overwrite board promoteTo", () => {
+				var board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : shared_fen,
+					promoteTo : "R",
+					validOrBreak : true
+				});
+				
+				expect(board_obj.playMove("bxa8=B").san).toBe("bxa8=B");
 			});
 			
 			test("invalid SAN should NOT overwrite board promoteTo", () => {
@@ -64,21 +79,35 @@ describe("Misc.", () => {
 					validOrBreak : true
 				});
 				
-				expect(board_obj.playMove("bxa8=x").san).toBe("bxa8=R");
+				expect(board_obj.playMove("bxa8=X").san).toBe("bxa8=R");
 			});
 			
-			test("isMockMove should copy promoteTo to fenApply board", () => {
+			test("board.promoteTo in isMockMove from board is lowest priority", () => {
 				var board_obj;
 				
 				board_obj=Ic.initBoard({
 					boardName : board_name,
 					fen : shared_fen,
-					promoteTo : "R",
+					promoteTo : "B",
 					validOrBreak : true
 				});
 				
-				expect(true).toBe(true);
-				//BUG (issue #10): expect(board_obj.playMove("b7-a8", {isMockMove : true}).san).toBe("bxa8=R");
+				expect(board_obj.playMove("bxa8", {isMockMove : true}).san).toBe("bxa8=B");
+				expect(board_obj.playMove("bxa8=X", {isMockMove : true}).san).toBe("bxa8=B");
+				expect(board_obj.playMove("bxa8=N", {isMockMove : true}).san).toBe("bxa8=N");
+				expect(board_obj.playMove("bxa8=N", {isMockMove : true, promoteTo : "R"}).san).toBe("bxa8=R");
+				expect(board_obj.playMove("bxa8=N", {isMockMove : true, promoteTo : "X"}).san).toBe("bxa8=N");
+				expect(board_obj.playMove("bxa8=X", {isMockMove : true, promoteTo : "X"}).san).toBe("bxa8=B");
+			});
+			
+			test("board.promoteTo in isMockMove from fenApply is lowest priority", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8"], {promoteTo : "B"}).san).toBe("bxa8=B");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X"], {promoteTo : "B"}).san).toBe("bxa8=B");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N"], {promoteTo : "B"}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N", {promoteTo : "R"}], {promoteTo : "B"}).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N", {promoteTo : "X"}], {promoteTo : "B"}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "B"}).san).toBe("bxa8=B");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "X"}).san).toBe("bxa8=Q");
 			});
 		});
 		
