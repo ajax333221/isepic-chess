@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.6.0";
+		var _VERSION="5.6.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1834,7 +1834,7 @@
 				}else if(/^[a-h]/.exec(mov)){//pawn move
 					parsed_piece_val=1;
 					
-					parse_exec=/([^=]+)=([NBRQ]).*$/.exec(mov);
+					parse_exec=/([^=]+)=(.?).*$/.exec(mov);
 					
 					if(parse_exec){
 						mov=parse_exec[1];
@@ -1912,7 +1912,7 @@
 				temp=_moveWrapmoveHelper(mov);
 				
 				if(temp){
-					bubbling_promoted_to=toAbsVal(temp[1]);
+					bubbling_promoted_to=temp[1];//default 0
 					
 					rtn=temp[0];
 				}
@@ -1922,14 +1922,14 @@
 				temp=that.sanWrapmoveHelper(mov);//place last for better performance
 				
 				if(temp){
-					bubbling_promoted_to=toAbsVal(temp[1]);
+					bubbling_promoted_to=temp[1];//default ""
 					
 					rtn=temp[0];
 				}
 			}
 			
 			if(rtn){
-				temp=(bubbling_promoted_to || toAbsVal(that.promoteTo) || _QUEEN);
+				temp=(toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN);/*NO remove toAbsVal()*/
 				
 				rtn=[[toBos(rtn[0]), toBos(rtn[1])], _promoteValHelper(temp)];
 			}
@@ -1939,7 +1939,7 @@
 		
 		//p = {promoteTo, delimiter}
 		function _draftMove(mov, p){
-			var i, len, that, temp, temp2, temp3, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, needs_extra, no_errors, rtn;
+			var i, len, that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, partial_san, file_collide, rank_collide, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, is_ambiguous, no_errors, rtn;
 			
 			that=this;
 			
@@ -1962,7 +1962,7 @@
 			//}
 			
 			if(no_errors){
-				bubbling_promoted_to=(toAbsVal(p.promoteTo) || temp[1]);
+				bubbling_promoted_to=_promoteValHelper(toAbsVal(p.promoteTo) || temp[1]);/*NO remove toAbsVal()*/
 				
 				initial_cached_square=that.getSquare(temp[0][0], {
 					isUnreferenced : true
@@ -2039,9 +2039,10 @@
 						partial_san+="="+toAbsBal(promoted_val);
 					}
 				}else{//knight, bishop, rook, queen, non-castling king
+					is_ambiguous=false;
+					
 					extra_file_bos="";
 					extra_rank_bos="";
-					needs_extra=false;
 					
 					if(!initial_cached_square.isKing){//knight, bishop, rook, queen
 						temp2=[];
@@ -2060,59 +2061,67 @@
 						
 						len=temp2.length;
 						if(len>1){
-							temp3="";
+							file_collide=false;
+							rank_collide=false;
 							
 							for(i=0; i<len; i++){//0<len
+								if(sameSquare(temp2[i], initial_cached_square)){
+									continue;
+								}
+								
 								//it's safe to calc legal moves here since we are not dealing with a pawn or king
-								if(!sameSquare(temp2[i], initial_cached_square) && that.isLegalMove([temp2[i], final_cached_square])){
-									temp3+=toBos(temp2[i]);
-								}
-							}
-							
-							if(temp3){
-								needs_extra=true;
-								
-								temp=(_strContains(temp3, initial_cached_square.fileBos)+(_strContains(temp3, initial_cached_square.rankBos)*2));
-								
-								if(temp && temp!==1){//2,3
-									extra_file_bos=initial_cached_square.fileBos;
-								}
-								
-								if(temp && temp!==2){//1,3
-									extra_rank_bos=initial_cached_square.rankBos;
+								if(that.isLegalMove([temp2[i], final_cached_square])){
+									is_ambiguous=true;
+									
+									if(!file_collide && initial_cached_square.fileBos===getFileBos(temp2[i])){
+										file_collide=true;
+										extra_rank_bos=initial_cached_square.rankBos;
+										
+										if(rank_collide){
+											break;
+										}
+									}
+									
+									if(!rank_collide && initial_cached_square.rankBos===getRankBos(temp2[i])){
+										rank_collide=true;
+										extra_file_bos=initial_cached_square.fileBos;
+										
+										if(file_collide){
+											break;
+										}
+									}
 								}
 							}
 						}
 					}
 					
-					temp="";
+					temp=initial_cached_square.absBal;
+					temp2=(final_cached_square.isEmptySquare ? "" : "x")+final_cached_square.bos;
 					
-					if(!final_cached_square.isEmptySquare){
-						temp+="x";
-					}
-					
-					temp+=final_cached_square.bos;
-					temp2=(!!extra_file_bos+!!extra_rank_bos);
-					
-					if(needs_extra){
-						if(!temp2){
-							partial_san+=initial_cached_square.absBal+initial_cached_square.fileBos+temp;
-						}else{
-							partial_san+=initial_cached_square.absBal+extra_file_bos+extra_rank_bos+temp;
+					if(is_ambiguous){
+						if(!extra_file_bos && !extra_rank_bos){//none
+							partial_san+=temp+initial_cached_square.fileBos+temp2;
+							
+							with_overdisambiguated.push(partial_san);
+							with_overdisambiguated.push(temp+initial_cached_square.rankBos+temp2);
+						}
+						
+						if(extra_file_bos || extra_rank_bos){//one or both
+							partial_san+=temp+extra_file_bos+extra_rank_bos+temp2;
+							
 							with_overdisambiguated.push(partial_san);
 						}
+						
+						if(!extra_file_bos || !extra_rank_bos){//none or one (but not both)
+							with_overdisambiguated.push(temp+initial_cached_square.fileBos+initial_cached_square.rankBos+temp2);
+						}
 					}else{
-						partial_san+=initial_cached_square.absBal+temp;
+						partial_san+=temp+temp2;
+						
 						with_overdisambiguated.push(partial_san);
-					}
-					
-					if(!temp2){//0
-						with_overdisambiguated.push(initial_cached_square.absBal+initial_cached_square.fileBos+temp);
-						with_overdisambiguated.push(initial_cached_square.absBal+initial_cached_square.rankBos+temp);
-					}
-					
-					if(temp2!==2){//0,1
-						with_overdisambiguated.push(initial_cached_square.absBal+initial_cached_square.fileBos+initial_cached_square.rankBos+temp);
+						with_overdisambiguated.push(temp+initial_cached_square.fileBos+temp2);
+						with_overdisambiguated.push(temp+initial_cached_square.rankBos+temp2);
+						with_overdisambiguated.push(temp+initial_cached_square.fileBos+initial_cached_square.rankBos+temp2);
 					}
 				}
 				

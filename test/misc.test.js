@@ -9,6 +9,79 @@ describe("Misc.", () => {
 		board_name="board_regression_tests";
 		other_board_name="board_regression_tests_other";
 		
+		describe("Disambiguation related", () => {
+			test("pinned pieces are ignored as candidates", () => {
+				expect(Ic.fenApply("rnb1kbnr/pp1p2pp/2p2p2/q3p3/4PN2/2NP4/PPP2PPP/R1BQKB1R w KQkq - 0 6", "playMove", ["f4-e2"]).san).toBe("Ne2");
+			});
+		});
+		
+		describe("Promotion related", () => {
+			var shared_fen;
+			
+			shared_fen="rn1qkbnr/1P1ppppp/2p5/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 5";
+			
+			test("K should change to Q", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7-a8", {promoteTo : "K"}]).san).toBe("bxa8=Q");
+			});
+			
+			test("P should change to N", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7-a8", {promoteTo : "P"}]).san).toBe("bxa8=N");
+			});
+			
+			test("valid promoteTo option should overwrite SAN", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "N"}]).san).toBe("bxa8=N");
+			});
+			
+			test("invalid promoteTo option should NOT overwrite SAN", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "W"}]).san).toBe("bxa8=R");
+			});
+			
+			test("unconventional SAN promotion", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=q"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=6"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=5"]).san).toBe("bxa8=Q");
+				
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=r"]).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=4"]).san).toBe("bxa8=R");
+				
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=n"]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=2"]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=1"]).san).toBe("bxa8=N");
+				
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8="]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=_"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=x"]).san).toBe("bxa8=Q");
+			});
+			
+			test("invalid SAN should NOT overwrite board promoteTo", () => {
+				var board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : shared_fen,
+					promoteTo : "R",
+					validOrBreak : true
+				});
+				
+				expect(board_obj.playMove("bxa8=x").san).toBe("bxa8=R");
+			});
+			
+			test("isMockMove should copy promoteTo to fenApply board", () => {
+				var board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : shared_fen,
+					promoteTo : "R",
+					validOrBreak : true
+				});
+				
+				expect(true).toBe(true);
+				//BUG (issue #10): expect(board_obj.playMove("b7-a8", {isMockMove : true}).san).toBe("bxa8=R");
+			});
+		});
+		
 		describe("Enpassant related", () => {
 			test("enpassant capture applied to other non enpassant moves", () => {
 				expect(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"]).sort()).toEqual(["d6", "e6"].sort());
