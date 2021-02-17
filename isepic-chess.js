@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.6.2";
+		var _VERSION="5.6.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1188,14 +1188,19 @@
 					current_side=(i ? that.b : that.w);
 					
 					if(current_side.castling){
-						temp=(i ? "8" : "1");
+						temp={
+							completeActiveColor : (i ? "black" : "white"),
+							originalKingBos : (i ? "e8" : "e1"),
+							originalLongRookBos : (i ? "a8" : "a1"),
+							originalShortRookBos : (i ? "h8" : "h1")
+						};
 						
-						if(that.getSquare("e"+temp).val!==current_side.king){
-							error_msg="Error [11] "+(i ? "black" : "white")+" castling rights without king in original square";
-						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare("h"+temp).val!==current_side.rook){
-							error_msg="Error [12] "+(i ? "black" : "white")+" short castling rights with missing H-file rook";
-						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare("a"+temp).val!==current_side.rook){
-							error_msg="Error [13] "+(i ? "black" : "white")+" long castling rights with missing A-file rook";
+						if(that.getSquare(temp.originalKingBos).val!==current_side.king){
+							error_msg="Error [11] "+temp.completeActiveColor+" castling rights without king in original square";
+						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare(temp.originalShortRookBos).val!==current_side.rook){
+							error_msg="Error [12] "+temp.completeActiveColor+" short castling rights with missing H-file rook";
+						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare(temp.originalLongRookBos).val!==current_side.rook){
+							error_msg="Error [13] "+temp.completeActiveColor+" long castling rights with missing A-file rook";
 						}
 						
 						if(error_msg){
@@ -1297,7 +1302,7 @@
 		
 		//p = {returnType (!= san), squareType, delimiter}
 		function _legalMovesHelper(target_qos, p){
-			var i, j, len, len2, that, temp, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
+			var i, j, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
 			
@@ -1350,20 +1355,27 @@
 					
 					if(active_side.castling && !that.isCheck){
 						for(i=0; i<2; i++){//0...1
-							if(active_side.castling===(i ? _SHORT_CASTLE : _LONG_CASTLE)){
+							temp2={
+								castleToSkip : (i ? _SHORT_CASTLE : _LONG_CASTLE),
+								direction : (i ? _DIRECTION_LEFT : _DIRECTION_RIGHT),
+								consecutiveEmpty : (i ? 3 : 2),
+								singleFileShift : (i ? -1 : 1)
+							};
+							
+							if(active_side.castling===temp2.castleToSkip){
 								continue;
 							}
 							
-							if(_candidateMoves(target_cached_square, (i ? _DIRECTION_LEFT : _DIRECTION_RIGHT), false, (i ? 3 : 2), false).length!==(i ? 3 : 2)){
+							if(_candidateMoves(target_cached_square, temp2.direction, false, temp2.consecutiveEmpty, false).length!==temp2.consecutiveEmpty){
 								continue;
 							}
 							
-							if(that.countAttacks(that.getSquare(target_cached_square, {fileShift : (i ? -1 : 1)}), true)){
+							if(that.countAttacks(that.getSquare(target_cached_square, {fileShift : temp2.singleFileShift}), true)){
 								continue;
 							}
 							
 							temp=that.getSquare(target_cached_square, {
-								fileShift : (i ? -2 : 2)
+								fileShift : (temp2.singleFileShift*2)
 							});
 							
 							pre_validated_arr_pos.push([temp]);
