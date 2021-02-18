@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.6.3";
+		var _VERSION="5.6.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -990,6 +990,7 @@
 			}
 			
 			that.checks=that.countAttacks(null);
+			that.isCheck=!!that.checks;/*NO move below legalMoves()*/
 			
 			is_stale=true;
 			
@@ -1003,7 +1004,6 @@
 				}
 			}
 			
-			that.isCheck=!!that.checks;
 			that.isCheckmate=(that.isCheck && is_stale);
 			that.isStalemate=(!that.isCheck && is_stale);
 			

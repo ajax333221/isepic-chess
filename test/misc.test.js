@@ -112,12 +112,13 @@ describe("Misc.", () => {
 		});
 		
 		describe("Enpassant related", () => {
-			test("enpassant capture applied to other non enpassant moves", () => {
-				expect(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"]).sort()).toEqual(["d6", "e6"].sort());
+			test("enpassant capture made with a non-pawn piece", () => {
+				expect(Ic.fenApply("rnbqkbnr/1pp1pp2/p7/3pQ1p1/2K4p/3P4/PPP1PPPP/RNB2BNR w kq d6 0 8", "legalMoves", ["e5"]).sort()).toEqual(["d5"].sort());
 			});
 			
 			test("taking enpassant results in self check", () => {
 				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4-d3"])).toBe(false);
+				expect(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"]).sort()).toEqual(["d6", "e6"].sort());
 			});
 			
 			test("missing option to remove check via enpassant", () => {
