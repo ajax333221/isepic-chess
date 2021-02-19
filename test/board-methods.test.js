@@ -16,7 +16,6 @@ Ic.setSilentMode(false);
 //toggleActiveNonActive (return value)
 //playMove = via fen apply
 //getWrappedMove
-//(?mm) countLightDarkBishops
 //(?mm) draftMove
 //
 //(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
@@ -38,15 +37,27 @@ describe("Board methods", () => {
 		other_board_name="board_hash_other";
 		
 		test("default position", () => {
-			var board_obj;
+			var board_obj, shared_fen;
+			
+			shared_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
-				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				fen : shared_fen,
 				validOrBreak : true
 			});
 			
 			expect(board_obj.boardHash()).toBe(1765615174);
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : shared_fen,
+				isHidden : true,
+				validOrBreak : true
+			});
+			
+			expect(board_obj.boardHash()).toBe(-1606863643);
+			expect(Ic.fenApply(shared_fen, "boardHash")).toBe(-1606863643);
 		});
 		
 		test("boardName and selectedBos not used in the hash", () => {
@@ -370,12 +381,96 @@ describe("Board methods", () => {
 		expect(Ic.fenApply("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "getSquare", ["h4", {fileShift : 1}])).toBeNull();
 	});
 	
-	describe("ascii, toggleIsRotated, countAttacks and setPromoteTo", () => {
+	test("b.countAttacks()", () => {
+		var shared_fen;
+		
+		shared_fen="8/2PR4/8/p5PK/P1Q2n2/3PNp2/5q1r/4nb1k w - - 0 1";
+		
+		expect(Ic.fenApply(shared_fen, "countAttacks")).toBe(2);
+		expect(Ic.fenApply(shared_fen, "countAttacks", [])).toBe(2);
+		expect(Ic.fenApply(shared_fen, "countAttacks", [null])).toBe(2);
+		expect(Ic.fenApply(shared_fen, "countAttacks", [null, true])).toBe(1);
+		expect(Ic.fenApply(shared_fen, "countAttacks", [null, false])).toBe(2);
+		
+		expect(Ic.fenApply(shared_fen, "countAttacks", ["g2"])).toBe(7);
+		expect(Ic.fenApply(shared_fen, "countAttacks", ["g2", true])).toBe(1);
+		expect(Ic.fenApply(shared_fen, "countAttacks", ["g2", false])).toBe(7);
+		
+		expect(Ic.fenApply(shared_fen, "countAttacks", ["g4"])).toBe(0);
+		expect(Ic.fenApply(shared_fen, "countAttacks", ["g4", false])).toBe(0);
+		expect(Ic.fenApply(shared_fen, "countAttacks", ["g4", true])).toBe(0);
+	});
+	
+	test("b.ascii()", () => {
+		var shared_fen, w_view_diagram, b_view_diagram;
+		
+		shared_fen="r1b2rk1/ppp1bppp/2N5/8/3qN3/8/PPPP1PPP/R1BQ1RK1 b - - 0 9";
+		
+		w_view_diagram=`   +------------------------+
+ 8 | r  .  b  .  .  r  k  . |
+ 7 | p  p  p  .  b  p  p  p |
+ 6 | .  .  N  .  .  .  .  . |
+ 5 | .  .  .  .  .  .  .  . |
+ 4 | .  .  .  q  N  .  .  . |
+ 3 | .  .  .  .  .  .  .  . |
+ 2 | P  P  P  P  .  P  P  P |
+ 1 | R  .  B  Q  .  R  K  . |
+   +------------------------+
+     a  b  c  d  e  f  g  h
+`;
+		
+		b_view_diagram=`   +------------------------+
+ 1 | .  K  R  .  Q  B  .  R |
+ 2 | P  P  P  .  P  P  P  P |
+ 3 | .  .  .  .  .  .  .  . |
+ 4 | .  .  .  N  q  .  .  . |
+ 5 | .  .  .  .  .  .  .  . |
+ 6 | .  .  .  .  .  N  .  . |
+ 7 | p  p  p  b  .  p  p  p |
+ 8 | .  k  r  .  .  b  .  r |
+   +------------------------+
+     h  g  f  e  d  c  b  a
+`;
+		
+		expect(Ic.fenApply(shared_fen, "ascii")).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [])).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", null, {isRotated : false})).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [], {isRotated : false})).toBe(w_view_diagram);
+		
+		expect(Ic.fenApply(shared_fen, "ascii", null, {isRotated : true})).toBe(b_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [], {isRotated : true})).toBe(b_view_diagram);
+		
+		expect(Ic.fenApply(shared_fen, "ascii", [false])).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [false], {isRotated : false})).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [false], {isRotated : true})).toBe(w_view_diagram);
+		
+		expect(Ic.fenApply(shared_fen, "ascii", [true])).toBe(b_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [true], {isRotated : false})).toBe(b_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [true], {isRotated : true})).toBe(b_view_diagram);
+	});
+	
+	test("b.countLightDarkBishops()", () => {
+		var current_fen;
+		
+		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+		expect(Ic.fenApply(current_fen, "countLightDarkBishops")).toEqual({
+			w : {lightSquaredBishops : 1, darkSquaredBishops : 1},
+			b : {lightSquaredBishops : 1, darkSquaredBishops : 1}
+		});
+		
+		current_fen="8/q5n1/p2k1b1r/Qp2bb1p/1P5P/RK1B3N/4B3/8 b - - 0 1";
+		expect(Ic.fenApply(current_fen, "countLightDarkBishops")).toEqual({
+			w : {lightSquaredBishops : 2, darkSquaredBishops : 0},
+			b : {lightSquaredBishops : 1, darkSquaredBishops : 2}
+		});
+	});
+	
+	describe("mix: ascii, toggleIsRotated and setPromoteTo", () => {
 		var board_name;
 		
 		board_name="board_shared_ascii";
 		
-		test("b.ascii(), b.toggleIsRotated(), b.countAttacks() and b.setPromoteTo()", () => {
+		test("mix: b.ascii(), b.toggleIsRotated() and b.setPromoteTo()", () => {
 			var temp, board_obj, rotated_yes, rotated_no;
 			
 			board_obj=Ic.initBoard({
@@ -429,12 +524,6 @@ describe("Board methods", () => {
      a  b  c  d  e  f  g  h
 `
 			);
-			
-			expect(board_obj.countAttacks()).toBe(2);
-			expect(board_obj.countAttacks("g2")).toBe(7);
-			expect(board_obj.countAttacks("g2", true)).toBe(1);
-			expect(board_obj.countAttacks("g4", false)).toBe(0);
-			expect(board_obj.countAttacks("g4", true)).toBe(0);
 			
 			expect(board_obj.promoteTo).toBe(3);
 			
@@ -721,5 +810,36 @@ _MOVES_`;
 			
 			expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 		});
+	});
+	
+	test("b.uciExport()", () => {
+		var board_name, board_obj, uci_to_compare;
+		
+		board_name="board_uci_export";
+		
+		board_obj=Ic.initBoard({
+			boardName : board_name,
+			fen : "8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1",
+			validOrBreak : true
+		});
+		
+		uci_to_compare="";
+		expect(board_obj.uciExport()).toBe(uci_to_compare);
+		
+		uci_to_compare="e5e4";
+		board_obj.playMove("e5-e4");
+		expect(board_obj.uciExport()).toBe(uci_to_compare);
+		
+		uci_to_compare="e5e4 e1g1";
+		board_obj.playMove("e1-g1");
+		expect(board_obj.uciExport()).toBe(uci_to_compare);
+		
+		uci_to_compare="e5e4 e1g1 a2a1r";
+		board_obj.playMove("a1=R");
+		expect(board_obj.uciExport()).toBe(uci_to_compare);
+		
+		uci_to_compare="e5e4 e1g1 a2a1r h7h8q";
+		board_obj.playMove("h8=Q");
+		expect(board_obj.uciExport()).toBe(uci_to_compare);
 	});
 });

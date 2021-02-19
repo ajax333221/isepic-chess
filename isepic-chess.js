@@ -4,7 +4,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.6.4";
+		var _VERSION="5.7.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1648,6 +1648,29 @@
 			return rtn;
 		}
 		
+		function _uciExport(){
+			var i, len, that, temp, uci_arr, move_list, rtn;
+			
+			that=this;
+			
+			rtn="";
+			
+			uci_arr=[];
+			move_list=that.moveList;
+			
+			for(i=1, len=move_list.length; i<len; i++){//1<len
+				temp=move_list[i];
+				
+				uci_arr.push(temp.fromBos+""+temp.toBos+(temp.initialVal!==temp.finalVal ? toBal(temp.finalVal).toLowerCase() : ""));
+			}
+			
+			if(uci_arr.length){
+				rtn=uci_arr.join(" ");
+			}
+			
+			return rtn;
+		}
+		
 		function _ascii(is_rotated){
 			var i, j, that, bottom_label, current_square, rtn;
 			
@@ -2633,6 +2656,7 @@
 						legalMoves : _legalMoves,
 						legalSanMoves : _legalSanMoves,
 						pgnExport : _pgnExport,
+						uciExport : _uciExport,
 						ascii : _ascii,
 						boardHash : _boardHash,
 						isEqualBoard : _isEqualBoard,
@@ -2850,11 +2874,12 @@
 			return rtn;
 		}
 		
-		//p = {promoteTo}
+		//p = {isRotated, promoteTo}
 		function fenApply(fen, fn_name, args, p){
 			var board, board_created, silent_mode_cache, rtn;
 			
 			rtn=null;
+			args=(_isArray(args) ? args : []);
 			p=_unreferenceP(p);
 			board_created=false;
 			
@@ -2868,6 +2893,7 @@
 			board=initBoard({
 				boardName : ("board_fenApply_"+fn_name),
 				fen : fen,
+				isRotated : p.isRotated,
 				promoteTo : p.promoteTo,
 				isHidden : true,
 				validOrBreak : true
@@ -2897,6 +2923,18 @@
 					break;
 				case "getSquare" :
 					rtn=(board_created ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [["isUnreferenced", true]])]) : null);
+					break;
+				case "countAttacks" :
+					rtn=(board_created ? _countAttacks.apply(board, args) : 0);
+					break;
+				case "ascii" :
+					rtn=(board_created ? _ascii.apply(board, args) : "");
+					break;
+				case "boardHash" :
+					rtn=(board_created ? _boardHash.apply(board, args) : "");
+					break;
+				case "countLightDarkBishops" :
+					rtn=(board_created ? _countLightDarkBishops.apply(board, args) : {w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}});
 					break;
 				default :
 					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");

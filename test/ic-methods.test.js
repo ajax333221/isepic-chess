@@ -1070,9 +1070,32 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			
 			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();
 			
+			expect(Ic.fenApply("0invalidfen0", "countAttacks", ["a2"])).toBe(0);
+			
+			expect(Ic.fenApply("0invalidfen0", "ascii")).toBe("");
+			
+			expect(Ic.fenApply("0invalidfen0", "boardHash")).toBe("");
+			
+			expect(Ic.fenApply("0invalidfen0", "countLightDarkBishops")).toEqual({
+				w : {lightSquaredBishops : 0, darkSquaredBishops : 0},
+				b : {lightSquaredBishops : 0, darkSquaredBishops : 0}
+			});
+			
 			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "0invalidfn0")).toBeNull();
 			
 			Ic.setSilentMode(false);
+		});
+		
+		describe("args related", () => {
+			test("should not crash when args is missing", () => {
+				var shared_fen;
+				
+				shared_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+				
+				expect(Ic.fenApply(shared_fen, "playMove")).toBeNull();
+				
+				expect(Ic.fenApply(shared_fen, "getSquare")).toBeNull();
+			});
 		});
 		
 		describe("isLegalFen", () => {//this belong here (it's not a board method)
