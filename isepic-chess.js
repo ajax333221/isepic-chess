@@ -1,10 +1,12 @@
 /** Copyright (c) 2021 Ajax Isepic (ajax333221) Licensed MIT */
 
-/* jshint indent:4, quotmark:double, onevar:true, undef:true, unused:true, trailing:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, sub:true, eqeqeq:true, esversion:6 */
+/* jshint quotmark:double, undef:true, unused:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, eqeqeq:true, esversion:9 */
+
+/* globals exports, define */
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.7.0";
+		var _VERSION="5.8.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -247,7 +249,7 @@
 			//}
 			
 			if(no_errors){
-				calculated_promote=(mov.initialVal!==mov.finalVal ? mov.finalVal : 0);
+				calculated_promote=(mov.promotion || "");
 				
 				rtn=[[mov.fromBos, mov.toBos], calculated_promote];
 			}
@@ -608,9 +610,9 @@
 							count+=_perft(board, (depth-1), (ply+1));
 							board.navLinkMove(ply-1);
 							
-							if(temp.initialVal!==temp.finalVal){//promotion
+							if(temp.promotion){
 								for(m=_KNIGHT; m<_KING; m++){//2...5
-									if(toAbsVal(temp.finalVal)===m){
+									if(toAbsVal(temp.promotion)===m){
 										continue;
 									}
 									
@@ -1511,9 +1513,9 @@
 					
 					legal_san_moves.push(temp.san);
 					
-					if(temp.initialVal!==temp.finalVal){//promotion
+					if(temp.promotion){
 						for(j=_KNIGHT; j<_KING; j++){//2...5
-							if(toAbsVal(temp.finalVal)===j){
+							if(toAbsVal(temp.promotion)===j){
 								continue;
 							}
 							
@@ -1581,8 +1583,7 @@
 			move_list=that.moveList;
 			
 			initial_fen=move_list[0].fen;
-			
-			black_starts=_strContains(initial_fen, " b ");
+			black_starts=(move_list[0].colorToPlay==="b");
 			
 			initial_full_move=(that.fullMove-Math.floor((that.currentMove+black_starts-1)/2)+(black_starts===!(that.currentMove%2))-1);
 			
@@ -1641,27 +1642,22 @@
 				rtn+="["+ordered_tags[i][0]+" \""+ordered_tags[i][1]+"\"]\n";
 			}
 			
-			//tener cuidado para que las 7 + setup + fen salgan en orden y sin duplicar
-			
 			rtn+="\n"+text_game;
 			
 			return rtn;
 		}
 		
 		function _uciExport(){
-			var i, len, that, temp, uci_arr, move_list, rtn;
+			var i, len, that, uci_arr, rtn;
 			
 			that=this;
 			
 			rtn="";
 			
 			uci_arr=[];
-			move_list=that.moveList;
 			
-			for(i=1, len=move_list.length; i<len; i++){//1<len
-				temp=move_list[i];
-				
-				uci_arr.push(temp.fromBos+""+temp.toBos+(temp.initialVal!==temp.finalVal ? toBal(temp.finalVal).toLowerCase() : ""));
+			for(i=1, len=that.moveList.length; i<len; i++){//1<len
+				uci_arr.push(that.moveList[i].uci);
 			}
 			
 			if(uci_arr.length){
@@ -1947,7 +1943,7 @@
 				temp=_moveWrapmoveHelper(mov);
 				
 				if(temp){
-					bubbling_promoted_to=temp[1];//default 0
+					bubbling_promoted_to=temp[1];//default ""
 					
 					rtn=temp[0];
 				}
@@ -2172,7 +2168,7 @@
 		
 		//p = {isMockMove, promoteTo, delimiter}
 		function _playMove(mov, p){
-			var i, that, temp, temp2, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, keep_going, rtn_move_obj;
+			var i, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, keep_going, rtn_move_obj;
 			
 			that=this;
 			
@@ -2287,13 +2283,17 @@
 					}
 				}
 				
-				rtn_move_obj={fen : that.fen, san : complete_san, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, initialVal : initial_cached_square.val, finalVal : (pgn_obj.promotedVal || initial_cached_square.val)};
+				temp=(initial_cached_square.bal.replace("*", "") || "").toLowerCase();//piece
+				temp2=(toBal(pgn_obj.promotedVal).replace("*", "") || "").toLowerCase();//promotion
+				temp3=(initial_cached_square.bos+""+final_cached_square.bos+""+temp2);//uci
+				
+				rtn_move_obj={colorMoved : that.nonActiveColor, colorToPlay : that.activeColor, fen : that.fen, san : complete_san, uci : temp3, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, piece : temp, promotion : temp2};
 				
 				if(that.currentMove!==that.moveList.length){
 					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
-				that.moveList.push({fen : that.fen, san : complete_san, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, initialVal : initial_cached_square.val, finalVal : (pgn_obj.promotedVal || initial_cached_square.val)});/*NO push  referenced rtn_move_obj*/
+				that.moveList.push({colorMoved : that.nonActiveColor, colorToPlay : that.activeColor, fen : that.fen, san : complete_san, uci : temp3, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, piece : temp, promotion : temp2});/*NO push  referenced rtn_move_obj*/
 				
 				that.refreshUi(1);//autorefresh
 			}
@@ -2803,7 +2803,7 @@
 					temp="1/2-1/2";
 				}
 				
-				new_board.moveList=[{fen : new_board.fen, san : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", initialVal : 0, finalVal : 0}];
+				new_board.moveList=[{colorMoved : new_board.nonActiveColor, colorToPlay : new_board.activeColor, fen : new_board.fen, san : "", uci : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", piece : "", promotion : ""}];
 				
 				postfen_was_valid=!new_board.refinedFenTest();
 				
@@ -2827,7 +2827,7 @@
 						temp="1/2-1/2";
 					}
 					
-					new_board.moveList=[{fen : new_board.fen, san : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", initialVal : 0, finalVal : 0}];
+					new_board.moveList=[{colorMoved : new_board.nonActiveColor, colorToPlay : new_board.activeColor, fen : new_board.fen, san : "", uci : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", piece : "", promotion : ""}];
 				}
 				
 				if(p.pgn){
