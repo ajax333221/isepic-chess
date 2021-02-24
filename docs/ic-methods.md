@@ -1,8 +1,37 @@
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
 
-#### List of `Ic.<methods>(...)`:
+<h1 align="center">Ic methods</h1>
 
 Isepic Chess library `isepic-chess.js` has the following available methods.
+
+<ul>
+<li>setSilentMode()</li>
+<li>getBoard()</li>
+<li>toVal()</li>
+<li>toAbsVal()</li>
+<li>toBal()</li>
+<li>toAbsBal()</li>
+<li>toClassName()</li>
+<li>toBos()</li>
+<li>toPos()</li>
+<li>getSign()</li>
+<li>getRankPos()</li>
+<li>getFilePos()</li>
+<li>getRankBos()</li>
+<li>getFileBos()</li>
+<li>isInsideBoard()</li>
+<li>sameSquare()</li>
+<li>countPieces()</li>
+<li>removeBoard()</li>
+<li>isEqualBoard()</li>
+<li>cloneBoard()</li>
+<li>initBoard()</li>
+<li>fenApply()</li>
+<li>fenGet()</li>
+<li>getBoardNames()</li>
+</ul>
+
+#### Table `Ic.<methods>(...)`:
 
 Function | Parameters | Return | UI refresh? | Description
 -------- | ---------- | ------ | ----------- | -----------

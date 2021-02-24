@@ -102,11 +102,11 @@ https://ajax333221.github.io/isepic-chess-ui/
 :book: Documentation
 -------------
 
-- [Ic methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/ic-methods.md#list-of-icmethods)
-- [Board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.test.md#list-of-boardmethods)
-- [Board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.test.md#list-of-boardproperties)
-- [Square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#list-of-squareproperties)
-- [Move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#list-of-moveproperties)
+- [Ic methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/ic-methods.md#ic-methods)
+- [Board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.test.md#board-methods)
+- [Board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.test.md#board-properties)
+- [Square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
+- [Move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
 :telescope: To do
 -------------

@@ -1,8 +1,32 @@
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
 
-#### List of `square.<properties>`:
+<h1 align="center">Square properties</h1>
 
 Squares from `board.getSquare()` and manually selected from `board.squares[<a1-h8>]` have the following accessible properties.
+
+<ul>
+<li>pos</li>
+<li>bos</li>
+<li>rankPos</li>
+<li>filePos</li>
+<li>rankBos</li>
+<li>fileBos</li>
+<li>bal</li>
+<li>absBal</li>
+<li>val</li>
+<li>absVal</li>
+<li>className</li>
+<li>sign</li>
+<li>isEmptySquare</li>
+<li>isPawn</li>
+<li>isKnight</li>
+<li>isBishop</li>
+<li>isRook</li>
+<li>isQueen</li>
+<li>isKing</li>
+</ul>
+
+#### Table `square.<properties>`:
 
 Property | Type | Description
 -------- | ---- | -----------

@@ -1,8 +1,39 @@
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
 
-#### List of `board.<properties>`:
+<h1 align="center">Board properties</h1>
 
-Boards created by `Ic.initBoard()` have the following accessible properties.
+Boards created by `Ic.initBoard()` have the following accessible properties:
+
+<ul>
+<li>boardName</li>
+<li>w</li>
+<li>b</li>
+<li>activeColor</li>
+<li>nonActiveColor</li>
+<li>fen</li>
+<li>enPassantBos</li>
+<li>halfMove</li>
+<li>fullMove</li>
+<li>moveList</li>
+<li>currentMove</li>
+<li>isRotated</li>
+<li>checks</li>
+<li>isCheck</li>
+<li>isCheckmate</li>
+<li>isStalemate</li>
+<li>isThreefold</li>
+<li>isInsufficientMaterial</li>
+<li>isFiftyMove</li>
+<li>inDraw</li>
+<li>promoteTo</li>
+<li>manualResult</li>
+<li>selectedBos</li>
+<li>isHidden</li>
+<li>isUnlabeled</li>
+<li>squares</li>
+</ul>
+
+#### Table `board.<properties>`:
 
 Property | Type | Description
 -------- | ---- | -----------

@@ -1,8 +1,35 @@
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
 
-#### List of `board.<methods>(...)`:
+<h1 align="center">Board methods</h1>
 
-Boards created by `Ic.initBoard()` have the following available methods.
+Boards created by `Ic.initBoard()` have the following available methods:
+
+<ul>
+<li>playMove()</li>
+<li>toggleIsRotated()</li>
+<li>setPromoteTo()</li>
+<li>setManualResult()</li>
+<li>setCurrentMove()</li>
+<li>navFirst()</li>
+<li>navPrevious()</li>
+<li>navNext()</li>
+<li>navLast()</li>
+<li>navLinkMove()</li>
+<li>cloneBoardFrom()</li>
+<li>cloneBoardTo()</li>
+<li>pgnExport()</li>
+<li>uciExport()</li>
+<li>ascii()</li>
+<li>getSquare()</li>
+<li>setSquare()</li>
+<li>countAttacks()</li>
+<li>isLegalMove()</li>
+<li>legalMoves()</li>
+<li>legalSanMoves()</li>
+<li>isEqualBoard()</li>
+</ul>
+
+#### Table `board.<methods>(...)`:
 
 Function | Parameters | Return | UI refresh? | Description
 -------- | ---------- | ------ | ----------- | -----------
