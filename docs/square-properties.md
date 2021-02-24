@@ -2,28 +2,28 @@
 
 <h1 align="center">Square properties</h1>
 
-Squares from `board.getSquare()` and manually selected from `board.squares[<a1-h8>]` have the following accessible properties.
+Squares from `board.getSquare()` and manually selected from `board.squares[<a1-h8>]` have the following accessible properties:
 
 <ul>
-<li>pos</li>
-<li>bos</li>
-<li>rankPos</li>
-<li>filePos</li>
-<li>rankBos</li>
-<li>fileBos</li>
-<li>bal</li>
-<li>absBal</li>
-<li>val</li>
-<li>absVal</li>
-<li>className</li>
-<li>sign</li>
-<li>isEmptySquare</li>
-<li>isPawn</li>
-<li>isKnight</li>
-<li>isBishop</li>
-<li>isRook</li>
-<li>isQueen</li>
-<li>isKing</li>
+<li>square.pos</li>
+<li>square.bos</li>
+<li>square.rankPos</li>
+<li>square.filePos</li>
+<li>square.rankBos</li>
+<li>square.fileBos</li>
+<li>square.bal</li>
+<li>square.absBal</li>
+<li>square.val</li>
+<li>square.absVal</li>
+<li>square.className</li>
+<li>square.sign</li>
+<li>square.isEmptySquare</li>
+<li>square.isPawn</li>
+<li>square.isKnight</li>
+<li>square.isBishop</li>
+<li>square.isRook</li>
+<li>square.isQueen</li>
+<li>square.isKing</li>
 </ul>
 
 #### Table `square.<properties>`:

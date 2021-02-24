@@ -2,21 +2,21 @@
 
 <h1 align="center">Move properties</h1>
 
-Moves from `board.playMove()` and manually selected from `board.moveList[<index>]` have the following accessible properties.
+Moves from `board.playMove()` and manually selected from `board.moveList[<index>]` have the following accessible properties:
 
 <ul>
-<li>colorMoved</li>
-<li>colorToPlay</li>
-<li>fen</li>
-<li>san</li>
-<li>uci</li>
-<li>comment</li>
-<li>moveResult</li>
-<li>canDraw</li>
-<li>fromBos</li>
-<li>toBos</li>
-<li>piece</li>
-<li>promotion</li>
+<li>move.colorMoved</li>
+<li>move.colorToPlay</li>
+<li>move.fen</li>
+<li>move.san</li>
+<li>move.uci</li>
+<li>move.comment</li>
+<li>move.moveResult</li>
+<li>move.canDraw</li>
+<li>move.fromBos</li>
+<li>move.toBos</li>
+<li>move.piece</li>
+<li>move.promotion</li>
 </ul>
 
 #### Table `move.<properties>`:

@@ -5,32 +5,32 @@
 Boards created by `Ic.initBoard()` have the following accessible properties:
 
 <ul>
-<li>boardName</li>
-<li>w</li>
-<li>b</li>
-<li>activeColor</li>
-<li>nonActiveColor</li>
-<li>fen</li>
-<li>enPassantBos</li>
-<li>halfMove</li>
-<li>fullMove</li>
-<li>moveList</li>
-<li>currentMove</li>
-<li>isRotated</li>
-<li>checks</li>
-<li>isCheck</li>
-<li>isCheckmate</li>
-<li>isStalemate</li>
-<li>isThreefold</li>
-<li>isInsufficientMaterial</li>
-<li>isFiftyMove</li>
-<li>inDraw</li>
-<li>promoteTo</li>
-<li>manualResult</li>
-<li>selectedBos</li>
-<li>isHidden</li>
-<li>isUnlabeled</li>
-<li>squares</li>
+<li>board.boardName</li>
+<li>board.w</li>
+<li>board.b</li>
+<li>board.activeColor</li>
+<li>board.nonActiveColor</li>
+<li>board.fen</li>
+<li>board.enPassantBos</li>
+<li>board.halfMove</li>
+<li>board.fullMove</li>
+<li>board.moveList</li>
+<li>board.currentMove</li>
+<li>board.isRotated</li>
+<li>board.checks</li>
+<li>board.isCheck</li>
+<li>board.isCheckmate</li>
+<li>board.isStalemate</li>
+<li>board.isThreefold</li>
+<li>board.isInsufficientMaterial</li>
+<li>board.isFiftyMove</li>
+<li>board.inDraw</li>
+<li>board.promoteTo</li>
+<li>board.manualResult</li>
+<li>board.selectedBos</li>
+<li>board.isHidden</li>
+<li>board.isUnlabeled</li>
+<li>board.squares</li>
 </ul>
 
 #### Table `board.<properties>`:
@@ -44,7 +44,7 @@ Property | Type | Description
 **enPassantBos** | String | Holds the **En passant bos** square (if any) or an empty string.<hr>Examples:<ul><li>`board_after_e4.enPassantBos //"e3"`</li><li>`board_no_enpass.enPassantBos //""`</li></ul>
 **halfMove** | Number | The **halfmove clock**.<br><br>Starts with the default value of `0` unless the **fen** used to initiate the **board** provides the optional **halfmove/fullmove clocks**.<hr>Examples:<ul><li>`board.halfMove //0`</li><li>`board_after_e4.halfMove //0`</li><li>`board_after_e4_e5.halfMove //0`</li><li>`board_after_e4_e5_nf3.halfMove //1`</li><li>`rff_board.halfMove //3`</li></ul>
 **fullMove** | Number | The **fullmove clock**.<br><br>Starts with the default value of `1` unless the **fen** used to initiate the **board** provides the optional **halfmove/fullmove clocks**.<hr>Examples:<ul><li>`board.fullMove //1`</li><li>`board_after_e4.fullMove //1`</li><li>`board_after_e4_e5.fullMove //2`</li><li>`board_after_e4_e5_nf3.fullMove //2`</li><li>`rff_board.fullMove //22`</li></ul>
-**moveList** | Array | The **move list** is a collection of :pushpin:**move**s stored as an array `[move0, move1, ..., moveN]`.<br><br>The **fen** from where the **board** was first initialized is always stored in the first element `board.moveList[0].fen`.<hr>Examples:<ul><li>`board.moveList //[{...}]`</li><li>`board_after_nc3.moveList //[{...}, {...}]`</li></ul><hr>:pushpin:Move documentation link:<ul><li>[move properties](https://github.com/ajax333221/isepic-chess#list-of-moveproperties).</li></ul>
+**moveList** | Array | The **move list** is a collection of :pushpin:**move**s stored as an array `[move0, move1, ..., moveN]`.<br><br>The **fen** from where the **board** was first initialized is always stored in the first element `board.moveList[0].fen`.<hr>Examples:<ul><li>`board.moveList //[{...}]`</li><li>`board_after_nc3.moveList //[{...}, {...}]`</li></ul><hr>:pushpin:Move documentation link:<ul><li>[move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties).</li></ul>
 **currentMove** | Number | The **current move** is the index of **move list** that the **board** is currently in.<br><br>If this "cursor" is not at the end of the **move list** when a new move is made, the **move list** will record the move and erase the rest.<br><br>This is always a zero-based index regardless of the initial **fullmove clock** used.<hr>Examples:<ul><li>`board.currentMove //0`</li><li>`board_after_e4.currentMove //1`</li><li>`board_after_e4_e5.currentMove //2`</li><li>`board_after_e4_e5_nf3.currentMove //3`</li><li>`rff_board.currentMove //0`</li></ul>
 **isRotated** | Boolean | This affects the visual representation of the **board** in `board.ascii()` and `IcUi` from **isepic-chess-ui.js**.<hr>Examples:<ul><li>`board.isRotated //false`</li><li>`board_currently_rotated.isRotated //true`</li></ul>
 **checks** | Number | The number of attacks to the **active** king.<hr>Examples:<ul><li>`board_not_in_check.checks //0`</li><li>`board_simple_check.checks //1`</li><li>`board_double_check.checks //2`</li></ul>
@@ -60,6 +60,6 @@ Property | Type | Description
 **selectedBos** | String | Holds the **ui selected bos** square (if any) or an empty string.<br><br>Only used when **isepic-chess-ui.js** is present (the property becomes irrelevant otherwise).<hr>Examples:<ul><li>`board_e2_selected_in_ui.selectedBos //"e2"`</li><li>`board_after_e4.selectedBos //""`</li></ul>
 **isHidden** | Boolean | Indicates if a **board** is meant to be shown or hidden in the UI.<br><br>Only used when **isepic-chess-ui.js** is present (the property becomes irrelevant otherwise).<hr>Examples:<ul><li>`main_board.isHidden //false`</li><li>`h_board.isHidden //true`</li></ul>
 **isUnlabeled** | Boolean | This can be used to remove the **board labels** in the UI.<br><br>Only used when **isepic-chess-ui.js** is present (the property becomes irrelevant otherwise).<hr>Examples:<ul><li>`main_board.isUnlabeled //false`</li><li>`unlabeled_board.isUnlabeled //true`</li></ul>
-**squares** | Object | Collection of the 64 :pushpin:**square**s of the board.<br><br>:zap:**Tip:** the preferred way of selecting **square**s is via `board.getSquare(...)`.<hr>Examples:<ul><li>`board.squares["a1"] //Object{...}`</li><li>`board.squares["h8"] //Object{...}`</li></ul><hr>:pushpin:Square documentation link:<ul><li>[square properties](https://github.com/ajax333221/isepic-chess#list-of-squareproperties).</li></ul>
+**squares** | Object | Collection of the 64 :pushpin:**square**s of the board.<br><br>:zap:**Tip:** the preferred way of selecting **square**s is via `board.getSquare(...)`.<hr>Examples:<ul><li>`board.squares["a1"] //Object{...}`</li><li>`board.squares["h8"] //Object{...}`</li></ul><hr>:pushpin:Square documentation link:<ul><li>[square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties).</li></ul>
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
