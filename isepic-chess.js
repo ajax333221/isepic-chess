@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.8.1";
+		var _VERSION="5.8.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -606,7 +606,7 @@
 								continue;
 							}
 							
-							temp=board.playMove(legal_moves[k]);
+							temp=board.playMove(legal_moves[k], {isLegalMove : true});
 							count+=_perft(board, (depth-1), (ply+1));
 							board.navLinkMove(ply-1);
 							
@@ -616,7 +616,7 @@
 										continue;
 									}
 									
-									board.playMove(legal_moves[k], {promoteTo : m});
+									board.playMove(legal_moves[k], {promoteTo : m, isLegalMove : true});
 									count+=_perft(board, (depth-1), (ply+1));
 									board.navLinkMove(ply-1);
 								}
@@ -1509,7 +1509,7 @@
 				extra_promos=0;
 				
 				for(i=0, len=legal_moves.length; i<len; i++){//0<len
-					temp=that.playMove(legal_moves[i], {isMockMove : true});
+					temp=that.playMove(legal_moves[i], {isMockMove : true, isLegalMove : true});
 					
 					legal_san_moves.push(temp.san);
 					
@@ -1519,7 +1519,7 @@
 								continue;
 							}
 							
-							temp2=that.playMove(legal_moves[i], {isMockMove : true, promoteTo : j});
+							temp2=that.playMove(legal_moves[i], {isMockMove : true, promoteTo : j, isLegalMove : true});
 							
 							legal_san_moves.push(temp2.san);
 							extra_promos++;
@@ -1891,7 +1891,7 @@
 						temp=that.legalMoves(current_square, {returnType : "fromToSquares"});
 						
 						for(k=0, len=temp.length; k<len; k++){//0<len
-							pgn_obj=that.draftMove(temp[k]);/*NO pass unnecessary promoteTo*/
+							pgn_obj=that.draftMove(temp[k], {isLegalMove : true});/*NO pass unnecessary promoteTo*/
 							
 							if(!pgn_obj.canMove){
 								continue;
@@ -1968,7 +1968,7 @@
 			return rtn;
 		}
 		
-		//p = {promoteTo, delimiter}
+		//p = {promoteTo, delimiter, isLegalMove}
 		function _draftMove(mov, p){
 			var i, len, that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, partial_san, file_collide, rank_collide, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, is_ambiguous, no_errors, rtn;
 			
@@ -1984,6 +1984,8 @@
 			
 			//if(no_errors){
 				rtn.canMove=false;
+				
+				p.isLegalMove=(p.isLegalMove===true);
 				
 				temp=that.getWrappedMove(mov, p);
 				
@@ -2006,7 +2008,7 @@
 				rtn.initialCachedSquare=initial_cached_square;
 				rtn.finalCachedSquare=final_cached_square;
 				
-				if(!that.isLegalMove(temp[0])){
+				if(!p.isLegalMove && !that.isLegalMove(temp[0])){
 					no_errors=false;
 				}
 			}
@@ -2166,7 +2168,7 @@
 			return rtn;
 		}
 		
-		//p = {isMockMove, promoteTo, delimiter}
+		//p = {isMockMove, promoteTo, delimiter, isLegalMove}
 		function _playMove(mov, p){
 			var i, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, keep_going, rtn_move_obj;
 			
