@@ -579,7 +579,7 @@ describe("Ic utility methods", () => {
 		//depth=3 ... toBe(2812) ... [v5.4.1 = passed]
 		//depth=4 ... toBe(43238) ... [v5.4.1 = passed]
 		//depth=5 ... toBe(674624) ... [v5.8.2 = passed]
-		//depth=5 ... toBe(11030083) ... [untested]
+		//depth=6 ... toBe(11030083) ... [untested]
 		
 		current_fen="r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10";
 		expect(Ic.utilityMisc.perft(Ic.initBoard({fen : current_fen}), 0, 1)).toBe(1);
