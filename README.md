@@ -111,7 +111,6 @@ https://ajax333221.github.io/isepic-chess-ui/
 :telescope: To do
 -------------
 
-- **UCI** (for parsing and move input)
 - **PGN** (export imported tags)
 - **PGN** (keep comments instead of deleting them)
 - **Parse multiple games** (currently the parser can only handle one game at a time)
