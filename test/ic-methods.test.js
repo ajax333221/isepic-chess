@@ -1050,6 +1050,72 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			board_obj.navFirst();
 			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
 		});
+		
+		test("initing from a sloppy PGN", () => {
+			var board_obj, game_pgn;
+			
+			game_pgn=`[Event "test"]
+[SetUp "1"]
+[FEN “rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3”]
+
+3... cxd5 (abc) 00400. c4 {	Later in "quote" i'm: 3 exd5 cxd5
+is another player x before anyone had heard of x! 	} 4...Ng8f6 <xyz> 5. N1c3 Nbc6 6. Ng1f3 Bg4 7. cxd5
+Nxd5+- 8.Bb5 Qa5-+ 9. Qb3 {!} 9. ... Bxf3 10. gxf3 Nxc3 11. Bxc6+ $1 {? It
+was Alekhine that improved with 11 bxc3 e6 12 d5! } $1 11 ... bxc6 12. Qb7 {?} Nd5+ ;rest;;
+13. Bd2 Qb6 {!} 14. Qxa8+ Kd7 15. 0 - 0 {If 15 a4 Nc7 $1 16 a5 $2 $999 Qxb2 ; rest
+17 Qxa7 Qxa1+ } 15 . ...Nc7 16. Ba5 Nxa8 17. Bxb6 Nxb6 18. Rfc1;;
+e6 19. Rc2- Be7 20. -Rac1;rest of line comment
+Bg5 21. Rd1-Rb8 22. $1 Rc5 - Nd5 23. Ra5
+Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
+28. Rb7   {	If  28  Ra4 Nb5! }  28 ...Bxd4 29. Rb8 Bxb2 30. h3 f5
+31. Kf1 Nd5 32. Kg2 +-- Be5 33. Ra8++ Nf4-- 34 . Kh2-+++ Nd3+--- 35 .Kg1--++ Ne1 ++--
+366666 ..... Ra7+!? Bc7 $5 37. h4 g6 38. h5 h6 39. hxg6 h5 40. g7 h4 41. g8=b h3 42. Kf1 h2 43. b4 h1=4 o ---  1;rest`;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				pgn : game_pgn,
+				validOrBreak : true
+			});
+			
+			expect(board_obj).not.toBeNull();
+			expect(board_obj.fen).toBe("6B1/R1bk4/2p1p3/5p2/1P6/5P2/5P2/4nK1r w - - 0 44");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
+		});
+		
+		test("initing from a UCI (partial) (default fen=true) (validOrBreak=false)", () => {
+			var board_obj, game_uci;
+			
+			game_uci="e2e4 e7e5 f1c4 b8c6 d2d3 d8f6 ffX55 e5f4";
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				uci : game_uci
+			});
+			
+			expect(board_obj).not.toBeNull();
+			expect(board_obj.fen).toBe("r1b1kbnr/pppp1ppp/2n2q2/4p3/2B1P3/3P4/PPP2PPP/RNBQK1NR w KQkq - 1 4");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		});
+		
+		test("initing from a sloppy UCI", () => {
+			var board_obj, game_uci;
+			
+			game_uci="  C6D5   c2c4  g8f6 b1c3 b8c6 g1f3 c8g4 c4d5 f6d5 f1b5 d8a5 d1b3 g4f3 g2f3 d5c3 b5c6 b7c6 b3b7 c3d5 c1d2 a5b6 b7a8 e8d7 e1g1 d5c7 d2a5 c7a8 a5b6 a8b6 f1c1 e7e6 c1c2 f8e7 a1c1 e7g5 c1d1 h8b8 c2c5 b6d5 c5a5 b8b7 d1d3 g5d8 d3b3 b7b3 a5a7 d5c7 a2b3 d8f6 a7b7 f6d4 b7b8 d4b2 h2h3 f7f5 g1f1 c7d5 f1g2 b2e5 b8a8 d5f4 g2h2 f4d3 h2g1 d3e1 a8a7 e5c7 h3h4 g7g6 h4h5 h7h6 h5g6 h6h5 g6g7 h5h4 g7g8B h4h3 g1f1 h3h2   b3b4  h2h14  ";
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3",
+				uci : game_uci,
+				validOrBreak : true
+			});
+			
+			expect(board_obj).not.toBeNull();
+			expect(board_obj.fen).toBe("6B1/R1bk4/2p1p3/5p2/1P6/5P2/5P2/4nK1r w - - 0 44");
+			board_obj.navFirst();
+			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
+		});
 	});
 	
 	describe("Ic.fenApply()", () => {

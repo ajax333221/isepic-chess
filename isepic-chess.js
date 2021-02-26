@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.9.0";
+		var _VERSION="5.10.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -106,7 +106,7 @@
 			return rtn;
 		}
 		
-		function _parserHelper(str){
+		function _pgnParserHelper(str){
 			var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index, rtn;
 			
 			rtn=null;
@@ -166,6 +166,20 @@
 					sanMoves : move_list,
 					result : game_result
 				};
+			}
+			
+			return rtn;
+		}
+		
+		function _uciParserHelper(str){
+			var rtn;
+			
+			rtn=null;
+			
+			str=_trimSpaces(str).replace(/[^a-h1-8 nrq]/gi, "").toLowerCase();
+			
+			if(str){
+				rtn=str.split(" ");
 			}
 			
 			return rtn;
@@ -1530,7 +1544,7 @@
 		}
 		
 		function _legalSanMoves(target_qos){
-			var i, j, len, that, temp, legal_moves_obj, legal_san_moves, no_errors, rtn;
+			var i, j, len, that, temp, legal_moves_all, legal_san_moves, no_errors, rtn;
 			
 			that=this;
 			
@@ -1538,9 +1552,9 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				legal_moves_obj=that.legalMovesHelper(target_qos, {returnType : "fromToSquares"});
+				legal_moves_all=that.legalUciMoves(target_qos);
 				
-				if(!legal_moves_obj.moves.length){
+				if(!legal_moves_all.length){
 					no_errors=false;
 				}
 			//}
@@ -1548,23 +1562,13 @@
 			if(no_errors){
 				legal_san_moves=[];
 				
-				if(legal_moves_obj.isPromotion){
-					for(i=0, len=legal_moves_obj.moves.length; i<len; i++){//0<len
-						for(j=_KNIGHT; j<_KING; j++){//2...5
-							temp=that.playMove(legal_moves_obj.moves[i], {isMockMove : true, promoteTo : j, isLegalMove : true});
-							
-							legal_san_moves.push(temp.san);
-						}
-					}
-				}else{
-					for(i=0, len=legal_moves_obj.moves.length; i<len; i++){//0<len
-						temp=that.playMove(legal_moves_obj.moves[i], {isMockMove : true, isLegalMove : true});
-						
-						legal_san_moves.push(temp.san);
-					}
+				for(i=0, len=legal_moves_all.length; i<len; i++){//0<len
+					temp=that.playMove(legal_moves_all[i], {isMockMove : true, isLegalMove : true});
+					
+					legal_san_moves.push(temp.san);
 				}
 				
-				if(legal_san_moves.length!==(legal_moves_obj.moves.length*(legal_moves_obj.isPromotion ? 4 : 1))){
+				if(legal_san_moves.length!==legal_moves_all.length){
 					no_errors=false;
 				}
 			}
@@ -1623,7 +1627,7 @@
 			
 			rtn="";
 			
-			header=_unreferenceP(header);/*2020 header de _parserHelper()*/
+			header=_unreferenceP(header);/*2020 header from _pgnParserHelper()*/
 			
 			move_list=that.moveList;
 			
@@ -2658,7 +2662,7 @@
 			return rtn;
 		}
 		
-		//p = {boardName, fen, pgn, moveIndex, isRotated, isHidden, isUnlabeled, promoteTo, manualResult, validOrBreak}
+		//p = {boardName, fen, pgn, uci, moveIndex, isRotated, isHidden, isUnlabeled, promoteTo, manualResult, validOrBreak}
 		function initBoard(p){
 			var i, j, len, temp, board_created, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
 			
@@ -2676,10 +2680,16 @@
 				p.isUnlabeled=(p.isUnlabeled===true);
 				p.validOrBreak=(p.validOrBreak===true);
 				
-				p.pgn=(_isNonBlankStr(p.pgn) ? _parserHelper(p.pgn) : null);
+				p.pgn=(_isNonBlankStr(p.pgn) ? _pgnParserHelper(p.pgn) : null);
 				
 				if(p.pgn){
 					p.fen=(p.fen || p.pgn.tags.FEN || _DEFAULT_FEN);
+				}else{
+					p.uci=(_isNonBlankStr(p.uci) ? _uciParserHelper(p.uci) : null);
+					
+					if(p.uci){
+						p.fen=(p.fen || _DEFAULT_FEN);
+					}
 				}
 				
 				fen_was_valid=!_basicFenTest(p.fen);
@@ -2905,6 +2915,20 @@
 						if(p.pgn.result!=="*"){
 							p.manualResult=(_pgnResultHelper(p.manualResult) || p.pgn.result);
 						}
+					}
+				}else if(p.uci){
+					everything_parsed=true;
+					
+					for(i=0, len=p.uci.length; i<len; i++){//0<len
+						if(new_board.playMove(p.uci[i])===null){
+							everything_parsed=false;
+							break;
+						}
+					}
+					
+					if(p.validOrBreak && !everything_parsed){
+						no_errors=false;
+						_consoleLog("Error[initBoard]: \""+board_name+"\" bad UCI");
 					}
 				}
 			}
