@@ -88,7 +88,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 -------------
 
 - PGN import / export
-- UCI ~~import~~ / export
+- UCI import / export
 - Advanced FEN validation
 - Get legal moves
 - Material difference

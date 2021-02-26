@@ -32,8 +32,16 @@ describe("Misc.", () => {
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "N"}]).san).toBe("bxa8=N");
 			});
 			
+			test("valid promoteTo option should overwrite UCI", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r", {promoteTo : "N"}]).san).toBe("bxa8=N");
+			});
+			
 			test("invalid promoteTo option should NOT overwrite SAN", () => {
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "W"}]).san).toBe("bxa8=R");
+			});
+			
+			test("invalid promoteTo option should NOT overwrite UCI", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r", {promoteTo : "W"}]).san).toBe("bxa8=R");
 			});
 			
 			test("unconventional SAN promotion", () => {
@@ -56,6 +64,26 @@ describe("Misc.", () => {
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X"]).san).toBe("bxa8=Q");
 			});
 			
+			test("unconventional UCI promotion", () => {
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8q"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a86"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a85"]).san).toBe("bxa8=Q");
+				
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r"]).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a84"]).san).toBe("bxa8=R");
+				
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8n"]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a82"]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a81"]).san).toBe("bxa8=N");
+				
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8 "]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a80"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8_"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8X"]).san).toBe("bxa8=Q");
+			});
+			
 			test("valid SAN should overwrite board promoteTo", () => {
 				var board_obj;
 				
@@ -69,6 +97,19 @@ describe("Misc.", () => {
 				expect(board_obj.playMove("bxa8=B").san).toBe("bxa8=B");
 			});
 			
+			test("valid UCI should overwrite board promoteTo", () => {
+				var board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : shared_fen,
+					promoteTo : "R",
+					validOrBreak : true
+				});
+				
+				expect(board_obj.playMove("b7a8b").san).toBe("bxa8=B");
+			});
+			
 			test("invalid SAN should NOT overwrite board promoteTo", () => {
 				var board_obj;
 				
@@ -80,6 +121,19 @@ describe("Misc.", () => {
 				});
 				
 				expect(board_obj.playMove("bxa8=X").san).toBe("bxa8=R");
+			});
+			
+			test("invalid UCI should NOT overwrite board promoteTo", () => {
+				var board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : shared_fen,
+					promoteTo : "R",
+					validOrBreak : true
+				});
+				
+				expect(board_obj.playMove("b7a8X").san).toBe("bxa8=R");
 			});
 			
 			test("board.promoteTo in isMockMove from board is lowest priority", () => {

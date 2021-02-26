@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.8.2";
+		var _VERSION="5.9.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -171,6 +171,43 @@
 			return rtn;
 		}
 		
+		function _uciWrapmoveHelper(mov){
+			var temp, possible_promote, no_errors, rtn;
+			
+			rtn=null;
+			no_errors=true;
+			
+			//if(no_errors){
+				if(!_isNonBlankStr(mov)){
+					no_errors=false;
+				}
+			//}
+			
+			if(no_errors){
+				mov=_trimSpaces(mov);
+				
+				if(mov.length!==4 && mov.length!==5){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				temp=_fromToWrapmoveHelper([mov.slice(0, 2), mov.slice(2, 4)]);
+				
+				if(temp===null){
+					no_errors=false;
+				}
+			}
+			
+			if(no_errors){
+				possible_promote=(mov.charAt(4) || "");
+				
+				rtn=[temp, possible_promote];
+			}
+			
+			return rtn;
+		}
+		
 		//p = {delimiter}
 		function _joinedWrapmoveHelper(mov, p){
 			var temp, no_errors, rtn;
@@ -237,7 +274,7 @@
 		}
 		
 		function _moveWrapmoveHelper(mov){
-			var calculated_promote, no_errors, rtn;
+			var possible_promote, no_errors, rtn;
 			
 			rtn=null;
 			no_errors=true;
@@ -249,9 +286,9 @@
 			//}
 			
 			if(no_errors){
-				calculated_promote=(mov.promotion || "");
+				possible_promote=(mov.promotion || "");
 				
-				rtn=[[mov.fromBos, mov.toBos], calculated_promote];
+				rtn=[[mov.fromBos, mov.toBos], possible_promote];
 			}
 			
 			return rtn;
@@ -574,8 +611,8 @@
 			return error_msg;
 		}
 		
-		function _perft(woard, depth, ply, joined_move_dash){
-			var i, j, k, m, len, temp, board, count, legal_moves, keep_going, rtn;
+		function _perft(woard, depth, ply, specific_uci){
+			var i, j, k, len, board, count, legal_moves_all, keep_going, rtn;
 			
 			rtn=1;
 			keep_going=true;
@@ -599,28 +636,16 @@
 				
 				for(i=0; i<8; i++){//0...7
 					for(j=0; j<8; j++){//0...7
-						legal_moves=board.legalMoves([i, j], {returnType : "fromToSquares", squareType : "pos"});
+						legal_moves_all=board.legalUciMoves([i, j]);
 						
-						for(k=0, len=legal_moves.length; k<len; k++){//0<len
-							if(_isNonEmptyStr(joined_move_dash) && joined_move_dash!==(toBos(legal_moves[k][0])+"-"+toBos(legal_moves[k][1]))){
+						for(k=0, len=legal_moves_all.length; k<len; k++){//0<len
+							if(_isNonEmptyStr(specific_uci) && specific_uci!==legal_moves_all[k]){
 								continue;
 							}
 							
-							temp=board.playMove(legal_moves[k], {isLegalMove : true});
+							board.playMove(legal_moves_all[k], {isLegalMove : true});
 							count+=_perft(board, (depth-1), (ply+1));
 							board.navLinkMove(ply-1);
-							
-							if(temp.promotion){
-								for(m=_KNIGHT; m<_KING; m++){//2...5
-									if(toAbsVal(temp.promotion)===m){
-										continue;
-									}
-									
-									board.playMove(legal_moves[k], {promoteTo : m, isLegalMove : true});
-									count+=_perft(board, (depth-1), (ply+1));
-									board.navLinkMove(ply-1);
-								}
-							}
 						}
 					}
 				}
@@ -1304,7 +1329,7 @@
 		
 		//p = {returnType (!= san), squareType, delimiter}
 		function _legalMovesHelper(target_qos, p){
-			var i, j, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
+			var i, j, k, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
 			
@@ -1312,7 +1337,7 @@
 				return that.testCollision(1, qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
 			}
 			
-			rtn=[];
+			rtn={moves : [], isPromotion : false};
 			p=_unreferenceP(p);
 			no_errors=true;
 			
@@ -1345,6 +1370,7 @@
 			if(no_errors){//is inside board + is ally piece
 				pre_validated_arr_pos=[];
 				en_passant_capturable_cached_square=null;
+				is_promotion=false;
 				
 				if(target_cached_square.isKing){
 					for(i=1; i<9; i++){//1...8
@@ -1384,6 +1410,9 @@
 						}
 					}
 				}else if(target_cached_square.isPawn){
+					//any move played from pawns that are one square away from promotion will always cause a promotion
+					is_promotion=(target_cached_square.rankPos===non_active_side.secondRankPos);
+					
 					temp=_candidateMoves(target_cached_square, (active_side.isBlack ? _DIRECTION_BOTTOM : _DIRECTION_TOP), false, (target_cached_square.rankPos===active_side.secondRankPos ? 2 : 1), false);
 					
 					if(temp.length){
@@ -1443,23 +1472,31 @@
 						}
 						
 						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
-							if(p.returnType==="joined"){
-								rtn.push(target_cached_square.bos+p.delimiter+current_cached_square.bos);
+							if(p.returnType==="uci"){
+								if(is_promotion){
+									for(k=_KNIGHT; k<_KING; k++){//2...5
+										rtn.moves.push(target_cached_square.bos+current_cached_square.bos+toBal(k).toLowerCase());
+									}
+								}else{
+									rtn.moves.push(target_cached_square.bos+current_cached_square.bos);
+								}
+							}else if(p.returnType==="joined"){
+								rtn.moves.push(target_cached_square.bos+p.delimiter+current_cached_square.bos);
 							}else if(p.returnType==="fromToSquares"){
 								if(p.squareType==="square"){
-									rtn.push([that.getSquare(target_cached_square, {isUnreferenced : true}), that.getSquare(current_cached_square, {isUnreferenced : true})]);
+									rtn.moves.push([that.getSquare(target_cached_square, {isUnreferenced : true}), that.getSquare(current_cached_square, {isUnreferenced : true})]);
 								}else if(p.squareType==="pos"){
-									rtn.push([toPos(target_cached_square), toPos(current_cached_square)]);
+									rtn.moves.push([toPos(target_cached_square), toPos(current_cached_square)]);
 								}else{//type "bos"
-									rtn.push([target_cached_square.bos, current_cached_square.bos]);
+									rtn.moves.push([target_cached_square.bos, current_cached_square.bos]);
 								}
 							}else{//type "toSquare"
 								if(p.squareType==="square"){
-									rtn.push(that.getSquare(current_cached_square, {isUnreferenced : true}));
+									rtn.moves.push(that.getSquare(current_cached_square, {isUnreferenced : true}));
 								}else if(p.squareType==="pos"){
-									rtn.push(toPos(current_cached_square));
+									rtn.moves.push(toPos(current_cached_square));
 								}else{//type "bos"
-									rtn.push(current_cached_square.bos);
+									rtn.moves.push(current_cached_square.bos);
 								}
 							}
 						}
@@ -1471,6 +1508,10 @@
 							that.setSquare(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
 						}
 					}
+				}
+				
+				if(rtn.moves.length){
+					rtn.isPromotion=is_promotion;
 				}
 			}
 			
@@ -1485,11 +1526,11 @@
 			
 			p=_unreferenceP(p);
 			
-			return (p.returnType==="san" ? that.legalSanMoves(target_qos) : that.legalMovesHelper(target_qos, p));
+			return (p.returnType==="san" ? that.legalSanMoves(target_qos) : that.legalMovesHelper(target_qos, p).moves);
 		}
 		
 		function _legalSanMoves(target_qos){
-			var i, j, len, that, temp, temp2, legal_moves, legal_san_moves, extra_promos, no_errors, rtn;
+			var i, j, len, that, temp, legal_moves_obj, legal_san_moves, no_errors, rtn;
 			
 			that=this;
 			
@@ -1497,37 +1538,33 @@
 			no_errors=true;
 			
 			//if(no_errors){
-				legal_moves=that.legalMoves(target_qos, {returnType : "fromToSquares"});
+				legal_moves_obj=that.legalMovesHelper(target_qos, {returnType : "fromToSquares"});
 				
-				if(!legal_moves.length){
+				if(!legal_moves_obj.moves.length){
 					no_errors=false;
 				}
 			//}
 			
 			if(no_errors){
 				legal_san_moves=[];
-				extra_promos=0;
 				
-				for(i=0, len=legal_moves.length; i<len; i++){//0<len
-					temp=that.playMove(legal_moves[i], {isMockMove : true, isLegalMove : true});
-					
-					legal_san_moves.push(temp.san);
-					
-					if(temp.promotion){
+				if(legal_moves_obj.isPromotion){
+					for(i=0, len=legal_moves_obj.moves.length; i<len; i++){//0<len
 						for(j=_KNIGHT; j<_KING; j++){//2...5
-							if(toAbsVal(temp.promotion)===j){
-								continue;
-							}
+							temp=that.playMove(legal_moves_obj.moves[i], {isMockMove : true, promoteTo : j, isLegalMove : true});
 							
-							temp2=that.playMove(legal_moves[i], {isMockMove : true, promoteTo : j, isLegalMove : true});
-							
-							legal_san_moves.push(temp2.san);
-							extra_promos++;
+							legal_san_moves.push(temp.san);
 						}
+					}
+				}else{
+					for(i=0, len=legal_moves_obj.moves.length; i<len; i++){//0<len
+						temp=that.playMove(legal_moves_obj.moves[i], {isMockMove : true, isLegalMove : true});
+						
+						legal_san_moves.push(temp.san);
 					}
 				}
 				
-				if((legal_san_moves.length-extra_promos)!==legal_moves.length){
+				if(legal_san_moves.length!==(legal_moves_obj.moves.length*(legal_moves_obj.isPromotion ? 4 : 1))){
 					no_errors=false;
 				}
 			}
@@ -1537,6 +1574,14 @@
 			}
 			
 			return rtn;
+		}
+		
+		function _legalUciMoves(target_qos){
+			var that;
+			
+			that=this;
+			
+			return that.legalMoves(target_qos, {returnType : "uci"});
 		}
 		
 		//p = {delimiter}
@@ -1932,8 +1977,18 @@
 			//if(rtn===null){
 				bubbling_promoted_to=0;
 				
-				rtn=_joinedWrapmoveHelper(mov, p);
+				temp=_uciWrapmoveHelper(mov);
+				
+				if(temp){
+					bubbling_promoted_to=temp[1];//default ""
+					
+					rtn=temp[0];
+				}
 			//}
+			
+			if(rtn===null){
+				rtn=_joinedWrapmoveHelper(mov, p);
+			}
 			
 			if(rtn===null){
 				rtn=_fromToWrapmoveHelper(mov);
@@ -2657,6 +2712,7 @@
 						legalMovesHelper : _legalMovesHelper,
 						legalMoves : _legalMoves,
 						legalSanMoves : _legalSanMoves,
+						legalUciMoves : _legalUciMoves,
 						pgnExport : _pgnExport,
 						uciExport : _uciExport,
 						ascii : _ascii,
@@ -2916,6 +2972,9 @@
 					break;
 				case "legalSanMoves" :
 					rtn=(board_created ? _legalSanMoves.apply(board, args) : []);
+					break;
+				case "legalUciMoves" :
+					rtn=(board_created ? _legalUciMoves.apply(board, args) : []);
 					break;
 				case "isLegalMove" :
 					rtn=(board_created ? _isLegalMove.apply(board, args) : false);
