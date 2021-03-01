@@ -60,7 +60,7 @@ describe("Board methods", () => {
 			expect(Ic.fenApply(shared_fen, "boardHash")).toBe(-1656520182);
 		});
 		
-		test("boardName and selectedBos not used in the hash", () => {
+		test("boardName not used in the hash", () => {
 			var board_a, board_b, hash_a, hash_b, shared_fen;
 			
 			shared_fen="Bnb1kb1r/2qpppp1/1pp5/p6p/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b k d3 0 8";
@@ -76,8 +76,6 @@ describe("Board methods", () => {
 				fen : shared_fen,
 				validOrBreak : true
 			});
-			
-			board_a.selectedBos="a2";
 			
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();

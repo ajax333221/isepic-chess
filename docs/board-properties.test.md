@@ -27,7 +27,6 @@ Boards created by `Ic.initBoard()` have the following accessible properties:
 <li>board.inDraw</li>
 <li>board.promoteTo</li>
 <li>board.manualResult</li>
-<li>board.selectedBos</li>
 <li>board.isHidden</li>
 <li>board.isUnlabeled</li>
 <li>board.squares</li>
@@ -57,7 +56,6 @@ Property | Type | Description
 **inDraw** | Boolean | Indicates that a draw is present.<br><br>Having a `board.manualResult` of `"1/2-1/2"` and being at the last move played will *not* affect this property.<hr>Examples:<ul><li>`main_board.inDraw //false`</li><li>`board_in_stalemate.inDraw //true`</li><li>`board_in_3fold.inDraw //true`</li><li>`board_100halfmoves.inDraw //true`</li><li>`board_insufficient_mat.inDraw //true`</li></ul>
 **promoteTo** | Number | Promoted pawns will turn into this piece.<br><br>The value is stored as an **abs val** (from `2` knight to `5` queen).<hr>Examples:<ul><li>`board_q_option.promoteTo //5`</li><li>`board_r_option.promoteTo //4`</li><li>`board_b_option.promoteTo //3`</li><li>`board_n_option.promoteTo //2`</li></ul>
 **manualResult** | String | This value is used to aid the PGN export to differentiate games that were not necessarily ended via checkmate or stalemate.<br><br>The value is stored as `"*", "1-0", "0-1" or "1/2-1/2"`.<hr>Examples:<ul><li>`board.manualResult //"*"`</li><li>`board_b_resigned.manualResult //"1-0"`</li><li>`board_w_resigned.manualResult //"0-1"`</li><li>`board_draw_agreed.manualResult //"1/2-1/2"`</li></ul>
-**selectedBos** | String | Holds the **ui selected bos** square (if any) or an empty string.<br><br>Only used when **isepic-chess-ui.js** is present (the property becomes irrelevant otherwise).<hr>Examples:<ul><li>`board_e2_selected_in_ui.selectedBos //"e2"`</li><li>`board_after_e4.selectedBos //""`</li></ul>
 **isHidden** | Boolean | Indicates if a **board** is meant to be shown or hidden in the UI.<br><br>Only used when **isepic-chess-ui.js** is present (the property becomes irrelevant otherwise).<hr>Examples:<ul><li>`main_board.isHidden //false`</li><li>`h_board.isHidden //true`</li></ul>
 **isUnlabeled** | Boolean | This can be used to remove the **board labels** in the UI.<br><br>Only used when **isepic-chess-ui.js** is present (the property becomes irrelevant otherwise).<hr>Examples:<ul><li>`main_board.isUnlabeled //false`</li><li>`unlabeled_board.isUnlabeled //true`</li></ul>
 **squares** | Object | Collection of the 64 :pushpin:**square**s of the board.<br><br>:zap:**Tip:** the preferred way of selecting **square**s is via `board.getSquare(...)`.<hr>Examples:<ul><li>`board.squares["a1"] //Object{...}`</li><li>`board.squares["h8"] //Object{...}`</li></ul><hr>:pushpin:Square documentation link:<ul><li>[square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties).</li></ul>

@@ -13,7 +13,6 @@ Ic.setSilentMode(false);
 //(mm) isUnlabeled (N/A)(solo cambia por ui) edit: ya no afecta board hash
 //
 //(x) isRotated (completado)(b.ascii() en board-methods.test.js + hasta se le hizo test por board hash)
-//(x) selectedBos (N/A)(siempre empty_string + solo cambia por ui)
 //(x) inDraw = (N/A)(solo un caso edge de checkmate + 50move rule, pero ya en regression test)
 
 describe("Board properties", () => {

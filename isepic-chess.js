@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.10.0";
+		var _VERSION="5.11.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -33,7 +33,7 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "selectedBos", "isHidden", "isUnlabeled", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "isUnlabeled", "squares"];
 		
 		//---------------- helpers
 		
@@ -1544,7 +1544,7 @@
 		}
 		
 		function _legalSanMoves(target_qos){
-			var i, j, len, that, temp, legal_moves_all, legal_san_moves, no_errors, rtn;
+			var i, len, that, temp, legal_moves_all, legal_san_moves, no_errors, rtn;
 			
 			that=this;
 			
@@ -1752,10 +1752,6 @@
 			temp="";
 			
 			for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
-				if(_MUTABLE_KEYS[i]==="selectedBos"){
-					continue;
-				}
-				
 				temp+=JSON.stringify(that[_MUTABLE_KEYS[i]]);
 			}
 			
@@ -2227,7 +2223,7 @@
 			return rtn;
 		}
 		
-		//p = {isMockMove, promoteTo, delimiter, isLegalMove}
+		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated}
 		function _playMove(mov, p){
 			var i, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, keep_going, rtn_move_obj;
 			
@@ -2239,6 +2235,7 @@
 			
 			//if(keep_going){
 				p.isMockMove=(p.isMockMove===true);
+				p.isInanimated=(p.isInanimated===true);
 				
 				if(p.isMockMove){
 					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p], {promoteTo : that.promoteTo});
@@ -2356,7 +2353,7 @@
 				
 				that.moveList.push({colorMoved : that.nonActiveColor, colorToPlay : that.activeColor, fen : that.fen, san : complete_san, uci : temp3, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, piece : temp, promotion : temp2});/*NO push  referenced rtn_move_obj*/
 				
-				that.refreshUi(1);//autorefresh
+				that.refreshUi(p.isInanimated ? 0 : 1);//autorefresh
 			}
 			
 			return rtn_move_obj;
@@ -2807,7 +2804,6 @@
 				target.inDraw=null;
 				target.promoteTo=null;
 				target.manualResult=null;
-				target.selectedBos=null;
 				target.isHidden=null;
 				target.isUnlabeled=null;
 				target.squares={};
@@ -2857,7 +2853,6 @@
 				board_created=true;
 				
 				new_board.isHidden=true;
-				new_board.selectedBos="";
 				
 				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
 				new_board.currentMove=0;
