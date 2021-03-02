@@ -914,7 +914,7 @@ _MOVES_`;
 	});
 	
 	test("b.navFirst(), b.navPrevious(), b.navNext(), b.navLast(), b.navLinkMove() and b.setCurrentMove()", () => {
-		var temp, board_name, board_obj, uci_to_compare;
+		var temp, board_name, board_obj;
 		
 		board_name="board_nav";
 		

@@ -1146,7 +1146,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 	test("Ic.getBoard(), Ic.getBoardNames() and Ic.removeBoard()", () => {
 		var i, len, temp, board_name;
 		
-		board_name="board_getboard";
+		board_name="board_getb_getbn_removeb";
 		
 		expect(Ic.getBoard(board_name)).toBeNull();
 		
