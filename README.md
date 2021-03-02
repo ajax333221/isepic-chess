@@ -4,7 +4,7 @@
 
 `isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#rocket-features)).
 
-<strong>Flexibility:</strong> it strives to be flexible (inspired in JavaScript) and attempts to make things work without easily giving up and throwing errors.
+<strong>Flexibility:</strong> it strives to be flexible (inspired by JavaScript) and attempts to make things work without easily giving up and throwing errors.
 
 <strong>Code coverage:</strong> the extra flexibility adds extra complexity and paths to be tested, but despite this, the code coverage is <strong>98~%</strong> <sup>(as of `v6.0.0`)</sup>.
 
