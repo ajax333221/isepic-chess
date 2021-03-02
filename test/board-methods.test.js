@@ -12,21 +12,13 @@ Ic.setSilentMode(false);
 //toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
 //setPromoteTo (return value)
 //setManualResult (return value)
-//setCurrentMove (return value)
 //toggleActiveNonActive (return value)
 //playMove = via fen apply
 //getWrappedMove
-//(?mm) draftMove
+//draftMove
 //
 //(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
 //(x) legalMovesHelper (se hara por b.legalMoves() y b.legalSanMoves())
-//(x) cloneBoardTo (completado)(es un Ic.utilityMisc.cloneBoardObjs())
-//(x) cloneBoardFrom (completado)(es un Ic.utilityMisc.cloneBoardObjs())
-//(x) navFirst (se hara por b.setCurrentMove())
-//(x) navPrevious (se hara por b.setCurrentMove())
-//(x) navNext (se hara por b.setCurrentMove())
-//(x) navLast (se hara por b.setCurrentMove())
-//(x) navLinkMove (se hara por b.setCurrentMove())
 //(x) refreshUi (N/A)(ui only)
 
 describe("Board methods", () => {
@@ -47,7 +39,7 @@ describe("Board methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(226262465);
+			expect(board_obj.boardHash()).toBe(-483842436);
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
@@ -56,8 +48,8 @@ describe("Board methods", () => {
 				validOrBreak : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(-1656520182);
-			expect(Ic.fenApply(shared_fen, "boardHash")).toBe(-1656520182);
+			expect(board_obj.boardHash()).toBe(-341780333);
+			expect(Ic.fenApply(shared_fen, "boardHash")).toBe(-341780333);
 		});
 		
 		test("boardName not used in the hash", () => {
@@ -80,7 +72,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(-890839231);
+			expect(hash_a).toBe(1740749510);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});
@@ -116,6 +108,11 @@ describe("Board methods", () => {
 			board_b.playMove("a2-a4");
 			expect(board_a.isEqualBoard(board_b)).toBe(true);
 			expect(board_b.isEqualBoard(board_a)).toBe(true);
+			
+			Ic.setSilentMode(true);
+			expect(board_a.isEqualBoard("0invalid0")).toBe(false);
+			expect(board_b.isEqualBoard("0invalid0")).toBe(false);
+			Ic.setSilentMode(false);
 		});
 	});
 	
@@ -497,6 +494,47 @@ describe("Board methods", () => {
 		});
 	});
 	
+	test("b.cloneBoardFrom() and b.cloneBoardTo()", () => {
+		var board_a_name, board_b_name, board_a, board_b;
+		
+		//b.cloneBoardFrom() covered with Ic.utilityMisc.cloneBoardObjs()
+		//b.cloneBoardTo() covered with Ic.utilityMisc.cloneBoardObjs()
+		
+		board_a_name="board_a";
+		board_b_name="board_b";
+		
+		board_a=Ic.initBoard({
+			boardName : board_a_name,
+			fen : "r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4",
+			validOrBreak : true
+		});
+		
+		board_b=Ic.initBoard({boardName : board_b_name});
+		
+		Ic.setSilentMode(true);
+		expect(board_a.cloneBoardFrom(board_a)).toBe(false);
+		expect(board_b.cloneBoardFrom(board_b)).toBe(false);
+		expect(board_a.cloneBoardTo(board_a)).toBe(false);
+		expect(board_b.cloneBoardTo(board_b)).toBe(false);
+		
+		expect(board_a.cloneBoardTo("0invalid0")).toBe(false);
+		expect(board_b.cloneBoardTo("0invalid0")).toBe(false);
+		Ic.setSilentMode(false);
+		
+		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(false);
+		
+		expect(board_b.cloneBoardFrom(board_a)).toBe(true);
+		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(true);
+		expect(board_b.fen).toBe("r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4");
+		
+		board_a.playMove("e8-d8");
+		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(false);
+		
+		expect(board_a.cloneBoardTo(board_b)).toBe(true);
+		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(true);
+		expect(board_b.fen).toBe("r1bk1bnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w - - 5 5");
+	});
+	
 	describe("mix: ascii, toggleIsRotated and setPromoteTo", () => {
 		var board_name;
 		
@@ -873,5 +911,152 @@ _MOVES_`;
 		uci_to_compare="e5e4 e1g1 a2a1r h7h8q";
 		board_obj.playMove("h8=Q");
 		expect(board_obj.uciExport()).toBe(uci_to_compare);
+	});
+	
+	test("b.navFirst(), b.navPrevious(), b.navNext(), b.navLast(), b.navLinkMove() and b.setCurrentMove()", () => {
+		var temp, board_name, board_obj, uci_to_compare;
+		
+		board_name="board_nav";
+		
+		board_obj=Ic.initBoard({
+			boardName : board_name,
+			fen : "2kr1bnr/pppbpppp/2n5/7q/5B2/2NP1N2/PPPQ1PPP/R3KB1R b KQ - 4 7",
+			validOrBreak : true
+		});
+		
+		temp=board_obj.navFirst();
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navPrevious();
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navNext();
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navLast();
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navLinkMove(0);
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navLinkMove(1);
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navLinkMove(-1);
+		expect(temp).toBe(false);
+		
+		expect(board_obj.currentMove).toBe(0);
+		
+		board_obj.playMove("g8-f6");
+		
+		expect(board_obj.currentMove).toBe(1);
+		
+		temp=board_obj.navFirst();
+		expect(temp).toBe(true);
+		
+		temp=board_obj.navFirst();
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navPrevious();
+		expect(temp).toBe(false);
+		
+		expect(board_obj.currentMove).toBe(0);
+		
+		temp=board_obj.navLast();
+		expect(temp).toBe(true);
+		
+		temp=board_obj.navLast();
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navNext();
+		expect(temp).toBe(false);
+		
+		expect(board_obj.currentMove).toBe(1);
+		
+		board_obj.playMove("e1-c1");
+		
+		temp=board_obj.navLinkMove(1);
+		expect(temp).toBe(true);
+		
+		temp=board_obj.navLinkMove(1);
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navPrevious();
+		expect(temp).toBe(true);
+		
+		temp=board_obj.navPrevious();
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navLinkMove(1);
+		expect(temp).toBe(true);
+		
+		temp=board_obj.navLinkMove(1);
+		expect(temp).toBe(false);
+		
+		temp=board_obj.navNext();
+		expect(temp).toBe(true);
+		
+		temp=board_obj.navNext();
+		expect(temp).toBe(false);
+		
+		board_obj.playMove("e7-e6");
+		
+		temp=board_obj.navLinkMove(-Infinity);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(0);
+		
+		temp=board_obj.navLinkMove(Infinity);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(3);
+		
+		temp=board_obj.navLinkMove("2");
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(2);
+		
+		temp=board_obj.navLinkMove("x");
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(0);
+		
+		temp=board_obj.setCurrentMove(1, true);
+		expect(temp).toBe(true);
+		
+		temp=board_obj.setCurrentMove(1, true);
+		expect(temp).toBe(false);
+		
+		expect(board_obj.currentMove).toBe(1);
+		
+		temp=board_obj.setCurrentMove(1, false);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(2);
+		
+		temp=board_obj.setCurrentMove(1, false);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(3);
+		
+		temp=board_obj.setCurrentMove(-2, false);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(1);
+		
+		temp=board_obj.setCurrentMove(-2, false);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(0);
+		
+		temp=board_obj.setCurrentMove(2, false);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(2);
+		
+		temp=board_obj.setCurrentMove(2, false);
+		expect(temp).toBe(true);
+		
+		expect(board_obj.currentMove).toBe(3);
 	});
 });

@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="5.11.0";
+		var _VERSION="6.0.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -33,7 +33,7 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "isUnlabeled", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "squares"];
 		
 		//---------------- helpers
 		
@@ -2659,7 +2659,7 @@
 			return rtn;
 		}
 		
-		//p = {boardName, fen, pgn, uci, moveIndex, isRotated, isHidden, isUnlabeled, promoteTo, manualResult, validOrBreak}
+		//p = {boardName, fen, pgn, uci, moveIndex, isRotated, isHidden, promoteTo, manualResult, validOrBreak}
 		function initBoard(p){
 			var i, j, len, temp, board_created, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
 			
@@ -2674,7 +2674,6 @@
 				
 				p.isRotated=(p.isRotated===true);
 				p.isHidden=(p.isHidden===true);
-				p.isUnlabeled=(p.isUnlabeled===true);
 				p.validOrBreak=(p.validOrBreak===true);
 				
 				p.pgn=(_isNonBlankStr(p.pgn) ? _pgnParserHelper(p.pgn) : null);
@@ -2805,7 +2804,6 @@
 				target.promoteTo=null;
 				target.manualResult=null;
 				target.isHidden=null;
-				target.isUnlabeled=null;
 				target.squares={};
 				
 				for(i=0; i<8; i++){//0...7
@@ -2882,15 +2880,7 @@
 					new_board.currentMove=0;
 					new_board.readValidatedFen(temp);
 					
-					temp="";
-					
-					if(new_board.isCheckmate){
-						temp=(new_board[new_board.activeColor].isBlack ? "1-0" : "0-1");
-					}else if(new_board.isStalemate){
-						temp="1/2-1/2";
-					}
-					
-					new_board.moveList=[{colorMoved : new_board.nonActiveColor, colorToPlay : new_board.activeColor, fen : new_board.fen, san : "", uci : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", piece : "", promotion : ""}];
+					new_board.moveList=[{colorMoved : new_board.nonActiveColor, colorToPlay : new_board.activeColor, fen : new_board.fen, san : "", uci : "", comment : "", moveResult : "", canDraw : new_board.inDraw, fromBos : "", toBos : "", piece : "", promotion : ""}];
 				}
 				
 				if(p.pgn){
@@ -2935,7 +2925,6 @@
 				new_board.setCurrentMove(p.moveIndex, true);
 				
 				new_board.isRotated=p.isRotated;
-				new_board.isUnlabeled=p.isUnlabeled;
 				new_board.setPromoteTo(p.promoteTo);
 				new_board.setManualResult(p.manualResult);
 				

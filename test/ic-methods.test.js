@@ -4,13 +4,6 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//+testcase for pgn (validOrBreak true/false) in Ic.initBoard()
-//getBoardNames
-//getBoard
-//removeBoard (si se le pasaba undefined crasheaba, pero se arreglo)
-//
-//(x) isEqualBoard (completado)(es un b.isEqualBoard())
-//(x) cloneBoard (completado)(es un Ic.utilityMisc.cloneBoardObjs())
 //(x) setSilentMode (N/A)
 
 describe("Ic methods", () => {
@@ -748,11 +741,57 @@ describe("Ic methods", () => {
 		expect(Ic.countPieces("BBBBBBBBBBBBBBBBBBBbBpPpb nNkK")).toEqual({w:{p:1, n:0, b:20, r:0, q:0, k:0}, b:{p:2, n:0, b:2, r:0, q:0, k:0}});
 	});
 	
+	test("Ic.isEqualBoard() and Ic.cloneBoard()", () => {
+		var board_a_name, board_b_name, board_a, board_b;
+		
+		//Ic.isEqualBoard() covered with b.isEqualBoard()
+		//Ic.cloneBoard() covered with Ic.utilityMisc.cloneBoardObjs()
+		
+		board_a_name="board_a";
+		board_b_name="board_b";
+		
+		board_a=Ic.initBoard({
+			boardName : board_a_name,
+			fen : "r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4",
+			validOrBreak : true
+		});
+		
+		board_b=Ic.initBoard({boardName : board_b_name});
+		
+		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(false);
+		
+		Ic.setSilentMode(true);
+		expect(Ic.isEqualBoard("0invalid0", board_b_name)).toBe(false);
+		expect(Ic.isEqualBoard(board_a_name, "0invalid0")).toBe(false);
+		Ic.setSilentMode(false);
+		
+		Ic.setSilentMode(true);
+		expect(Ic.cloneBoard("0invalid0", board_b_name)).toBe(false);
+		expect(Ic.cloneBoard(board_a_name, "0invalid0")).toBe(false);
+		expect(Ic.cloneBoard(board_a_name, board_a_name)).toBe(false);
+		expect(Ic.cloneBoard(board_b_name, board_b_name)).toBe(false);
+		Ic.setSilentMode(false);
+		
+		expect(Ic.cloneBoard(board_a_name, board_b_name)).toBe(true);
+		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(true);
+	});
+	
 	describe("Ic.initBoard()", () => {
 		var board_name, other_board_name;
 		
 		board_name="board_init";
 		other_board_name="board_init_other";
+		
+		test("init from default fen after refined fail", () => {
+			var board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "8/8/k7/r6p/1R5P/8/K7/8 b - - 0 1"
+			});
+			
+			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		});
 		
 		test("init from missing optional clocks", () => {
 			var board_obj;
@@ -1051,6 +1090,24 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
 		});
 		
+		test("initing from a UCI (partial) (default fen=true) (validOrBreak=true)", () => {
+			var board_obj, game_uci;
+			
+			game_uci="e2e4 e7e5 f1c4 b8c6 d2d3 d8f6 ffX55 e5f4";
+			
+			Ic.setSilentMode(true);
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				uci : game_uci,
+				validOrBreak : true
+			});
+			
+			Ic.setSilentMode(false);
+			
+			expect(board_obj).toBeNull();
+		});
+		
 		test("initing from a UCI (partial) (default fen=true) (validOrBreak=false)", () => {
 			var board_obj, game_uci;
 			
@@ -1084,6 +1141,41 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			board_obj.navFirst();
 			expect(board_obj.fen).toBe("rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3");
 		});
+	});
+	
+	test("Ic.getBoard(), Ic.getBoardNames() and Ic.removeBoard()", () => {
+		var i, len, temp, board_name;
+		
+		board_name="board_getboard";
+		
+		expect(Ic.getBoard(board_name)).toBeNull();
+		
+		Ic.initBoard({boardName : board_name});
+		
+		expect(Ic.getBoard(board_name)).not.toBeNull();
+		
+		expect(Ic.getBoard("")).toBeNull();
+		expect(Ic.getBoard(" ")).toBeNull();
+		expect(Ic.getBoard("0invalid0")).toBeNull();
+		
+		expect(Ic.removeBoard(board_name)).toBe(true);
+		expect(Ic.removeBoard(board_name)).toBe(false);
+		
+		expect(Ic.getBoard(board_name)).toBeNull();
+		
+		Ic.initBoard();
+		
+		temp=Ic.getBoardNames();
+		expect(!!temp.length).toBe(true);
+		
+		temp.push(board_name);
+		
+		for(i=0, len=temp.length; i<len; i++){//0<len
+			expect(Ic.removeBoard(temp[i])).toBe(temp[i]===board_name ? false : true);
+		}
+		
+		temp=Ic.getBoardNames();
+		expect(!!temp.length).toBe(false);
 	});
 	
 	describe("Ic.fenApply()", () => {

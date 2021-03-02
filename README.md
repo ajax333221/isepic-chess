@@ -4,6 +4,16 @@
 
 `isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#rocket-features)).
 
+<strong>Flexibility:</strong> it is inspired in JavaScript in the way that it strives to be flexible and attempt to make things work without easily giving up and throwing errors.
+
+<strong>Code coverage:</strong> the extra flexibility adds extra complexity and paths to be tested, but despite this, the code coverage is <strong>98~%</strong> <sup>(as of `v6.0.0`)</sup>.
+
+<strong>Perft-tested:</strong> each release is tested against known <em>Perft positions</em> to ensure that the move generation tree of legal moves do not vary from the correct count.
+
+<strong>UI-less:</strong> all the bloating code that a user interface brings is completely separated into this other project: [Isepic Chess UI](https://github.com/ajax333221/isepic-chess-ui).
+
+<strong>Dependency-less:</strong> does not depend on any other library.
+
 :pushpin: Table of contents
 -------------
 
@@ -97,14 +107,13 @@ https://ajax333221.github.io/isepic-chess-ui/
 - Check / checkmate / draw detection
 - SAN parsing
 - ASCII diagram
-- Extense parameter-flexibility
 
 :book: Documentation
 -------------
 
 - [Ic methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/ic-methods.md#ic-methods)
-- [Board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.test.md#board-methods)
-- [Board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.test.md#board-properties)
+- [Board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
+- [Board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
 - [Square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
 - [Move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 

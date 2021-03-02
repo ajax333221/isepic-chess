@@ -10,7 +10,6 @@ Ic.setSilentMode(false);
 //currentMove (no con fenGet) test de movelist split cuando currentMove no esta al final
 //
 //(mm) isHidden (N/A)(en ic solo afecta el board hash + solo cambia por ui)
-//(mm) isUnlabeled (N/A)(solo cambia por ui) edit: ya no afecta board hash
 //
 //(x) isRotated (completado)(b.ascii() en board-methods.test.js + hasta se le hizo test por board hash)
 //(x) inDraw = (N/A)(solo un caso edge de checkmate + 50move rule, pero ya en regression test)
