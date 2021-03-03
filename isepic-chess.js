@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.0.0";
+		var _VERSION="6.1.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2352,6 +2352,12 @@
 				}
 				
 				that.moveList.push({colorMoved : that.nonActiveColor, colorToPlay : that.activeColor, fen : that.fen, san : complete_san, uci : temp3, comment : autogen_comment, moveResult : move_res, canDraw : that.inDraw, fromBos : initial_cached_square.bos, toBos : final_cached_square.bos, piece : temp, promotion : temp2});/*NO push  referenced rtn_move_obj*/
+				
+				temp=that.isHidden;
+				
+				that.isHidden=true;
+				that.setManualResult("*");
+				that.isHidden=temp;
 				
 				that.refreshUi(p.isInanimated ? 0 : 1);//autorefresh
 			}
