@@ -63,7 +63,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
 			
 			expect(Ic.toVal(square_c8)).toBe(-6);
 		});
@@ -113,7 +113,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
 			
 			expect(Ic.toAbsVal(square_c8)).toBe(6);
 		});
@@ -163,7 +163,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
 			
 			expect(Ic.toBal(square_c8)).toBe("k");
 		});
@@ -213,7 +213,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
 			
 			expect(Ic.toAbsBal(square_c8)).toBe("K");
 		});
@@ -263,7 +263,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
 			
 			expect(Ic.toClassName(square_c8)).toBe("bk");
 		});
@@ -315,7 +315,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"]);
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
 			
 			expect(Ic.getSign(square_c8)).toBe(-1);
 		});
@@ -364,7 +364,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.toBos(square_e7)).toBe("e7");
 		});
@@ -413,7 +413,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.toPos(square_e7)).toEqual([1, 4]);
 		});
@@ -462,7 +462,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.getRankPos(square_e7)).toBe(1);
 		});
@@ -511,7 +511,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.getFilePos(square_e7)).toBe(4);
 		});
@@ -560,7 +560,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.getRankBos(square_e7)).toBe("7");
 		});
@@ -609,7 +609,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.getFileBos(square_e7)).toBe("e");
 		});
@@ -660,7 +660,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.isInsideBoard(square_e7)).toBe(true);
 		});
@@ -721,7 +721,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"]);
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
 			
 			expect(Ic.sameSquare(square_e7, "e7")).toBe(true);
 		});
@@ -753,10 +753,14 @@ describe("Ic methods", () => {
 		board_a=Ic.initBoard({
 			boardName : board_a_name,
 			fen : "r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4",
-			validOrBreak : true
+			skipFenValidation : true
 		});
 		
-		board_b=Ic.initBoard({boardName : board_b_name});
+		board_b=Ic.initBoard({
+			boardName : board_b_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation : true
+		});
 		
 		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(false);
 		
@@ -799,7 +803,7 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "8/r6k/8/8/8/R6K/8/8 w - -",
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			expect(board_obj.fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
@@ -814,7 +818,7 @@ describe("Ic methods", () => {
 			Ic.initBoard({
 				boardName : board_name,
 				fen : "8/1r5k/8/8/8/1R5K/8/8 w - - 0 1",
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			expect(temp.fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
@@ -842,7 +846,7 @@ describe("Ic methods", () => {
 			Ic.initBoard({
 				boardName : other_board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			expect(Ic.getBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
@@ -1150,7 +1154,11 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		
 		expect(Ic.getBoard(board_name)).toBeNull();
 		
-		Ic.initBoard({boardName : board_name});
+		Ic.initBoard({
+			boardName : board_name,
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation : true
+		});
 		
 		expect(Ic.getBoard(board_name)).not.toBeNull();
 		
@@ -1163,7 +1171,10 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		
 		expect(Ic.getBoard(board_name)).toBeNull();
 		
-		Ic.initBoard();
+		Ic.initBoard({
+			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation : true
+		});
 		
 		temp=Ic.getBoardNames();
 		expect(!!temp.length).toBe(true);
@@ -1182,47 +1193,47 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		test("default value", () => {
 			Ic.setSilentMode(true);
 			
-			expect(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"]).sort()).toEqual([].sort());
+			expect(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
 			
-			expect(Ic.fenApply("0invalidfen0", "legalSanMoves", ["a2"]).sort()).toEqual([].sort());
+			expect(Ic.fenApply("0invalidfen0", "legalSanMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
 			
-			expect(Ic.fenApply("0invalidfen0", "legalUciMoves", ["a2"]).sort()).toEqual([].sort());
+			expect(Ic.fenApply("0invalidfen0", "legalUciMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
 			
-			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2-a3"])).toBe(false);
+			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2-a3"])).toBe(false);//NO use {skipFenValidation : true}
 			
 			Ic.setSilentMode(false);
 			
-			expect(Ic.fenApply("0invalidfen0", "isLegalFen")).toBe(false);
+			expect(Ic.fenApply("0invalidfen0", "isLegalFen")).toBe(false);//NO use {skipFenValidation : true}
 			
 			Ic.setSilentMode(true);
 			
-			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();
+			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();//NO use {skipFenValidation : true}
 			
-			expect(Ic.fenApply("0invalidfen0", "countAttacks", ["a2"])).toBe(0);
+			expect(Ic.fenApply("0invalidfen0", "countAttacks", ["a2"])).toBe(0);//NO use {skipFenValidation : true}
 			
-			expect(Ic.fenApply("0invalidfen0", "ascii")).toBe("");
+			expect(Ic.fenApply("0invalidfen0", "ascii")).toBe("");//NO use {skipFenValidation : true}
 			
-			expect(Ic.fenApply("0invalidfen0", "boardHash")).toBe("");
+			expect(Ic.fenApply("0invalidfen0", "boardHash")).toBe("");//NO use {skipFenValidation : true}
 			
 			expect(Ic.fenApply("0invalidfen0", "countLightDarkBishops")).toEqual({
 				w : {lightSquaredBishops : 0, darkSquaredBishops : 0},
 				b : {lightSquaredBishops : 0, darkSquaredBishops : 0}
-			});
+			});//NO use {skipFenValidation : true}
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "0invalidfn0")).toBeNull();
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "0invalidfn0", [], {skipFenValidation : true})).toBeNull();
 			
 			Ic.setSilentMode(false);
 		});
 		
 		describe("args related", () => {
 			test("should not crash when args is missing", () => {
-				var shared_fen;
+				var undef_args, shared_fen;
 				
 				shared_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 				
-				expect(Ic.fenApply(shared_fen, "playMove")).toBeNull();
+				expect(Ic.fenApply(shared_fen, "playMove", undef_args, {skipFenValidation : true})).toBeNull();
 				
-				expect(Ic.fenApply(shared_fen, "getSquare")).toBeNull();
+				expect(Ic.fenApply(shared_fen, "getSquare", undef_args, {skipFenValidation : true})).toBeNull();
 			});
 		});
 		
@@ -1233,12 +1244,12 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				default_val=false;
 				
 				for(i=0, len=bad_shared_fen.length; i<len; i++){//0<len
-					expect(Ic.fenApply(bad_shared_fen[i], "isLegalFen")).toBe(default_val);
+					expect(Ic.fenApply(bad_shared_fen[i], "isLegalFen")).toBe(default_val);//NO use {skipFenValidation : true}
 				}
 			});
 			
 			test("normal inputs", () => {
-				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen")).toBe(true);
+				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen", [], {skipFenValidation : true})).toBe(true);
 			});
 		});
 	});
@@ -1246,16 +1257,16 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 	test("Ic.fenGet()", () => {
 		Ic.setSilentMode(true);
 		
-		expect(Ic.fenGet("0invalidfen0", "isCheck")).toBeNull();
+		expect(Ic.fenGet("0invalidfen0", "isCheck")).toBeNull();//NO use {skipFenValidation : true}
 		
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "")).toBeNull();
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "", {skipFenValidation : true})).toBeNull();
 		
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0")).toBeNull();
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0", {skipFenValidation : true})).toBeNull();
 		
 		Ic.setSilentMode(false);
 		
-		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", ["isStalemate", "inDraw"])).toEqual({inDraw:true, isStalemate:true});
+		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", ["isStalemate", "inDraw"], {skipFenValidation : true})).toEqual({inDraw:true, isStalemate:true});
 		
-		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", "isStalemate inDraw")).toEqual({isStalemate:true, inDraw:true});
+		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", "isStalemate inDraw", {skipFenValidation : true})).toEqual({isStalemate:true, inDraw:true});
 	});
 });

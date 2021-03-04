@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.1.0";
+		var _VERSION="6.2.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -306,6 +306,154 @@
 			}
 			
 			return rtn;
+		}
+		
+		function _nullboardHelper(board_name){
+			var i, j, temp, current_pos, current_bos, target;
+			
+			target=getBoard(board_name);
+			
+			if(target===null){
+				_BOARDS[board_name]={
+					boardName : board_name,
+					getSquare : _getSquare,
+					setSquare : _setSquare,
+					countAttacks : _countAttacks,
+					toggleActiveNonActive : _toggleActiveNonActive,
+					toggleIsRotated : _toggleIsRotated,
+					setPromoteTo : _setPromoteTo,
+					setManualResult : _setManualResult,
+					setCurrentMove : _setCurrentMove,
+					readValidatedFen : _readValidatedFen,
+					updateFenAndMisc : _updateFenAndMisc,
+					refinedFenTest : _refinedFenTest,
+					testCollision : _testCollision,
+					isLegalMove : _isLegalMove,
+					legalMovesHelper : _legalMovesHelper,
+					legalMoves : _legalMoves,
+					legalSanMoves : _legalSanMoves,
+					legalUciMoves : _legalUciMoves,
+					pgnExport : _pgnExport,
+					uciExport : _uciExport,
+					ascii : _ascii,
+					boardHash : _boardHash,
+					isEqualBoard : _isEqualBoard,
+					cloneBoardFrom : _cloneBoardFrom,
+					cloneBoardTo : _cloneBoardTo,
+					countLightDarkBishops : _countLightDarkBishops,
+					sanWrapmoveHelper : _sanWrapmoveHelper,
+					getWrappedMove : _getWrappedMove,
+					draftMove : _draftMove,
+					playMove : _playMove,
+					navFirst : _navFirst,
+					navPrevious : _navPrevious,
+					navNext : _navNext,
+					navLast : _navLast,
+					navLinkMove : _navLinkMove,
+					refreshUi : _refreshUi
+				};
+				
+				target=_BOARDS[board_name];
+			}
+			
+			target.w={
+				//static
+				isBlack : false,
+				sign : 1,
+				firstRankPos : 7,
+				secondRankPos : 6,
+				lastRankPos : 0,
+				singlePawnRankShift : -1,
+				pawn : _PAWN,
+				knight : _KNIGHT,
+				bishop : _BISHOP,
+				rook : _ROOK,
+				queen : _QUEEN,
+				king : _KING,
+				
+				//mutable
+				kingBos : null,
+				castling : null,
+				materialDiff : null
+			};
+			
+			target.b={
+				//static
+				isBlack : true,
+				sign : -1,
+				firstRankPos : 0,
+				secondRankPos : 1,
+				lastRankPos : 7,
+				singlePawnRankShift : 1,
+				pawn : -_PAWN,
+				knight : -_KNIGHT,
+				bishop : -_BISHOP,
+				rook : -_ROOK,
+				queen : -_QUEEN,
+				king : -_KING,
+				
+				//mutable
+				kingBos : null,
+				castling : null,
+				materialDiff : null
+			};
+			
+			target.activeColor=null;
+			target.nonActiveColor=null;
+			target.fen=null;
+			target.enPassantBos=null;
+			target.halfMove=null;
+			target.fullMove=null;
+			target.moveList=null;
+			target.currentMove=null;
+			target.isRotated=null;
+			target.checks=null;
+			target.isCheck=null;
+			target.isCheckmate=null;
+			target.isStalemate=null;
+			target.isThreefold=null;
+			target.isInsufficientMaterial=null;
+			target.isFiftyMove=null;
+			target.inDraw=null;
+			target.promoteTo=null;
+			target.manualResult=null;
+			target.isHidden=null;
+			target.squares={};
+			
+			for(i=0; i<8; i++){//0...7
+				for(j=0; j<8; j++){//0...7
+					current_pos=[i, j];
+					current_bos=toBos(current_pos);
+					
+					target.squares[current_bos]={};
+					temp=target.squares[current_bos];
+					
+					//static
+					temp.pos=current_pos;
+					temp.bos=current_bos;
+					temp.rankPos=getRankPos(current_pos);
+					temp.filePos=getFilePos(current_pos);
+					temp.rankBos=getRankBos(current_pos);
+					temp.fileBos=getFileBos(current_pos);
+					
+					//mutable
+					temp.bal=null;
+					temp.absBal=null;
+					temp.val=null;
+					temp.absVal=null;
+					temp.className=null;
+					temp.sign=null;
+					temp.isEmptySquare=null;
+					temp.isPawn=null;
+					temp.isKnight=null;
+					temp.isBishop=null;
+					temp.isRook=null;
+					temp.isQueen=null;
+					temp.isKing=null;
+				}
+			}
+			
+			return target;
 		}
 		
 		//---------------- utilities
@@ -653,7 +801,7 @@
 						legal_moves_all=board.legalUciMoves([i, j]);
 						
 						for(k=0, len=legal_moves_all.length; k<len; k++){//0<len
-							if(_isNonEmptyStr(specific_uci) && specific_uci!==legal_moves_all[k]){
+							if(specific_uci && specific_uci!==legal_moves_all[k]){
 								continue;
 							}
 							
@@ -2238,7 +2386,7 @@
 				p.isInanimated=(p.isInanimated===true);
 				
 				if(p.isMockMove){
-					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p], {promoteTo : that.promoteTo});
+					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p], {promoteTo : that.promoteTo, skipFenValidation : true});
 					
 					keep_going=false;
 				}
@@ -2493,7 +2641,7 @@
 				qos=_strToBosHelper(qos);
 				
 				if(qos!==null){
-					rtn=[(8-_toInt(qos.charAt(1), 1, 8)), _toInt("abcdefgh".indexOf(qos.charAt(0)), 0, 7)];
+					rtn=[(8-_toInt(qos.charAt(1))), _toInt("abcdefgh".indexOf(qos.charAt(0)))];
 				}
 			}else if(_isArray(qos)){
 				rtn=_arrToPosHelper(qos);
@@ -2665,9 +2813,9 @@
 			return rtn;
 		}
 		
-		//p = {boardName, fen, pgn, uci, moveIndex, isRotated, isHidden, promoteTo, manualResult, validOrBreak}
+		//p = {boardName, fen, pgn, uci, moveIndex, isRotated, skipFenValidation, isHidden, promoteTo, manualResult, validOrBreak}
 		function initBoard(p){
-			var i, j, len, temp, board_created, target, board_name, current_pos, current_bos, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
+			var i, len, temp, board_created, board_name, fen_was_valid, postfen_was_valid, new_board, everything_parsed, no_errors, rtn;
 			
 			rtn=null;
 			p=_unreferenceP(p);
@@ -2679,6 +2827,7 @@
 				board_name=p.boardName;
 				
 				p.isRotated=(p.isRotated===true);
+				p.skipFenValidation=(p.skipFenValidation===true);
 				p.isHidden=(p.isHidden===true);
 				p.validOrBreak=(p.validOrBreak===true);
 				
@@ -2694,7 +2843,7 @@
 					}
 				}
 				
-				fen_was_valid=!_basicFenTest(p.fen);
+				fen_was_valid=(p.skipFenValidation || !_basicFenTest(p.fen));
 				
 				if(p.validOrBreak && !fen_was_valid){
 					no_errors=false;
@@ -2703,157 +2852,8 @@
 			//}
 			
 			if(no_errors){
-				target=getBoard(board_name);
+				new_board=_nullboardHelper(board_name);
 				
-				if(target===null){
-					_BOARDS[board_name]={
-						boardName : board_name,
-						getSquare : _getSquare,
-						setSquare : _setSquare,
-						countAttacks : _countAttacks,
-						toggleActiveNonActive : _toggleActiveNonActive,
-						toggleIsRotated : _toggleIsRotated,
-						setPromoteTo : _setPromoteTo,
-						setManualResult : _setManualResult,
-						setCurrentMove : _setCurrentMove,
-						readValidatedFen : _readValidatedFen,
-						updateFenAndMisc : _updateFenAndMisc,
-						refinedFenTest : _refinedFenTest,
-						testCollision : _testCollision,
-						isLegalMove : _isLegalMove,
-						legalMovesHelper : _legalMovesHelper,
-						legalMoves : _legalMoves,
-						legalSanMoves : _legalSanMoves,
-						legalUciMoves : _legalUciMoves,
-						pgnExport : _pgnExport,
-						uciExport : _uciExport,
-						ascii : _ascii,
-						boardHash : _boardHash,
-						isEqualBoard : _isEqualBoard,
-						cloneBoardFrom : _cloneBoardFrom,
-						cloneBoardTo : _cloneBoardTo,
-						countLightDarkBishops : _countLightDarkBishops,
-						sanWrapmoveHelper : _sanWrapmoveHelper,
-						getWrappedMove : _getWrappedMove,
-						draftMove : _draftMove,
-						playMove : _playMove,
-						navFirst : _navFirst,
-						navPrevious : _navPrevious,
-						navNext : _navNext,
-						navLast : _navLast,
-						navLinkMove : _navLinkMove,
-						refreshUi : _refreshUi
-					};
-					
-					target=getBoard(board_name);
-				}
-				
-				target.w={
-					//static
-					isBlack : false,
-					sign : 1,
-					firstRankPos : 7,
-					secondRankPos : 6,
-					lastRankPos : 0,
-					singlePawnRankShift : -1,
-					pawn : _PAWN,
-					knight : _KNIGHT,
-					bishop : _BISHOP,
-					rook : _ROOK,
-					queen : _QUEEN,
-					king : _KING,
-					
-					//mutable
-					kingBos : null,
-					castling : null,
-					materialDiff : null
-				};
-				
-				target.b={
-					//static
-					isBlack : true,
-					sign : -1,
-					firstRankPos : 0,
-					secondRankPos : 1,
-					lastRankPos : 7,
-					singlePawnRankShift : 1,
-					pawn : -_PAWN,
-					knight : -_KNIGHT,
-					bishop : -_BISHOP,
-					rook : -_ROOK,
-					queen : -_QUEEN,
-					king : -_KING,
-					
-					//mutable
-					kingBos : null,
-					castling : null,
-					materialDiff : null
-				};
-				
-				target.activeColor=null;
-				target.nonActiveColor=null;
-				target.fen=null;
-				target.enPassantBos=null;
-				target.halfMove=null;
-				target.fullMove=null;
-				target.moveList=null;
-				target.currentMove=null;
-				target.isRotated=null;
-				target.checks=null;
-				target.isCheck=null;
-				target.isCheckmate=null;
-				target.isStalemate=null;
-				target.isThreefold=null;
-				target.isInsufficientMaterial=null;
-				target.isFiftyMove=null;
-				target.inDraw=null;
-				target.promoteTo=null;
-				target.manualResult=null;
-				target.isHidden=null;
-				target.squares={};
-				
-				for(i=0; i<8; i++){//0...7
-					for(j=0; j<8; j++){//0...7
-						current_pos=[i, j];
-						current_bos=toBos(current_pos);
-						
-						target.squares[current_bos]={};
-						temp=target.squares[current_bos];
-						
-						//static
-						temp.pos=current_pos;
-						temp.bos=current_bos;
-						temp.rankPos=getRankPos(current_pos);
-						temp.filePos=getFilePos(current_pos);
-						temp.rankBos=getRankBos(current_pos);
-						temp.fileBos=getFileBos(current_pos);
-						
-						//mutable
-						temp.bal=null;
-						temp.absBal=null;
-						temp.val=null;
-						temp.absVal=null;
-						temp.className=null;
-						temp.sign=null;
-						temp.isEmptySquare=null;
-						temp.isPawn=null;
-						temp.isKnight=null;
-						temp.isBishop=null;
-						temp.isRook=null;
-						temp.isQueen=null;
-						temp.isKing=null;
-					}
-				}
-				
-				new_board=getBoard(board_name);
-				
-				if(new_board===null){
-					no_errors=false;
-					_consoleLog("Error[initBoard]: \""+board_name+"\" board selection failure");
-				}
-			}
-			
-			if(no_errors){
 				board_created=true;
 				
 				new_board.isHidden=true;
@@ -2872,7 +2872,7 @@
 				
 				new_board.moveList=[{colorMoved : new_board.nonActiveColor, colorToPlay : new_board.activeColor, fen : new_board.fen, san : "", uci : "", comment : "", moveResult : temp, canDraw : new_board.inDraw, fromBos : "", toBos : "", piece : "", promotion : ""}];
 				
-				postfen_was_valid=!new_board.refinedFenTest();
+				postfen_was_valid=(p.skipFenValidation || !new_board.refinedFenTest());
 				
 				if(p.validOrBreak && !postfen_was_valid){
 					no_errors=false;
@@ -2946,7 +2946,7 @@
 			return rtn;
 		}
 		
-		//p = {isRotated, promoteTo}
+		//p = {isRotated, promoteTo, skipFenValidation}
 		function fenApply(fen, fn_name, args, p){
 			var board, board_created, silent_mode_cache, rtn;
 			
@@ -2967,6 +2967,7 @@
 				fen : fen,
 				isRotated : p.isRotated,
 				promoteTo : p.promoteTo,
+				skipFenValidation : p.skipFenValidation,
 				isHidden : true,
 				validOrBreak : true
 			});
@@ -3022,10 +3023,12 @@
 			return rtn;
 		}
 		
-		function fenGet(fen, props){
+		//p = {skipFenValidation}
+		function fenGet(fen, props, p){
 			var i, j, len, len2, board, board_created, board_keys, current_key, invalid_key, no_errors, rtn_pre, rtn;
 			
 			rtn=null;
+			p=_unreferenceP(p);
 			board_created=false;
 			no_errors=true;
 			
@@ -3033,6 +3036,7 @@
 				board=initBoard({
 					boardName : "board_fenGet",
 					fen : fen,
+					skipFenValidation : p.skipFenValidation,
 					isHidden : true,
 					validOrBreak : true
 				});

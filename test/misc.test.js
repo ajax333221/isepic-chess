@@ -11,7 +11,7 @@ describe("Misc.", () => {
 		
 		describe("Disambiguation related", () => {
 			test("pinned pieces are ignored as candidates", () => {
-				expect(Ic.fenApply("rnb1kbnr/pp1p2pp/2p2p2/q3p3/4PN2/2NP4/PPP2PPP/R1BQKB1R w KQkq - 0 6", "playMove", ["f4-e2"]).san).toBe("Ne2");
+				expect(Ic.fenApply("rnb1kbnr/pp1p2pp/2p2p2/q3p3/4PN2/2NP4/PPP2PPP/R1BQKB1R w KQkq - 0 6", "playMove", ["f4-e2"], {skipFenValidation : true}).san).toBe("Ne2");
 			});
 		});
 		
@@ -21,67 +21,67 @@ describe("Misc.", () => {
 			shared_fen="rn1qkbnr/1P1ppppp/2p5/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 5";
 			
 			test("K should change to Q", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7-a8", {promoteTo : "K"}]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7-a8", {promoteTo : "K"}], {skipFenValidation : true}).san).toBe("bxa8=Q");
 			});
 			
 			test("P should change to N", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7-a8", {promoteTo : "P"}]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7-a8", {promoteTo : "P"}], {skipFenValidation : true}).san).toBe("bxa8=N");
 			});
 			
 			test("valid promoteTo option should overwrite SAN", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "N"}]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "N"}], {skipFenValidation : true}).san).toBe("bxa8=N");
 			});
 			
 			test("valid promoteTo option should overwrite UCI", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r", {promoteTo : "N"}]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r", {promoteTo : "N"}], {skipFenValidation : true}).san).toBe("bxa8=N");
 			});
 			
 			test("invalid promoteTo option should NOT overwrite SAN", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "W"}]).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=R", {promoteTo : "W"}], {skipFenValidation : true}).san).toBe("bxa8=R");
 			});
 			
 			test("invalid promoteTo option should NOT overwrite UCI", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r", {promoteTo : "W"}]).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r", {promoteTo : "W"}], {skipFenValidation : true}).san).toBe("bxa8=R");
 			});
 			
 			test("unconventional SAN promotion", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=q"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=6"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=5"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=q"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=6"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=5"], {skipFenValidation : true}).san).toBe("bxa8=Q");
 				
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=r"]).san).toBe("bxa8=R");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=4"]).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=r"], {skipFenValidation : true}).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=4"], {skipFenValidation : true}).san).toBe("bxa8=R");
 				
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=n"]).san).toBe("bxa8=N");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=2"]).san).toBe("bxa8=N");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=1"]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=n"], {skipFenValidation : true}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=2"], {skipFenValidation : true}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=1"], {skipFenValidation : true}).san).toBe("bxa8=N");
 				
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8="]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8= "]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=0"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=_"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8="], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8= "], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=0"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=_"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X"], {skipFenValidation : true}).san).toBe("bxa8=Q");
 			});
 			
 			test("unconventional UCI promotion", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8q"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a86"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a85"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8q"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a86"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a85"], {skipFenValidation : true}).san).toBe("bxa8=Q");
 				
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r"]).san).toBe("bxa8=R");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a84"]).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8r"], {skipFenValidation : true}).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a84"], {skipFenValidation : true}).san).toBe("bxa8=R");
 				
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8n"]).san).toBe("bxa8=N");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a82"]).san).toBe("bxa8=N");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a81"]).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8n"], {skipFenValidation : true}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a82"], {skipFenValidation : true}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a81"], {skipFenValidation : true}).san).toBe("bxa8=N");
 				
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8 "]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a80"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8_"]).san).toBe("bxa8=Q");
-				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8X"]).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8 "], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a80"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8_"], {skipFenValidation : true}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["b7a8X"], {skipFenValidation : true}).san).toBe("bxa8=Q");
 			});
 			
 			test("valid SAN should overwrite board promoteTo", () => {
@@ -91,7 +91,7 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : shared_fen,
 					promoteTo : "R",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				expect(board_obj.playMove("bxa8=B").san).toBe("bxa8=B");
@@ -104,7 +104,7 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : shared_fen,
 					promoteTo : "R",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				expect(board_obj.playMove("b7a8b").san).toBe("bxa8=B");
@@ -117,7 +117,7 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : shared_fen,
 					promoteTo : "R",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				expect(board_obj.playMove("bxa8=X").san).toBe("bxa8=R");
@@ -130,7 +130,7 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : shared_fen,
 					promoteTo : "R",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				expect(board_obj.playMove("b7a8X").san).toBe("bxa8=R");
@@ -143,7 +143,7 @@ describe("Misc.", () => {
 					boardName : board_name,
 					fen : shared_fen,
 					promoteTo : "B",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				expect(board_obj.playMove("bxa8", {isMockMove : true}).san).toBe("bxa8=B");
@@ -155,28 +155,28 @@ describe("Misc.", () => {
 			});
 			
 			test("board.promoteTo in isMockMove from fenApply is lowest priority", () => {
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8"], {promoteTo : "B"}).san).toBe("bxa8=B");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X"], {promoteTo : "B"}).san).toBe("bxa8=B");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N"], {promoteTo : "B"}).san).toBe("bxa8=N");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N", {promoteTo : "R"}], {promoteTo : "B"}).san).toBe("bxa8=R");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N", {promoteTo : "X"}], {promoteTo : "B"}).san).toBe("bxa8=N");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "B"}).san).toBe("bxa8=B");
-				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "X"}).san).toBe("bxa8=Q");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8"], {promoteTo : "B", skipFenValidation : true}).san).toBe("bxa8=B");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X"], {promoteTo : "B", skipFenValidation : true}).san).toBe("bxa8=B");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N"], {promoteTo : "B", skipFenValidation : true}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N", {promoteTo : "R"}], {promoteTo : "B", skipFenValidation : true}).san).toBe("bxa8=R");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=N", {promoteTo : "X"}], {promoteTo : "B", skipFenValidation : true}).san).toBe("bxa8=N");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "B", skipFenValidation : true}).san).toBe("bxa8=B");
+				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "X", skipFenValidation : true}).san).toBe("bxa8=Q");
 			});
 		});
 		
 		describe("Enpassant related", () => {
 			test("enpassant capture made with a non-pawn piece", () => {
-				expect(Ic.fenApply("rnbqkbnr/1pp1pp2/p7/3pQ1p1/2K4p/3P4/PPP1PPPP/RNB2BNR w kq d6 0 8", "legalMoves", ["e5"]).sort()).toEqual(["d5"].sort());
+				expect(Ic.fenApply("rnbqkbnr/1pp1pp2/p7/3pQ1p1/2K4p/3P4/PPP1PPPP/RNB2BNR w kq d6 0 8", "legalMoves", ["e5"], {skipFenValidation : true}).sort()).toEqual(["d5"].sort());
 			});
 			
 			test("taking enpassant results in self check", () => {
-				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4-d3"])).toBe(false);
-				expect(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"]).sort()).toEqual(["d6", "e6"].sort());
+				expect(Ic.fenApply("8/8/1k6/8/2pP4/8/8/6BK b - d3 0 1", "isLegalMove", ["c4-d3"], {skipFenValidation : true})).toBe(false);
+				expect(Ic.fenApply("r1b1kbnr/ppp3pp/3q4/P2nPp2/3p4/7K/1PP2PP1/RNBQ1BNR w kq f6 0 10", "legalMoves", ["e5"], {skipFenValidation : true}).sort()).toEqual(["d6", "e6"].sort());
 			});
 			
 			test("missing option to remove check via enpassant", () => {
-				expect(Ic.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", ["d4-e3"])).toBe(true);
+				expect(Ic.fenApply("8/8/8/3k4/3pP3/8/8/7K b - e3 0 1", "isLegalMove", ["d4-e3"], {skipFenValidation : true})).toBe(true);
 			});
 			
 			test("enpassant capture discovered double check", () => {
@@ -185,7 +185,7 @@ describe("Misc.", () => {
 				board_obj=Ic.initBoard({
 					boardName : board_name,
 					fen : "8/8/7k/6pP/5BKR/8/8/8 w - g6 0 1",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				board_obj.playMove("h5-g6");
@@ -201,36 +201,36 @@ describe("Misc.", () => {
 				temp="2q1k3/3ppp2/5r2/7b/8/4n3/3PPP2/R3K2R w KQ - 0 1";
 				
 				//jumping attacked squares (white)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1-c1"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1-g1"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1-c1"], {skipFenValidation : true})).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1-g1"], {skipFenValidation : true})).toBe(false);//short
 				
 				temp="r3k2r/3pBp2/8/3N4/8/8/3PPP2/3QK3 b kq - 0 1";
 				
 				//jumping attacked squares (black)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8-c8"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8-g8"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8-c8"], {skipFenValidation : true})).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8-g8"], {skipFenValidation : true})).toBe(false);//short
 				
 				temp="qk6/pp5b/8/8/8/8/3PPP2/R3K3 w Q - 0 1";
 				
 				//b1 attack should not prevent long castle (white)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1-c1"])).toBe(true);
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1-c1"], {skipFenValidation : true})).toBe(true);
 				
 				temp="r3k3/3ppp2/N7/8/8/8/5PPP/6QK b q - 0 1";
 				
 				//b8 attack should not prevent long castle (black)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8-c8"])).toBe(true);
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8-c8"], {skipFenValidation : true})).toBe(true);
 				
 				temp="qk6/pp6/8/8/8/8/3PPPn1/R3K2R w KQ - 0 1";
 				
 				//castling in check (white)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1-c1"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e1-g1"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1-c1"], {skipFenValidation : true})).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e1-g1"], {skipFenValidation : true})).toBe(false);//short
 				
 				temp="r3k2r/3pppN1/8/8/8/8/5PPP/6QK b kq - 0 1";
 				
 				//castling in check (black)
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8-c8"])).toBe(false);//long
-				expect(Ic.fenApply(temp, "isLegalMove", ["e8-g8"])).toBe(false);//short
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8-c8"], {skipFenValidation : true})).toBe(false);//long
+				expect(Ic.fenApply(temp, "isLegalMove", ["e8-g8"], {skipFenValidation : true})).toBe(false);//short
 			});
 			
 			test("removing castle rights", () => {
@@ -239,13 +239,13 @@ describe("Misc.", () => {
 				board_obj=Ic.initBoard({
 					boardName : board_name,
 					fen : "r3k2r/4p3/8/3bb3/8/8/Q3P2Q/R3K2R w KQkq - 0 1",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				board_other=Ic.initBoard({
 					boardName : other_board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				expect(board_obj.w.castling).toBe(3);
@@ -347,11 +347,13 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "k7/P7/4q3/8/8/4Q3/p7/K7 w - - 0 1",
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			board_other=Ic.initBoard({
-				boardName : other_board_name
+				boardName : other_board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				skipFenValidation : true
 			});
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
@@ -414,7 +416,7 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			temp=Ic.toPos(board_obj.squares["a2"].pos);/*NO b.getSquare()*/
@@ -428,13 +430,13 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			board_other=Ic.initBoard({
 				boardName : other_board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			temp=board_obj.getSquare("b2", {isUnreferenced : false});
@@ -471,13 +473,13 @@ describe("Misc.", () => {
 				board_obj=Ic.initBoard({
 					boardName : board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				board_other=Ic.initBoard({
 					boardName : other_board_name,
 					fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-					validOrBreak : true
+					skipFenValidation : true
 				});
 				
 				temp=board_obj.getSquare("e4", {isUnreferenced : false});
@@ -524,7 +526,7 @@ describe("Misc.", () => {
 			
 			fen="rnbqkr2/ppppppNp/n5p1/2b5/8/P1N5/1PPPPPPP/R1BQKB1R b KQq - 100 52";
 			
-			expect(Ic.fenGet(fen, "isCheckmate isFiftyMove inDraw")).toEqual({isCheckmate:true, isFiftyMove:true, inDraw:false});
+			expect(Ic.fenGet(fen, "isCheckmate isFiftyMove inDraw", {skipFenValidation : true})).toEqual({isCheckmate:true, isFiftyMove:true, inDraw:false});
 		});
 	});
 	
@@ -614,7 +616,7 @@ describe("Misc.", () => {
 		arr.push("rnbqkbnr/pppppqpp/8/8/8/1P2PNP1/PBPPQPBP/RN3RK1 b kq - 0 1");
 		
 		for(i=0, len=arr.length; i<len; i++){//0<len
-			expect(Ic.fenApply(arr[i], "isLegalFen")).toBe(false);
+			expect(Ic.fenApply(arr[i], "isLegalFen")).toBe(false);//NO use {skipFenValidation : true}
 			
 			expect(Ic.utilityMisc.basicFenTest(arr[i])).toBe("");
 		}
@@ -632,8 +634,7 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				isRotated : true,
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			board_obj.playMove("e2-e4");
@@ -749,12 +750,13 @@ describe("Misc.", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "r3k2r/4p3/3B1P2/2NpN1N1/1Pn1n1n1/3b1p2/4P3/R3K2R w KQkq - 0 1",
-				isRotated : true,
-				validOrBreak : true
+				skipFenValidation : true
 			});
 			
 			board_other=Ic.initBoard({
-				boardName : other_board_name
+				boardName : other_board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				skipFenValidation : true
 			});
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
