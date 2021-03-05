@@ -50,43 +50,42 @@ The variable `Ic` will be added to window.
 ```js
 const {Ic} = require("isepic-chess");
 
-var board, ascii_diagram, example_pgn;
-
-example_pgn = `[Event "example game"]
+var example_pgn = `[Event "m1 London"]
+[Site "?"]
+[Date "1861.07.??"]
+[Round "9"]
+[White "Kolisch, Ignatz"]
+[Black "Anderssen, Adolf"]
+[Result "0-1"]
+[Annotator "JvR"]
 [SetUp "1"]
-[FEN "rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2"]
+[FEN "5r1k/pp4pp/3r3q/8/3PpP1P/1P2NbP1/PB1Q3K/R7 b - - 0 30"]
+[PlyCount "13"]
+[EventDate "1861.??.??"]
 
-2. Qf3 Nc6 3. Bc4`;
+30... Rxf4 $1 {Anderssen starts fireworks.} 31. Qe1 (31.gxf4 $2 Qxh4+ 32.Kg1
+Rg6+) 31... Rg6 (31...Rxh4+ $1 32.gxh4 Rg6 $1) 32. Bc1 (32.Ng2 $1) 32... Rxh4+
+$1 33. gxh4 Qf4+ 34. Kh3 Bg2+ $1 35. Nxg2 Qf3+ 36. Kh2 Qxg2# { Anderssen won
+the match by this mate (+4, =2, -3).} 0-1`;
 
-board = Ic.initBoard({
-  boardName : "example_board",
+var board = Ic.initBoard({
   pgn : example_pgn
 });
 
-// same than passing a SAN move of "Nd4"
-board.playMove("c6-d4");
+console.log(board.ascii());
+//   +------------------------+
+// 8 | .  .  .  .  .  .  .  k |
+// 7 | p  p  .  .  .  .  p  p |
+// 6 | .  .  .  .  .  .  r  . |
+// 5 | .  .  .  .  .  .  .  . |
+// 4 | .  .  .  P  p  .  .  P |
+// 3 | .  P  .  .  .  .  .  . |
+// 2 | P  .  .  .  .  .  q  K |
+// 1 | R  .  B  .  Q  .  .  . |
+//   +------------------------+
+//     a  b  c  d  e  f  g  h
 
-// "Qxf7", "Qxf7++", "Q3xf7+", "Qfxf7", "Qf3xf7 {comment}", etc
-board.playMove("Qxf7#");
-
-ascii_diagram = board.ascii();
-
-module.exports = (ascii_diagram + "\nIs Checkmate? = " + board.isCheckmate);
-//    +------------------------+
-//  8 | r  .  b  q  k  b  n  r |
-//  7 | p  p  p  p  .  Q  p  p |
-//  6 | .  .  .  .  .  .  .  . |
-//  5 | .  .  .  .  p  .  .  . |
-//  4 | .  .  B  n  P  .  .  . |
-//  3 | .  .  .  .  .  .  .  . |
-//  2 | P  P  P  P  .  P  P  P |
-//  1 | R  N  B  .  K  .  N  R |
-//    +------------------------+
-//      a  b  c  d  e  f  g  h
-// 
-// Is Checkmate? = true
-
-/* for a graphical user interface see https://github.com/ajax333221/isepic-chess-ui */
+console.log(board.fen); //"7k/pp4pp/6r1/8/3Pp2P/1P6/P5qK/R1B1Q3 w - - 0 37"
 ```
 
 :eye: Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
