@@ -15,6 +15,12 @@ describe("Misc.", () => {
 			});
 		});
 		
+		describe("isLegalMove related", () => {
+			test("move search matching to-from in from-to-from-to...", () => {
+				expect(Ic.fenApply("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", "isLegalMove", ["f6-f3"], {skipFenValidation : true})).toBe(false);
+			});
+		});
+		
 		describe("Promotion related", () => {
 			var shared_fen;
 			

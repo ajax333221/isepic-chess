@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.3.0";
+		var _VERSION="6.3.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1801,7 +1801,7 @@
 			if(keep_going){
 				temp=(toBos(temp[0][0])+""+toBos(temp[0][1]));
 				
-				rtn=(that.legalUci.join("").indexOf(temp)!==-1);
+				rtn=(that.legalUci.join(",").indexOf(temp)!==-1);
 			}
 			
 			return rtn;

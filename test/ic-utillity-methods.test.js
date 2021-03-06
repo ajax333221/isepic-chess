@@ -563,19 +563,20 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0, 1)).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 1, 1)).toBe(20);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 2, 1)).toBe(400);
-		//depth=3 ... toBe(8902) ... [v5.9.0 = passed]
-		//depth=4 ... toBe(197281) ... [v5.4.1 = passed]
-		//depth=5 ... toBe(4865609) ... [v6.2.0 = passed]
+		//depth=3 ... toBe(8902) ... [v6.3.0 = passed]
+		//depth=4 ... toBe(197281) ... [v6.3.0 = passed]
+		//depth=5 ... toBe(4865609) ... [v6.3.0 = passed]
 		//depth=6 ... toBe(119060324) ... [untested]
 		//depth=7 ... toBe(3195901860) ... [untested]
 		
 		current_p={fen : "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", skipFenValidation : true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0, 1)).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 1, 1)).toBe(48);
-		//depth=2 ... toBe(2039) ... [v5.9.0 = passed]
-		//depth=3 ... toBe(97862) ... [v5.9.0 = passed]
-		//depth=4 ... toBe(4085603) ... [untested]
+		//depth=2 ... toBe(2039) ... [v6.3.0 = passed]
+		//depth=3 ... toBe(97862) ... [v6.3.0 = passed]
+		//depth=4 ... toBe(4085603) ... [v6.3.0 = passed]
 		//depth=5 ... toBe(193690690) ... [untested]
+		//depth=6 ... toBe(8031647685) ... [untested]
 		
 		current_p={fen : "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", skipFenValidation : true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0, 1)).toBe(1);
