@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.2.0";
+		var _VERSION="6.3.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -33,7 +33,7 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "legalUci", "legalUciTree", "squares"];
 		
 		//---------------- helpers
 		
@@ -418,6 +418,8 @@
 			target.promoteTo=null;
 			target.manualResult=null;
 			target.isHidden=null;
+			target.legalUci=null;
+			target.legalUciTree=null;
 			target.squares={};
 			
 			for(i=0; i<8; i++){//0...7
@@ -616,6 +618,8 @@
 			
 			if(to_board!==from_board){
 				to_board.moveList=[];
+				to_board.legalUci=[];
+				to_board.legalUciTree={};
 				
 				for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
 					current_key=_MUTABLE_KEYS[i];
@@ -625,6 +629,12 @@
 					//primitive data type
 					if(!_isObject(from_prop) && !_isArray(from_prop)){
 						to_board[current_key]=from_board[current_key];//can't use to_prop, it's not a reference here
+						
+						continue;
+					}
+					
+					if(current_key==="legalUci"){
+						to_board.legalUci=from_board.legalUci.slice(0);
 						
 						continue;
 					}
@@ -648,6 +658,14 @@
 						//primitive data type
 						if(!_isObject(current_sub_from) && !_isArray(current_sub_from)){
 							_consoleLog("Error[_cloneBoardObjs]: unexpected primitive data type");
+							
+							continue;
+						}
+						
+						if(current_key==="legalUciTree"){
+							//["legalUciTree"] object of (0-64), array of (0-N)
+							
+							to_prop[sub_keys[j]]=current_sub_from.slice(0);
 							
 							continue;
 						}
@@ -774,7 +792,7 @@
 		}
 		
 		function _perft(woard, depth, ply, specific_uci){
-			var i, j, k, len, board, count, legal_moves_all, keep_going, rtn;
+			var i, len, board, count, keep_going, rtn;
 			
 			rtn=1;
 			keep_going=true;
@@ -796,19 +814,17 @@
 			if(keep_going){
 				count=0;
 				
-				for(i=0; i<8; i++){//0...7
-					for(j=0; j<8; j++){//0...7
-						legal_moves_all=board.legalUciMoves([i, j]);
-						
-						for(k=0, len=legal_moves_all.length; k<len; k++){//0<len
-							if(specific_uci && specific_uci!==legal_moves_all[k]){
-								continue;
-							}
-							
-							board.playMove(legal_moves_all[k], {isLegalMove : true});
-							count+=_perft(board, (depth-1), (ply+1));
-							board.navLinkMove(ply-1);
-						}
+				for(i=0, len=board.legalUci.length; i<len; i++){//0<len
+					if(specific_uci && specific_uci!==board.legalUci[i]){
+						continue;
+					}
+					
+					if(depth===1){
+						count++;
+					}else{
+						board.playMove(board.legalUci[i], {isLegalMove : true});
+						count+=_perft(board, (depth-1), (ply+1));
+						board.navLinkMove(ply-1);
 					}
 				}
 				
@@ -1149,7 +1165,7 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, len, that, temp, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, is_stale, bishop_count, at_least_one_light, at_least_one_dark, current_side;
+			var i, j, k, len, that, temp, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark, current_side;
 			
 			that=this;
 			
@@ -1179,22 +1195,29 @@
 			}
 			
 			that.checks=that.countAttacks(null);
-			that.isCheck=!!that.checks;/*NO move below legalMoves()*/
+			that.isCheck=!!that.checks;/*NO move below legalMovesHelper()*/
 			
-			is_stale=true;
+			that.legalUci=[];
+			that.legalUciTree={};
 			
-			outer:
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					if(that.legalMoves([i, j]).length){
-						is_stale=false;
-						break outer;
+					temp=that.legalMovesHelper([i, j]).uciMoves;
+					
+					if(!temp.length){
+						continue;
+					}
+					
+					that.legalUciTree[toBos([i, j])]=temp.slice(0);
+					
+					for(k=0, len=temp.length; k<len; k++){//0<len
+						that.legalUci.push(temp[k]);
 					}
 				}
 			}
 			
-			that.isCheckmate=(that.isCheck && is_stale);
-			that.isStalemate=(!that.isCheck && is_stale);
+			that.isCheckmate=(that.isCheck && !that.legalUci.length);
+			that.isStalemate=(!that.isCheck && !that.legalUci.length);
 			
 			clockless_fen=(new_fen_board+" "+that.activeColor+" "+((_castlingChars(that.w.castling).toUpperCase()+""+_castlingChars(that.b.castling)) || "-")+" "+(that.enPassantBos || "-"));
 			
@@ -1489,9 +1512,8 @@
 			return rtn;
 		}
 		
-		//p = {returnType (!= san), squareType, delimiter}
-		function _legalMovesHelper(target_qos, p){
-			var i, j, k, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pre_validated_arr_pos, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
+		function _legalMovesHelper(target_qos){
+			var i, j, k, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pseudo_legal_arr_pos, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, no_errors, rtn;
 			
 			that=this;
 			
@@ -1499,18 +1521,10 @@
 				return that.testCollision(1, qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
 			}
 			
-			rtn={moves : [], isPromotion : false};
-			p=_unreferenceP(p);
+			rtn={uciMoves : [], isPromotion : false};
 			no_errors=true;
 			
 			//if(no_errors){
-				p.returnType=(_isNonEmptyStr(p.returnType) ? p.returnType : "toSquare");
-				
-				p.squareType=(_isNonEmptyStr(p.squareType) ? p.squareType : "bos");
-				
-				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter : "-");
-				p.delimiter=p.delimiter.charAt(0);
-				
 				target_cached_square=that.getSquare(target_qos, {
 					isUnreferenced : true
 				});
@@ -1530,7 +1544,7 @@
 			}
 			
 			if(no_errors){//is inside board + is ally piece
-				pre_validated_arr_pos=[];
+				pseudo_legal_arr_pos=[];
 				en_passant_capturable_cached_square=null;
 				is_promotion=false;
 				
@@ -1539,7 +1553,7 @@
 						temp=_candidateMoves(target_cached_square, i, false, 1, true);
 						
 						if(temp.length){
-							pre_validated_arr_pos.push(temp);
+							pseudo_legal_arr_pos.push(temp);
 						}
 					}
 					
@@ -1568,7 +1582,7 @@
 								fileShift : (temp2.singleFileShift*2)
 							});
 							
-							pre_validated_arr_pos.push([temp]);
+							pseudo_legal_arr_pos.push([temp]);
 						}
 					}
 				}else if(target_cached_square.isPawn){
@@ -1578,7 +1592,7 @@
 					temp=_candidateMoves(target_cached_square, (active_side.isBlack ? _DIRECTION_BOTTOM : _DIRECTION_TOP), false, (target_cached_square.rankPos===active_side.secondRankPos ? 2 : 1), false);
 					
 					if(temp.length){
-						pre_validated_arr_pos.push(temp);
+						pseudo_legal_arr_pos.push(temp);
 					}
 					
 					for(i=0; i<2; i++){//0...1
@@ -1594,7 +1608,7 @@
 						temp=sameSquare(current_diagonal_square, that.enPassantBos);
 						
 						if(temp || (current_diagonal_square.sign!==active_side.sign && !current_diagonal_square.isEmptySquare && !current_diagonal_square.isKing)){
-							pre_validated_arr_pos.push([current_diagonal_square]);
+							pseudo_legal_arr_pos.push([current_diagonal_square]);
 						}
 						
 						if(temp){
@@ -1613,14 +1627,14 @@
 						temp=_candidateMoves(target_cached_square, piece_directions[i], target_cached_square.isKnight, null, true);
 						
 						if(temp.length){
-							pre_validated_arr_pos.push(temp);
+							pseudo_legal_arr_pos.push(temp);
 						}
 					}
 				}
 				
-				for(i=0, len=pre_validated_arr_pos.length; i<len; i++){//0<len
-					for(j=0, len2=pre_validated_arr_pos[i].length; j<len2; j++){//0<len2
-						current_cached_square=that.getSquare(pre_validated_arr_pos[i][j], {
+				for(i=0, len=pseudo_legal_arr_pos.length; i<len; i++){//0<len
+					for(j=0, len2=pseudo_legal_arr_pos[i].length; j<len2; j++){//0<len2
+						current_cached_square=that.getSquare(pseudo_legal_arr_pos[i][j], {
 							isUnreferenced : true
 						});
 						
@@ -1634,32 +1648,12 @@
 						}
 						
 						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
-							if(p.returnType==="uci"){
-								if(is_promotion){
-									for(k=_KNIGHT; k<_KING; k++){//2...5
-										rtn.moves.push(target_cached_square.bos+current_cached_square.bos+toBal(k).toLowerCase());
-									}
-								}else{
-									rtn.moves.push(target_cached_square.bos+current_cached_square.bos);
+							if(is_promotion){
+								for(k=_KNIGHT; k<_KING; k++){//2...5
+									rtn.uciMoves.push(target_cached_square.bos+current_cached_square.bos+toBal(k).toLowerCase());
 								}
-							}else if(p.returnType==="joined"){
-								rtn.moves.push(target_cached_square.bos+p.delimiter+current_cached_square.bos);
-							}else if(p.returnType==="fromToSquares"){
-								if(p.squareType==="square"){
-									rtn.moves.push([that.getSquare(target_cached_square, {isUnreferenced : true}), that.getSquare(current_cached_square, {isUnreferenced : true})]);
-								}else if(p.squareType==="pos"){
-									rtn.moves.push([toPos(target_cached_square), toPos(current_cached_square)]);
-								}else{//type "bos"
-									rtn.moves.push([target_cached_square.bos, current_cached_square.bos]);
-								}
-							}else{//type "toSquare"
-								if(p.squareType==="square"){
-									rtn.moves.push(that.getSquare(current_cached_square, {isUnreferenced : true}));
-								}else if(p.squareType==="pos"){
-									rtn.moves.push(toPos(current_cached_square));
-								}else{//type "bos"
-									rtn.moves.push(current_cached_square.bos);
-								}
+							}else{
+								rtn.uciMoves.push(target_cached_square.bos+current_cached_square.bos);
 							}
 						}
 						
@@ -1672,7 +1666,7 @@
 					}
 				}
 				
-				if(rtn.moves.length){
+				if(rtn.uciMoves.length){
 					rtn.isPromotion=is_promotion;
 				}
 			}
@@ -1682,50 +1676,101 @@
 		
 		//p = {returnType, squareType, delimiter}
 		function _legalMoves(target_qos, p){
-			var that;
-			
-			that=this;
-			
-			p=_unreferenceP(p);
-			
-			return (p.returnType==="san" ? that.legalSanMoves(target_qos) : that.legalMovesHelper(target_qos, p).moves);
-		}
-		
-		function _legalSanMoves(target_qos){
-			var i, len, that, temp, legal_moves_all, legal_san_moves, no_errors, rtn;
+			var i, len, that, temp, temp2, is_san, from_bos, to_bos, used_keys, legal_uci_in_bos, keep_going, rtn;
 			
 			that=this;
 			
 			rtn=[];
-			no_errors=true;
+			p=_unreferenceP(p);
+			keep_going=true;
 			
-			//if(no_errors){
-				legal_moves_all=that.legalUciMoves(target_qos);
+			//if(keep_going){
+				legal_uci_in_bos=that.legalUciTree[toBos(target_qos)];
 				
-				if(!legal_moves_all.length){
-					no_errors=false;
+				if(!legal_uci_in_bos || !legal_uci_in_bos.length){
+					keep_going=false;
 				}
 			//}
 			
-			if(no_errors){
-				legal_san_moves=[];
+			if(keep_going){
+				legal_uci_in_bos=legal_uci_in_bos.slice(0);
 				
-				for(i=0, len=legal_moves_all.length; i<len; i++){//0<len
-					temp=that.playMove(legal_moves_all[i], {isMockMove : true, isLegalMove : true});
+				p.returnType=(_isNonEmptyStr(p.returnType) ? p.returnType : "toSquare");
+				
+				p.squareType=(_isNonEmptyStr(p.squareType) ? p.squareType : "bos");
+				
+				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter : "-");
+				p.delimiter=p.delimiter.charAt(0);
+				
+				if(p.returnType==="uci"){
+					rtn=legal_uci_in_bos;
 					
-					legal_san_moves.push(temp.san);
-				}
-				
-				if(legal_san_moves.length!==legal_moves_all.length){
-					no_errors=false;
+					keep_going=false;
 				}
 			}
 			
-			if(no_errors){
-				rtn=legal_san_moves;
+			if(keep_going){
+				temp=[];
+				used_keys={};
+				is_san=(p.returnType==="san");
+				
+				for(i=0, len=legal_uci_in_bos.length; i<len; i++){//0<len
+					temp2=legal_uci_in_bos[i];
+					
+					from_bos=temp2.slice(0, 2);
+					to_bos=temp2.slice(2, 4);
+					
+					if(is_san){
+						temp.push(that.playMove(temp2, {isMockMove : true, isLegalMove : true}).san);
+						
+						continue;
+					}
+					
+					if(used_keys[to_bos]){
+						continue;
+					}
+					
+					used_keys[to_bos]=true;
+					
+					if(p.returnType==="joined"){
+						temp.push(from_bos+p.delimiter+to_bos);
+					}else if(p.returnType==="fromToSquares"){
+						if(p.squareType==="square"){
+							temp.push([that.getSquare(from_bos, {isUnreferenced : true}), that.getSquare(to_bos, {isUnreferenced : true})]);
+						}else if(p.squareType==="pos"){
+							temp.push([toPos(from_bos), toPos(to_bos)]);
+						}else{//type "bos"
+							temp.push([from_bos, to_bos]);
+						}
+					}else{//type "toSquare"
+						if(p.squareType==="square"){
+							temp.push(that.getSquare(to_bos, {isUnreferenced : true}));
+						}else if(p.squareType==="pos"){
+							temp.push(toPos(to_bos));
+						}else{//type "bos"
+							temp.push(to_bos);
+						}
+					}
+				}
+				
+				if(is_san && temp.length!==legal_uci_in_bos.length){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				rtn=temp;
 			}
 			
 			return rtn;
+		}
+		
+		function _legalSanMoves(target_qos){
+			var that;
+			
+			that=this;
+			
+			return that.legalMoves(target_qos, {returnType : "san"});
 		}
 		
 		function _legalUciMoves(target_qos){
@@ -1738,31 +1783,25 @@
 		
 		//p = {delimiter}
 		function _isLegalMove(mov, p){
-			var that, temp, moves, no_errors, rtn;
+			var that, temp, keep_going, rtn;
 			
 			that=this;
 			
 			rtn=false;
-			no_errors=true;
+			keep_going=true;
 			
-			//if(no_errors){
+			//if(keep_going){
 				temp=that.getWrappedMove(mov, p);
 				
 				if(temp===null){
-					no_errors=false;
+					keep_going=false;
 				}
 			//}
 			
-			if(no_errors){
-				moves=that.legalMoves(temp[0][0]);
+			if(keep_going){
+				temp=(toBos(temp[0][0])+""+toBos(temp[0][1]));
 				
-				if(!moves.length){
-					no_errors=false;
-				}
-			}
-			
-			if(no_errors){
-				rtn=_strContains(moves.join(), toBos(temp[0][1]));
+				rtn=(that.legalUci.join("").indexOf(temp)!==-1);
 			}
 			
 			return rtn;

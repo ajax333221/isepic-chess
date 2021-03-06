@@ -565,8 +565,9 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 2, 1)).toBe(400);
 		//depth=3 ... toBe(8902) ... [v5.9.0 = passed]
 		//depth=4 ... toBe(197281) ... [v5.4.1 = passed]
-		//depth=5 ... toBe(4865609) ... [untested]
+		//depth=5 ... toBe(4865609) ... [v6.2.0 = passed]
 		//depth=6 ... toBe(119060324) ... [untested]
+		//depth=7 ... toBe(3195901860) ... [untested]
 		
 		current_p={fen : "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", skipFenValidation : true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0, 1)).toBe(1);

@@ -8,6 +8,8 @@ Ic.setSilentMode(false);
 //promoteTo (no con fenGet) poner muchos advanced pawns y promoverlos todos (solo checkar el Fen final)
 //moveList (no con fenGet) en misc hay san y moveResult, buscar un ejemplo completo (e.g. promotion)
 //currentMove (no con fenGet) test de movelist split cuando currentMove no esta al final
+//legalUci via fenGet
+//legalUciTree fenGet
 //
 //(mm) isHidden (N/A)(en ic solo afecta el board hash + solo cambia por ui)
 //
