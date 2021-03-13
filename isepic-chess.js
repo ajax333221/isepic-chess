@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.3.1";
+		var _VERSION="6.3.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -518,7 +518,7 @@
 		}
 		
 		function _toInt(num, min_val, max_val){
-			num=(num*1 || 0);
+			num=((num*1) || 0);
 			num=(num<0 ? Math.ceil(num) : Math.floor(num));
 			
 			min_val*=1;
@@ -1151,8 +1151,8 @@
 				}
 			}
 			
-			that.w.castling=(_strContains(fen_parts[2], "K") ? _SHORT_CASTLE : 0)+(_strContains(fen_parts[2], "Q") ? _LONG_CASTLE : 0);
-			that.b.castling=(_strContains(fen_parts[2], "k") ? _SHORT_CASTLE : 0)+(_strContains(fen_parts[2], "q") ? _LONG_CASTLE : 0);
+			that.w.castling=((_strContains(fen_parts[2], "K") ? _SHORT_CASTLE : 0)+(_strContains(fen_parts[2], "Q") ? _LONG_CASTLE : 0));
+			that.b.castling=((_strContains(fen_parts[2], "k") ? _SHORT_CASTLE : 0)+(_strContains(fen_parts[2], "q") ? _LONG_CASTLE : 0));
 			
 			that.enPassantBos=fen_parts[3].replace("-", "");
 			
@@ -1184,14 +1184,14 @@
 							current_side.kingBos=current_square.bos;
 						}
 						
-						new_fen_board+=(consecutive_empty_squares || "")+current_square.bal;
+						new_fen_board+=((consecutive_empty_squares || "")+current_square.bal);
 						consecutive_empty_squares=-1;
 					}
 					
 					consecutive_empty_squares++;
 				}
 				
-				new_fen_board+=(consecutive_empty_squares || "")+(i!==7 ? "/" : "");
+				new_fen_board+=((consecutive_empty_squares || "")+(i!==7 ? "/" : ""));
 			}
 			
 			that.checks=that.countAttacks(null);
@@ -1347,7 +1347,7 @@
 					//if(current_side.k!==1){...} done in _basicFenTest
 					
 					if(current_side.p>8){
-						error_msg="Error ["+(i+4)+"] more than 8 pawns";
+						error_msg=("Error ["+(i+4)+"] more than 8 pawns");
 						break;
 					}
 					
@@ -1356,12 +1356,12 @@
 					temp=(current_other_side.p+current_other_side.n+current_other_side.b+current_other_side.r+current_other_side.q+current_other_side.k);
 					
 					if(temp===16 && current_promoted_count){
-						error_msg="Error ["+(i+6)+"] promoted pieces without capturing any piece";
+						error_msg=("Error ["+(i+6)+"] promoted pieces without capturing any piece");
 						break;
 					}
 					
 					if(current_promoted_count>(8-current_side.p)){
-						error_msg="Error ["+(i+8)+"] promoted pieces exceed the number of missing pawns";
+						error_msg=("Error ["+(i+8)+"] promoted pieces exceed the number of missing pawns");
 						break;
 					}
 				}
@@ -1408,11 +1408,11 @@
 						};
 						
 						if(that.getSquare(temp.originalKingBos).val!==current_side.king){
-							error_msg="Error [11] "+temp.completeActiveColor+" castling rights without king in original square";
+							error_msg=("Error [11] "+temp.completeActiveColor+" castling rights without king in original square");
 						}else if(current_side.castling!==_LONG_CASTLE && that.getSquare(temp.originalShortRookBos).val!==current_side.rook){
-							error_msg="Error [12] "+temp.completeActiveColor+" short castling rights with missing H-file rook";
+							error_msg=("Error [12] "+temp.completeActiveColor+" short castling rights with missing H-file rook");
 						}else if(current_side.castling!==_SHORT_CASTLE && that.getSquare(temp.originalLongRookBos).val!==current_side.rook){
-							error_msg="Error [13] "+temp.completeActiveColor+" long castling rights with missing A-file rook";
+							error_msg=("Error [13] "+temp.completeActiveColor+" long castling rights with missing A-file rook");
 						}
 						
 						if(error_msg){
@@ -1433,7 +1433,7 @@
 			rtn={
 				candidateMoves : [],
 				isAttacked : false,
-				disambiguationPos : null
+				disambiguationBos : null
 			};
 			
 			active_side=that[that.activeColor];
@@ -1502,7 +1502,7 @@
 				
 				if(op===3 && is_ally_piece){
 					if(current_square.absVal===toAbsVal(ally_qal)){
-						rtn.disambiguationPos=current_square.pos;
+						rtn.disambiguationBos=current_square.bos;
 					}
 				}
 				
@@ -1836,7 +1836,7 @@
 					text_game+=move_list[i].san;
 					
 					if(move_list[i].comment){
-						text_game+=" "+move_list[i].comment;
+						text_game+=(" "+move_list[i].comment);
 					}
 				}
 				
@@ -1857,10 +1857,10 @@
 			
 			if(text_game){
 				if(black_starts){
-					text_game=initial_full_move+"..."+text_game;
+					text_game=(initial_full_move+"..."+text_game);
 				}
 				
-				text_game+=" "+result_tag_ow;
+				text_game+=(" "+result_tag_ow);
 			}else{
 				text_game+=result_tag_ow;
 			}
@@ -1875,10 +1875,10 @@
 			}
 			
 			for(i=0, len=ordered_tags.length; i<len; i++){//0<len
-				rtn+="["+ordered_tags[i][0]+" \""+ordered_tags[i][1]+"\"]\n";
+				rtn+=("["+ordered_tags[i][0]+" \""+ordered_tags[i][1]+"\"]\n");
 			}
 			
-			rtn+="\n"+text_game;
+			rtn+=("\n"+text_game);
 			
 			return rtn;
 		}
@@ -1918,7 +1918,7 @@
 					current_square=that.getSquare(is_rotated ? [(7-i), (7-j)] : [i, j]);
 					
 					rtn+=(j ? "" : (" "+current_square.rankBos+" |"));
-					rtn+=" "+current_square.bal.replace("*", ".")+" ";
+					rtn+=(" "+current_square.bal.replace("*", ".")+" ");
 					rtn+=(j===7 ? "|\n" : "");
 					
 					bottom_label+=(i===j ? ("  "+current_square.fileBos) : "");
@@ -1926,7 +1926,7 @@
 			}
 			
 			rtn+="   +------------------------+\n";
-			rtn+="   "+bottom_label+"\n";
+			rtn+=("   "+bottom_label+"\n");
 			
 			return rtn;
 		}
@@ -2216,8 +2216,8 @@
 			
 			that=this;
 			
-			function _disambiguationPos(qos, piece_direction, as_knight, ally_qal){//uses: that
-				return that.testCollision(3, qos, piece_direction, as_knight, null, null, ally_qal).disambiguationPos;
+			function _disambiguationBos(qos, piece_direction, as_knight, ally_qal){//uses: that
+				return that.testCollision(3, qos, piece_direction, as_knight, null, null, ally_qal).disambiguationBos;
 			}
 			
 			rtn={};
@@ -2311,7 +2311,7 @@
 					with_overdisambiguated.push(partial_san);
 					
 					if(promoted_val){
-						partial_san+="="+toAbsBal(promoted_val);
+						partial_san+=("="+toAbsBal(promoted_val));
 					}
 				}else{//knight, bishop, rook, queen, non-castling king
 					is_ambiguous=false;
@@ -2320,69 +2320,56 @@
 					extra_rank_bos="";
 					
 					if(!initial_cached_square.isKing){//knight, bishop, rook, queen
-						temp2=[];
+						file_collide=false;
+						rank_collide=false;
 						
 						piece_directions=[];
 						if(!initial_cached_square.isBishop){piece_directions.push(1, 3, 5, 7);}
 						if(!initial_cached_square.isRook){piece_directions.push(2, 4, 6, 8);}
 						
 						for(i=0, len=piece_directions.length; i<len; i++){//0<len
-							temp=_disambiguationPos(final_cached_square, piece_directions[i], initial_cached_square.isKnight, initial_cached_square.absVal);
+							temp=_disambiguationBos(final_cached_square, piece_directions[i], initial_cached_square.isKnight, initial_cached_square.absVal);
 							
-							if(temp){
-								temp2.push(temp);
+							//it's safe to calc legal moves here since we are not dealing with a pawn or king
+							if(!temp || sameSquare(temp, initial_cached_square) || !that.isLegalMove([temp, final_cached_square])){
+								continue;
 							}
-						}
-						
-						len=temp2.length;
-						if(len>1){
-							file_collide=false;
-							rank_collide=false;
 							
-							for(i=0; i<len; i++){//0<len
-								if(sameSquare(temp2[i], initial_cached_square)){
-									continue;
-								}
+							is_ambiguous=true;
+							
+							if(!file_collide && initial_cached_square.fileBos===getFileBos(temp)){
+								file_collide=true;
+								extra_rank_bos=initial_cached_square.rankBos;
 								
-								//it's safe to calc legal moves here since we are not dealing with a pawn or king
-								if(that.isLegalMove([temp2[i], final_cached_square])){
-									is_ambiguous=true;
-									
-									if(!file_collide && initial_cached_square.fileBos===getFileBos(temp2[i])){
-										file_collide=true;
-										extra_rank_bos=initial_cached_square.rankBos;
-										
-										if(rank_collide){
-											break;
-										}
-									}
-									
-									if(!rank_collide && initial_cached_square.rankBos===getRankBos(temp2[i])){
-										rank_collide=true;
-										extra_file_bos=initial_cached_square.fileBos;
-										
-										if(file_collide){
-											break;
-										}
-									}
+								if(rank_collide){
+									break;
+								}
+							}
+							
+							if(!rank_collide && initial_cached_square.rankBos===getRankBos(temp)){
+								rank_collide=true;
+								extra_file_bos=initial_cached_square.fileBos;
+								
+								if(file_collide){
+									break;
 								}
 							}
 						}
 					}
 					
 					temp=initial_cached_square.absBal;
-					temp2=(final_cached_square.isEmptySquare ? "" : "x")+final_cached_square.bos;
+					temp2=((final_cached_square.isEmptySquare ? "" : "x")+final_cached_square.bos);
 					
 					if(is_ambiguous){
 						if(!extra_file_bos && !extra_rank_bos){//none
-							partial_san+=temp+initial_cached_square.fileBos+temp2;
+							partial_san+=(temp+initial_cached_square.fileBos+temp2);
 							
 							with_overdisambiguated.push(partial_san);
 							with_overdisambiguated.push(temp+initial_cached_square.rankBos+temp2);
 						}
 						
 						if(extra_file_bos || extra_rank_bos){//one or both
-							partial_san+=temp+extra_file_bos+extra_rank_bos+temp2;
+							partial_san+=(temp+extra_file_bos+extra_rank_bos+temp2);
 							
 							with_overdisambiguated.push(partial_san);
 						}
@@ -2391,7 +2378,7 @@
 							with_overdisambiguated.push(temp+initial_cached_square.fileBos+initial_cached_square.rankBos+temp2);
 						}
 					}else{
-						partial_san+=temp+temp2;
+						partial_san+=(temp+temp2);
 						
 						with_overdisambiguated.push(partial_san);
 						with_overdisambiguated.push(temp+initial_cached_square.fileBos+temp2);
