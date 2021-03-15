@@ -118,7 +118,7 @@ var filtered = fen_arr.filter(function(fen){
   obj = Ic.fenGet(fen, "w");
   
   if(obj){
-  rtn = (obj.w.kingBos!=="e1");
+    rtn = (obj.w.kingBos!=="e1");
   }
   
   return rtn;
@@ -141,14 +141,15 @@ https://ajax333221.github.io/isepic-chess-ui/
 
 - PGN import / export
 - UCI import / export
-- Advanced FEN validation
 - Get legal moves
 - Material difference
 - Multiple boards at once
+- ASCII diagram
 - Pawn promotion options
 - Check / checkmate / draw detection
+- Powerful FEN one-liner operations <sup>(`Ic.fenApply()` and `Ic.fenGet()`)</sup>
+- Advanced FEN validation
 - SAN parsing
-- ASCII diagram
 
 :book: Documentation
 -------------
