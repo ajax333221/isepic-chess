@@ -1161,7 +1161,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			];
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
-				expect(Ic.isLegalFen(arr[i])).toBe(true);//NO use {skipFenValidation : true}
+				expect(Ic.isLegalFen(arr[i])).toBe(true);
 				
 				expect(Ic.utilityMisc.basicFenTest(arr[i])).toBe("");
 			}
@@ -1225,7 +1225,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			];
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
-				expect(Ic.isLegalFen(arr[i])).toBe(false);//NO use {skipFenValidation : true}
+				expect(Ic.isLegalFen(arr[i])).toBe(false);
 				
 				expect(Ic.utilityMisc.basicFenTest(arr[i])).not.toBe("");
 			}
@@ -1315,7 +1315,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			arr.push("rnbqkbnr/pppppqpp/8/8/8/1P2PNP1/PBPPQPBP/RN3RK1 b kq - 0 1");
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
-				expect(Ic.isLegalFen(arr[i])).toBe(false);//NO use {skipFenValidation : true}
+				expect(Ic.isLegalFen(arr[i])).toBe(false);
 				
 				expect(Ic.utilityMisc.basicFenTest(arr[i])).toBe("");
 			}
