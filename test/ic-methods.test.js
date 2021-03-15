@@ -1148,7 +1148,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 	});
 	
 	describe("Ic.isLegalFen()", () => {
-		describe("legal FEN", () => {
+		test("legal FEN", () => {
 			var i, len, arr;
 			
 			arr=[
@@ -1167,7 +1167,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			}
 		});
 		
-		describe("illegal FEN that fails basic fen test", () => {
+		test("illegal FEN that fails basic fen test", () => {
 			var i, len, arr;
 			
 			arr=[
@@ -1231,7 +1231,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			}
 		});
 		
-		describe("illegal FEN that passes basic fen test", () => {
+		test("illegal FEN that passes basic fen test", () => {
 			var i, len, arr;
 			
 			arr=[
