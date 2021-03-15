@@ -85,7 +85,50 @@ console.log(board.ascii());
 //   +------------------------+
 //     a  b  c  d  e  f  g  h
 
-console.log(board.fen); //"7k/pp4pp/6r1/8/3Pp2P/1P6/P5qK/R1B1Q3 w - - 0 37"
+console.log(board.fen);
+// "7k/pp4pp/6r1/8/3Pp2P/1P6/P5qK/R1B1Q3 w - - 0 37"
+
+var fen_arr = [
+  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+  "r1bqk2r/pppp1pbp/2n2n2/4p3/5p2/2N3PN/PPPPP1BP/R1BQK2R w KQkq - 2 8",
+  "r2qkb1r/pbp1p1p1/1pnp1n1p/5p2/4P2P/5NP1/PPPPKPB1/RNBQR3 w kq - 0 8",
+  "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+  "r2qkbnr/ppp4p/2np1p2/4p3/3PP3/P2B1N2/1PP2PpP/RNBQ1RK1 b kq - 1 11"
+];
+
+/* transform each FEN into arrays with their legal UCI moves for the g2 square */
+var mapped = fen_arr.map(function(fen){
+  return Ic.fenApply(fen, "legalUciMoves", ["g2"]);
+});
+
+console.log(mapped);
+// [
+//  ["g2g3", "g2g4"],
+//  ["g2f1", "g2f3", "g2e4", "g2d5", "g2c6"],
+//  ["g2h3", "g2h1", "g2f1"],
+//  [],
+//  ["g2f1n", "g2f1b", "g2f1r", "g2f1q"]
+// ]
+
+/* get only the positions where the white king is not in its original square */
+var filtered = fen_arr.filter(function(fen){
+  var obj, rtn;
+  
+  rtn = false;
+  obj = Ic.fenGet(fen, "w");
+  
+  if(obj){
+  rtn = (obj.w.kingBos!=="e1");
+  }
+  
+  return rtn;
+});
+
+console.log(filtered);
+// [
+//  "r2qkb1r/pbp1p1p1/1pnp1n1p/5p2/4P2P/5NP1/PPPPKPB1/RNBQR3 w kq - 0 8",
+//  "r2qkbnr/ppp4p/2np1p2/4p3/3PP3/P2B1N2/1PP2PpP/RNBQ1RK1 b kq - 1 11"
+// ]
 ```
 
 :eye: Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>

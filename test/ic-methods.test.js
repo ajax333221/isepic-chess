@@ -1244,26 +1244,46 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				default_val=false;
 				
 				for(i=0, len=bad_shared_fen.length; i<len; i++){//0<len
+					//explicit fn_name
 					expect(Ic.fenApply(bad_shared_fen[i], "isLegalFen")).toBe(default_val);//NO use {skipFenValidation : true}
+					
+					//implicit fn_name
+					expect(Ic.fenApply(bad_shared_fen[i])).toBe(default_val);//NO use {skipFenValidation : true}
 				}
 			});
 			
 			test("normal inputs", () => {
+				//explicit fn_name
 				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen", [], {skipFenValidation : true})).toBe(true);
+				
+				//implicit fn_name
+				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1")).toBe(true);//NO use {skipFenValidation : true}
 			});
 		});
 	});
 	
 	test("Ic.fenGet()", () => {
+		var temp;
+		
 		Ic.setSilentMode(true);
 		
 		expect(Ic.fenGet("0invalidfen0", "isCheck")).toBeNull();//NO use {skipFenValidation : true}
 		
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "", {skipFenValidation : true})).toBeNull();
-		
 		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0", {skipFenValidation : true})).toBeNull();
 		
 		Ic.setSilentMode(false);
+		
+		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");//NO use {skipFenValidation : true}
+		expect(temp).not.toBeNull();
+		expect(temp.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		
+		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "", {skipFenValidation : true});
+		expect(temp).not.toBeNull();
+		expect(temp.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+		
+		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", [], {skipFenValidation : true});
+		expect(temp).not.toBeNull();
+		expect(temp.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		
 		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", ["isStalemate", "inDraw"], {skipFenValidation : true})).toEqual({inDraw:true, isStalemate:true});
 		

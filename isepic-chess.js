@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.3.3";
+		var _VERSION="6.4.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -3079,7 +3079,8 @@
 			board_created=false;
 			
 			silent_mode_cache=_SILENT_MODE;
-			fn_name=_formatName(fn_name);
+			
+			fn_name=(_isNonBlankStr(fn_name) ? _formatName(fn_name) : "isLegalFen");
 			
 			if(fn_name==="isLegalFen"){
 				setSilentMode(true);
@@ -3181,6 +3182,10 @@
 					board_keys=_trimSpaces(props).split(" ");
 				}
 				
+				if(!board_keys.length){
+					board_keys=_MUTABLE_KEYS.slice(0);
+				}
+				
 				rtn_pre={};
 				
 				for(i=0, len=board_keys.length; i<len; i++){//0<len
@@ -3205,13 +3210,6 @@
 							break;
 						}
 					}
-				}
-			}
-			
-			if(keep_going){
-				if(!Object.keys(rtn_pre).length){
-					keep_going=false;
-					_consoleLog("Error[fenGet]: empty property list");
 				}
 			}
 			
