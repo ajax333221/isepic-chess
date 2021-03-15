@@ -1147,6 +1147,181 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		});
 	});
 	
+	describe("Ic.isLegalFen()", () => {
+		describe("legal FEN", () => {
+			var i, len, arr;
+			
+			arr=[
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rn1qkb1r/p1ppp2P/1p4B1/7n/3P4/8/PPP2PbP/RNB1K1NR b KQkq - 1 8",
+				"1n1Rkb1r/p4ppp/4q3/4p1B1/4P3/8/PPP2PPP/2K5 b k - 1 17",
+				"8/Q6p/6p1/5p2/5P2/2p3P1/3r3P/2K1k3 b - - 3 44",
+				"5r2/pp1Q1k2/5r2/q1p5/3P4/6R1/PPP2PP1/1K6 b - - 3 29",
+				"8/8/4kp1p/3p3P/4KP2/8/8/8 w - - 0 54"
+			];
+			
+			for(i=0, len=arr.length; i<len; i++){//0<len
+				expect(Ic.isLegalFen(arr[i])).toBe(true);//NO use {skipFenValidation : true}
+				
+				expect(Ic.utilityMisc.basicFenTest(arr[i])).toBe("");
+			}
+		});
+		
+		describe("illegal FEN that fails basic fen test", () => {
+			var i, len, arr;
+			
+			arr=[
+				"",
+				" ",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR W KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR B KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQKQ - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w QKqk - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - 0 1",
+				"rnbqkbnr/xppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w kqKQ - 0 1",
+				"P7/8/7K/8/8/7k/8/8 b - - 0 1",
+				"p7/8/7K/8/8/7k/8/8 b - - 0 1",
+				"8/8/7K/8/8/7k/8/P7 b - - 0 1",
+				"8/8/7K/8/8/7k/8/p7 b - - 0 1",
+				"P7/8/7K/8/8/7k/8/p7 b - - 0 1",
+				"p7/8/7K/8/8/7k/8/P7 b - - 0 1",
+				"P7/8/7K/8/8/7k/8/P7 b - - 0 1",
+				"p7/8/7K/8/8/7k/8/p7 b - - 0 1",
+				"rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d2 0 1",
+				"rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d4 0 1",
+				"rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq d7 0 2",
+				"rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq d5 0 2",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNRw KQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR wKQkq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq- 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 01 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 2 02",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - a 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 1 a",
+				"rnbqkbnr/pppppppp/44/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"8/8/1K51/8/8/7k/8/8 b - - 0 1",
+				"8/8/K32P1/8/8/7k/8/8 b - - 0 1",
+				"8/8/61K/8/8/7k/8/8 b - - 0 1",
+				"rnbqkbn1/ppppppppr/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"rnbqkbn1/3r3/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				"R7R/8/K7/8/8/7k/8/8 b - - 0 1",
+				"8/8/K8/8/8/7k/8/8 b - - 0 1",
+				"8/8/8K/8/8/7k/8/8 b - - 0 1",
+				"8/8/8/8/8/8/8/8 b - - 0 1",
+				"k7/8/8/8/8/8/8/8 w - - 0 1",
+				"8/7k/8/8/8/8/8/8 b - - 0 1",
+				"K6K/8/8/8/8/8/8/k7 w - - 0 1",
+				"8/K6K/8/8/8/7k/8/8 b - - 0 1",
+				"K7/8/8/8/8/8/8/8 w - - 0 1",
+				"8/7K/8/8/8/8/8/8 b - - 0 1",
+				"k6k/8/8/8/8/8/8/K7 w - - 0 1",
+				"8/k6k/8/8/8/7K/8/8 b - - 0 1"
+			];
+			
+			for(i=0, len=arr.length; i<len; i++){//0<len
+				expect(Ic.isLegalFen(arr[i])).toBe(false);//NO use {skipFenValidation : true}
+				
+				expect(Ic.utilityMisc.basicFenTest(arr[i])).not.toBe("");
+			}
+		});
+		
+		describe("illegal FEN that passes basic fen test", () => {
+			var i, len, arr;
+			
+			arr=[
+				"8/8/4R3/2K5/3N2B1/8/4k3/8 b - - 0 1",
+				"8/7q/8/1k1p4/4K3/6n1/8/8 w - - 0 1",
+				"8/7q/5n2/1k1p4/4K3/6n1/8/4r3 w - - 0 1",
+				"8/8/8/1K6/5k2/6P1/8/8 w - - 0 1",
+				"8/8/8/1K6/1r3k2/8/8/8 b - - 0 1",
+				"8/8/8/1K6/1r3k2/6P1/8/8 b - - 0 1",
+				"8/8/8/1K6/1r3k2/6P1/8/8 w - - 0 1",
+				"8/8/4N3/1K6/5k2/8/8/8 w - - 0 1",
+				"8/8/4K3/4k3/8/8/8/8 w - - 0 1",
+				"8/8/2K5/8/6P1/2k5/8/8 w - g3 0 1",
+				"8/8/2K5/6p1/6P1/2k5/8/8 b - g6 0 1",
+				"8/8/2K5/8/8/2k5/8/8 w - g6 0 1",
+				"8/8/2K3N1/6p1/8/2k5/8/8 w - g6 0 1",
+				"8/8/2K3N1/6p1/6P1/2k3n1/8/8 b - g3 0 1",
+				"8/8/2K5/8/6p1/2k5/8/8 w - g3 0 1",
+				"8/8/2K5/8/6p1/2k5/8/8 b - g3 0 1",
+				"8/8/2K5/6P1/8/2k5/8/8 w - g6 0 1",
+				"8/8/2K5/6P1/8/2k5/8/8 b - g6 0 1",
+				"8/7P/2k4P/7P/7P/2K4P/7P/8 w - - 0 1",
+				"8/P7/P1k5/P7/P7/P1K5/P7/8 w - - 0 1",
+				"3knbnr/2pppppp/8/P7/P7/P3K3/P7/8 w - - 0 1",
+				"8/7p/2k4p/7p/7p/7p/PPPPPP2/K7 w - - 0 1",
+				"rnbq1rk1/ppppppbp/5np1/8/8/4P3/PPPPP1PP/4K3 w - - 0 1",
+				"rnbq1rk1/1pppppbp/5np1/8/4P3/4P3/PPP1P1PP/4K3 w - - 0 1",
+				"rnbq1rk1/3pppbp/5np1/4P3/4P3/4P3/PP2P1PP/4K3 w - - 0 1",
+				"4K3/8/8/8/8/4k3/8/8 w KQ - 0 1",
+				"8/4K3/8/8/8/8/8/4k3 w kq - 0 1",
+				"8/8/2k5/8/8/8/8/4K2R w Q - 0 1",
+				"8/8/2k5/8/8/8/8/r3K3 w K - 0 1",
+				"8/8/2k5/8/8/8/8/4K3 w K - 0 1",
+				"8/8/2k5/8/8/8/8/4K3 w Q - 0 1",
+				"8/8/2k5/8/8/8/8/4K3 w KQ - 0 1",
+				"4K3/8/2k5/8/8/8/8/R6R w KQ - 0 1",
+				"r6r/8/8/8/2K5/8/8/4k3 w kq - 0 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 1 1",
+				"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 5 3",
+				"rnbqkb1r/pppppppp/8/8/3N1n2/8/PPPPPPPP/RNBQKB1R b KQkq - 8 4",
+				"rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"
+			];
+			
+			//"more than 8 wp"
+			arr.push("rnbqkbnr/pppppppp/8/8/8/P7/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppp1ppp/8/4p3/1P6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+			
+			//"more than 8 bp"
+			arr.push("rnbqkbnr/pppppppp/p7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppp1ppp/8/4p3/1p6/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+			
+			//"more promoted pieces than possible (w)"
+			arr.push("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBRR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppp1ppp/8/4p3/8/PP6/1NPRPPBR/RNBQKBNR w KQkq - 0 1");
+			arr.push("4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRQQ w - - 0 1");
+			arr.push("4k3/2pppppp/8/8/8/B7/BBBPPPPP/1B2KRRR w - - 0 1");
+			arr.push("rnbqkbnr/1ppppppp/p7/8/7Q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPNPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppp1ppp/8/4p3/7B/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppppppp/8/8/8/R7/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			
+			//"more promoted pieces than possible (b)"
+			arr.push("rrbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/1ppppppp/p7/8/7q/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPPnPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppp1ppp/8/4p3/7b/P7/1PPPPPPP/RNBQKBNR w KQkq - 0 1");
+			arr.push("rnbqkbnr/pppppppp/8/8/8/r7/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+			
+			//"light and dark squared bishops taken into account (w)"
+			arr.push("r3k2r/3ppp2/8/8/8/3PP3/PPPB1PPP/RNBQK1NR w KQkq - 0 1");
+			arr.push("r3k2r/3ppp2/8/8/8/3PP3/PPP1BPPP/RN1QKBNR w KQkq - 0 1");
+			
+			//"light and dark squared bishops taken into account (b)"
+			arr.push("rnbqk1nr/pppb1ppp/3pp3/8/8/8/3PPP2/R3K2R b KQkq - 0 1");
+			arr.push("rn1qkbnr/ppp1bppp/3pp3/8/8/8/3PPP2/R3K2R b KQkq - 0 1");
+			
+			//"promoted pieces with other side total 16 (w)"
+			arr.push("rn3rk1/pbppqpbp/1p2pnp1/8/8/8/PPPPPQPP/RNBQKBNR w KQ - 0 1");
+			
+			//"promoted pieces with other side total 16 (b)"
+			arr.push("rnbqkbnr/pppppqpp/8/8/8/1P2PNP1/PBPPQPBP/RN3RK1 b kq - 0 1");
+			
+			for(i=0, len=arr.length; i<len; i++){//0<len
+				expect(Ic.isLegalFen(arr[i])).toBe(false);//NO use {skipFenValidation : true}
+				
+				expect(Ic.utilityMisc.basicFenTest(arr[i])).toBe("");
+			}
+		});
+	});
+	
 	test("Ic.getBoard(), Ic.getBoardNames() and Ic.removeBoard()", () => {
 		var i, len, temp, board_name;
 		

@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.4.0";
+		var _VERSION="6.5.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2625,6 +2625,10 @@
 			_SILENT_MODE=!!val;
 		}
 		
+		function isLegalFen(fen){
+			return fenApply(fen, "isLegalFen");
+		}
+		
 		function getBoard(woard){
 			var is_valid, keep_going, rtn;
 			
@@ -3231,6 +3235,7 @@
 		return {
 			version : _VERSION,
 			setSilentMode : setSilentMode,
+			isLegalFen : isLegalFen,
 			getBoard : getBoard,
 			toVal : toVal,
 			toAbsVal : toAbsVal,
