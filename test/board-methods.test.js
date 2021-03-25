@@ -354,16 +354,31 @@ describe("Board methods", () => {
 	});
 	
 	describe("b.isLegalMove()", () => {
-		var shared_fen;
+		var shared_fen, shared_promo_fen;
 		
 		shared_fen="8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1";
+		shared_promo_fen="rn1qkbnr/1P1ppppp/2p5/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 5";
 		
 		test("san move", () => {
 			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa2"], {skipFenValidation : true})).toBe(true);
 			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Ra2"], {skipFenValidation : true})).toBe(false);
 			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa9"], {skipFenValidation : true})).toBe(false);
 			
-			/*2020 should it should be legal with pawn promotion missing =X? yes*/
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8="], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=p"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=k"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=P"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=K"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=0"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=1"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=6"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=9"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=5"], {skipFenValidation : true})).toBe(true);
 		});
 		
 		test("uci move", () => {
@@ -371,7 +386,22 @@ describe("Board methods", () => {
 			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2c2"], {skipFenValidation : true})).toBe(false);
 			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c9a9"], {skipFenValidation : true})).toBe(false);
 			
-			/*2020 should it should be legal with pawn promotion missing the 5th char? yes*/
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8 "], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8="], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8p"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8k"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8P"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8K"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a80"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a81"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a86"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a89"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a85"], {skipFenValidation : true})).toBe(true);
 		});
 		
 		test("joined move", () => {

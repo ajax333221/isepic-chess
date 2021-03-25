@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.5.0";
+		var _VERSION="6.5.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -307,7 +307,7 @@
 			}
 			
 			if(keep_going){
-				rtn=mov;
+				rtn=[toBos(mov[0]), toBos(mov[1])];
 			}
 			
 			return rtn;
@@ -1813,7 +1813,7 @@
 		
 		//p = {delimiter}
 		function _isLegalMove(mov, p){
-			var that, temp, keep_going, rtn;
+			var that, wrapped_move, legal_uci_in_bos, keep_going, rtn;
 			
 			that=this;
 			
@@ -1821,17 +1821,31 @@
 			keep_going=true;
 			
 			//if(keep_going){
-				temp=that.getWrappedMove(mov, p);
+				wrapped_move=that.getWrappedMove(mov, p);
 				
-				if(temp===null){
+				if(wrapped_move===null){
 					keep_going=false;
 				}
 			//}
 			
 			if(keep_going){
-				temp=(toBos(temp[0][0])+""+toBos(temp[0][1]));
+				if(wrapped_move.isConfirmedLegalMove){
+					rtn=true;
+					
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				legal_uci_in_bos=that.legalUciTree[wrapped_move.fromBos];
 				
-				rtn=(that.legalUci.join(",").indexOf(temp)!==-1);
+				if(!legal_uci_in_bos || !legal_uci_in_bos.length){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				rtn=(legal_uci_in_bos.join(",").indexOf(wrapped_move.fromBos+""+wrapped_move.toBos)!==-1);
 			}
 			
 			return rtn;
@@ -2175,7 +2189,7 @@
 									continue;
 								}
 								
-								validated_move=temp[k];
+								validated_move=temp[k];//needs to be [from_bos, to_bos], legalMoves(squareType=bos)
 								break outer;
 							}
 						}
@@ -2196,7 +2210,7 @@
 		
 		//p = {delimiter}
 		function _getWrappedMove(mov, p){
-			var that, temp, bubbling_promoted_to, rtn;
+			var that, temp, bubbling_promoted_to, is_confirmed_legal, rtn;
 			
 			that=this;
 			
@@ -2204,6 +2218,7 @@
 			
 			//if(rtn===null){
 				bubbling_promoted_to=0;
+				is_confirmed_legal=false;
 				
 				temp=_uciWrapmoveHelper(mov);
 				
@@ -2237,6 +2252,7 @@
 				
 				if(temp){
 					bubbling_promoted_to=temp[1];//default ""
+					is_confirmed_legal=true;
 					
 					rtn=temp[0];
 				}
@@ -2245,7 +2261,12 @@
 			if(rtn){
 				temp=(toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN);/*NO remove toAbsVal()*/
 				
-				rtn=[[toBos(rtn[0]), toBos(rtn[1])], _promoteValHelper(temp)];
+				rtn={
+					fromBos : rtn[0],
+					toBos : rtn[1],
+					promotion : _promoteValHelper(temp),
+					isConfirmedLegalMove : is_confirmed_legal
+				};
 			}
 			
 			return rtn;
@@ -2253,7 +2274,7 @@
 		
 		//p = {promoteTo, delimiter, isLegalMove}
 		function _draftMove(mov, p){
-			var i, len, that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, bubbling_promoted_to, king_castled, partial_san, file_collide, rank_collide, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, is_ambiguous, keep_going, rtn;
+			var i, len, that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, wrapped_move, bubbling_promoted_to, king_castled, partial_san, file_collide, rank_collide, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, is_ambiguous, keep_going, rtn;
 			
 			that=this;
 			
@@ -2270,34 +2291,38 @@
 				
 				p.isLegalMove=(p.isLegalMove===true);
 				
-				temp=that.getWrappedMove(mov, p);
+				wrapped_move=that.getWrappedMove(mov, p);
 				
-				if(temp===null){
+				if(wrapped_move===null){
 					keep_going=false;
 				}
 			//}
 			
 			if(keep_going){
-				bubbling_promoted_to=_promoteValHelper(toAbsVal(p.promoteTo) || temp[1]);/*NO remove toAbsVal()*/
+				if(wrapped_move.isConfirmedLegalMove){
+					p.isLegalMove=true;
+				}
 				
-				initial_cached_square=that.getSquare(temp[0][0], {
-					isUnreferenced : true
-				});
-				
-				final_cached_square=that.getSquare(temp[0][1], {
-					isUnreferenced : true
-				});
-				
-				rtn.initialCachedSquare=initial_cached_square;
-				rtn.finalCachedSquare=final_cached_square;
-				
-				if(!p.isLegalMove && !that.isLegalMove(temp[0])){
+				if(!p.isLegalMove && !that.isLegalMove(wrapped_move.fromBos+""+wrapped_move.toBos)){
 					keep_going=false;
 				}
 			}
 			
 			if(keep_going){
 				rtn.canMove=true;
+				
+				bubbling_promoted_to=_promoteValHelper(toAbsVal(p.promoteTo) || wrapped_move.promotion);/*NO remove toAbsVal()*/
+				
+				initial_cached_square=that.getSquare(wrapped_move.fromBos, {
+					isUnreferenced : true
+				});
+				
+				final_cached_square=that.getSquare(wrapped_move.toBos, {
+					isUnreferenced : true
+				});
+				
+				rtn.initialCachedSquare=initial_cached_square;
+				rtn.finalCachedSquare=final_cached_square;
 				
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
