@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.6.0";
+		var _VERSION="6.6.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -724,13 +724,7 @@
 						
 						sub_sub_keys=Object.keys(current_sub_from);
 						
-						if(current_key==="moveList"){
-							to_prop[sub_keys[j]]={};
-							
-							/*NO put a "continue" in here*/
-						}
-						
-						if(current_key==="legalRevTree"){
+						if(current_key==="moveList" || current_key==="legalRevTree"){
 							to_prop[sub_keys[j]]={};
 							
 							/*NO put a "continue" in here*/
@@ -975,7 +969,7 @@
 			that=this;
 			
 			function _isAttacked(qos, piece_direction, as_knight){//uses: that
-				return that.testCollision(2, qos, piece_direction, as_knight, null, null, null).isAttacked;
+				return that.testCollision(2, qos, piece_direction, as_knight, null, null).isAttacked;
 			}
 			
 			rtn_total_checks=0;
@@ -1493,15 +1487,14 @@
 			return rtn_msg;
 		}
 		
-		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture, ally_qal){
-			var i, that, current_square, rank_change, file_change, active_side, is_ally_piece, rtn;
+		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture){
+			var i, that, current_square, rank_change, file_change, active_side, rtn;
 			
 			that=this;
 			
 			rtn={
 				candidateMoves : [],
-				isAttacked : false,
-				disambiguationBos : ""
+				isAttacked : false
 			};
 			
 			active_side=that[that.activeColor];
@@ -1530,15 +1523,17 @@
 					continue;
 				}
 				
-				is_ally_piece=(current_square.sign===active_side.sign);
+				if(current_square.sign===active_side.sign){
+					break;
+				}
 				
-				if(op===1 && !is_ally_piece){
+				if(op===1){
 					if(allow_capture && !current_square.isKing){
 						rtn.candidateMoves.push(current_square.pos);
 					}
 				}
 				
-				if(op===2 && !is_ally_piece){
+				if(op===2){
 					if(as_knight){
 						if(current_square.isKnight){
 							rtn.isAttacked=true;
@@ -1568,12 +1563,6 @@
 					}
 				}
 				
-				if(op===3 && is_ally_piece){
-					if(current_square.absVal===toAbsVal(ally_qal)){
-						rtn.disambiguationBos=current_square.bos;
-					}
-				}
-				
 				break;
 			}
 			
@@ -1581,12 +1570,12 @@
 		}
 		
 		function _legalMovesHelper(target_qos){
-			var i, j, k, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pseudo_legal_arr_pos, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, keep_going, rtn;
+			var i, j, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pseudo_legal_arr_pos, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, keep_going, rtn;
 			
 			that=this;
 			
 			function _candidateMoves(qos, piece_direction, as_knight, total_squares, allow_capture){//uses: that
-				return that.testCollision(1, qos, piece_direction, as_knight, total_squares, allow_capture, null).candidateMoves;
+				return that.testCollision(1, qos, piece_direction, as_knight, total_squares, allow_capture).candidateMoves;
 			}
 			
 			rtn={
@@ -2312,13 +2301,9 @@
 		
 		//p = {promoteTo, delimiter, isLegalMove}
 		function _draftMove(mov, p){
-			var i, len, that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, wrapped_move, bubbling_promoted_to, king_castled, partial_san, file_collide, rank_collide, with_overdisambiguated, extra_file_bos, extra_rank_bos, piece_directions, active_side, non_active_side, is_ambiguous, keep_going, rtn;
+			var that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, wrapped_move, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, active_side, non_active_side, is_ambiguous, keep_going, rtn;
 			
 			that=this;
-			
-			function _disambiguationBos(qos, piece_direction, as_knight, ally_qal){//uses: that
-				return that.testCollision(3, qos, piece_direction, as_knight, null, null, ally_qal).disambiguationBos;
-			}
 			
 			rtn={};
 			p=_unreferenceP(p);
@@ -2424,38 +2409,22 @@
 					extra_rank_bos="";
 					
 					if(!initial_cached_square.isKing){//knight, bishop, rook, queen
-						file_collide=false;
-						rank_collide=false;
+						temp=that.legalRevTree[final_cached_square.bos];
 						
-						piece_directions=[];
-						if(!initial_cached_square.isBishop){piece_directions.push(1, 3, 5, 7);}
-						if(!initial_cached_square.isRook){piece_directions.push(2, 4, 6, 8);}
-						
-						for(i=0, len=piece_directions.length; i<len; i++){//0<len
-							temp=_disambiguationBos(final_cached_square, piece_directions[i], initial_cached_square.isKnight, initial_cached_square.absVal);
+						if(temp){
+							temp=temp[initial_cached_square.bal.toLowerCase()];
 							
-							//it's safe to calc legal moves here since we are not dealing with a pawn or king
-							if(!temp || sameSquare(temp, initial_cached_square) || !that.isLegalMove([temp, final_cached_square])){
-								continue;
-							}
-							
-							is_ambiguous=true;
-							
-							if(!file_collide && initial_cached_square.fileBos===getFileBos(temp)){
-								file_collide=true;
-								extra_rank_bos=initial_cached_square.rankBos;
+							if(temp && temp.length>1){
+								is_ambiguous=true;
 								
-								if(rank_collide){
-									break;
+								temp=temp.join(",");
+								
+								if(_occurrences(temp, initial_cached_square.fileBos)>1){
+									extra_rank_bos=initial_cached_square.rankBos;
 								}
-							}
-							
-							if(!rank_collide && initial_cached_square.rankBos===getRankBos(temp)){
-								rank_collide=true;
-								extra_file_bos=initial_cached_square.fileBos;
 								
-								if(file_collide){
-									break;
+								if(_occurrences(temp, initial_cached_square.rankBos)>1){
+									extra_file_bos=initial_cached_square.fileBos;
 								}
 							}
 						}
