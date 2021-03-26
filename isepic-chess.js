@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.5.1";
+		var _VERSION="6.6.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -33,7 +33,7 @@
 		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "legalUci", "legalUciTree", "squares"];
+		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "legalUci", "legalUciTree", "legalRevTree", "squares"];
 		
 		//---------------- helpers
 		
@@ -446,6 +446,7 @@
 			target.isHidden=null;
 			target.legalUci=null;
 			target.legalUciTree=null;
+			target.legalRevTree=null;
 			target.squares={};
 			
 			for(i=0; i<8; i++){//0...7
@@ -640,12 +641,13 @@
 		}
 		
 		function _cloneBoardObjs(to_board, from_board){
-			var i, j, k, len, len2, len3, current_key, current_sub_from, sub_keys, sub_sub_keys, to_prop, from_prop;
+			var i, j, k, len, len2, len3, temp, current_key, current_sub_from, sub_keys, sub_sub_keys, to_prop, from_prop;
 			
 			if(to_board!==from_board){
 				to_board.moveList=[];
 				to_board.legalUci=[];
 				to_board.legalUciTree={};
+				to_board.legalRevTree={};
 				
 				for(i=0, len=_MUTABLE_KEYS.length; i<len; i++){//0<len
 					current_key=_MUTABLE_KEYS[i];
@@ -728,16 +730,30 @@
 							/*NO put a "continue" in here*/
 						}
 						
+						if(current_key==="legalRevTree"){
+							to_prop[sub_keys[j]]={};
+							
+							/*NO put a "continue" in here*/
+						}
+						
 						for(k=0, len3=sub_sub_keys.length; k<len3; k++){//0<len3
+							temp=current_sub_from[sub_sub_keys[k]];
+							
+							if(current_key==="legalRevTree"){
+								to_prop[sub_keys[j]][sub_sub_keys[k]]=temp.slice(0);
+								
+								continue;
+							}
+							
 							//object or array data type
-							if(_isObject(current_sub_from[sub_sub_keys[k]]) || _isArray(current_sub_from[sub_sub_keys[k]])){
+							if(_isObject(temp) || _isArray(temp)){
 								_consoleLog("Error[_cloneBoardObjs]: unexpected type in key \""+sub_sub_keys[k]+"\"");
 								
 								continue;
 							}
 							
 							//primitive data type
-							to_prop[sub_keys[j]][sub_sub_keys[k]]=current_sub_from[sub_sub_keys[k]];
+							to_prop[sub_keys[j]][sub_sub_keys[k]]=temp;
 						}
 					}
 				}
@@ -1191,7 +1207,7 @@
 		}
 		
 		function _updateFenAndMisc(){
-			var i, j, k, len, that, temp, current_square, current_diff, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark, current_side;
+			var i, j, k, m, len, that, temp, temp2, current_square, current_diff, from_bos, to_bos, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark, current_side;
 			
 			that=this;
 			
@@ -1225,19 +1241,44 @@
 			
 			that.legalUci=[];
 			that.legalUciTree={};
+			that.legalRevTree={};
 			
 			for(i=0; i<8; i++){//0...7
 				for(j=0; j<8; j++){//0...7
-					temp=that.legalMovesHelper([i, j]).uciMoves;
+					temp=that.legalMovesHelper([i, j]);
+					len=temp.uciMoves.length;
 					
-					if(!temp.length){
+					if(!len){
 						continue;
 					}
 					
-					that.legalUciTree[toBos([i, j])]=temp.slice(0);
+					from_bos=toBos([i, j]);
+					that.legalUciTree[from_bos]=[];
 					
-					for(k=0, len=temp.length; k<len; k++){//0<len
-						that.legalUci.push(temp[k]);
+					for(k=0; k<len; k++){//0<len
+						temp2=temp.uciMoves[k];
+						
+						if(temp.isPromotion){
+							for(m=_KNIGHT; m<_KING; m++){//2...5
+								that.legalUci.push(temp2+toBal(m).toLowerCase());
+								that.legalUciTree[from_bos].push(temp2+toBal(m).toLowerCase());
+							}
+						}else{
+							that.legalUci.push(temp2);
+							that.legalUciTree[from_bos].push(temp2);
+						}
+						
+						to_bos=temp2.slice(2, 4);
+						
+						if((typeof that.legalRevTree[to_bos])==="undefined"){
+							that.legalRevTree[to_bos]={};
+						}
+						
+						if((typeof that.legalRevTree[to_bos][temp.piece])==="undefined"){
+							that.legalRevTree[to_bos][temp.piece]=[];
+						}
+						
+						that.legalRevTree[to_bos][temp.piece].push(from_bos);
 					}
 				}
 			}
@@ -1550,6 +1591,7 @@
 			
 			rtn={
 				uciMoves : [],
+				piece : "",
 				isPromotion : false
 			};
 			keep_going=true;
@@ -1577,6 +1619,8 @@
 				pseudo_legal_arr_pos=[];
 				en_passant_capturable_cached_square=null;
 				is_promotion=false;
+				
+				rtn.piece=target_cached_square.bal.toLowerCase();
 				
 				if(target_cached_square.isKing){
 					for(i=1; i<9; i++){//1...8
@@ -1678,13 +1722,7 @@
 						}
 						
 						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
-							if(is_promotion){
-								for(k=_KNIGHT; k<_KING; k++){//2...5
-									rtn.uciMoves.push(target_cached_square.bos+current_cached_square.bos+toBal(k).toLowerCase());
-								}
-							}else{
-								rtn.uciMoves.push(target_cached_square.bos+current_cached_square.bos);
-							}
+							rtn.uciMoves.push(target_cached_square.bos+current_cached_square.bos);
 						}
 						
 						that.setSquare(current_cached_square, current_cached_square.val);

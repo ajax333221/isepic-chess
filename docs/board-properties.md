@@ -30,6 +30,7 @@ Boards created by `Ic.initBoard()` have the following accessible properties:
 <li>board.isHidden</li>
 <li>board.legalUci</li>
 <li>board.legalUciTree</li>
+<li>board.legalRevTree</li>
 <li>board.squares</li>
 </ul>
 
@@ -60,6 +61,7 @@ Property | Type | Description
 **isHidden** | Boolean | Indicates if a **board** is meant to be shown or hidden in the UI.<br><br>Only used when **isepic-chess-ui.js** is present (the property becomes irrelevant otherwise).<hr>Examples:<ul><li>`main_board.isHidden //false`</li><li>`h_board.isHidden //true`</li></ul>
 **legalUci** | Array | Array with all the **legal uci moves**.<hr>Examples:<ul><li>`board.legalUci //["a2a3", ...]`</li><li>`board_after_e4.legalUci //["a7a6", ...]`</li></ul>
 **legalUciTree** | Object | Collection with all the **legal uci moves** divided into arrays (one array per each **square bos** with at least one legal move).<hr>Examples:<ul><li>`board.legalUciTree //{a2 : ["a2a3", ...], b2 : ...}`</li><li>`board_after_e4.legalUciTree //{a7 : ["a7a6", ...], b7 : ...}`</li></ul>
+**legalRevTree** | Object | Collection with all the **legal reversed moves**.<br><br>Instead of something conventional like *from-to*, this is distributed as *to-from* (while also storing a sub-level in between with a lowercased piece-char holding the *from*s).<br><br>This object is of great help when parsing a SAN move (the origin square is not apparent, but the piece and destination square can be extracted) and also in move disambiguation.<hr>Examples:<ul><li>`board.legalRevTree //{a3: {p : ["a2"], n : ["b1"]}, b3 : ...}`</li><li>`board_after_e4.legalRevTree //{a6: {p : ["a7"], n : ["b8"]}, b6 : ...}`</li></ul>
 **squares** | Object | Collection of the 64 :pushpin:**square**s of the board.<br><br>:zap:**Tip:** the preferred way of selecting **square**s is via `board.getSquare(...)`.<hr>Examples:<ul><li>`board.squares["a1"] //Object{...}`</li><li>`board.squares["h8"] //Object{...}`</li></ul><hr>:pushpin:Square documentation link:<ul><li>[square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties).</li></ul>
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
