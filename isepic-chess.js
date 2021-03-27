@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.6.1";
+		var _VERSION="6.6.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -139,13 +139,13 @@
 				
 				move_list=[];
 				last_index=-1;
-				rgxp=/\s+\d*\s*\.*\s*\.*\s*([^\s]+)/g;
+				rgxp=/\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*([^\s]+)/g;
 				
 				while(mtch=rgxp.exec(g)){
 					last_index=rgxp.lastIndex;
 					
 					temp=mtch[0];
-					move_list.push(mtch[1]);
+					move_list.push(mtch[2]);
 				}
 				
 				if(last_index===-1){
@@ -2148,7 +2148,7 @@
 		}
 		
 		function _sanWrapmoveHelper(mov){
-			var i, j, k, m, len, len2, that, temp, current_square, validated_move, parsed_promote, parsed_piece_val, parse_exec, pgn_obj, keep_going, rtn;
+			var i, j, k, m, len, len2, that, temp, current_square, to_bos, validated_move, parsed_promote, parsed_piece_val, parse_exec, pgn_obj, keep_going, rtn;
 			
 			that=this;
 			
@@ -2159,7 +2159,7 @@
 				validated_move=null;
 				parsed_promote="";
 				
-				mov=(" "+mov).replace(/^\s+\d*\s*\.*\s*\.*\s*/, "");
+				mov=(" "+mov).replace(/^\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*/, "");
 				
 				if(!_isNonBlankStr(mov)){
 					keep_going=false;
@@ -2168,14 +2168,21 @@
 			
 			if(keep_going){
 				parsed_piece_val=0;
+				to_bos="";
 				
 				mov=_cleanSan(mov);
 				parse_exec=/^[NBRQK]/.exec(mov);
 				
 				if(parse_exec){//knight, bishop, rook, queen, non-castling king
 					parsed_piece_val=toVal(parse_exec[0]);
-				}else if(mov==="O-O" || mov==="O-O-O"){//castling king
+				}else if(mov==="O-O-O"){//castling king (long)
 					parsed_piece_val=6;
+					
+					to_bos=(that[that.activeColor].isBlack ? "c8" : "c1");
+				}else if(mov==="O-O"){//castling king (short)
+					parsed_piece_val=6;
+					
+					to_bos=(that[that.activeColor].isBlack ? "g8" : "g1");
 				}else if(/^[a-h]/.exec(mov)){//pawn move
 					parsed_piece_val=1;
 					

@@ -1069,7 +1069,7 @@ describe("Ic methods", () => {
 [SetUp "1"]
 [FEN “rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3”]
 
-3... cxd5 (abc) 00400. c4 {	Later in "quote" i'm: 3 exd5 cxd5
+3... cxd5 (abc) 400. c4 {	Later in "quote" i'm: 3 exd5 cxd5
 is another player x before anyone had heard of x! 	} 4...Ng8f6 <xyz> 5. N1c3 Nbc6 6. Ng1f3 Bg4 7. cxd5
 Nxd5+- 8.Bb5 Qa5-+ 9. Qb3 {!} 9. ... Bxf3 10. gxf3 Nxc3 11. Bxc6+ $1 {? It
 was Alekhine that improved with 11 bxc3 e6 12 d5! } $1 11 ... bxc6 12. Qb7 {?} Nd5+ ;rest;;

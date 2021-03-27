@@ -239,6 +239,20 @@ describe("Misc.", () => {
 				expect(Ic.fenApply(temp, "isLegalMove", ["e8-g8"], {skipFenValidation : true})).toBe(false);//short
 			});
 			
+			test("SAN castling", () => {
+				var temp;
+				
+				temp="r3k2r/1pn1ppp1/3pb3/8/8/3PB3/1PN1PPP1/R3K2R w KQkq - 0 1";
+				
+				expect(Ic.fenApply(temp, "playMove", ["O-O-O"], {skipFenValidation : true}).san).toBe("O-O-O");
+				expect(Ic.fenApply(temp, "playMove", ["o-o-o"], {skipFenValidation : true}).san).toBe("O-O-O");
+				expect(Ic.fenApply(temp, "playMove", ["0-0-0"], {skipFenValidation : true}).san).toBe("O-O-O");
+				
+				expect(Ic.fenApply(temp, "playMove", ["O-O"], {skipFenValidation : true}).san).toBe("O-O");
+				expect(Ic.fenApply(temp, "playMove", ["o-o"], {skipFenValidation : true}).san).toBe("O-O");
+				expect(Ic.fenApply(temp, "playMove", ["0-0"], {skipFenValidation : true}).san).toBe("O-O");
+			});
+			
 			test("removing castle rights", () => {
 				var board_obj, board_other;
 				

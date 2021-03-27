@@ -2,11 +2,6 @@ const {Ic}=require("../isepic-chess");
 
 Ic.setSilentMode(false);
 
-//---to do:
-//
-//cleanSan
-//isMove
-
 describe("Ic utility methods", () => {
 	test("Ic.utilityMisc.consoleLog()", () => {
 		Ic.setSilentMode(true);
@@ -62,6 +57,37 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.isBoard([])).toBe(false);
 		expect(Ic.utilityMisc.isBoard(["hello", "world", "!"])).toBe(false);
 		expect(Ic.utilityMisc.isBoard(null)).toBe(false);
+	});
+	
+	describe("Ic.utilityMisc.isMove()", () => {
+		test("should return true", () => {
+			var temp;
+			
+			temp={fromBos : "a2", toBos : "a3"};
+			expect(Ic.utilityMisc.isMove(temp)).toBe(true);
+			
+			temp={fromBos : "a2", toBos : "a3", someExtraKey : 9};
+			expect(Ic.utilityMisc.isMove(temp)).toBe(true);
+			
+			temp={fromBos : "", toBos : ""};
+			expect(Ic.utilityMisc.isMove(temp)).toBe(true);
+		});
+		
+		test("should return false", () => {
+			var temp;
+			
+			temp={};
+			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
+			
+			temp={fromBos : "a2"};
+			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
+			
+			temp={toBos : "a3"};
+			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
+			
+			temp={fromBos : true, toBos : true};
+			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
+		});
 	});
 	
 	test("Ic.utilityMisc.trimSpaces()", () => {
@@ -308,6 +334,65 @@ describe("Ic utility methods", () => {
 			expect(Ic.utilityMisc.unreferenceP({henlo : "worlmnd", other : true, unchanged : 3}, [["henlo", "frend"], ["three", "get", "skipped"], ["other", false]])).toEqual({henlo : "frend", other : false, unchanged : 3});
 			Ic.setSilentMode(false);
 		});
+	});
+	
+	test("Ic.utilityMisc.cleanSan()", () => {
+		expect(Ic.utilityMisc.cleanSan("O-O-O")).toBe("O-O-O");
+		expect(Ic.utilityMisc.cleanSan("o-o-o")).toBe("O-O-O");
+		expect(Ic.utilityMisc.cleanSan("0-0-0")).toBe("O-O-O");
+		
+		expect(Ic.utilityMisc.cleanSan("O-O")).toBe("O-O");
+		expect(Ic.utilityMisc.cleanSan("o-o")).toBe("O-O");
+		expect(Ic.utilityMisc.cleanSan("0-0")).toBe("O-O");
+		
+		expect(Ic.utilityMisc.cleanSan("½-½")).toBe("1/2-1/2");
+		expect(Ic.utilityMisc.cleanSan("o-1")).toBe("0-1");
+		expect(Ic.utilityMisc.cleanSan("O-1")).toBe("0-1");
+		expect(Ic.utilityMisc.cleanSan("1-o")).toBe("1-0");
+		expect(Ic.utilityMisc.cleanSan("1-O")).toBe("1-0");
+		
+		expect(Ic.utilityMisc.cleanSan("1-----0")).toBe("1-0");
+		
+		expect(Ic.utilityMisc.cleanSan("e4;escape after")).toBe("e4");
+		expect(Ic.utilityMisc.cleanSan(" e4 ; escape after ")).toBe("e4");
+		
+		expect(Ic.utilityMisc.cleanSan("%escape whole line")).toBe("");
+		expect(Ic.utilityMisc.cleanSan("e%4")).toBe("e4");//mm
+		
+		expect(Ic.utilityMisc.cleanSan(" a3 ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  e4  e5  ")).toBe("e4 e5");
+		
+		expect(Ic.utilityMisc.cleanSan("a3#")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3++")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3+")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3+-")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3-+")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3!")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3!!")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3!?")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3?!")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3?")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3??")).toBe("a3");
+		
+		expect(Ic.utilityMisc.cleanSan("  a3  #  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  ++  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  +  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  +-  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  -+  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  !  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  !!  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  !?  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  ?!  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  ?  ")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("  a3  ??  ")).toBe("a3");
+		
+		expect(Ic.utilityMisc.cleanSan("a3 ()<>[]")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3 (())<()>[()]")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3 ([])<[]>[[]]")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3 (<>)<<>>[<>]")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3 (()<>[])")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3 <()[]>")).toBe("a3");
+		expect(Ic.utilityMisc.cleanSan("a3 [()<>[]]")).toBe("a3");
 	});
 	
 	describe("Ic.utilityMisc.cloneBoardObjs()", () => {
