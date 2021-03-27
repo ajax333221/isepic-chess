@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.6.2";
+		var _VERSION="6.6.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2148,7 +2148,7 @@
 		}
 		
 		function _sanWrapmoveHelper(mov){
-			var i, j, k, m, len, len2, that, temp, current_square, to_bos, validated_move, parsed_promote, parsed_piece_val, parse_exec, pgn_obj, keep_going, rtn;
+			var i, j, len, len2, that, temp, to_bos, validated_move, parsed_promote, lc_piece, parse_exec, pgn_obj, keep_going, rtn;
 			
 			that=this;
 			
@@ -2167,24 +2167,26 @@
 			//}
 			
 			if(keep_going){
-				parsed_piece_val=0;
+				lc_piece="";
 				to_bos="";
 				
 				mov=_cleanSan(mov);
 				parse_exec=/^[NBRQK]/.exec(mov);
 				
 				if(parse_exec){//knight, bishop, rook, queen, non-castling king
-					parsed_piece_val=toVal(parse_exec[0]);
+					lc_piece=parse_exec[0].toLowerCase();
+					
+					to_bos=toBos(mov.slice(-2));
 				}else if(mov==="O-O-O"){//castling king (long)
-					parsed_piece_val=6;
+					lc_piece="k";
 					
 					to_bos=(that[that.activeColor].isBlack ? "c8" : "c1");
 				}else if(mov==="O-O"){//castling king (short)
-					parsed_piece_val=6;
+					lc_piece="k";
 					
 					to_bos=(that[that.activeColor].isBlack ? "g8" : "g1");
 				}else if(/^[a-h]/.exec(mov)){//pawn move
-					parsed_piece_val=1;
+					lc_piece="p";
 					
 					parse_exec=/([^=]+)=(.?).*$/.exec(mov);
 					
@@ -2192,41 +2194,47 @@
 						mov=parse_exec[1];
 						parsed_promote=parse_exec[2];
 					}
+					
+					to_bos=toBos(mov.slice(-2));
 				}
 				
-				if(!parsed_piece_val){
+				if(!lc_piece || !to_bos){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				temp=that.legalRevTree[to_bos];
+				
+				if(!temp){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				temp=temp[lc_piece];
+				
+				if(!temp){
 					keep_going=false;
 				}
 			}
 			
 			if(keep_going){
 				outer:
-				for(i=0; i<8; i++){//0...7
-					for(j=0; j<8; j++){//0...7
-						current_square=that.getSquare([i, j]);
-						
-						if(parsed_piece_val!==current_square.absVal){
+				for(i=0, len=temp.length; i<len; i++){//0<len
+					pgn_obj=that.draftMove([temp[i], to_bos], {isLegalMove : true});/*NO pass unnecessary promoteTo*/
+					
+					if(!pgn_obj.canMove){
+						continue;
+					}
+					
+					for(j=0, len2=pgn_obj.withOverdisambiguated.length; j<len2; j++){//0<len2
+						if(mov!==pgn_obj.withOverdisambiguated[j]){
 							continue;
 						}
 						
-						temp=that.legalMoves(current_square, {returnType : "fromToSquares"});
-						
-						for(k=0, len=temp.length; k<len; k++){//0<len
-							pgn_obj=that.draftMove(temp[k], {isLegalMove : true});/*NO pass unnecessary promoteTo*/
-							
-							if(!pgn_obj.canMove){
-								continue;
-							}
-							
-							for(m=0, len2=pgn_obj.withOverdisambiguated.length; m<len2; m++){//0<len2
-								if(mov!==pgn_obj.withOverdisambiguated[m]){
-									continue;
-								}
-								
-								validated_move=temp[k];//needs to be [from_bos, to_bos], legalMoves(squareType=bos)
-								break outer;
-							}
-						}
+						validated_move=[temp[i], to_bos];
+						break outer;
 					}
 				}
 				
