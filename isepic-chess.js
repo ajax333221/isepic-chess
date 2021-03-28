@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.6.3";
+		var _VERSION="6.6.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -623,7 +623,7 @@
 				rtn=rtn.replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "").replace(/\n/g, " ");
 				
 				rtn=rtn.replace(/\$\d+/g, " ");/*to-do: keep NAG*/
-				rtn=rtn.replace(/[^a-h0-8nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
+				rtn=rtn.replace(/[^a-h0-9nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
 				rtn=rtn.replace(/\s*\-+\s*/g, "-");
 				rtn=rtn.replace(/0-0-0/g, "w").replace(/0-0/g, "v");
 				rtn=rtn.replace(/o-o-o/gi, "w").replace(/o-o/gi, "v");

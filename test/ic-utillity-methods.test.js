@@ -337,21 +337,39 @@ describe("Ic utility methods", () => {
 	});
 	
 	test("Ic.utilityMisc.cleanSan()", () => {
+		expect(Ic.utilityMisc.cleanSan("0123456789")).toBe("0123456789");
+		expect(Ic.utilityMisc.cleanSan("abcdefghijklmnopqrstuvwxyz-")).toBe("abcdefghkn0qrx");
+		expect(Ic.utilityMisc.cleanSan("ABCDEFGHIJKLMNOPQRSTUVWXYZ-")).toBe("ABCDEFGHKN0QRX");
+		expect(Ic.utilityMisc.cleanSan("=/ ½")).toBe("=/ 1/2");
+		
 		expect(Ic.utilityMisc.cleanSan("O-O-O")).toBe("O-O-O");
 		expect(Ic.utilityMisc.cleanSan("o-o-o")).toBe("O-O-O");
 		expect(Ic.utilityMisc.cleanSan("0-0-0")).toBe("O-O-O");
+		expect(Ic.utilityMisc.cleanSan("O---O---O")).toBe("O-O-O");
+		expect(Ic.utilityMisc.cleanSan("o---o---o")).toBe("O-O-O");
+		expect(Ic.utilityMisc.cleanSan("0---0---0")).toBe("O-O-O");
 		
 		expect(Ic.utilityMisc.cleanSan("O-O")).toBe("O-O");
 		expect(Ic.utilityMisc.cleanSan("o-o")).toBe("O-O");
 		expect(Ic.utilityMisc.cleanSan("0-0")).toBe("O-O");
+		expect(Ic.utilityMisc.cleanSan("O---O")).toBe("O-O");
+		expect(Ic.utilityMisc.cleanSan("o---o")).toBe("O-O");
+		expect(Ic.utilityMisc.cleanSan("0---0")).toBe("O-O");
 		
 		expect(Ic.utilityMisc.cleanSan("½-½")).toBe("1/2-1/2");
-		expect(Ic.utilityMisc.cleanSan("o-1")).toBe("0-1");
 		expect(Ic.utilityMisc.cleanSan("O-1")).toBe("0-1");
-		expect(Ic.utilityMisc.cleanSan("1-o")).toBe("1-0");
+		expect(Ic.utilityMisc.cleanSan("o-1")).toBe("0-1");
+		expect(Ic.utilityMisc.cleanSan("0-1")).toBe("0-1");
 		expect(Ic.utilityMisc.cleanSan("1-O")).toBe("1-0");
-		
-		expect(Ic.utilityMisc.cleanSan("1-----0")).toBe("1-0");
+		expect(Ic.utilityMisc.cleanSan("1-o")).toBe("1-0");
+		expect(Ic.utilityMisc.cleanSan("1-0")).toBe("1-0");
+		expect(Ic.utilityMisc.cleanSan("½---½")).toBe("1/2-1/2");
+		expect(Ic.utilityMisc.cleanSan("O---1")).toBe("0-1");
+		expect(Ic.utilityMisc.cleanSan("o---1")).toBe("0-1");
+		expect(Ic.utilityMisc.cleanSan("0---1")).toBe("0-1");
+		expect(Ic.utilityMisc.cleanSan("1---O")).toBe("1-0");
+		expect(Ic.utilityMisc.cleanSan("1---o")).toBe("1-0");
+		expect(Ic.utilityMisc.cleanSan("1---0")).toBe("1-0");
 		
 		expect(Ic.utilityMisc.cleanSan("e4;escape after")).toBe("e4");
 		expect(Ic.utilityMisc.cleanSan(" e4 ; escape after ")).toBe("e4");
