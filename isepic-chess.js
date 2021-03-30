@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.6.4";
+		var _VERSION="6.6.5";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -594,7 +594,7 @@
 			rtn=(_isObject(p) ? {...p} : {});
 			
 			if(_isArray(changes)){
-				for(i=0, len=changes.length; i<len; i++){
+				for(i=0, len=changes.length; i<len; i++){//0<len
 					if(!_isArray(changes[i]) || changes[i].length!==2 || !_isNonBlankStr(changes[i][0])){
 						_consoleLog("Error[_unreferenceP]: unexpected format");
 						
@@ -981,7 +981,7 @@
 			for(i=0; i<2; i++){//0...1
 				as_knight=!!i;
 				
-				for(j=1; j<9; j++){//1...8
+				for(j=_DIRECTION_TOP; j<=_DIRECTION_TOP_LEFT; j++){//1...8
 					if(_isAttacked(target_qos, j, as_knight)){
 						rtn_total_checks++;
 						
@@ -1253,7 +1253,7 @@
 						temp2=temp.uciMoves[k];
 						
 						if(temp.isPromotion){
-							for(m=_KNIGHT; m<_KING; m++){//2...5
+							for(m=_KNIGHT; m<=_QUEEN; m++){//2...5
 								that.legalUci.push(temp2+toBal(m).toLowerCase());
 								that.legalUciTree[from_bos].push(temp2+toBal(m).toLowerCase());
 							}
@@ -1264,11 +1264,11 @@
 						
 						to_bos=temp2.slice(2, 4);
 						
-						if((typeof that.legalRevTree[to_bos])==="undefined"){
+						if(!that.legalRevTree[to_bos]){
 							that.legalRevTree[to_bos]={};
 						}
 						
-						if((typeof that.legalRevTree[to_bos][temp.piece])==="undefined"){
+						if(!that.legalRevTree[to_bos][temp.piece]){
 							that.legalRevTree[to_bos][temp.piece]=[];
 						}
 						
@@ -1332,7 +1332,7 @@
 			that.w.materialDiff=[];
 			that.b.materialDiff=[];
 			
-			for(i=1; i<7; i++){//1...6
+			for(i=_PAWN; i<=_KING; i++){//1...6
 				temp=toBal(-i);
 				current_diff=(total_pieces.w[temp]-total_pieces.b[temp]);
 				
@@ -1487,7 +1487,7 @@
 			return rtn_msg;
 		}
 		
-		function _testCollision(op, initial_qos, piece_direction, as_knight, total_squares, allow_capture){
+		function _testCollision(op, initial_qos, piece_direction, as_knight, max_shifts, allow_capture){
 			var i, that, current_square, rank_change, file_change, active_side, rtn;
 			
 			that=this;
@@ -1503,9 +1503,9 @@
 			rank_change=(as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction-1];
 			file_change=(as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction-1];
 			
-			total_squares=_toInt(as_knight ? 1 : (total_squares || 7));
+			max_shifts=_toInt(as_knight ? 1 : (max_shifts || 7));
 			
-			for(i=0; i<total_squares; i++){//0<total_squares
+			for(i=0; i<max_shifts; i++){//0<max_shifts
 				current_square=that.getSquare(initial_qos, {
 					rankShift : (rank_change*(i+1)),
 					fileShift : (file_change*(i+1))
@@ -1574,8 +1574,8 @@
 			
 			that=this;
 			
-			function _candidateMoves(qos, piece_direction, as_knight, total_squares, allow_capture){//uses: that
-				return that.testCollision(1, qos, piece_direction, as_knight, total_squares, allow_capture).candidateMoves;
+			function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture){//uses: that
+				return that.testCollision(1, qos, piece_direction, as_knight, max_shifts, allow_capture).candidateMoves;
 			}
 			
 			rtn={
@@ -1612,7 +1612,7 @@
 				rtn.piece=target_cached_square.bal.toLowerCase();
 				
 				if(target_cached_square.isKing){
-					for(i=1; i<9; i++){//1...8
+					for(i=_DIRECTION_TOP; i<=_DIRECTION_TOP_LEFT; i++){//1...8
 						temp=_candidateMoves(target_cached_square, i, false, 1, true);
 						
 						if(temp.length){
@@ -1872,7 +1872,7 @@
 			}
 			
 			if(keep_going){
-				rtn=(legal_uci_in_bos.join(",").indexOf(wrapped_move.fromBos+""+wrapped_move.toBos)!==-1);
+				rtn=_strContains(legal_uci_in_bos.join(","), (wrapped_move.fromBos+""+wrapped_move.toBos));
 			}
 			
 			return rtn;
@@ -2171,21 +2171,8 @@
 				to_bos="";
 				
 				mov=_cleanSan(mov);
-				parse_exec=/^[NBRQK]/.exec(mov);
 				
-				if(parse_exec){//knight, bishop, rook, queen, non-castling king
-					lc_piece=parse_exec[0].toLowerCase();
-					
-					to_bos=toBos(mov.slice(-2));
-				}else if(mov==="O-O-O"){//castling king (long)
-					lc_piece="k";
-					
-					to_bos=(that[that.activeColor].isBlack ? "c8" : "c1");
-				}else if(mov==="O-O"){//castling king (short)
-					lc_piece="k";
-					
-					to_bos=(that[that.activeColor].isBlack ? "g8" : "g1");
-				}else if(/^[a-h]/.exec(mov)){//pawn move
+				if(/^[a-h]/.exec(mov)){//pawn move
 					lc_piece="p";
 					
 					parse_exec=/([^=]+)=(.?).*$/.exec(mov);
@@ -2196,6 +2183,22 @@
 					}
 					
 					to_bos=toBos(mov.slice(-2));
+				}else if(mov==="O-O"){//castling king (short)
+					lc_piece="k";
+					
+					to_bos=(that[that.activeColor].isBlack ? "g8" : "g1");
+				}else if(mov==="O-O-O"){//castling king (long)
+					lc_piece="k";
+					
+					to_bos=(that[that.activeColor].isBlack ? "c8" : "c1");
+				}else{
+					parse_exec=/^[NBRQK]/.exec(mov);
+					
+					if(parse_exec){//knight, bishop, rook, queen, non-castling king
+						lc_piece=parse_exec[0].toLowerCase();
+						
+						to_bos=toBos(mov.slice(-2));
+					}
 				}
 				
 				if(!lc_piece || !to_bos){
@@ -2626,7 +2629,7 @@
 					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
-				/*NO push  referenced rtn_move_obj*/
+				/*NO push referenced rtn_move_obj*/
 				that.moveList.push({
 					colorMoved : that.nonActiveColor,
 					colorToPlay : that.activeColor,
@@ -2700,7 +2703,7 @@
 				if(_isNonBlankStr(woard)){
 					woard=_formatName(woard);
 					
-					if(!woard || (typeof _BOARDS[woard])==="undefined"){
+					if(!woard || !_BOARDS[woard]){
 						keep_going=false;
 					}
 				}
@@ -2882,7 +2885,7 @@
 			if(_isNonBlankStr(fen)){
 				fen_board=_trimSpaces(fen).split(" ")[0];
 				
-				for(i=1; i<7; i++){//1...6
+				for(i=_PAWN; i<=_KING; i++){//1...6
 					for(j=0; j<2; j++){//0...1
 						current_side=(j ? rtn.w : rtn.b);
 						
@@ -3242,7 +3245,7 @@
 				for(i=0, len=board_keys.length; i<len; i++){//0<len
 					current_key=_formatName(board_keys[i]);
 					
-					if(current_key && (typeof rtn_pre[current_key])==="undefined"){
+					if(current_key && !rtn_pre[current_key]){
 						invalid_key=true;
 						
 						for(j=0, len2=_MUTABLE_KEYS.length; j<len2; j++){//0<len2
