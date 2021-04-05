@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.6.5";
+		var _VERSION="6.6.6";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -351,6 +351,7 @@
 					setManualResult : _setManualResult,
 					setCurrentMove : _setCurrentMove,
 					readValidatedFen : _readValidatedFen,
+					getClocklessFenHelper : _getClocklessFenHelper,
 					updateFenAndMisc : _updateFenAndMisc,
 					refinedFenTest : _refinedFenTest,
 					testCollision : _testCollision,
@@ -932,7 +933,7 @@
 		
 		//p = {rankShift, fileShift}
 		function _setSquare(qos, new_qal, p){
-			var that, target_square, new_val, new_abs_val, rtn_set;
+			var that, target_square, current_side, new_val, new_abs_val, rtn_set;
 			
 			that=this;
 			
@@ -958,6 +959,12 @@
 				target_square.isRook=(new_abs_val===_ROOK);
 				target_square.isQueen=(new_abs_val===_QUEEN);
 				target_square.isKing=(new_abs_val===_KING);
+				
+				if(target_square.isKing){
+					current_side=(target_square.sign<0 ? that.b : that.w);
+					
+					current_side.kingBos=toBos(qos);
+				}
 			}
 			
 			return rtn_set;
@@ -1109,6 +1116,7 @@
 				
 				that.currentMove=temp;
 				that.readValidatedFen(that.moveList[temp].fen);
+				that.updateFenAndMisc();
 				
 				that.refreshUi(is_goto ? 0 : num);//autorefresh
 			}
@@ -1196,16 +1204,14 @@
 			
 			that.halfMove=((fen_parts[4]*1) || 0);
 			that.fullMove=((fen_parts[5]*1) || 1);
-			
-			that.updateFenAndMisc();
 		}
 		
-		function _updateFenAndMisc(){
-			var i, j, k, m, len, that, temp, temp2, current_square, current_diff, from_bos, to_bos, total_pieces, consecutive_empty_squares, new_fen_board, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark, current_side;
+		function _getClocklessFenHelper(){
+			var i, j, that, fen_board, current_square, consecutive_empty_squares, rtn;
 			
 			that=this;
 			
-			new_fen_board="";
+			fen_board="";
 			
 			for(i=0; i<8; i++){//0...7
 				consecutive_empty_squares=0;
@@ -1214,21 +1220,28 @@
 					current_square=that.getSquare([i, j]);
 					
 					if(!current_square.isEmptySquare){
-						if(current_square.isKing){
-							current_side=(current_square.sign===that[that.activeColor].sign ? that[that.activeColor] : that[that.nonActiveColor]);
-							
-							current_side.kingBos=current_square.bos;
-						}
-						
-						new_fen_board+=((consecutive_empty_squares || "")+current_square.bal);
+						fen_board+=((consecutive_empty_squares || "")+current_square.bal);
 						consecutive_empty_squares=-1;
 					}
 					
 					consecutive_empty_squares++;
 				}
 				
-				new_fen_board+=((consecutive_empty_squares || "")+(i!==7 ? "/" : ""));
+				fen_board+=((consecutive_empty_squares || "")+(i!==7 ? "/" : ""));
 			}
+			
+			rtn=fen_board;
+			rtn+=(" "+that.activeColor);
+			rtn+=(" "+((_castlingChars(that.w.castling).toUpperCase()+""+_castlingChars(that.b.castling)) || "-"));
+			rtn+=(" "+(that.enPassantBos || "-"));
+			
+			return rtn;
+		}
+		
+		function _updateFenAndMisc(){
+			var i, j, k, m, len, that, temp, temp2, current_diff, from_bos, to_bos, total_pieces, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark;
+			
+			that=this;
 			
 			that.checks=that.countAttacks(null);
 			that.isCheck=!!that.checks;/*NO move below legalMovesHelper()*/
@@ -1280,7 +1293,7 @@
 			that.isCheckmate=(that.isCheck && !that.legalUci.length);
 			that.isStalemate=(!that.isCheck && !that.legalUci.length);
 			
-			clockless_fen=(new_fen_board+" "+that.activeColor+" "+((_castlingChars(that.w.castling).toUpperCase()+""+_castlingChars(that.b.castling)) || "-")+" "+(that.enPassantBos || "-"));
+			clockless_fen=that.getClocklessFenHelper();
 			
 			that.fen=(clockless_fen+" "+that.halfMove+" "+that.fullMove);
 			
@@ -1710,7 +1723,7 @@
 							}
 						}
 						
-						if(!that.countAttacks((target_cached_square.isKing ? current_cached_square : null), true)){
+						if(!that.countAttacks(null, true)){
 							rtn.uciMoves.push(target_cached_square.bos+current_cached_square.bos);
 						}
 						
@@ -3009,9 +3022,11 @@
 				
 				new_board.isHidden=true;
 				
-				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);/*NO refactor to a function*/
+				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);
+				
 				new_board.currentMove=0;
 				new_board.readValidatedFen(temp);
+				new_board.updateFenAndMisc();
 				
 				temp="";
 				
@@ -3046,9 +3061,9 @@
 			
 			if(keep_going){
 				if(!postfen_was_valid){
-					temp=_DEFAULT_FEN;/*NO refactor to a function*/
 					new_board.currentMove=0;
-					new_board.readValidatedFen(temp);
+					new_board.readValidatedFen(_DEFAULT_FEN);
+					new_board.updateFenAndMisc();
 					
 					new_board.moveList=[{
 						colorMoved : new_board.nonActiveColor,

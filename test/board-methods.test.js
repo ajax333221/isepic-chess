@@ -4,7 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//setSquare
+//setSquare (+ b.kingBos)
 //readValidatedFen
 //updateFenAndMisc
 //refinedFenTest (hay unos fen en misc.)
@@ -19,6 +19,7 @@ Ic.setSilentMode(false);
 //
 //(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
 //(x) legalMovesHelper (se hara por b.legalMoves() y b.legalSanMoves())
+//(x) getClocklessFenHelper (se hara por b.updateFenAndMisc())
 //(x) refreshUi (N/A)(ui only)
 
 describe("Board methods", () => {
@@ -685,6 +686,7 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : w_win_pgn,
+				skipFenValidation : true,
 				validOrBreak : true
 			});
 			
@@ -740,6 +742,7 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : b_win_pgn,
+				skipFenValidation : true,
 				validOrBreak : true
 			});
 			
@@ -795,6 +798,7 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : stalemate_pgn,
+				skipFenValidation : true,
 				validOrBreak : true
 			});
 			
@@ -850,6 +854,7 @@ _MOVES_`;
 				boardName : board_name,
 				fen : shared_fen,
 				pgn : unfinished_pgn,
+				skipFenValidation : true,
 				validOrBreak : true
 			});
 			

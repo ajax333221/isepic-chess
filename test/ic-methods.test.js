@@ -792,7 +792,7 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "8/8/k7/r6p/1R5P/8/K7/8 b - - 0 1"
-			});
+			});//NO use {skipFenValidation : true}
 			
 			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
@@ -834,7 +834,7 @@ describe("Ic methods", () => {
 				boardName : board_name,
 				fen : "0invalidfen0",
 				validOrBreak : true
-			});
+			});//NO use {skipFenValidation : true}
 			
 			Ic.setSilentMode(false);
 			
@@ -858,7 +858,7 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "0invalidfen0"
-			});
+			});//NO use {skipFenValidation : true}
 			
 			expect(Ic.getBoard(board_name).fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 			expect(board_obj).not.toBeNull();
@@ -951,6 +951,7 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				pgn : game_pgn,
+				skipFenValidation : true,
 				validOrBreak : true
 			});
 			
@@ -971,7 +972,8 @@ describe("Ic methods", () => {
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
-				pgn : game_pgn
+				pgn : game_pgn,
+				skipFenValidation : true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -994,6 +996,7 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				pgn : game_pgn,
+				skipFenValidation : true,
 				validOrBreak : true
 			});
 			
@@ -1013,7 +1016,8 @@ describe("Ic methods", () => {
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
-				pgn : game_pgn
+				pgn : game_pgn,
+				skipFenValidation : true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1030,7 +1034,8 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3",
-				pgn : game_pgn
+				pgn : game_pgn,
+				skipFenValidation : true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1051,7 +1056,8 @@ describe("Ic methods", () => {
 			board_obj=Ic.initBoard({
 				boardName : board_name,
 				fen : "rnbqkbn1/ppppppp1/7r/7p/P7/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3",
-				pgn : game_pgn
+				pgn : game_pgn,
+				skipFenValidation : true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1086,7 +1092,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				boardName : board_name,
 				pgn : game_pgn,
 				validOrBreak : true
-			});
+			});//NO use {skipFenValidation : true}
 			
 			expect(board_obj).not.toBeNull();
 			expect(board_obj.fen).toBe("6B1/R1bk4/2p1p3/5p2/1P6/5P2/5P2/4nK1r w - - 0 44");
@@ -1137,6 +1143,7 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				boardName : board_name,
 				fen : "rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3",
 				uci : game_uci,
+				skipFenValidation : true,
 				validOrBreak : true
 			});
 			
