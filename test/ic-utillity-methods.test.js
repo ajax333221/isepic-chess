@@ -499,6 +499,24 @@ describe("Ic utility methods", () => {
 			error_msg="Error [1]";
 			len=error_msg.length;
 			
+			test("fen too short (less than 20 length)", () => {
+				expect(Ic.utilityMisc.basicFenTest("x").substring(0, len)).toBe(error_msg);
+				expect(Ic.utilityMisc.basicFenTest("8/8/8/8/8/8/8/8").substring(0, len)).toBe(error_msg);
+				expect(Ic.utilityMisc.basicFenTest("k7/8/8/8/8/8/8/K7").substring(0, len)).toBe(error_msg);
+				expect(Ic.utilityMisc.basicFenTest("0000000000000000019").substring(0, len)).toBe(error_msg);
+			});
+		});
+		
+		describe("Error type: 2", () => {
+			var len, error_msg;
+			
+			error_msg="Error [2]";
+			len=error_msg.length;
+			
+			test("wrong structure (20 or more length)", () => {
+				expect(Ic.utilityMisc.basicFenTest("00000000000000000020").substring(0, len)).toBe(error_msg);
+			});
+			
 			test("color need to be w or b", () => {
 				expect(Ic.utilityMisc.basicFenTest("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR x KQkq - 0 1").substring(0, len)).toBe(error_msg);
 				
@@ -559,10 +577,10 @@ describe("Ic utility methods", () => {
 			});
 		});
 		
-		describe("Error type: 2", () => {
+		describe("Error type: 3", () => {
 			var len, error_msg;
 			
-			error_msg="Error [2]";
+			error_msg="Error [3]";
 			len=error_msg.length;
 			
 			test("full move at 0", () => {
@@ -586,10 +604,10 @@ describe("Ic utility methods", () => {
 			});
 		});
 		
-		describe("Error type: 3", () => {
+		describe("Error type: 4", () => {
 			var len, error_msg;
 			
-			error_msg="Error [3]";
+			error_msg="Error [4]";
 			len=error_msg.length;
 			
 			test("consecutive numbers", () => {
@@ -603,10 +621,10 @@ describe("Ic utility methods", () => {
 			});
 		});
 		
-		describe("Error type: 4", () => {
+		describe("Error type: 5", () => {
 			var len, error_msg;
 			
-			error_msg="Error [4]";
+			error_msg="Error [5]";
 			len=error_msg.length;
 			
 			test("not exactly 8 columns", () => {
@@ -622,10 +640,10 @@ describe("Ic utility methods", () => {
 			});
 		});
 		
-		describe("Error type: 5", () => {
+		describe("Error type: 6", () => {
 			var len, error_msg;
 			
-			error_msg="Error [5]";
+			error_msg="Error [6]";
 			len=error_msg.length;
 			
 			test("missing wk", () => {
@@ -641,10 +659,10 @@ describe("Ic utility methods", () => {
 			});
 		});
 		
-		describe("Error type: 6", () => {
+		describe("Error type: 7", () => {
 			var len, error_msg;
 			
-			error_msg="Error [6]";
+			error_msg="Error [7]";
 			len=error_msg.length;
 			
 			test("missing bk", () => {

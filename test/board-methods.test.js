@@ -17,6 +17,7 @@ Ic.setSilentMode(false);
 //getWrappedMove
 //draftMove
 //
+//(x) fenWrapmoveHelper (se hara por b.getWrappedMove())
 //(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
 //(x) legalMovesHelper (se hara por b.legalMoves() y b.legalSanMoves())
 //(x) getClocklessFenHelper (se hara por b.updateFenAndMisc())
@@ -355,10 +356,10 @@ describe("Board methods", () => {
 	});
 	
 	describe("b.isLegalMove()", () => {
-		var shared_fen, shared_promo_fen;
+		var fen, shared_fen, shared_promo_fen;
 		
 		shared_fen="8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1";
-		shared_promo_fen="rn1qkbnr/1P1ppppp/2p5/8/8/8/1PPPPPPP/RNBQKBNR w KQkq - 0 5";
+		shared_promo_fen="rn1qkbnr/1P1ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R w KQkq - 0 5";
 		
 		test("san move", () => {
 			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa2"], {skipFenValidation : true})).toBe(true);
@@ -403,6 +404,76 @@ describe("Board methods", () => {
 			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8q"], {skipFenValidation : true})).toBe(true);
 			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Q"], {skipFenValidation : true})).toBe(true);
 			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a85"], {skipFenValidation : true})).toBe(true);
+		});
+		
+		test("fen move", () => {
+			fen="8/8/8/4k3/8/8/R3K3/8 b - -";
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 7 4"], {skipFenValidation : true})).toBe(true);
+			
+			fen="8/8/8/4k3/8/2R5/r3K3/8 b - -";
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 7 4"], {skipFenValidation : true})).toBe(false);
+			
+			fen="8/8/8/4k3/8/2R5/r3K3/8 w - -";
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(false);
+			
+			fen="Qn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 0 5"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 1 5"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation : true})).toBe(true);
+			
+			fen="Rn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			
+			fen="Bn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			
+			fen="Nn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			
+			fen="Kn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="Pn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="Xn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="1n1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="qn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="rn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="rn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQkq -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="bn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="nn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="kn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="pn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			
+			fen="xn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
 		});
 		
 		test("joined move", () => {
@@ -653,6 +724,37 @@ describe("Board methods", () => {
 			board_obj.setPromoteTo(-1);
 			expect(board_obj.promoteTo).toBe(2);
 		});
+	});
+	
+	test("b.fenHistoryExport()", () => {
+		var board_name, board_obj, fen_arr_to_compare;
+		
+		board_name="board_fen_history_export";
+		
+		board_obj=Ic.initBoard({
+			boardName : board_name,
+			fen : "8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1",
+			skipFenValidation : true
+		});
+		
+		fen_arr_to_compare=["8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1"];
+		expect(board_obj.fenHistoryExport()).toEqual(fen_arr_to_compare);
+		
+		fen_arr_to_compare.push("8/7P/8/8/4pp2/1n3P2/pk4P1/4K2R w K - 0 2");
+		board_obj.playMove("e5-e4");
+		expect(board_obj.fenHistoryExport()).toEqual(fen_arr_to_compare);
+		
+		fen_arr_to_compare.push("8/7P/8/8/4pp2/1n3P2/pk4P1/5RK1 b - - 1 2");
+		board_obj.playMove("e1-g1");
+		expect(board_obj.fenHistoryExport()).toEqual(fen_arr_to_compare);
+		
+		fen_arr_to_compare.push("8/7P/8/8/4pp2/1n3P2/1k4P1/r4RK1 w - - 0 3");
+		board_obj.playMove("a1=R");
+		expect(board_obj.fenHistoryExport()).toEqual(fen_arr_to_compare);
+		
+		fen_arr_to_compare.push("7Q/8/8/8/4pp2/1n3P2/1k4P1/r4RK1 b - - 0 3");
+		board_obj.playMove("h8=Q");
+		expect(board_obj.fenHistoryExport()).toEqual(fen_arr_to_compare);
 	});
 	
 	describe("b.pgnExport()", () => {

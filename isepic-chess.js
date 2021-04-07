@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.6.6";
+		var _VERSION="6.7.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -360,6 +360,7 @@
 					legalMoves : _legalMoves,
 					legalSanMoves : _legalSanMoves,
 					legalUciMoves : _legalUciMoves,
+					fenHistoryExport : _fenHistoryExport,
 					pgnExport : _pgnExport,
 					uciExport : _uciExport,
 					ascii : _ascii,
@@ -368,6 +369,7 @@
 					cloneBoardFrom : _cloneBoardFrom,
 					cloneBoardTo : _cloneBoardTo,
 					countLightDarkBishops : _countLightDarkBishops,
+					fenWrapmoveHelper : _fenWrapmoveHelper,
 					sanWrapmoveHelper : _sanWrapmoveHelper,
 					getWrappedMove : _getWrappedMove,
 					draftMove : _draftMove,
@@ -769,17 +771,23 @@
 			if(!rtn_msg){
 				fen=_trimSpaces(fen);
 				
+				if(fen.length<20){
+					rtn_msg="Error [1] fen is too short";
+				}
+			}
+			
+			if(!rtn_msg){
 				optional_clocks=fen.replace(/^([rnbqkRNBQK1-8]+\/)([rnbqkpRNBQKP1-8]+\/){6}([rnbqkRNBQK1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])($|\s)/, "");
 				
 				if(fen.length===optional_clocks.length){
-					rtn_msg="Error [1] invalid fen structure";
+					rtn_msg="Error [2] invalid fen structure";
 				}
 			}
 			
 			if(!rtn_msg){
 				if(optional_clocks.length){
 					if(!(/^(0|[1-9][0-9]*)\s([1-9][0-9]*)$/.test(optional_clocks))){
-						rtn_msg="Error [2] invalid half/full move";
+						rtn_msg="Error [3] invalid half/full move";
 					}
 				}
 			}
@@ -798,7 +806,7 @@
 						current_is_num=!!temp;
 						
 						if(last_is_num && current_is_num){
-							rtn_msg="Error [3] two consecutive numeric values";
+							rtn_msg="Error [4] two consecutive numeric values";
 							break outer;
 						}
 						
@@ -807,7 +815,7 @@
 					}
 					
 					if(total_files_in_current_rank!==8){
-						rtn_msg="Error [4] rank without exactly 8 columns";
+						rtn_msg="Error [5] rank without exactly 8 columns";
 						break;
 					}
 				}
@@ -815,13 +823,13 @@
 			
 			if(!rtn_msg){
 				if(_occurrences(fen_board, "K")!==1){
-					rtn_msg="Error [5] board without exactly one white king";
+					rtn_msg="Error [6] board without exactly one white king";
 				}
 			}
 			
 			if(!rtn_msg){
 				if(_occurrences(fen_board, "k")!==1){
-					rtn_msg="Error [6] board without exactly one black king";
+					rtn_msg="Error [7] board without exactly one black king";
 				}
 			}
 			
@@ -1891,6 +1899,20 @@
 			return rtn;
 		}
 		
+		function _fenHistoryExport(){
+			var i, len, that, rtn;
+			
+			that=this;
+			
+			rtn=[];
+			
+			for(i=0, len=that.moveList.length; i<len; i++){//0<len
+				rtn.push(that.moveList[i].fen);
+			}
+			
+			return rtn;
+		}
+		
 		function _pgnExport(){/*2020 p options: remove comments, max line len, tag white-list*/
 			var i, len, that, header, ordered_tags, result_tag_ow, move_list, black_starts, initial_fen, initial_full_move, text_game, rtn;
 			
@@ -2160,6 +2182,111 @@
 			return rtn;
 		}
 		
+		function _fenWrapmoveHelper(mov){
+			var i, j, that, obj, from_squares, to_squares, current_bos, old_square, new_square, parsed_promote, is_long_castle, king_rank, silent_mode_cache, keep_going, rtn;
+			
+			that=this;
+			
+			rtn=null;
+			keep_going=true;
+			
+			//if(keep_going){
+				parsed_promote="";
+				
+				if(!_isNonBlankStr(mov)){
+					keep_going=false;
+				}
+			//}
+			
+			if(keep_going){
+				silent_mode_cache=_SILENT_MODE;
+				
+				setSilentMode(true);
+				
+				obj=fenGet(mov, "squares activeColor");
+				
+				setSilentMode(silent_mode_cache);
+				
+				if(!obj || that.activeColor===obj.activeColor){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				from_squares=[];
+				to_squares=[];
+				
+				for(i=0; i<8; i++){//0...7
+					for(j=0; j<8; j++){//0...7
+						current_bos=Ic.toBos([i, j]);
+						
+						old_square=that.getSquare(current_bos);
+						new_square=obj.squares[current_bos];//can't use getSquare()
+						
+						if(old_square.val===new_square.val){
+							continue;
+						}
+						
+						if(new_square.val===0){//piece disappearing
+							//this excludes enpassant capture
+							//can't be 0 here (no problem with inverted logic >0 being <=0)
+							if((old_square.val>0)===(that.activeColor==="w")){
+								from_squares.push(current_bos);
+							}
+						}else{//piece overwriting
+							//this excludes enemy piece changes in ally turn and wrong color promotion
+							//can't be 0 here (no problem with inverted logic >0 being <=0)
+							if((new_square.val>0)===(that.activeColor==="w")){
+								to_squares.push(current_bos);
+							}
+						}
+					}
+				}
+				
+				//4 changes (len=2 + len=2) : king castled
+				//2 changes (len=1 + len=1) : one piece moved
+				//1 or 3 changes : invalid
+				//0 changes : nothing moved
+				if(from_squares.length===2 && to_squares.length===2){
+					is_long_castle=(from_squares.join("").indexOf("a")!==-1);
+					king_rank=(that.activeColor==="w" ? 1 : 8);
+					
+					to_squares=[(is_long_castle ? "c" : "g")+king_rank];
+					from_squares=["e"+king_rank];
+				}
+				
+				if(from_squares.length!==1 || to_squares.length!==1){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				old_square=that.getSquare(from_squares[0]);
+				
+				if(old_square===null){
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				new_square=obj.squares[to_squares[0]];//can't use getSquare()
+				
+				if(!new_square){//this might be undefined but never null (is not a getSquare() return)
+					keep_going=false;
+				}
+			}
+			
+			if(keep_going){
+				if(old_square.val!==new_square.val){
+					parsed_promote=new_square.bal;
+				}
+				
+				rtn=[[old_square.bos, new_square.bos], parsed_promote];
+			}
+			
+			return rtn;
+		}
+		
 		function _sanWrapmoveHelper(mov){
 			var i, j, len, len2, that, temp, to_bos, validated_move, parsed_promote, lc_piece, parse_exec, pgn_obj, keep_going, rtn;
 			
@@ -2297,6 +2424,16 @@
 			
 			if(rtn===null){
 				temp=_moveWrapmoveHelper(mov);
+				
+				if(temp){
+					bubbling_promoted_to=temp[1];//default ""
+					
+					rtn=temp[0];
+				}
+			}
+			
+			if(rtn===null){
+				temp=that.fenWrapmoveHelper(mov);
 				
 				if(temp){
 					bubbling_promoted_to=temp[1];//default ""
