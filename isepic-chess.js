@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.7.0";
+		var _VERSION="6.8.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -358,6 +358,7 @@
 					isLegalMove : _isLegalMove,
 					legalMovesHelper : _legalMovesHelper,
 					legalMoves : _legalMoves,
+					legalFenMoves : _legalFenMoves,
 					legalSanMoves : _legalSanMoves,
 					legalUciMoves : _legalUciMoves,
 					fenHistoryExport : _fenHistoryExport,
@@ -1754,7 +1755,7 @@
 		
 		//p = {returnType, squareType, delimiter}
 		function _legalMoves(target_qos, p){
-			var i, len, that, temp, temp2, is_san, from_bos, to_bos, used_keys, legal_uci_in_bos, keep_going, rtn;
+			var i, len, that, temp, temp2, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, keep_going, rtn;
 			
 			that=this;
 			
@@ -1790,19 +1791,23 @@
 			if(keep_going){
 				temp=[];
 				used_keys={};
-				is_san=(p.returnType==="san");
+				is_fen_or_san=(p.returnType==="fen" || p.returnType==="san");
 				
 				for(i=0, len=legal_uci_in_bos.length; i<len; i++){//0<len
 					temp2=legal_uci_in_bos[i];
 					
-					from_bos=temp2.slice(0, 2);
-					to_bos=temp2.slice(2, 4);
-					
-					if(is_san){
-						temp.push(that.playMove(temp2, {isMockMove : true, isLegalMove : true}).san);
+					if(is_fen_or_san){
+						if(p.returnType==="fen"){
+							temp.push(that.playMove(temp2, {isMockMove : true, isLegalMove : true}).fen);
+						}else{//type "san"
+							temp.push(that.playMove(temp2, {isMockMove : true, isLegalMove : true}).san);
+						}
 						
 						continue;
 					}
+					
+					from_bos=temp2.slice(0, 2);
+					to_bos=temp2.slice(2, 4);
 					
 					if(used_keys[to_bos]){
 						continue;
@@ -1831,7 +1836,7 @@
 					}
 				}
 				
-				if(is_san && temp.length!==legal_uci_in_bos.length){
+				if(is_fen_or_san && temp.length!==legal_uci_in_bos.length){
 					keep_going=false;
 				}
 			}
@@ -1841,6 +1846,14 @@
 			}
 			
 			return rtn;
+		}
+		
+		function _legalFenMoves(target_qos){
+			var that;
+			
+			that=this;
+			
+			return that.legalMoves(target_qos, {returnType : "fen"});
 		}
 		
 		function _legalSanMoves(target_qos){
@@ -3314,6 +3327,9 @@
 					break;
 				case "legalMoves" :
 					rtn=(board_created ? _legalMoves.apply(board, args) : []);
+					break;
+				case "legalFenMoves" :
+					rtn=(board_created ? _legalFenMoves.apply(board, args) : []);
 					break;
 				case "legalSanMoves" :
 					rtn=(board_created ? _legalSanMoves.apply(board, args) : []);

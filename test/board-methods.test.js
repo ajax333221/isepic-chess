@@ -314,7 +314,23 @@ describe("Board methods", () => {
 			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual(["a3", "a4"].sort());
 		});
 		
-		test("returnType=(x)san", () => {
+		test("returnType=fen", () => {
+			var p;
+			
+			p={returnType : "fen"};
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual(["8/8/8/4k3/8/8/r2RK3/8 b - - 1 1", "8/8/8/4k3/8/8/rR2K3/8 b - - 1 1", "8/8/8/4k3/8/8/R3K3/8 b - - 0 1"].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual(["1rq1k2r/p1pb1pp1/1pB2n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1", "1rq1k2r/p1pB1pp1/1p3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/1p3n1p/2b1N3/P1B1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/Bp3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1"].sort());
+			
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1"].sort());
+		});
+		
+		test("returnType=san", () => {
 			var p;
 			
 			p={returnType : "san"};
@@ -329,6 +345,34 @@ describe("Board methods", () => {
 			
 			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["a3", "a4"].sort());
 		});
+		
+		test("returnType=uci", () => {
+			var p;
+			
+			p={returnType : "uci"};
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual(["c2d2", "c2b2", "c2a2"].sort());
+			
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual(["b5c6", "b5d7", "b5c4", "b5a6"].sort());
+			
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["b7b8q", "b7b8n", "b7b8b", "b7b8r", "b7c8q", "b7c8n", "b7c8b", "b7c8r", "b7a8q", "b7a8n", "b7a8b", "b7a8r"].sort());
+			
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["a2a3", "a2a4"].sort());
+		});
+	});
+	
+	test("b.legalFenMoves()", () => {
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalFenMoves", ["c2"], {skipFenValidation : true}).sort()).toEqual(["8/8/8/4k3/8/8/r2RK3/8 b - - 1 1", "8/8/8/4k3/8/8/rR2K3/8 b - - 1 1", "8/8/8/4k3/8/8/R3K3/8 b - - 0 1"].sort());
+		
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalFenMoves", ["a2"], {skipFenValidation : true}).sort()).toEqual([].sort());
+		
+		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalFenMoves", ["b5"], {skipFenValidation : true}).sort()).toEqual(["1rq1k2r/p1pb1pp1/1pB2n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1", "1rq1k2r/p1pB1pp1/1p3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/1p3n1p/2b1N3/P1B1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/Bp3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1"].sort());
+		
+		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalFenMoves", ["b7"], {skipFenValidation : true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
+		
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalFenMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true})], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1"].sort());
 	});
 	
 	test("b.legalSanMoves()", () => {
@@ -356,57 +400,14 @@ describe("Board methods", () => {
 	});
 	
 	describe("b.isLegalMove()", () => {
-		var fen, shared_fen, shared_promo_fen;
+		var shared_fen, shared_promo_fen;
 		
 		shared_fen="8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1";
 		shared_promo_fen="rn1qkbnr/1P1ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R w KQkq - 0 5";
 		
-		test("san move", () => {
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa2"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Ra2"], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa9"], {skipFenValidation : true})).toBe(false);
-			
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8="], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=p"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=k"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=P"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=K"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=0"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=1"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=6"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=9"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=5"], {skipFenValidation : true})).toBe(true);
-		});
-		
-		test("uci move", () => {
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2a2"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2c2"], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c9a9"], {skipFenValidation : true})).toBe(false);
-			
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8 "], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8="], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8p"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8k"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8P"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8K"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a80"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a81"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a86"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a89"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a85"], {skipFenValidation : true})).toBe(true);
-		});
-		
 		test("fen move", () => {
+			var fen;
+			
 			fen="8/8/8/4k3/8/8/R3K3/8 b - -";
 			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
 			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(true);
@@ -474,6 +475,51 @@ describe("Board methods", () => {
 			
 			fen="xn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
 			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+		});
+		
+		test("san move", () => {
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa2"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Ra2"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa9"], {skipFenValidation : true})).toBe(false);
+			
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8="], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=p"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=k"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=P"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=K"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=0"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=1"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=6"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=9"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=5"], {skipFenValidation : true})).toBe(true);
+		});
+		
+		test("uci move", () => {
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2a2"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2c2"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c9a9"], {skipFenValidation : true})).toBe(false);
+			
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8 "], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8="], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8p"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8k"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Z"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8P"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8K"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a80"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a81"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a86"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a89"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Q"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a85"], {skipFenValidation : true})).toBe(true);
 		});
 		
 		test("joined move", () => {
