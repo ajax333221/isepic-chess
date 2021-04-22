@@ -4,9 +4,23 @@ var GIT_DOCS_URL=GIT_README_DOCS_URL+"/blob/master/docs/";
 var URL_BOARD_PROPS=["board properties", "board-properties.md#board-properties"];
 var URL_BOARD_METHODS=["board methods", "board-methods.md#board-methods"];
 
+var URL_SQUARE_PROPS=["square properties", "square-properties.md#square-properties"];
+
+var URL_MOVE_PROPS=["move properties", "move-properties.md#move-properties"];
+
 var PIN_BOARD={
 	name : "Board",
 	urls : [URL_BOARD_PROPS, URL_BOARD_METHODS]
+};
+
+var PIN_SQUARE={
+	name : "Square",
+	urls : [URL_SQUARE_PROPS]
+};
+
+var PIN_MOVE={
+	name : "Move",
+	urls : [URL_MOVE_PROPS]
 };
 
 //=====================================================
@@ -96,6 +110,49 @@ var p_qos={
 	children : [p_qos_ch1, p_qos_ch2, p_qos_ch3]
 };
 
+//---
+
+var p_mov_ch1={
+	name : "moveSan",
+	type : "String",
+	isBold : true
+};
+
+var p_mov_ch2={
+	name : "moveUci",
+	type : "String",
+	isBold : true
+};
+
+var p_mov_ch3={
+	name : "moveJoined",
+	type : "String",
+	isBold : true
+};
+
+var p_mov_ch4={
+	name : "moveFen",
+	type : "String",
+	isBold : true
+};
+
+var p_mov_ch5={
+	name : "moveFromTo",
+	type : "Array",
+	isBold : true
+};
+
+var p_mov_ch6={
+	name : "move",
+	type : "Object",
+	isBold : true
+};
+
+var p_mov={
+	name : "mov",
+	children : [p_mov_ch1, p_mov_ch2, p_mov_ch3, p_mov_ch4, p_mov_ch5, p_mov_ch6]
+};
+
 //=====================================================
 
 function isObj(obj){
@@ -135,7 +192,7 @@ function overwriteAndUnreference(obj, arr){
 	
 	temp={...obj};
 	
-	for(i=0, len=arr.length; i<len; i++){
+	for(i=0, len=arr.length; i<len; i++){//0<len
 		temp[arr[i][0]]=arr[i][1];
 	}
 	
@@ -208,7 +265,7 @@ function docoGenMethodTable(obj){
 			
 			res+=temp.description.join("<br><br>");
 			
-			if(temp.examples){
+			if(temp.examples && temp.examples.length){
 				res+="<hr>Example"+(temp.examples.length!==1 ? "s" : "")+":";
 				res+="<ul><li>`"+temp.examples.join("`</li><li>`")+"`</li></ul>";
 			}
@@ -300,7 +357,7 @@ function recursiveFormat(obj, options, has_op_params, has_op_keys){
 	}else if(obj.children && obj.children.length){
 		temp="";
 		
-		for(i=0, len=obj.children.length; i<len; i++){
+		for(i=0, len=obj.children.length; i<len; i++){//0<len
 			temp2=recursiveFormat(obj.children[i], options, has_op_params, has_op_keys);
 			
 			if(temp2.html!==""){

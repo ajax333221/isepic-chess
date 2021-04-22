@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Doco. Generator (Board methods)</title>
+	</head>
+	<body>
+		<h1>board-methods.md</h1>
+		<textarea id="result" style="width:100%;height:400px">...</textarea>
+	</body>
+	<script src="../doco-gen.js"></script>
+	<script>
+		var board, res;
+		
+		board={
+			playMove : {
+				index : 1,
+				name : "playMove",
+				refreshUi : true
+			},
+			toggleIsRotated : {
+				index : 2,
+				name : "toggleIsRotated",
+				refreshUi : true
+			},
+			setPromoteTo : {
+				index : 3,
+				name : "setPromoteTo",
+				refreshUi : true
+			},
+			setManualResult : {
+				index : 4,
+				name : "setManualResult",
+				refreshUi : true
+			},
+			setCurrentMove : {
+				index : 5,
+				name : "setCurrentMove",
+				refreshUi : true
+			},
+			navFirst : {
+				index : 6,
+				name : "navFirst",
+				refreshUi : true
+			},
+			navPrevious : {
+				index : 7,
+				name : "navPrevious",
+				refreshUi : true
+			},
+			navNext : {
+				index : 8,
+				name : "navNext",
+				refreshUi : true
+			},
+			navLast : {
+				index : 9,
+				name : "navLast",
+				refreshUi : true
+			},
+			navLinkMove : {
+				index : 10,
+				name : "navLinkMove",
+				refreshUi : true
+			},
+			cloneBoardFrom : {
+				index : 11,
+				name : "cloneBoardFrom",
+				refreshUi : true
+			},
+			cloneBoardTo : {
+				index : 12,
+				name : "cloneBoardTo",
+				refreshUi : true
+			},
+			fenHistoryExport : {
+				index : 13,
+				name : "fenHistoryExport"
+			},
+			pgnExport : {
+				index : 14,
+				name : "pgnExport"
+			},
+			uciExport : {
+				index : 15,
+				name : "uciExport"
+			},
+			ascii : {
+				index : 16,
+				name : "ascii"
+			},
+			getSquare : {
+				index : 17,
+				name : "getSquare"
+			},
+			setSquare : {
+				index : 18,
+				name : "setSquare"
+			},
+			countAttacks : {
+				index : 19,
+				name : "countAttacks"
+			},
+			isLegalMove : {
+				index : 20,
+				name : "isLegalMove"
+			},
+			legalMoves : {
+				index : 21,
+				name : "legalMoves"
+			},
+			legalFenMoves : {
+				index : 22,
+				name : "legalFenMoves"
+			},
+			legalSanMoves : {
+				index : 23,
+				name : "legalSanMoves"
+			},
+			legalUciMoves : {
+				index : 24,
+				name : "legalUciMoves"
+			},
+			isEqualBoard : {
+				index : 25,
+				name : "isEqualBoard"
+			}
+		};
+		
+		//start: playMove
+		board.playMove.params={
+			children : [
+				p_mov,
+				{
+					name : "p",
+					type : "Object",
+					icon : "eight_pointed_black_star",
+					children : [
+						{name : "isMockMove", type : "Boolean", icon : "eight_spoked_asterisk"},
+						overwriteAndUnreference(p_qal, [["name", "promoteTo"], ["icon", "eight_spoked_asterisk"]]),
+						{name : "delimiter", type : "String", icon : "eight_spoked_asterisk"},
+						{name : "isLegalMove", type : "Boolean", icon : "eight_spoked_asterisk"},
+						{name : "isInanimated", type : "Boolean", icon : "eight_spoked_asterisk"}
+					]
+				}
+			]
+		};
+		
+		board.playMove.returnVal=[
+			{
+				children : [
+					{
+						name : "move",
+						type : "Object",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "null"
+					}
+				]
+			}
+		];
+		
+		board.playMove.description=[];
+		board.playMove.description.push("Generates a :pushpin:**move** <sup>(unreferenced copy)</sup>.");
+		board.playMove.description.push("`isMockMove = true` plays the move on a **temporal board** instead of affecting the **board**.");
+		board.playMove.description.push("`isLegalMove = true` skips the legal move validation. This should only be used if the move is known to be a legal move for a specific fen and the current board fen matches it.");
+		board.playMove.description.push("`isInanimated = true` prevents the **piece animation**. The UI refresh takes place normally.");
+		board.playMove.description.push("The Boolean options (`isMockMove`, `isLegalMove` and `isInanimated`) default to `false` when not set to a Boolean value of `true`.");
+		board.playMove.description.push("`promoteTo` takes precedence over everything when specified and a pawn promotion takes place.");
+		board.playMove.description.push("`delimiter` is a single character to look for in **moveJoined** (like `\"-\" in \"a2-a4\"`) to allow the use of any delimiters. Defaults to `\"-\"` if not specified.");
+		
+		board.playMove.examples=[];
+		board.playMove.examples.push("board.playMove(\"Nc3\") //Object{...}");
+		board.playMove.examples.push("board.playMove(\"b1_c3\", {delimiter: \"_\"}) //Object{...}");
+		board.playMove.examples.push("board.playMove(\"0invalidmove0\") //null");
+		
+		board.playMove.links=PIN_MOVE;
+		//end: playMove
+		
+		//start: toggleIsRotated
+		board.toggleIsRotated.params={
+			children : [{name : "newIsRotated", type : "Boolean", icon : "eight_pointed_black_star"}]
+		};
+		
+		board.toggleIsRotated.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.toggleIsRotated.description=[];
+		board.toggleIsRotated.description.push("(... *temporal-draft*: toggles (or sets) the **board property** of `board.isRotated`, when passing the Boolean parameter this will set instead of toggle ...)");/*draft*/
+		
+		board.toggleIsRotated.examples=[];/*add examples*/
+		//end: toggleIsRotated
+		
+		//start: setPromoteTo
+		board.setPromoteTo.params={
+			children : [p_qal]
+		};
+		
+		board.setPromoteTo.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.setPromoteTo.description=[];
+		board.setPromoteTo.description.push("(... *temporal-draft*: changes the **board property** of `board.promoteTo` after interpreting the input ...)");/*draft*/
+		
+		board.setPromoteTo.examples=[];/*add examples*/
+		//end: setPromoteTo
+		
+		//start: setManualResult
+		board.setManualResult.params={
+			children : [{name : "res", type : "String"}]
+		};
+		
+		board.setManualResult.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.setManualResult.description=[];
+		board.setManualResult.description.push("(... *temporal-draft*: changes the **board property** of `board.manualResult` after interpreting the input. Valid inputs are `\"*\", \"1-0\", \"0-1\" or \"1/2-1/2\"` and will fallback to `\"*\"` for invalid inputs ...)");/*draft*/
+		
+		board.setManualResult.examples=[];/*add examples*/
+		//end: setManualResult
+		
+		//start: setCurrentMove
+		board.setCurrentMove.params={
+			children : [
+				{name : "val", type : "Number"},
+				{name : "isGoto", type : "Boolean", icon : "eight_pointed_black_star"}
+			]
+		};
+		
+		board.setCurrentMove.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.setCurrentMove.description=[];
+		board.setCurrentMove.description.push("(... *temporal-draft*: changes the **board property** of `board.currentMove` either by a shift value or a jump-to value ...)");/*draft*/
+		
+		board.setCurrentMove.examples=[];/*add examples*/
+		//end: setCurrentMove
+		
+		//start: navFirst
+		board.navFirst.params={};
+		
+		board.navFirst.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.navFirst.description=[];
+		board.navFirst.description.push("Performs a `board.setCurrentMove(0)`.");
+		
+		board.navFirst.examples=[];
+		board.navFirst.examples.push("board.navFirst() //true");
+		board.navFirst.examples.push("board.navFirst() //false");
+		//end: navFirst
+		
+		//start: navPrevious
+		board.navPrevious.params={};
+		
+		board.navPrevious.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.navPrevious.description=[];
+		board.navPrevious.description.push("Performs a `board.setCurrentMove(board.currentMove-1)`.");
+		
+		board.navPrevious.examples=[];
+		board.navPrevious.examples.push("board.navPrevious() //true");
+		board.navPrevious.examples.push("board.navPrevious() //false");
+		//end: navPrevious
+		
+		//start: navNext
+		board.navNext.params={};
+		
+		board.navNext.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.navNext.description=[];
+		board.navNext.description.push("Performs a `board.setCurrentMove(board.currentMove+1)`.");
+		
+		board.navNext.examples=[];
+		board.navNext.examples.push("board.navNext() //true");
+		board.navNext.examples.push("board.navNext() //false");
+		//end: navNext
+		
+		//start: navLast
+		board.navLast.params={};
+		
+		board.navLast.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.navLast.description=[];
+		board.navLast.description.push("Performs a `board.setCurrentMove(board.moveList.length-1)`.");
+		
+		board.navLast.examples=[];
+		board.navLast.examples.push("board.navLast() //true");
+		board.navLast.examples.push("board.navLast() //false");
+		//end: navLast
+		
+		//start: navLinkMove
+		board.navLinkMove.params={
+			children : [{name : "moveIndex", type : "Number"}]
+		};
+		
+		board.navLinkMove.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.navLinkMove.description=[];
+		board.navLinkMove.description.push("Performs a `board.setCurrentMove(moveIndex)`.");
+		
+		board.navLinkMove.examples=[];
+		board.navLinkMove.examples.push("board.navLinkMove(2) //true");
+		board.navLinkMove.examples.push("board.navLinkMove(2) //false");
+		//end: navLinkMove
+		
+		//start: cloneBoardFrom
+		board.cloneBoardFrom.params={
+			children : [overwriteAndUnreference(p_board, [["name", "fromBoard"]])]
+		};
+		
+		board.cloneBoardFrom.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.cloneBoardFrom.description=[];
+		board.cloneBoardFrom.description.push("(... *temporal-draft*: copies all the board properties (except `board.boardName`) from another board into this board ...)");/*draft*/
+		
+		board.cloneBoardFrom.examples=[];/*add examples*/
+		//end: cloneBoardFrom
+		
+		//start: cloneBoardTo
+		board.cloneBoardTo.params={
+			children : [overwriteAndUnreference(p_board, [["name", "toBoard"]])]
+		};
+		
+		board.cloneBoardTo.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.cloneBoardTo.description=[];
+		board.cloneBoardTo.description.push("(... *temporal-draft*: copies all the board properties (except `board.boardName`) from this board into another board ...)");/*draft*/
+		
+		board.cloneBoardTo.examples=[];/*add examples*/
+		//end: cloneBoardTo
+		
+		//start: fenHistoryExport
+		board.fenHistoryExport.params={};
+		
+		board.fenHistoryExport.returnVal={
+			children : [{type : "Array"}]
+		};
+		
+		board.fenHistoryExport.description=[];
+		board.fenHistoryExport.description.push("Returns the **FEN history** list.");
+		board.fenHistoryExport.description.push("The first element (index 0) holds the initial fen position.");
+		
+		board.fenHistoryExport.examples=[];/*add examples*/
+		//end: fenHistoryExport
+		
+		//start: pgnExport
+		board.pgnExport.params={};
+		
+		board.pgnExport.returnVal={
+			children : [{type : "String"}]
+		};
+		
+		board.pgnExport.description=[];
+		board.pgnExport.description.push("Returns the **PGN** as text.");
+		board.pgnExport.description.push("A line feed `\\n` is used as the line break character.");
+		
+		board.pgnExport.examples=[];/*add examples*/
+		//end: pgnExport
+		
+		//start: uciExport
+		board.uciExport.params={};
+		
+		board.uciExport.returnVal={
+			children : [{type : "String"}]
+		};
+		
+		board.uciExport.description=[];
+		board.uciExport.description.push("Returns the **UCI** moves as text.");
+		
+		board.uciExport.examples=[];/*add examples*/
+		//end: uciExport
+		
+		//start: ascii
+		board.ascii.params={
+			children : [{name : "isRotated", type : "Boolean", icon : "eight_pointed_black_star"}]
+		};
+		
+		board.ascii.returnVal={
+			children : [{type : "String"}]
+		};
+		
+		board.ascii.description=[];
+		board.ascii.description.push("Returns the **chess diagram** as text.");
+		board.ascii.description.push("Boolean parameters will take precedence over the **board property** of `board.isRotated`.");
+		board.ascii.description.push("A line feed `\\n` is used as the line break character.");
+		
+		board.ascii.examples=[];/*add examples*/
+		//end: ascii
+		
+		//start: getSquare
+		board.getSquare.params={
+			children : [
+				p_qos,
+				{
+					name : "p",
+					type : "Object",
+					icon : "eight_pointed_black_star",
+					children : [
+						{name : "rankShift", type : "Number", icon : "eight_spoked_asterisk", codeAfter : "-7 to 7"},
+						{name : "fileShift", type : "Number", icon : "eight_spoked_asterisk", codeAfter : "-7 to 7"},
+						{name : "isUnreferenced", type : "Boolean", icon : "eight_spoked_asterisk"}
+					]
+				}
+			]
+		};
+		
+		board.getSquare.returnVal=[
+			{
+				children : [
+					{
+						name : "square",
+						type : "Object",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "null"
+					}
+				]
+			}
+		];
+		
+		board.getSquare.description=[];
+		board.getSquare.description.push("Returns a :pushpin:**square**.");
+		board.getSquare.description.push("If the **square** is invalid (before or after shifting by `rankShift` and `fileShift`), then `null` will be returned.");
+		board.getSquare.description.push("`isUnreferenced = true` means that the returned **square** will not be referenced (updates made to the **board** do not affect these unreferenced copies).");
+		board.getSquare.description.push("The Boolean option `isUnreferenced` defaults to `false` when not set to a Boolean value of `true`.");
+		
+		board.getSquare.links=PIN_SQUARE;
+		
+		board.getSquare.examples=[];
+		board.getSquare.examples.push("board.getSquare(\"e4\") //Object{...}");
+		board.getSquare.examples.push("board.getSquare(\"a1\", {rankShift:-7, fileShift:7}) //Object{...}");
+		board.getSquare.examples.push("board.getSquare(\"0invalidsquare0\") //null");
+		//end: getSquare
+		
+		//start: setSquare
+		board.setSquare.params={
+			children : [
+				p_qos,
+				p_qal,
+				{
+					name : "p",
+					type : "Object",
+					icon : "eight_pointed_black_star",
+					children : [
+						{name : "rankShift", type : "Number", icon : "eight_spoked_asterisk", codeAfter : "-7 to 7"},
+						{name : "fileShift", type : "Number", icon : "eight_spoked_asterisk", codeAfter : "-7 to 7"}
+					]
+				}
+			]
+		};
+		
+		board.setSquare.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.setSquare.description=[];
+		board.setSquare.description.push("(... *temporal-draft*: changes the **board property** of `board.squares.x`, it updates the **king bos** `board.w.kingBos` and `board.b.kingBos` when setting a king, the **square** object will have every non-static property updated, supports the rank/file shifting like `board.getSquare()`, Note: no validation happens, no castle rights get updated and no UI refresh occurs ...)");/*draft*/
+		
+		board.setSquare.examples=[];/*add examples*/
+		//end: setSquare
+		
+		//start: countAttacks
+		board.countAttacks.params={
+			children : [
+				overwriteAndUnreference(p_qos, [["icon", "eight_pointed_black_star"]]),
+				{name : "earlyBreak", type : "Boolean", icon : "eight_pointed_black_star"}
+			]
+		};
+		
+		board.countAttacks.returnVal={
+			children : [{type : "Number"}]
+		};
+		
+		board.countAttacks.description=[];
+		board.countAttacks.description.push("(... *temporal-draft*: this can be called to know how many times enemy pieces are attacking a square, you can pass a boolean to short-circuit and stop looking after a single attack on the square and you will get 0 or 1, it is a waste of resources to re-count the times attacked to the king square as this information is already calculated and stored in `board.checks`, the active side king bos will be used as default if the optional qos is missing ...)");/*draft*/
+		
+		board.countAttacks.examples=[];/*add examples*/
+		//end: countAttacks
+		
+		//start: isLegalMove
+		board.isLegalMove.params={
+			children : [
+				p_mov,
+				{
+					name : "p",
+					type : "Object",
+					icon : "eight_pointed_black_star",
+					children : [
+						{name : "delimiter", type : "String", icon : "eight_spoked_asterisk"}
+					]
+				}
+			]
+		};
+		
+		board.isLegalMove.returnVal=[
+			{
+				children : [{type : "Boolean"}]
+			},
+			{
+				children : [
+					{
+						type : "Boolean",
+						codeAfter : "false"
+					}
+				]
+			}
+		];
+		
+		board.isLegalMove.description=[];
+		board.isLegalMove.description.push("Test to see if a move is legal or not.");
+		board.isLegalMove.description.push("`delimiter` is a single character to look for in **moveJoined** (like `\"-\" in \"a2-a4\"`) to allow the use of any delimiters. Defaults to `\"-\"` if not specified.");
+		
+		board.isLegalMove.examples=[];
+		board.isLegalMove.examples.push("board.isLegalMove(\"Nf3\") //true");
+		board.isLegalMove.examples.push("board.isLegalMove(\"g1f3\") //true");
+		board.isLegalMove.examples.push("board.isLegalMove(\"g1-f3\") //true");
+		board.isLegalMove.examples.push("board.isLegalMove(\"g1_f3\", {delimiter : \"_\"}) //true");
+		board.isLegalMove.examples.push("board.isLegalMove(\"rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1\") //true");
+		board.isLegalMove.examples.push("board.isLegalMove([\"g1\", [5, 5]]) //true");
+		board.isLegalMove.examples.push("board.isLegalMove(\"0invalidsan0\") //false");
+		board.isLegalMove.examples.push("board.isLegalMove(\"a1-h7\") //false");
+		board.isLegalMove.examples.push("board.isLegalMove([\"a1\", \"0invalidsquare0\"]) //false");
+		//end: isLegalMove
+		
+		//start: legalMoves
+		board.legalMoves.params={
+			children : [
+				overwriteAndUnreference(p_qos, [["name", "initialQos"]]),
+				{
+					name : "p",
+					type : "Object",
+					icon : "eight_pointed_black_star",
+					children : [
+						{name : "returnType", type : "String", icon : "eight_spoked_asterisk"},
+						{name : "squareType", type : "String", icon : "eight_spoked_asterisk"},
+						{name : "delimiter", type : "String", icon : "eight_spoked_asterisk"}
+					]
+				}
+			]
+		};
+		
+		board.legalMoves.returnVal=[
+			{
+				children : [
+					{
+						name : "finalBosArray",
+						type : "Array",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "Array",
+						codeAfter : "[]"
+					}
+				]
+			}
+		];
+		
+		board.legalMoves.description=[];
+		board.legalMoves.description.push("Returns a **final bos array** with all the squares that a piece from an **initial qos** square can legally move to.");
+		board.legalMoves.description.push("Passing an **initial qos** square with a **square val** of `0` or a **non active sign** will result in a `[]`.");
+		board.legalMoves.description.push("`returnType` accepted values: `\"joined\"`, `\"fromToSquares\"`, `\"fen\"`, `\"san\"`, `\"uci\"` and `\"toSquare\"`. Defaults to `\"toSquare\"` if not specified.");
+		board.legalMoves.description.push("`squareType` accepted values: `\"square\"`, `\"pos\"` and `\"bos\"`. Defaults to `\"bos\"` if not specified. Only used in `returnType = \"fromToSquares\" and returnType = \"toSquare\"`.");
+		board.legalMoves.description.push("`delimiter` is a single character to be used in `returnType = \"joined\"`. Defaults to `\"-\"` if not specified.");
+		
+		board.legalMoves.examples=[];
+		board.legalMoves.examples.push("board.legalMoves(\"b1\") //[\"c3\", \"a3\"]");
+		board.legalMoves.examples.push("board.legalMoves(\"a3\") //[]");
+		board.legalMoves.examples.push("board.legalMoves(\"e7\") //[]");
+		board.legalMoves.examples.push("board.legalMoves(\"0invalidsquare0\") //[]");
+		//end: legalMoves
+		
+		//start: legalFenMoves
+		board.legalFenMoves.params={
+			children : [
+				overwriteAndUnreference(p_qos, [["name", "initialQos"]])
+			]
+		};
+		
+		board.legalFenMoves.returnVal=[
+			{
+				children : [
+					{
+						name : "finalFenArray",
+						type : "Array",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "Array",
+						codeAfter : "[]"
+					}
+				]
+			}
+		];
+		
+		board.legalFenMoves.description=[];
+		board.legalFenMoves.description.push("Returns a **final fen array** with all the FEN positions that can be legally reached when moving a piece from an **initial qos**.");
+		board.legalFenMoves.description.push("Passing an **initial qos** square with a **square val** of `0` or a **non active sign** will result in a `[]`.");
+		board.legalFenMoves.description.push("All pawn promotions will be included.");
+		
+		board.legalFenMoves.examples=[];
+		board.legalFenMoves.examples.push("board.legalFenMoves(\"b1\") //[\"rnbqkbnr/pppppppp/8/8/8/2N5/PPPPPPPP/R1BQKBNR b KQkq - 1 1\", \"rnbqkbnr/pppppppp/8/8/8/N7/PPPPPPPP/R1BQKBNR b KQkq - 1 1\"]");
+		board.legalFenMoves.examples.push("board.legalFenMoves(\"a3\") //[]");
+		board.legalFenMoves.examples.push("board.legalFenMoves(\"e7\") //[]");
+		board.legalFenMoves.examples.push("board.legalFenMoves(\"0invalidsquare0\") //[]");
+		//end: legalFenMoves
+		
+		//start: legalSanMoves
+		board.legalSanMoves.params={
+			children : [
+				overwriteAndUnreference(p_qos, [["name", "initialQos"]])
+			]
+		};
+		
+		board.legalSanMoves.returnVal=[
+			{
+				children : [
+					{
+						name : "finalSanArray",
+						type : "Array",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "Array",
+						codeAfter : "[]"
+					}
+				]
+			}
+		];
+		
+		board.legalSanMoves.description=[];
+		board.legalSanMoves.description.push("Returns a **final san array** with all the san moves that a piece from an **initial qos** square can legally move to.");
+		board.legalSanMoves.description.push("Passing an **initial qos** square with a **square val** of `0` or a **non active sign** will result in a `[]`.");
+		board.legalSanMoves.description.push("All pawn promotions will be included.");
+		
+		board.legalSanMoves.examples=[];
+		board.legalSanMoves.examples.push("board.legalSanMoves(\"b1\") //[\"Nc3\", \"Na3\"]");
+		board.legalSanMoves.examples.push("board.legalSanMoves(\"a3\") //[]");
+		board.legalSanMoves.examples.push("board.legalSanMoves(\"e7\") //[]");
+		board.legalSanMoves.examples.push("board.legalSanMoves(\"0invalidsquare0\") //[]");
+		//end: legalSanMoves
+		
+		//start: legalUciMoves
+		board.legalUciMoves.params={
+			children : [
+				overwriteAndUnreference(p_qos, [["name", "initialQos"]])
+			]
+		};
+		
+		board.legalUciMoves.returnVal=[
+			{
+				children : [
+					{
+						name : "finalUciArray",
+						type : "Array",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "Array",
+						codeAfter : "[]"
+					}
+				]
+			}
+		];
+		
+		board.legalUciMoves.description=[];
+		board.legalUciMoves.description.push("Returns a **final uci array** with all the uci moves that a piece from an **initial qos** square can legally move to.");
+		board.legalUciMoves.description.push("Passing an **initial qos** square with a **square val** of `0` or a **non active sign** will result in a `[]`.");
+		board.legalUciMoves.description.push("All pawn promotions will be included.");
+		
+		board.legalUciMoves.examples=[];
+		board.legalUciMoves.examples.push("board.legalUciMoves(\"b1\") //[\"b1c3\", \"b1a3\"]");
+		board.legalUciMoves.examples.push("board.legalUciMoves(\"a3\") //[]");
+		board.legalUciMoves.examples.push("board.legalUciMoves(\"e7\") //[]");
+		board.legalUciMoves.examples.push("board.legalUciMoves(\"0invalidsquare0\") //[]");
+		//end: legalUciMoves
+		
+		//start: isEqualBoard
+		board.isEqualBoard.params={
+			children : [
+				overwriteAndUnreference(p_board, [["name", "toBoard"]])
+			]
+		};
+		
+		board.isEqualBoard.returnVal=[
+			{
+				children : [{type : "Boolean"}]
+			},
+			{
+				children : [
+					{
+						type : "Boolean",
+						codeAfter : "false"
+					}
+				]
+			}
+		];
+		
+		board.isEqualBoard.description=[];
+		board.isEqualBoard.description.push("Tests for the equality of the "+urlLink(URL_BOARD_PROPS)+" <sup>(except for `board.boardName`)</sup> between the calling **board** and another **board**.");
+		
+		board.isEqualBoard.examples=[];
+		board.isEqualBoard.examples.push("board.isEqualBoard(\"board_copy\") //true");
+		board.isEqualBoard.examples.push("board.isEqualBoard(other_board) //false");
+		board.isEqualBoard.examples.push("same_board.isEqualBoard(same_board) //true");
+		board.isEqualBoard.examples.push("other_board.isEqualBoard(\"nonexistent\") //false");
+		
+		board.isEqualBoard.errors=[];
+		board.isEqualBoard.errors.push("the *to board* is not found.");
+		//end: isEqualBoard
+		
+		res="";
+		
+		res+="<p align=\"center\">"+urlHrefLink(["« Return", "#book-documentation"])+"</p>";
+		
+		res+="\n\n";
+		
+		res+="<h1 align=\"center\">Board methods</h1>";
+		
+		res+="\n\n";
+		
+		res+="Boards created by `Ic.initBoard()` have the following available methods:";
+		
+		res+="\n\n";
+		
+		res+="<ul>\n<li>board."+docoGenMethodList(board).join("()</li>\n<li>board.")+"()</li>\n</ul>";
+		
+		res+="\n\n";
+		
+		res+="#### Table `board.<methods>(...)`:";
+		
+		res+="\n\n";
+		
+		res+="Function | Parameters | Return | UI refresh? | Description";
+		
+		res+="\n";
+		
+		res+="-------- | ---------- | ------ | ----------- | -----------";
+		
+		res+="\n";
+		
+		res+=docoGenMethodTable(board).join("\n");
+		
+		res+="\n\n";
+		
+		res+="<sup>And the [board UI methods](https://github.com/ajax333221/isepic-chess-ui#list-of-boarduimethods) when **isepic-chess-ui.js** is present.</sup>";
+		
+		res+="\n\n";
+		
+		res+="<p align=\"center\">"+urlHrefLink(["« Return", "#book-documentation"])+"</p>";
+		
+		res+="\n";
+		
+		document.getElementById("result").value=res;
+	</script>
+</html>
