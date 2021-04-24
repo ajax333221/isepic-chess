@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.8.0";
+		var _VERSION="6.8.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -31,9 +31,41 @@
 		var _SHORT_CASTLE=1;
 		var _LONG_CASTLE=2;
 		
+		var _RESULT_ONGOING="*";
+		var _RESULT_W_WINS="1-0";
+		var _RESULT_B_WINS="0-1";
+		var _RESULT_DRAW="1/2-1/2";
+		
 		var _DEFAULT_FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		
-		var _MUTABLE_KEYS=["w", "b", "activeColor", "nonActiveColor", "fen", "enPassantBos", "halfMove", "fullMove", "moveList", "currentMove", "isRotated", "checks", "isCheck", "isCheckmate", "isStalemate", "isThreefold", "isInsufficientMaterial", "isFiftyMove", "inDraw", "promoteTo", "manualResult", "isHidden", "legalUci", "legalUciTree", "legalRevTree", "squares"];
+		var _MUTABLE_KEYS=[
+			"w",
+			"b",
+			"activeColor",
+			"nonActiveColor",
+			"fen",
+			"enPassantBos",
+			"halfMove",
+			"fullMove",
+			"moveList",
+			"currentMove",
+			"isRotated",
+			"checks",
+			"isCheck",
+			"isCheckmate",
+			"isStalemate",
+			"isThreefold",
+			"isInsufficientMaterial",
+			"isFiftyMove",
+			"inDraw",
+			"promoteTo",
+			"manualResult",
+			"isHidden",
+			"legalUci",
+			"legalUciTree",
+			"legalRevTree",
+			"squares"
+		];
 		
 		//---------------- helpers
 		
@@ -48,7 +80,7 @@
 			
 			str=(""+str).replace(/\s/g, "").replace(/o/gi, "0").replace(/½/g, "1/2");
 			
-			if(str==="*" || str==="1-0" || str==="0-1" || str==="1/2-1/2"){
+			if(str===_RESULT_ONGOING || str===_RESULT_W_WINS || str===_RESULT_B_WINS || str===_RESULT_DRAW){
 				rtn=str;
 			}
 			
@@ -154,7 +186,7 @@
 			}
 			
 			if(keep_going){
-				game_result="*";
+				game_result=_RESULT_ONGOING;
 				
 				temp=_pgnResultHelper(temp);
 				
@@ -636,7 +668,7 @@
 				
 				rtn=rtn.replace(/\-/g, " ");
 				rtn=rtn.replace(/w/g, "O-O-O").replace(/v/g, "O-O");
-				rtn=rtn.replace(/i/g, "1-0").replace(/j/g, "0-1").replace(/z/g, "1/2-1/2");
+				rtn=rtn.replace(/i/g, _RESULT_W_WINS).replace(/j/g, _RESULT_B_WINS).replace(/z/g, _RESULT_DRAW);
 				
 				rtn=_trimSpaces(rtn);
 			}
@@ -1073,7 +1105,7 @@
 			that=this;
 			
 			rtn_changed=false;
-			temp=(_pgnResultHelper(str) || "*");
+			temp=(_pgnResultHelper(str) || _RESULT_ONGOING);
 			
 			if(temp!==that.manualResult){
 				rtn_changed=true;
@@ -1942,7 +1974,7 @@
 			
 			initial_full_move=(that.fullMove-Math.floor((that.currentMove+black_starts-1)/2)+(black_starts===!(that.currentMove%2))-1);
 			
-			result_tag_ow="*";
+			result_tag_ow=_RESULT_ONGOING;
 			
 			text_game="";
 			
@@ -1964,13 +1996,13 @@
 				}
 			}
 			
-			if(result_tag_ow==="*"){
+			if(result_tag_ow===_RESULT_ONGOING){
 				if(move_list[move_list.length-1].canDraw){
-					result_tag_ow="1/2-1/2";
+					result_tag_ow=_RESULT_DRAW;
 				}
 			}
 			
-			if(that.manualResult!=="*"){
+			if(that.manualResult!==_RESULT_ONGOING){
 				result_tag_ow=that.manualResult;
 			}
 			
@@ -1984,7 +2016,7 @@
 				text_game+=result_tag_ow;
 			}
 			
-			text_game=(text_game || "*");
+			text_game=(text_game || _RESULT_ONGOING);
 			
 			ordered_tags=[
 				["Event", (header.Event || "Chess game")],
@@ -2748,9 +2780,9 @@
 				
 				if(that.isCheckmate){
 					complete_san+="#";
-					move_res=(non_active_side.isBlack ? "1-0" : "0-1");//non_active_side is toggled
+					move_res=(non_active_side.isBlack ? _RESULT_W_WINS : _RESULT_B_WINS);//non_active_side is toggled
 				}else if(that.isStalemate){
-					move_res="1/2-1/2";
+					move_res=_RESULT_DRAW;
 				}else if(that.isCheck){//check but not checkmate
 					complete_san+="+";
 				}
@@ -2811,7 +2843,7 @@
 				temp=that.isHidden;
 				
 				that.isHidden=true;
-				that.setManualResult("*");
+				that.setManualResult(_RESULT_ONGOING);
 				that.isHidden=temp;
 				
 				that.refreshUi(p.isInanimated ? 0 : 1);//autorefresh
@@ -3181,9 +3213,9 @@
 				temp="";
 				
 				if(new_board.isCheckmate){
-					temp=(new_board[new_board.activeColor].isBlack ? "1-0" : "0-1");
+					temp=(new_board[new_board.activeColor].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS);
 				}else if(new_board.isStalemate){
-					temp="1/2-1/2";
+					temp=_RESULT_DRAW;
 				}
 				
 				new_board.moveList=[{
@@ -3245,7 +3277,7 @@
 						keep_going=false;
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
 					}else{
-						if(p.pgn.result!=="*"){
+						if(p.pgn.result!==_RESULT_ONGOING){
 							p.manualResult=(_pgnResultHelper(p.manualResult) || p.pgn.result);
 						}
 					}
