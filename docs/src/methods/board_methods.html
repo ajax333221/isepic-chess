@@ -73,56 +73,66 @@
 				name : "cloneBoardTo",
 				refreshUi : true
 			},
-			fenHistoryExport : {
+			reset : {
 				index : 13,
+				name : "reset",
+				refreshUi : true
+			},
+			deleteMoves : {
+				index : 14,
+				name : "deleteMoves",
+				refreshUi : true
+			},
+			fenHistoryExport : {
+				index : 15,
 				name : "fenHistoryExport"
 			},
 			pgnExport : {
-				index : 14,
+				index : 16,
 				name : "pgnExport"
 			},
 			uciExport : {
-				index : 15,
+				index : 17,
 				name : "uciExport"
 			},
 			ascii : {
-				index : 16,
+				index : 18,
 				name : "ascii"
 			},
 			getSquare : {
-				index : 17,
+				index : 19,
 				name : "getSquare"
 			},
 			setSquare : {
-				index : 18,
+				index : 20,
 				name : "setSquare"
 			},
 			countAttacks : {
-				index : 19,
+				index : 21,
 				name : "countAttacks"
 			},
 			isLegalMove : {
-				index : 20,
+				index : 22,
 				name : "isLegalMove"
 			},
 			legalMoves : {
-				index : 21,
+				index : 23,
 				name : "legalMoves"
 			},
 			legalFenMoves : {
-				index : 22,
+				index : 24,
 				name : "legalFenMoves"
 			},
 			legalSanMoves : {
-				index : 23,
+				index : 25,
 				name : "legalSanMoves"
 			},
 			legalUciMoves : {
-				index : 24,
+				index : 26,
 				name : "legalUciMoves"
 			},
 			isEqualBoard : {
-				index : 25,
+				index : 27,
 				name : "isEqualBoard"
 			}
 		};
@@ -173,6 +183,7 @@
 		board.playMove.description.push("The Boolean options (`isMockMove`, `isLegalMove` and `isInanimated`) default to `false` when not set to a Boolean value of `true`.");
 		board.playMove.description.push("`promoteTo` takes precedence over everything when specified and a pawn promotion takes place.");
 		board.playMove.description.push("`delimiter` is a single character to look for in **moveJoined** (like `\"-\" in \"a2-a4\"`) to allow the use of any delimiters. Defaults to `\"-\"` if not specified.");
+		board.playMove.description.push("Successfully playing a move will set `\"*\"` to `board.manualResult`.");
 		
 		board.playMove.examples=[];
 		board.playMove.examples.push("board.playMove(\"Nc3\") //Object{...}");
@@ -351,6 +362,36 @@
 		
 		board.cloneBoardTo.examples=[];/*add examples*/
 		//end: cloneBoardTo
+		
+		//start: reset
+		board.reset.params={
+			children : [{name : "keepOptions", type : "Boolean", icon : "eight_pointed_black_star"}]
+		};
+		
+		board.reset.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.reset.description=[];
+		board.reset.description.push("Loads the **default fen position**.");
+		board.reset.description.push("`keepOptions` can be used to prevent the overwrite of `board.isRotated`, `board.promoteTo`, `board.manualResult` and `board.isHidden` to their respectives defaults.");
+		
+		board.reset.examples=[];/*add examples*/
+		//end: reset
+		
+		//start: deleteMoves
+		board.deleteMoves.params={};
+		
+		board.deleteMoves.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.deleteMoves.description=[];
+		board.deleteMoves.description.push("Navigates to the **starting position** and deletes all the played moves.");
+		board.deleteMoves.description.push("Successfully deleting a move will set `\"*\"` to `board.manualResult`.");
+		
+		board.deleteMoves.examples=[];/*add examples*/
+		//end: deleteMoves
 		
 		//start: fenHistoryExport
 		board.fenHistoryExport.params={};

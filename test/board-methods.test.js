@@ -696,6 +696,300 @@ describe("Board methods", () => {
 		expect(board_b.fen).toBe("r1bk1bnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w - - 5 5");
 	});
 	
+	describe("b.reset()", () => {
+		var board_name, other_board_name;
+		
+		board_name="board_reset";
+		other_board_name="board_reset_other";
+		
+		test("default position", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				skipFenValidation : true
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+			
+			board_b.playMove("e4");
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+			
+			board_b.reset();
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+		});
+		
+		test("other fen position", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq e3 0 2",
+				skipFenValidation : true
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+			
+			board_b.reset();
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+		});
+		
+		test("keep options = false (default) [case A : true false]", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name,
+				isRotated : true,
+				promoteTo : "N",
+				manualResult : "0-1",
+				isHidden : true
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				isRotated : true,
+				promoteTo : "N",
+				manualResult : "0-1",
+				isHidden : true
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+			
+			board_b.reset();
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+		});
+		
+		test("keep options = false (default) [case B : false true]", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				isRotated : true,
+				promoteTo : "N",
+				manualResult : "0-1",
+				isHidden : true
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+			
+			board_b.reset();
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+		});
+		
+		test("keep options = true [case C : true true]", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name,
+				isRotated : true,
+				promoteTo : "N",
+				manualResult : "0-1",
+				isHidden : true
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				isRotated : true,
+				promoteTo : "N",
+				manualResult : "0-1",
+				isHidden : true
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+			
+			board_b.reset(true);
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+		});
+		
+		test("keep options = true [case D : false false]", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				isRotated : true,
+				promoteTo : "N",
+				manualResult : "0-1",
+				isHidden : true
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+			
+			board_b.reset(true);
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+		});
+		
+		test("returned value", () => {
+			var temp, board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "r1bqkbnr/pppppppp/2n5/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 2 2"
+			});
+			
+			temp=board_a.reset();
+			expect(temp).toBe(false);
+			
+			board_a.playMove("e4");
+			board_a.playMove("e5");
+			
+			temp=board_a.reset();
+			expect(temp).toBe(true);
+			
+			temp=board_a.reset();
+			expect(temp).toBe(false);
+			
+			//---
+			
+			temp=board_b.reset();
+			expect(temp).toBe(true);
+			
+			temp=board_b.reset();
+			expect(temp).toBe(false);
+			
+			board_b.playMove("e4");
+			board_b.playMove("e5");
+			
+			temp=board_b.reset();
+			expect(temp).toBe(true);
+			
+			temp=board_b.reset();
+			expect(temp).toBe(false);
+		});
+	});
+	
+	describe("b.deleteMoves()", () => {
+		var board_name, other_board_name;
+		
+		board_name="board_delete_moves";
+		other_board_name="board_delete_moves_other";
+		
+		test("default position", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+			
+			board_b.playMove("e4");
+			board_b.playMove("e5");
+			board_b.playMove("Nf3");
+			board_b.playMove("Nc6");
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+			
+			board_b.deleteMoves();
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+		});
+		
+		test("other fen position", () => {
+			var board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name,
+				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq e3 0 2",
+				skipFenValidation : true
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq e3 0 2",
+				skipFenValidation : true
+			});
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+			
+			board_b.playMove("d5");
+			board_b.playMove("d4");
+			board_b.playMove("dxe4");
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+			
+			board_b.deleteMoves();
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+		});
+		
+		test("returned value", () => {
+			var temp, board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				uci : "e2e4 e7e5"
+			});
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(false);
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(false);
+			
+			board_a.playMove("e4");
+			board_a.playMove("e5");
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(true);
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(false);
+			
+			//---
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(true);
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(false);
+			
+			board_b.playMove("e4");
+			board_b.playMove("e5");
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(true);
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(false);
+		});
+	});
+	
 	describe("mix: ascii, toggleIsRotated and setPromoteTo", () => {
 		var board_name;
 		

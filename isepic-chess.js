@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.8.1";
+		var _VERSION="6.9.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -401,6 +401,8 @@
 					isEqualBoard : _isEqualBoard,
 					cloneBoardFrom : _cloneBoardFrom,
 					cloneBoardTo : _cloneBoardTo,
+					reset : _reset,
+					deleteMoves : _deleteMoves,
 					countLightDarkBishops : _countLightDarkBishops,
 					fenWrapmoveHelper : _fenWrapmoveHelper,
 					sanWrapmoveHelper : _sanWrapmoveHelper,
@@ -2196,6 +2198,84 @@
 			}
 			
 			return rtn;
+		}
+		
+		function _reset(keep_options){
+			var that, hash_cache, rtn_changed;
+			
+			that=this;
+			
+			rtn_changed=false;
+			
+			hash_cache=that.boardHash();
+			
+			that.currentMove=0;
+			that.readValidatedFen(_DEFAULT_FEN);
+			that.updateFenAndMisc();
+			
+			that.moveList=[{
+				colorMoved : that.nonActiveColor,
+				colorToPlay : that.activeColor,
+				fen : that.fen,
+				san : "",
+				uci : "",
+				comment : "",
+				moveResult : "",
+				canDraw : that.inDraw,
+				fromBos : "",
+				toBos : "",
+				piece : "",
+				promotion : ""
+			}];
+			
+			if(!keep_options){
+				that.isHidden=true;//prevents ui refresh from setPromoteTo() and setManualResult()
+				
+				that.isRotated=false;
+				that.setPromoteTo(_QUEEN);
+				that.setManualResult(_RESULT_ONGOING);
+				that.isHidden=false;
+			}
+			
+			if(that.boardHash()!==hash_cache){
+				rtn_changed=true;
+				
+				that.refreshUi(0);//autorefresh
+			}
+			
+			return rtn_changed;
+		}
+		
+		function _deleteMoves(){
+			var that, temp, hash_cache, rtn_changed;
+			
+			that=this;
+			
+			rtn_changed=false;
+			
+			hash_cache=that.boardHash();
+			
+			temp=that.isHidden;
+			
+			that.isHidden=true;
+			that.navFirst();
+			that.isHidden=temp;
+			
+			that.moveList=that.moveList.slice(0, 1);
+			
+			if(that.boardHash()!==hash_cache){
+				rtn_changed=true;
+				
+				temp=that.isHidden;
+				
+				that.isHidden=true;
+				that.setManualResult(_RESULT_ONGOING);
+				that.isHidden=temp;
+				
+				that.refreshUi(0);//autorefresh
+			}
+			
+			return rtn_changed;
 		}
 		
 		function _countLightDarkBishops(){
