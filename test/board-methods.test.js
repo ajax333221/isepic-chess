@@ -741,6 +741,10 @@ describe("Board methods", () => {
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
 			
+			board_b.playMove("Nc6");
+			
+			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+			
 			board_b.reset();
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
@@ -753,7 +757,6 @@ describe("Board methods", () => {
 				boardName : board_name,
 				isRotated : true,
 				promoteTo : "N",
-				manualResult : "0-1",
 				isHidden : true
 			});
 			
@@ -761,7 +764,6 @@ describe("Board methods", () => {
 				boardName : other_board_name,
 				isRotated : true,
 				promoteTo : "N",
-				manualResult : "0-1",
 				isHidden : true
 			});
 			
@@ -783,7 +785,6 @@ describe("Board methods", () => {
 				boardName : other_board_name,
 				isRotated : true,
 				promoteTo : "N",
-				manualResult : "0-1",
 				isHidden : true
 			});
 			
@@ -801,7 +802,6 @@ describe("Board methods", () => {
 				boardName : board_name,
 				isRotated : true,
 				promoteTo : "N",
-				manualResult : "0-1",
 				isHidden : true
 			});
 			
@@ -809,7 +809,6 @@ describe("Board methods", () => {
 				boardName : other_board_name,
 				isRotated : true,
 				promoteTo : "N",
-				manualResult : "0-1",
 				isHidden : true
 			});
 			
@@ -831,7 +830,6 @@ describe("Board methods", () => {
 				boardName : other_board_name,
 				isRotated : true,
 				promoteTo : "N",
-				manualResult : "0-1",
 				isHidden : true
 			});
 			
@@ -840,6 +838,156 @@ describe("Board methods", () => {
 			board_b.reset(true);
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
+		});
+		
+		test("manualResult to default, keep options = false [case A.f : from implicit *]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+		});
+		
+		test("manualResult to default, keep options = false [case B.f : from explicit *]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				manualResult : "*"
+			});
+			
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+		});
+		
+		test("manualResult to default, keep options = false [case C.f : from 1-0]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				manualResult : "1-0"
+			});
+			
+			expect(board_obj.manualResult).toBe("1-0");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(true);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+		});
+		
+		test("manualResult to default, keep options = false [case D.f : from 0-1]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				manualResult : "0-1"
+			});
+			
+			expect(board_obj.manualResult).toBe("0-1");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(true);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset();
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+		});
+		
+		test("manualResult to default, keep options = true [case A.t : from implicit *]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+		});
+		
+		test("manualResult to default, keep options = true [case B.t : from explicit *]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				manualResult : "*"
+			});
+			
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+		});
+		
+		test("manualResult to default, keep options = true [case C.t : from 1-0]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				manualResult : "1-0"
+			});
+			
+			expect(board_obj.manualResult).toBe("1-0");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(true);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
+		});
+		
+		test("manualResult to default, keep options = true [case D.t : from 0-1]", () => {
+			var temp, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				manualResult : "0-1"
+			});
+			
+			expect(board_obj.manualResult).toBe("0-1");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(true);
+			expect(board_obj.manualResult).toBe("*");
+			
+			temp=board_obj.reset(true);
+			expect(temp).toBe(false);
+			expect(board_obj.manualResult).toBe("*");
 		});
 		
 		test("returned value", () => {
@@ -944,49 +1092,124 @@ describe("Board methods", () => {
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
 		});
 		
-		test("returned value", () => {
+		test("manualResult change - default position", () => {
 			var temp, board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName : board_name,
+				manualResult : "1/2-1/2"
 			});
 			
 			board_b=Ic.initBoard({
 				boardName : other_board_name,
-				uci : "e2e4 e7e5"
+				uci : "e2e4 e7e5",
+				manualResult : "1/2-1/2",
+				validOrBreak : true
 			});
 			
 			temp=board_a.deleteMoves();
 			expect(temp).toBe(false);
+			expect(board_a.manualResult).toBe("1/2-1/2");
 			
 			temp=board_a.deleteMoves();
 			expect(temp).toBe(false);
+			expect(board_a.manualResult).toBe("1/2-1/2");
 			
 			board_a.playMove("e4");
 			board_a.playMove("e5");
+			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.deleteMoves();
 			expect(temp).toBe(true);
+			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.deleteMoves();
 			expect(temp).toBe(false);
+			expect(board_a.manualResult).toBe("*");
 			
 			//---
 			
 			temp=board_b.deleteMoves();
 			expect(temp).toBe(true);
+			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.deleteMoves();
 			expect(temp).toBe(false);
+			expect(board_b.manualResult).toBe("*");
 			
 			board_b.playMove("e4");
 			board_b.playMove("e5");
+			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.deleteMoves();
 			expect(temp).toBe(true);
+			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.deleteMoves();
 			expect(temp).toBe(false);
+			expect(board_b.manualResult).toBe("*");
+		});
+		
+		test("manualResult change - other fen position", () => {
+			var temp, board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name,
+				fen : "rnbqkb1r/pppppppp/5n2/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+				skipFenValidation : true,
+				manualResult : "1/2-1/2"
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name,
+				fen : "rnbqkb1r/pppppppp/5n2/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+				uci : "e2e4 e7e5",
+				skipFenValidation : true,
+				manualResult : "1/2-1/2",
+				validOrBreak : true
+			});
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(false);
+			expect(board_a.manualResult).toBe("1/2-1/2");
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(false);
+			expect(board_a.manualResult).toBe("1/2-1/2");
+			
+			board_a.playMove("e4");
+			board_a.playMove("e5");
+			expect(board_a.manualResult).toBe("*");
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(true);
+			expect(board_a.manualResult).toBe("*");
+			
+			temp=board_a.deleteMoves();
+			expect(temp).toBe(false);
+			expect(board_a.manualResult).toBe("*");
+			
+			//---
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(true);
+			expect(board_b.manualResult).toBe("*");
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(false);
+			expect(board_b.manualResult).toBe("*");
+			
+			board_b.playMove("e4");
+			board_b.playMove("e5");
+			expect(board_b.manualResult).toBe("*");
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(true);
+			expect(board_b.manualResult).toBe("*");
+			
+			temp=board_b.deleteMoves();
+			expect(temp).toBe(false);
+			expect(board_b.manualResult).toBe("*");
 		});
 	});
 	

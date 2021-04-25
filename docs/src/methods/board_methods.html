@@ -374,7 +374,9 @@
 		
 		board.reset.description=[];
 		board.reset.description.push("Loads the **default fen position**.");
-		board.reset.description.push("`keepOptions` can be used to prevent the overwrite of `board.isRotated`, `board.promoteTo`, `board.manualResult` and `board.isHidden` to their respectives defaults.");
+		board.reset.description.push("`keepOptions` can be used to prevent the overwrite of `board.isRotated`, `board.promoteTo` and `board.isHidden` to their respectives defaults.");
+		board.reset.description.push("All the played moves are deleted.");
+		board.reset.description.push("It will set `\"*\"` to `board.manualResult`.");
 		
 		board.reset.examples=[];/*add examples*/
 		//end: reset

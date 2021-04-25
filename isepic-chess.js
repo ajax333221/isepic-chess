@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.9.0";
+		var _VERSION="6.9.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2201,7 +2201,7 @@
 		}
 		
 		function _reset(keep_options){
-			var that, hash_cache, rtn_changed;
+			var that, temp, hash_cache, rtn_changed;
 			
 			that=this;
 			
@@ -2228,12 +2228,17 @@
 				promotion : ""
 			}];
 			
+			temp=that.isHidden;
+			
+			that.isHidden=true;
+			that.setManualResult(_RESULT_ONGOING);
+			that.isHidden=temp;
+			
 			if(!keep_options){
-				that.isHidden=true;//prevents ui refresh from setPromoteTo() and setManualResult()
+				that.isHidden=true;//prevents ui refresh from setPromoteTo()
 				
 				that.isRotated=false;
 				that.setPromoteTo(_QUEEN);
-				that.setManualResult(_RESULT_ONGOING);
 				that.isHidden=false;
 			}
 			
