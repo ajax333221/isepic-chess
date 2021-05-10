@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.9.1";
+		var _VERSION="6.9.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -3254,7 +3254,7 @@
 			keep_going=true;
 			
 			//if(keep_going){
-				p.boardName=(_isNonBlankStr(p.boardName) ? _formatName(p.boardName) : ("board_"+new Date().getTime()));
+				p.boardName=(_isNonBlankStr(p.boardName) ? _formatName(p.boardName) : ("b_"+((new Date().getTime()+"").slice(-10)+""+Math.random().toString(36).slice(2, 7)).slice(-10)));
 				board_name=p.boardName;
 				
 				p.isRotated=(p.isRotated===true);
