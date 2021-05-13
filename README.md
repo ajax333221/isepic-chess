@@ -2,6 +2,16 @@
 
 <h1 align="center">isepic-chess.js</h1>
 
+<p align="center">
+	<a href="https://github.com/ajax333221/isepic-chess/releases/latest"><img src="https://img.shields.io/github/v/release/ajax333221/isepic-chess.svg?colorB=dddddd" alt="latest release"></a>
+	<a href="https://www.npmjs.com/package/isepic-chess"><img src="https://img.shields.io/npm/v/isepic-chess.svg" alt="npm version"></a>
+	<a href="https://github.com/facebook/jest"><img src="https://img.shields.io/badge/tested_with-jest-99424f.svg" alt="tested with Jest"></a>
+	<a href="#page_facing_up-copyright-and-license"><img src="https://img.shields.io/github/license/ajax333221/isepic-chess.svg" alt="license"></a>
+	<a href="https://www.reddit.com/r/isepic_chess_js"><img src="https://img.shields.io/reddit/subreddit-subscribers/isepic_chess_js?style=social" alt="official subreddit"></a>
+</p>
+
+<br>
+
 `isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#rocket-features)).
 
 <strong>Flexibility:</strong> it strives to be flexible (inspired by JavaScript) and attempts to make things work without easily giving up and throwing errors.
