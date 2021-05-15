@@ -253,14 +253,77 @@ describe("Board properties", () => {
 		
 		expect(Object.keys(get_custom.squares).length).toBe(64);
 		
+		expect(get_custom.squares["d6"].pos).toEqual([2, 3]);
+		expect(get_custom.squares["d6"].bos).toBe("d6");
+		expect(get_custom.squares["d6"].rankPos).toBe(2);
+		expect(get_custom.squares["d6"].filePos).toBe(3);
+		expect(get_custom.squares["d6"].rankBos).toBe("6");
+		expect(get_custom.squares["d6"].fileBos).toBe("d");
+		
+		expect(get_custom.squares["e8"].bal).toBe("k");
+		expect(get_custom.squares["d6"].bal).toBe("K");
+		expect(get_custom.squares["e6"].bal).toBe("*");
+		expect(get_custom.squares["f6"].bal).toBe("R");
+		
+		expect(get_custom.squares["e8"].absBal).toBe("K");
+		expect(get_custom.squares["d6"].absBal).toBe("K");
+		expect(get_custom.squares["e6"].absBal).toBe("*");
+		expect(get_custom.squares["f6"].absBal).toBe("R");
+		
+		expect(get_custom.squares["e8"].val).toBe(-6);
+		expect(get_custom.squares["d6"].val).toBe(6);
+		expect(get_custom.squares["e6"].val).toBe(0);
+		expect(get_custom.squares["f6"].val).toBe(4);
+		
+		expect(get_custom.squares["e8"].absVal).toBe(6);
+		expect(get_custom.squares["d6"].absVal).toBe(6);
+		expect(get_custom.squares["e6"].absVal).toBe(0);
+		expect(get_custom.squares["f6"].absVal).toBe(4);
+		
+		expect(get_custom.squares["e8"].className).toBe("bk");
 		expect(get_custom.squares["d6"].className).toBe("wk");
+		expect(get_custom.squares["e6"].className).toBe("");
 		expect(get_custom.squares["f6"].className).toBe("wr");
+		
+		expect(get_custom.squares["e8"].sign).toBe(-1);
+		expect(get_custom.squares["d6"].sign).toBe(1);
+		expect(get_custom.squares["e6"].sign).toBe(-1);
+		expect(get_custom.squares["f6"].sign).toBe(1);
+		
+		expect(get_custom.squares["e8"].isEmptySquare).toBe(false);
+		expect(get_custom.squares["d6"].isEmptySquare).toBe(false);
+		expect(get_custom.squares["e6"].isEmptySquare).toBe(true);
+		expect(get_custom.squares["f6"].isEmptySquare).toBe(false);
+		
+		expect(get_custom.squares["e8"].isPawn).toBe(false);
+		expect(get_custom.squares["d6"].isPawn).toBe(false);
+		expect(get_custom.squares["e6"].isPawn).toBe(false);
+		expect(get_custom.squares["f6"].isPawn).toBe(false);
+		
+		expect(get_custom.squares["e8"].isKnight).toBe(false);
+		expect(get_custom.squares["d6"].isKnight).toBe(false);
+		expect(get_custom.squares["e6"].isKnight).toBe(false);
+		expect(get_custom.squares["f6"].isKnight).toBe(false);
+		
+		expect(get_custom.squares["e8"].isBishop).toBe(false);
+		expect(get_custom.squares["d6"].isBishop).toBe(false);
+		expect(get_custom.squares["e6"].isBishop).toBe(false);
+		expect(get_custom.squares["f6"].isBishop).toBe(false);
+		
+		expect(get_custom.squares["e8"].isRook).toBe(false);
+		expect(get_custom.squares["d6"].isRook).toBe(false);
+		expect(get_custom.squares["e6"].isRook).toBe(false);
+		expect(get_custom.squares["f6"].isRook).toBe(true);
+		
+		expect(get_custom.squares["e8"].isQueen).toBe(false);
+		expect(get_custom.squares["d6"].isQueen).toBe(false);
+		expect(get_custom.squares["e6"].isQueen).toBe(false);
+		expect(get_custom.squares["f6"].isQueen).toBe(false);
+		
 		expect(get_custom.squares["e8"].isKing).toBe(true);
-		expect(get_custom.squares["a1"].val).toBe(0);
-		expect(get_custom.squares["a2"].pos).toEqual([6, 0]);
-		expect(get_custom.squares["a3"].bos).toBe("a3");
-		expect(get_custom.squares["h1"].fileBos).toBe("h");
-		expect(get_custom.squares["h2"].isEmptySquare).toBe(true);
+		expect(get_custom.squares["d6"].isKing).toBe(true);
+		expect(get_custom.squares["e6"].isKing).toBe(false);
+		expect(get_custom.squares["f6"].isKing).toBe(false);
 	});
 	
 	test("b.enPassantBos", () => {
