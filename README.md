@@ -34,7 +34,6 @@
 - [Demo](https://github.com/ajax333221/isepic-chess#eye-demo-from-isepic-chess-ui)
 - [Features](https://github.com/ajax333221/isepic-chess#rocket-features)
 - [Documentation](https://github.com/ajax333221/isepic-chess#book-documentation)
-- [To do](https://github.com/ajax333221/isepic-chess#telescope-to-do)
 - [Copyright and license](https://github.com/ajax333221/isepic-chess#page_facing_up-copyright-and-license)
 
 :computer_mouse: Installation
@@ -169,13 +168,6 @@ https://ajax333221.github.io/isepic-chess-ui/
 - [Board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
 - [Square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
 - [Move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
-
-:telescope: To do
--------------
-
-- **PGN** (export imported tags)
-- **PGN** (keep comments instead of deleting them)
-- **Parse multiple games** (currently the parser can only handle one game at a time)
 
 :page_facing_up: Copyright and license
 -------------
