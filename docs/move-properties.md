@@ -13,6 +13,7 @@ Moves from `board.playMove()` and manually selected from `board.moveList[<index>
 <li>move.comment</li>
 <li>move.moveResult</li>
 <li>move.canDraw</li>
+<li>move.isCapture</li>
 <li>move.fromBos</li>
 <li>move.toBos</li>
 <li>move.piece</li>
@@ -31,6 +32,7 @@ Property | Type | Description
 **comment** | String | `"{...}"` a **comment** to be shown after the san for this move, it holds an empty string if no comment.
 **moveResult** | String | If a checkmate or stalemate happened in this move, the value will be a **result** `"1-0", "0-1", "1/2-1/2"`, it holds an empty string otherwise.
 **canDraw** | Boolean | The value of `board.inDraw` after this move is played.
+**isCapture** | Boolean | `true` if there was a **piece capture** in this move.
 **fromBos** | String | The origin (from) **squareBos**.
 **toBos** | String | The destination (to) **squareBos**.
 **piece** | String | The **lowercased piece bal** character.

@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.9.2";
+		var _VERSION="6.10.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1076,7 +1076,7 @@
 				
 				that.isRotated=temp;
 				
-				that.refreshUi(0);//autorefresh
+				that.refreshUi(0, false);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -1095,7 +1095,7 @@
 				
 				that.promoteTo=temp;
 				
-				that.refreshUi(0);//autorefresh
+				that.refreshUi(0, false);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -1114,7 +1114,7 @@
 				
 				that.manualResult=temp;
 				
-				that.refreshUi(0);//autorefresh
+				that.refreshUi(0, false);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -1161,7 +1161,7 @@
 				that.readValidatedFen(that.moveList[temp].fen);
 				that.updateFenAndMisc();
 				
-				that.refreshUi(is_goto ? 0 : num);//autorefresh
+				that.refreshUi((is_goto ? 0 : num), true);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -2159,7 +2159,7 @@
 				
 				_cloneBoardObjs(that, from_board);
 				
-				that.refreshUi(0);//autorefresh
+				that.refreshUi(0, false);//autorefresh
 			}
 			
 			return rtn;
@@ -2194,7 +2194,7 @@
 				
 				_cloneBoardObjs(to_board, that);
 				
-				to_board.refreshUi(0);//autorefresh
+				to_board.refreshUi(0, false);//autorefresh
 			}
 			
 			return rtn;
@@ -2222,6 +2222,7 @@
 				comment : "",
 				moveResult : "",
 				canDraw : that.inDraw,
+				isCapture : false,
 				fromBos : "",
 				toBos : "",
 				piece : "",
@@ -2245,7 +2246,7 @@
 			if(that.boardHash()!==hash_cache){
 				rtn_changed=true;
 				
-				that.refreshUi(0);//autorefresh
+				that.refreshUi(0, false);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -2277,7 +2278,7 @@
 				that.setManualResult(_RESULT_ONGOING);
 				that.isHidden=temp;
 				
-				that.refreshUi(0);//autorefresh
+				that.refreshUi(0, false);//autorefresh
 			}
 			
 			return rtn_changed;
@@ -2599,7 +2600,7 @@
 		
 		//p = {promoteTo, delimiter, isLegalMove}
 		function _draftMove(mov, p){
-			var that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, wrapped_move, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, active_side, non_active_side, is_ambiguous, keep_going, rtn;
+			var that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, is_capture, wrapped_move, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, active_side, non_active_side, is_ambiguous, keep_going, rtn;
 			
 			that=this;
 			
@@ -2649,6 +2650,7 @@
 				non_active_side=that[that.nonActiveColor];
 				
 				pawn_moved=false;
+				is_capture=!final_cached_square.isEmptySquare;
 				new_en_passant_bos="";
 				promoted_val=0;
 				king_castled=0;
@@ -2677,6 +2679,8 @@
 							rankShift : non_active_side.singlePawnRankShift
 						}).bos;
 					}else if(sameSquare(final_cached_square, that.enPassantBos)){//enpassant capture
+						is_capture=true;
+						
 						rtn.enPassantCaptureAtRankShift=non_active_side.singlePawnRankShift;
 					}else if(final_cached_square.rankPos===active_side.lastRankPos){//promotion
 						promoted_val=(bubbling_promoted_to*active_side.sign);
@@ -2761,6 +2765,7 @@
 				rtn.pawnMoved=pawn_moved;
 				rtn.newEnPassantBos=new_en_passant_bos;
 				rtn.promotedVal=promoted_val;
+				rtn.isCapture=is_capture;
 				rtn.partialSan=partial_san;
 				rtn.withOverdisambiguated=with_overdisambiguated;
 			}
@@ -2768,7 +2773,7 @@
 			return rtn;
 		}
 		
-		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated}
+		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
 		function _playMove(mov, p){
 			var i, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, keep_going, rtn_move_obj;
 			
@@ -2781,6 +2786,7 @@
 			//if(keep_going){
 				p.isMockMove=(p.isMockMove===true);
 				p.isInanimated=(p.isInanimated===true);
+				p.playSounds=(p.playSounds===true);
 				
 				if(p.isMockMove){
 					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p], {promoteTo : that.promoteTo, skipFenValidation : true});
@@ -2899,6 +2905,7 @@
 					comment : autogen_comment,
 					moveResult : move_res,
 					canDraw : that.inDraw,
+					isCapture : pgn_obj.isCapture,
 					fromBos : initial_cached_square.bos,
 					toBos : final_cached_square.bos,
 					piece : temp,
@@ -2919,6 +2926,7 @@
 					comment : autogen_comment,
 					moveResult : move_res,
 					canDraw : that.inDraw,
+					isCapture : pgn_obj.isCapture,
 					fromBos : initial_cached_square.bos,
 					toBos : final_cached_square.bos,
 					piece : temp,
@@ -2931,7 +2939,7 @@
 				that.setManualResult(_RESULT_ONGOING);
 				that.isHidden=temp;
 				
-				that.refreshUi(p.isInanimated ? 0 : 1);//autorefresh
+				that.refreshUi((p.isInanimated ? 0 : 1), p.playSounds);//autorefresh
 			}
 			
 			return rtn_move_obj;
@@ -2939,13 +2947,13 @@
 		
 		//---------------- board (using IcUi)
 		
-		function _refreshUi(animate_move){
+		function _refreshUi(animation_type, play_sounds){
 			var that;
 			
 			that=this;
 			
 			if(_WIN && _WIN.IcUi && _WIN.IcUi.refreshUi){
-				_WIN.IcUi.refreshUi.apply(that, [animate_move]);
+				_WIN.IcUi.refreshUi.apply(that, [animation_type, play_sounds]);
 			}
 		}
 		
@@ -3312,6 +3320,7 @@
 					comment : "",
 					moveResult : temp,
 					canDraw : new_board.inDraw,
+					isCapture : false,
 					fromBos : "",
 					toBos : "",
 					piece : "",
@@ -3341,6 +3350,7 @@
 						comment : "",
 						moveResult : "",
 						canDraw : new_board.inDraw,
+						isCapture : false,
 						fromBos : "",
 						toBos : "",
 						piece : "",
@@ -3395,7 +3405,7 @@
 				
 				new_board.isHidden=p.isHidden;
 				
-				new_board.refreshUi(0);//autorefresh
+				new_board.refreshUi(0, false);//autorefresh
 			}
 			
 			if(board_created && !keep_going){
