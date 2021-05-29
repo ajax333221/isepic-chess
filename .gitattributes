@@ -1,6 +1,2 @@
 # AUTO-DETECT
-* text=auto
-
-# EOL files LF
-*.js text eol=lf
-package.json text eol=lf
+* text=auto eol=lf
