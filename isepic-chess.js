@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.10.0";
+		var _VERSION="6.10.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -871,7 +871,7 @@
 			return rtn_msg;
 		}
 		
-		function _perft(woard, depth, ply, specific_uci){
+		function _perft(woard, depth, specific_uci){
 			var i, len, board, count, keep_going, rtn;
 			
 			rtn=1;
@@ -903,8 +903,8 @@
 						count++;
 					}else{
 						board.playMove(board.legalUci[i], {isLegalMove : true});
-						count+=_perft(board, (depth-1), (ply+1));
-						board.navLinkMove(ply-1);
+						count+=_perft(board, (depth-1));
+						board.navPrevious();
 					}
 				}
 				
