@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.10.1";
+		var _VERSION="6.10.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -798,31 +798,27 @@
 			rtn_msg="";
 			
 			//if(!rtn_msg){
-				if(!_isNonBlankStr(fen)){
-					rtn_msg="Error [0] falsy value after trim";
+				fen=(""+fen);
+				
+				if(fen.length<20){
+					rtn_msg="Error [0] fen is too short";
 				}
 			//}
 			
 			if(!rtn_msg){
 				fen=_trimSpaces(fen);
 				
-				if(fen.length<20){
-					rtn_msg="Error [1] fen is too short";
-				}
-			}
-			
-			if(!rtn_msg){
 				optional_clocks=fen.replace(/^([rnbqkRNBQK1-8]+\/)([rnbqkpRNBQKP1-8]+\/){6}([rnbqkRNBQK1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])($|\s)/, "");
 				
 				if(fen.length===optional_clocks.length){
-					rtn_msg="Error [2] invalid fen structure";
+					rtn_msg="Error [1] invalid fen structure";
 				}
 			}
 			
 			if(!rtn_msg){
 				if(optional_clocks.length){
 					if(!(/^(0|[1-9][0-9]*)\s([1-9][0-9]*)$/.test(optional_clocks))){
-						rtn_msg="Error [3] invalid half/full move";
+						rtn_msg="Error [2] invalid half/full move";
 					}
 				}
 			}
@@ -841,7 +837,7 @@
 						current_is_num=!!temp;
 						
 						if(last_is_num && current_is_num){
-							rtn_msg="Error [4] two consecutive numeric values";
+							rtn_msg="Error [3] two consecutive numeric values";
 							break outer;
 						}
 						
@@ -850,21 +846,25 @@
 					}
 					
 					if(total_files_in_current_rank!==8){
-						rtn_msg="Error [5] rank without exactly 8 columns";
+						rtn_msg="Error [4] rank without exactly 8 columns";
 						break;
 					}
 				}
 			}
 			
 			if(!rtn_msg){
-				if(_occurrences(fen_board, "K")!==1){
-					rtn_msg="Error [6] board without exactly one white king";
+				temp=fen_board.indexOf("K");
+				
+				if(temp===-1 || fen_board.lastIndexOf("K")!==temp){
+					rtn_msg="Error [5] board without exactly one white king";
 				}
 			}
 			
 			if(!rtn_msg){
-				if(_occurrences(fen_board, "k")!==1){
-					rtn_msg="Error [7] board without exactly one black king";
+				temp=fen_board.indexOf("k");
+				
+				if(temp===-1 || fen_board.lastIndexOf("k")!==temp){
+					rtn_msg="Error [6] board without exactly one black king";
 				}
 			}
 			
@@ -2379,7 +2379,7 @@
 				//1 or 3 changes : invalid
 				//0 changes : nothing moved
 				if(from_squares.length===2 && to_squares.length===2){
-					is_long_castle=(from_squares.join("").indexOf("a")!==-1);
+					is_long_castle=_strContains(from_squares.join(""), "a");
 					king_rank=(that.activeColor==="w" ? 1 : 8);
 					
 					to_squares=[(is_long_castle ? "c" : "g")+king_rank];
@@ -3077,7 +3077,7 @@
 				qos=_strToBosHelper(qos);
 				
 				if(qos!==null){
-					rtn=[(8-_toInt(qos.charAt(1))), _toInt("abcdefgh".indexOf(qos.charAt(0)))];
+					rtn=[(8-(qos.charAt(1)*1)), "abcdefgh".indexOf(qos.charAt(0))];
 				}
 			}else if(_isArray(qos)){
 				rtn=_arrToPosHelper(qos);
