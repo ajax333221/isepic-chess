@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.10.3";
+		var _VERSION="6.10.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -143,7 +143,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				if(!_isNonBlankStr(str)){
 					break block;
 				}
@@ -216,7 +217,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				if(!_isNonBlankStr(str)){
 					break block;
 				}
@@ -238,7 +240,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				if(!_isNonBlankStr(mov)){
 					break block;
 				}
@@ -270,7 +273,8 @@
 			rtn=null;
 			p=_unreferenceP(p);
 			
-			block : {
+			block:
+			{
 				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter : "-");
 				p.delimiter=p.delimiter.charAt(0);
 				
@@ -301,7 +305,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				if(!_isArray(mov) || mov.length!==2){
 					break block;
 				}
@@ -321,7 +326,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				if(!_isMove(mov)){
 					break block;
 				}
@@ -765,7 +771,8 @@
 			
 			rtn_msg="";
 			
-			block : {
+			block:
+			{
 				fen=(""+fen);
 				
 				if(fen.length<20){
@@ -838,7 +845,8 @@
 			
 			rtn=1;
 			
-			block : {
+			block:
+			{
 				if(depth<1){
 					break block;
 				}
@@ -1084,7 +1092,8 @@
 			
 			rtn_changed=false;
 			
-			block : {
+			block:
+			{
 				len=that.moveList.length;
 				
 				if(len<2){
@@ -1361,7 +1370,8 @@
 			
 			rtn_msg="";
 			
-			block : {
+			block:
+			{
 				active_side=that[that.activeColor];
 				non_active_side=that[that.nonActiveColor];
 				
@@ -1584,7 +1594,8 @@
 				isPromotion : false
 			};
 			
-			block : {
+			block:
+			{
 				target_cached_square=that.getSquare(target_qos, {
 					isUnreferenced : true
 				});
@@ -1735,7 +1746,8 @@
 			rtn=[];
 			p=_unreferenceP(p);
 			
-			block : {
+			block:
+			{
 				legal_uci_in_bos=that.legalUciTree[toBos(target_qos)];
 				
 				if(!legal_uci_in_bos || !legal_uci_in_bos.length){
@@ -1845,7 +1857,8 @@
 			
 			rtn=false;
 			
-			block : {
+			block:
+			{
 				wrapped_move=that.getWrappedMove(mov, p);
 				
 				if(wrapped_move===null){
@@ -2037,7 +2050,8 @@
 			
 			rtn=false;
 			
-			block : {
+			block:
+			{
 				to_board=getBoard(to_woard);
 				
 				if(to_board===null){
@@ -2058,7 +2072,8 @@
 			
 			rtn=false;
 			
-			block : {
+			block:
+			{
 				from_board=getBoard(from_woard);
 				
 				if(from_board===null){
@@ -2088,7 +2103,8 @@
 			
 			rtn=false;
 			
-			block : {
+			block:
+			{
 				to_board=getBoard(to_woard);
 				
 				if(to_board===null){
@@ -2231,7 +2247,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				parsed_promote="";
 				
 				if(!_isNonBlankStr(mov)){
@@ -2325,7 +2342,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				validated_move=null;
 				parsed_promote="";
 				
@@ -2421,7 +2439,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				bubbling_promoted_to=0;
 				is_confirmed_legal=false;
 				
@@ -2500,7 +2519,8 @@
 			rtn={};
 			p=_unreferenceP(p);
 			
-			block : {
+			block:
+			{
 				rtn.canMove=false;
 				
 				p.isLegalMove=(p.isLegalMove===true);
@@ -2670,7 +2690,8 @@
 			rtn_move_obj=null;
 			p=_unreferenceP(p);
 			
-			block : {
+			block:
+			{
 				p.isMockMove=(p.isMockMove===true);
 				p.isInanimated=(p.isInanimated===true);
 				p.playSounds=(p.playSounds===true);
@@ -2855,7 +2876,8 @@
 			
 			rtn=null;
 			
-			block : {
+			block:
+			{
 				if(_isBoard(woard)){
 					rtn=woard;
 					break block;
@@ -3083,7 +3105,8 @@
 			
 			rtn=false;
 			
-			block : {
+			block:
+			{
 				left_board=getBoard(left_woard);
 				
 				if(left_board===null){
@@ -3102,7 +3125,8 @@
 			
 			rtn=false;
 			
-			block : {
+			block:
+			{
 				to_board=getBoard(to_woard);
 				
 				if(to_board===null){
@@ -3125,7 +3149,8 @@
 			board_created=false;
 			finished_block=false;
 			
-			block : {
+			block:
+			{
 				p.boardName=(_isNonBlankStr(p.boardName) ? _formatName(p.boardName) : ("b_"+((new Date().getTime()+"").slice(-10)+""+Math.random().toString(36).slice(2, 7)).slice(-10)));
 				board_name=p.boardName;
 				
@@ -3364,7 +3389,8 @@
 			p=_unreferenceP(p);
 			board_created=false;
 			
-			block : {
+			block:
+			{
 				board=initBoard({
 					boardName : "board_fenGet",
 					fen : fen,
