@@ -209,7 +209,8 @@
 		};
 		
 		board.toggleIsRotated.description=[];
-		board.toggleIsRotated.description.push("(... *temporal-draft*: toggles (or sets) the **board property** of `board.isRotated`, when passing the Boolean parameter this will set instead of toggle ...)");/*draft*/
+		board.toggleIsRotated.description.push("Toggles (or sets) the **board property** of `board.isRotated`.");
+		board.toggleIsRotated.description.push("When a Boolean is passed, `board.isRotated` will be setting that specific value instead of toggling.");
 		
 		board.toggleIsRotated.examples=[];
 		board.toggleIsRotated.examples.push("board.toggleIsRotated() //true");
@@ -229,9 +230,20 @@
 		};
 		
 		board.setPromoteTo.description=[];
-		board.setPromoteTo.description.push("(... *temporal-draft*: changes the **board property** of `board.promoteTo` after interpreting the input ...)");/*draft*/
+		board.setPromoteTo.description.push("Changes the **board property** of `board.promoteTo`.");
+		board.setPromoteTo.description.push("Min and max inclusive limits of `2` (knight) and `5` (queen) will be enforced.");
+		board.setPromoteTo.description.push("**Falsy-values** and invalid inputs will default to `5` (queen).");
 		
-		board.setPromoteTo.examples=[];/*add examples*/
+		board.setPromoteTo.examples=[];
+		board.setPromoteTo.examples.push("board.setPromoteTo(3) //true");
+		board.setPromoteTo.examples.push("board.setPromoteTo(3) //false");
+		board.setPromoteTo.examples.push("board.setPromoteTo(-4) //true");
+		board.setPromoteTo.examples.push("board.setPromoteTo(\"q\") //true");
+		board.setPromoteTo.examples.push("board.setPromoteTo(\"N\") //true");
+		board.setPromoteTo.examples.push("board.setPromoteTo(\"wr\") //true");
+		board.setPromoteTo.examples.push("board.setPromoteTo(\"br\") //false");
+		board.setPromoteTo.examples.push("board.setPromoteTo() //true");
+		board.setPromoteTo.examples.push("board.setPromoteTo() //false");
 		//end: setPromoteTo
 		
 		//start: setManualResult
@@ -244,9 +256,15 @@
 		};
 		
 		board.setManualResult.description=[];
-		board.setManualResult.description.push("(... *temporal-draft*: changes the **board property** of `board.manualResult` after interpreting the input. Valid inputs are `\"*\", \"1-0\", \"0-1\" or \"1/2-1/2\"` and will fallback to `\"*\"` for invalid inputs ...)");/*draft*/
+		board.setManualResult.description.push("Changes the **board property** of `board.manualResult`.");
+		board.setManualResult.description.push("Valid inputs are `\"*\", \"1-0\", \"0-1\" or \"1/2-1/2\"` and will fallback to `\"*\"` for invalid inputs.");
 		
-		board.setManualResult.examples=[];/*add examples*/
+		board.setManualResult.examples=[];
+		board.setManualResult.examples.push("board.setManualResult(\"*\") //false");
+		board.setManualResult.examples.push("board.setManualResult(\"1-0\") //true");
+		board.setManualResult.examples.push("board.setManualResult(\"0-1\") //true");
+		board.setManualResult.examples.push("board.setManualResult(\"1/2-1/2\") //true");
+		board.setManualResult.examples.push("board.setManualResult(\"0invalidresult0\") //true");
 		//end: setManualResult
 		
 		//start: setCurrentMove
@@ -262,9 +280,18 @@
 		};
 		
 		board.setCurrentMove.description=[];
-		board.setCurrentMove.description.push("(... *temporal-draft*: changes the **board property** of `board.currentMove` either by a shift value or a jump-to value ...)");/*draft*/
+		board.setCurrentMove.description.push("Changes the **board property** of `board.currentMove`.");
+		board.setCurrentMove.description.push("When a Boolean `true` is passed (or not passing a Boolean type), the value will be set to the **current move**.");
+		board.setCurrentMove.description.push("When a Boolean `false` is passed, the **current move** will be shifted by the value instead of setting the value.");
+		board.setCurrentMove.description.push("The **piece animation** in UI will be prevented when:<ul><li>Boolean `true` is passed in `isGoto`.</li><li>`isGoto` is not a Boolean type and the **current move** change is bigger than one.</li></ul>");
 		
-		board.setCurrentMove.examples=[];/*add examples*/
+		board.setCurrentMove.examples=[];
+		board.setCurrentMove.examples.push("board.setCurrentMove(2) //true");
+		board.setCurrentMove.examples.push("board.setCurrentMove(2) //false");
+		board.setCurrentMove.examples.push("board.setCurrentMove(1, false) //true");
+		board.setCurrentMove.examples.push("board.setCurrentMove(1, false) //true");
+		board.setCurrentMove.examples.push("board.setCurrentMove(4, true) //true");
+		board.setCurrentMove.examples.push("board.setCurrentMove(4, true) //false");
 		//end: setCurrentMove
 		
 		//start: navFirst
@@ -354,9 +381,16 @@
 		};
 		
 		board.cloneBoardFrom.description=[];
-		board.cloneBoardFrom.description.push("(... *temporal-draft*: copies all the board properties (except `board.boardName`) from another board into this board ...)");/*draft*/
+		board.cloneBoardFrom.description.push("Copies all the board properties (except `board.boardName`) from another board into this board.");
 		
-		board.cloneBoardFrom.examples=[];/*add examples*/
+		board.cloneBoardFrom.examples=[];
+		board.cloneBoardFrom.examples.push("board.cloneBoardFrom(from_board) //true");
+		board.cloneBoardFrom.examples.push("board.cloneBoardFrom(\"0invalid0\") //false");
+		board.cloneBoardFrom.examples.push("board.cloneBoardFrom(board) //false");
+		
+		board.cloneBoardFrom.errors=[];
+		board.cloneBoardFrom.errors.push("the *from board* is not found.");
+		board.cloneBoardFrom.errors.push("attempting to clone the board from itself.");
 		//end: cloneBoardFrom
 		
 		//start: cloneBoardTo
@@ -369,9 +403,16 @@
 		};
 		
 		board.cloneBoardTo.description=[];
-		board.cloneBoardTo.description.push("(... *temporal-draft*: copies all the board properties (except `board.boardName`) from this board into another board ...)");/*draft*/
+		board.cloneBoardTo.description.push("Copies all the board properties (except `board.boardName`) from this board into another board.");
 		
-		board.cloneBoardTo.examples=[];/*add examples*/
+		board.cloneBoardTo.examples=[];
+		board.cloneBoardTo.examples.push("board.cloneBoardTo(to_board) //true");
+		board.cloneBoardTo.examples.push("board.cloneBoardTo(\"0invalid0\") //false");
+		board.cloneBoardTo.examples.push("board.cloneBoardTo(board) //false");
+		
+		board.cloneBoardTo.errors=[];
+		board.cloneBoardTo.errors.push("the *to board* is not found.");
+		board.cloneBoardTo.errors.push("attempting to clone the board to itself.");
 		//end: cloneBoardTo
 		
 		//start: reset
@@ -438,7 +479,9 @@
 		board.fenHistoryExport.description.push("Returns the **FEN history** list.");
 		board.fenHistoryExport.description.push("The first element (index 0) holds the initial fen position.");
 		
-		board.fenHistoryExport.examples=[];/*add examples*/
+		board.fenHistoryExport.examples=[];
+		board.fenHistoryExport.examples.push("board.fenHistoryExport() //[\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\"]");
+		board.fenHistoryExport.examples.push("board_after_e4.fenHistoryExport() //[\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\", \"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\"]");
 		//end: fenHistoryExport
 		
 		//start: pgnExport
@@ -452,7 +495,9 @@
 		board.pgnExport.description.push("Returns the **PGN** as text.");
 		board.pgnExport.description.push("A line feed `\\n` is used as the line break character.");
 		
-		board.pgnExport.examples=[];/*add examples*/
+		board.pgnExport.examples=[];
+		board.pgnExport.examples.push("board.pgnExport() //... *");
+		board.pgnExport.examples.push("board_after_e4.pgnExport() //... 1. e4 *");
 		//end: pgnExport
 		
 		//start: uciExport
@@ -465,7 +510,9 @@
 		board.uciExport.description=[];
 		board.uciExport.description.push("Returns the **UCI** moves as text.");
 		
-		board.uciExport.examples=[];/*add examples*/
+		board.uciExport.examples=[];
+		board.uciExport.examples.push("board.uciExport() //\"\"");
+		board.uciExport.examples.push("board_after_e4.uciExport() //\"e2e4\"");
 		//end: uciExport
 		
 		//start: ascii
@@ -558,9 +605,15 @@
 		};
 		
 		board.setSquare.description=[];
-		board.setSquare.description.push("(... *temporal-draft*: changes the **board property** of `board.squares.x`, it updates the **king bos** `board.w.kingBos` and `board.b.kingBos` when setting a king, the **square** object will have every non-static property updated, supports the rank/file shifting like `board.getSquare()`, Note: no validation happens, no castle rights get updated and no UI refresh occurs ...)");/*draft*/
+		board.setSquare.description.push("Changes the **board property** of `board.squares.x`.");
+		board.setSquare.description.push("It updates the **king bos** (`board.w.kingBos` or `board.b.kingBos`) when setting a king.");
+		board.setSquare.description.push("The **square** object will have every non-static property updated.");
+		board.setSquare.description.push("**Imporant:** this method is not meant to be used unless you know exactly how everything works (the validation, castle rights and UI must be manually checked, updated and refreshed).");
 		
-		board.setSquare.examples=[];/*add examples*/
+		board.setSquare.examples=[];
+		board.setSquare.examples.push("board.setSquare(\"e4\", 0) //true");
+		board.setSquare.examples.push("board.setSquare(\"a1\", \"Q\", {rankShift:-7, fileShift:7}) //true");
+		board.setSquare.examples.push("board.setSquare(\"0invalidsquare0\", \"wr\") //false");
 		//end: setSquare
 		
 		//start: countAttacks
@@ -576,9 +629,18 @@
 		};
 		
 		board.countAttacks.description=[];
-		board.countAttacks.description.push("(... *temporal-draft*: this can be called to know how many times enemy pieces are attacking a square, you can pass a boolean to short-circuit and stop looking after a single attack on the square and you will get 0 or 1, it is a waste of resources to re-count the times attacked to the king square as this information is already calculated and stored in `board.checks`, the active side king bos will be used as default if the optional qos is missing ...)");/*draft*/
+		board.countAttacks.description.push("This can be called to know how many times enemy pieces are attacking a square.");
+		board.countAttacks.description.push("Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single attack on the square (in this case, either a 0 or 1 will be returned).");
+		board.countAttacks.description.push("The active side **king bos** will be used as default if the optional **qos** is missing.");
+		board.countAttacks.description.push("It is a waste of resources to re-count the times attacked to the king square (this information is already calculated and stored in `board.checks`).");
 		
-		board.countAttacks.examples=[];/*add examples*/
+		board.countAttacks.examples=[];
+		board.countAttacks.examples.push("board.countAttacks(\"c6\") //3");
+		board.countAttacks.examples.push("board.countAttacks(\"c6\", true) //1");
+		board.countAttacks.examples.push("board.countAttacks(\"c6\", false) //3");
+		board.countAttacks.examples.push("board.countAttacks(\"e4\") //0");
+		board.countAttacks.examples.push("board.countAttacks(\"e4\", true) //0");
+		board.countAttacks.examples.push("board.countAttacks(\"e4\", false) //0");
 		//end: countAttacks
 		
 		//start: isLegalMove
