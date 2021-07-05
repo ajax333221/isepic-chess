@@ -257,7 +257,7 @@
 		
 		board.setManualResult.description=[];
 		board.setManualResult.description.push("Changes the **board property** of `board.manualResult`.");
-		board.setManualResult.description.push("Valid inputs are `\"*\", \"1-0\", \"0-1\" or \"1/2-1/2\"` and will fallback to `\"*\"` for invalid inputs.");
+		board.setManualResult.description.push("Valid inputs are `\"*\", \"1-0\", \"0-1\" and \"1/2-1/2\"`. The fallback `\"*\"` will be used for invalid inputs.");
 		
 		board.setManualResult.examples=[];
 		board.setManualResult.examples.push("board.setManualResult(\"*\") //false");
@@ -496,8 +496,8 @@
 		board.pgnExport.description.push("A line feed `\\n` is used as the line break character.");
 		
 		board.pgnExport.examples=[];
-		board.pgnExport.examples.push("board.pgnExport() //... *");
-		board.pgnExport.examples.push("board_after_e4.pgnExport() //... 1. e4 *");
+		board.pgnExport.examples.push("board.pgnExport() //\"... *\"");
+		board.pgnExport.examples.push("board_after_e4.pgnExport() //\"... 1. e4 *\"");
 		//end: pgnExport
 		
 		//start: uciExport
@@ -608,7 +608,7 @@
 		board.setSquare.description.push("Changes the **board property** of `board.squares.x`.");
 		board.setSquare.description.push("It updates the **king bos** (`board.w.kingBos` or `board.b.kingBos`) when setting a king.");
 		board.setSquare.description.push("The **square** object will have every non-static property updated.");
-		board.setSquare.description.push("**Imporant:** this method is not meant to be used unless you know exactly how everything works (the validation, castle rights and UI must be manually checked, updated and refreshed).");
+		board.setSquare.description.push("**:warning:Important:** this method is not meant to be used unless you know exactly how everything works (the validation, castle rights and UI must be manually checked, updated and refreshed).");
 		
 		board.setSquare.examples=[];
 		board.setSquare.examples.push("board.setSquare(\"e4\", 0) //true");
