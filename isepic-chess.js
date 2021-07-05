@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.10.4";
+		var _VERSION="6.11.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -946,12 +946,21 @@
 			that=this;
 			
 			rtn_set=false;
-			target_square=that.getSquare(qos, _unreferenceP(p, [["isUnreferenced", false]]));
 			
-			if(target_square!==null){
-				rtn_set=true;
+			block:
+			{
+				target_square=that.getSquare(qos, _unreferenceP(p, [["isUnreferenced", false]]));
+				
+				if(target_square===null){
+					break block;
+				}
 				
 				new_val=toVal(new_qal);
+				
+				if(target_square.val===new_val){
+					break block;
+				}
+				
 				new_abs_val=toAbsVal(new_val);
 				
 				target_square.bal=toBal(new_val);
@@ -973,6 +982,8 @@
 					
 					current_side.kingBos=toBos(qos);
 				}
+				
+				rtn_set=true;
 			}
 			
 			return rtn_set;
