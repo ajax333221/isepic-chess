@@ -4,7 +4,6 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//setSquare (+ b.kingBos)
 //readValidatedFen
 //updateFenAndMisc
 //refinedFenTest (hay unos fen en misc.)
@@ -13,7 +12,6 @@ Ic.setSilentMode(false);
 //setPromoteTo (return value)
 //setManualResult (return value)
 //toggleActiveNonActive (return value)
-//playMove = via fen apply
 //getWrappedMove
 //draftMove
 //
@@ -547,6 +545,52 @@ describe("Board methods", () => {
 		});
 	});
 	
+	describe("b.playMove()", () => {
+		var board_name, other_board_name;
+		
+		board_name="board_play_move";
+		other_board_name="board_play_move_other";
+		
+		test("p options: isMockMove and isUnreferenced", () => {
+			var temp, temp2, board_a, board_b;
+			
+			board_a=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_b=Ic.initBoard({
+				boardName : other_board_name
+			});
+			
+			board_a.playMove("e4", {isMockMove : true});
+			board_b.playMove("e4", {isMockMove : true});
+			
+			expect(board_a.uciExport()).toBe("");
+			expect(board_b.uciExport()).toBe("");
+			
+			board_a.playMove("e4");
+			board_b.playMove("e4", {isMockMove : false});
+			
+			expect(board_a.uciExport()).toBe("e2e4");
+			expect(board_b.uciExport()).toBe("e2e4");
+			
+			temp=board_a.playMove("e5", {isUnreferenced : false});
+			temp2=board_b.playMove("e5", {isUnreferenced : true});
+			
+			temp.uci="_e5_";
+			temp2.uci="_e5_";
+			
+			temp=board_a.playMove("Nf3");
+			temp2=board_b.playMove("Nf3");
+			
+			temp.uci="_Nf3_";
+			temp2.uci="_Nf3_";
+			
+			expect(board_a.uciExport()).toBe("e2e4 _e5_ _Nf3_");
+			expect(board_b.uciExport()).toBe("e2e4 e7e5 _Nf3_");
+		});
+	});
+	
 	test("b.getSquare()", () => {
 		var shared_fen;
 		
@@ -569,6 +613,57 @@ describe("Board methods", () => {
 		expect(Ic.fenApply(shared_fen, "getSquare", ["a4", {fileShift : -1}], {skipFenValidation : true})).toBeNull();
 		
 		expect(Ic.fenApply(shared_fen, "getSquare", ["h4", {fileShift : 1}], {skipFenValidation : true})).toBeNull();
+	});
+	
+	test("b.setSquare()", () => {
+		var board_a_name, board_b_name, board_a, board_b, shared_fen, get_ref, get_unref, get_via_set_square;
+		
+		board_a_name="board_set_square_a";
+		board_b_name="board_set_square_b";
+		
+		shared_fen="r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4";
+		
+		board_a=Ic.initBoard({
+			boardName : board_a_name,
+			fen : shared_fen,
+			skipFenValidation : true
+		});
+		
+		board_b=Ic.initBoard({
+			boardName : board_b_name,
+			fen : shared_fen,
+			skipFenValidation : true
+		});
+		
+		get_ref=board_a.getSquare("c4");
+		board_b.getSquare("c4");
+		
+		get_unref=board_a.getSquare("c4", {isUnreferenced : true});
+		board_b.getSquare("c4", {isUnreferenced : true});
+		
+		get_via_set_square=board_a.setSquare("c4", 0);
+		board_b.setSquare("c4", 0);
+		
+		expect(get_unref.bal==="B").toBe(true);
+		expect(get_ref.bal==="*").toBe(true);
+		expect(get_via_set_square.bal==="*").toBe(true);
+		
+		expect(get_ref===get_via_set_square).toBe(true);//exact same reference
+		
+		expect(get_ref!==board_b.getSquare("c4")).toBe(true);
+		expect(get_unref!==board_b.getSquare("c4")).toBe(true);
+		expect(get_via_set_square!==board_b.getSquare("c4")).toBe(true);
+		
+		board_a.setSquare("g1", 0);
+		board_a.setSquare("h1", 6);
+		
+		board_a.setSquare("e8", 0);
+		board_a.setSquare("e7", -6);
+		
+		expect(board_a.w.kingBos).toBe("h1");
+		expect(board_a.b.kingBos).toBe("e7");
+		
+		expect(board_a.b.castling).toBe(3);//castling was not affected (this is by design)
 	});
 	
 	test("b.countAttacks()", () => {

@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="6.11.0";
+		var _VERSION="7.0.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -941,52 +941,48 @@
 		
 		//p = {rankShift, fileShift}
 		function _setSquare(qos, new_qal, p){
-			var that, target_square, current_side, new_val, new_abs_val, rtn_set;
+			var that, current_side, new_val, new_abs_val, rtn;
 			
 			that=this;
 			
-			rtn_set=false;
+			rtn=that.getSquare(qos, _unreferenceP(p, [["isUnreferenced", false]]));
 			
 			block:
 			{
-				target_square=that.getSquare(qos, _unreferenceP(p, [["isUnreferenced", false]]));
-				
-				if(target_square===null){
+				if(rtn===null){
 					break block;
 				}
 				
 				new_val=toVal(new_qal);
 				
-				if(target_square.val===new_val){
+				if(rtn.val===new_val){
 					break block;
 				}
 				
 				new_abs_val=toAbsVal(new_val);
 				
-				target_square.bal=toBal(new_val);
-				target_square.absBal=toAbsBal(new_val);
-				target_square.val=new_val;
-				target_square.absVal=new_abs_val;
-				target_square.className=toClassName(new_val);
-				target_square.sign=getSign(new_val);
-				target_square.isEmptySquare=(new_abs_val===_EMPTY_SQR);
-				target_square.isPawn=(new_abs_val===_PAWN);
-				target_square.isKnight=(new_abs_val===_KNIGHT);
-				target_square.isBishop=(new_abs_val===_BISHOP);
-				target_square.isRook=(new_abs_val===_ROOK);
-				target_square.isQueen=(new_abs_val===_QUEEN);
-				target_square.isKing=(new_abs_val===_KING);
+				rtn.bal=toBal(new_val);
+				rtn.absBal=toAbsBal(new_val);
+				rtn.val=new_val;
+				rtn.absVal=new_abs_val;
+				rtn.className=toClassName(new_val);
+				rtn.sign=getSign(new_val);
+				rtn.isEmptySquare=(new_abs_val===_EMPTY_SQR);
+				rtn.isPawn=(new_abs_val===_PAWN);
+				rtn.isKnight=(new_abs_val===_KNIGHT);
+				rtn.isBishop=(new_abs_val===_BISHOP);
+				rtn.isRook=(new_abs_val===_ROOK);
+				rtn.isQueen=(new_abs_val===_QUEEN);
+				rtn.isKing=(new_abs_val===_KING);
 				
-				if(target_square.isKing){
-					current_side=(target_square.sign<0 ? that.b : that.w);
+				if(rtn.isKing){
+					current_side=(rtn.sign<0 ? that.b : that.w);
 					
 					current_side.kingBos=toBos(qos);
 				}
-				
-				rtn_set=true;
 			}
 			
-			return rtn_set;
+			return rtn;
 		}
 		
 		function _countAttacks(target_qos, early_break){
@@ -1538,7 +1534,7 @@
 				
 				if(current_square.isEmptySquare){
 					if(op===1){
-						rtn.candidateMoves.push(current_square.pos);
+						rtn.candidateMoves.push(current_square.bos);
 					}
 					
 					continue;
@@ -1550,7 +1546,7 @@
 				
 				if(op===1){
 					if(allow_capture && !current_square.isKing){
-						rtn.candidateMoves.push(current_square.pos);
+						rtn.candidateMoves.push(current_square.bos);
 					}
 				}
 				
@@ -1591,7 +1587,7 @@
 		}
 		
 		function _legalMovesHelper(target_qos){
-			var i, j, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pseudo_legal_arr_pos, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, rtn;
+			var i, j, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pseudo_legal_arr, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, rtn;
 			
 			that=this;
 			
@@ -1622,7 +1618,7 @@
 					break block;
 				}
 				
-				pseudo_legal_arr_pos=[];
+				pseudo_legal_arr=[];
 				en_passant_capturable_cached_square=null;
 				is_promotion=false;
 				
@@ -1633,7 +1629,7 @@
 						temp=_candidateMoves(target_cached_square, i, false, 1, true);
 						
 						if(temp.length){
-							pseudo_legal_arr_pos.push(temp);
+							pseudo_legal_arr.push(temp);
 						}
 					}
 					
@@ -1662,7 +1658,7 @@
 								fileShift : (temp2.singleFileShift*2)
 							});
 							
-							pseudo_legal_arr_pos.push([temp]);
+							pseudo_legal_arr.push([temp]);
 						}
 					}
 				}else if(target_cached_square.isPawn){
@@ -1672,7 +1668,7 @@
 					temp=_candidateMoves(target_cached_square, (active_side.isBlack ? _DIRECTION_BOTTOM : _DIRECTION_TOP), false, (target_cached_square.rankPos===active_side.secondRankPos ? 2 : 1), false);
 					
 					if(temp.length){
-						pseudo_legal_arr_pos.push(temp);
+						pseudo_legal_arr.push(temp);
 					}
 					
 					for(i=0; i<2; i++){//0...1
@@ -1688,7 +1684,7 @@
 						temp=sameSquare(current_diagonal_square, that.enPassantBos);
 						
 						if(temp || (current_diagonal_square.sign!==active_side.sign && !current_diagonal_square.isEmptySquare && !current_diagonal_square.isKing)){
-							pseudo_legal_arr_pos.push([current_diagonal_square]);
+							pseudo_legal_arr.push([current_diagonal_square]);
 						}
 						
 						if(temp){
@@ -1707,14 +1703,14 @@
 						temp=_candidateMoves(target_cached_square, piece_directions[i], target_cached_square.isKnight, null, true);
 						
 						if(temp.length){
-							pseudo_legal_arr_pos.push(temp);
+							pseudo_legal_arr.push(temp);
 						}
 					}
 				}
 				
-				for(i=0, len=pseudo_legal_arr_pos.length; i<len; i++){//0<len
-					for(j=0, len2=pseudo_legal_arr_pos[i].length; j<len2; j++){//0<len2
-						current_cached_square=that.getSquare(pseudo_legal_arr_pos[i][j], {
+				for(i=0, len=pseudo_legal_arr.length; i<len; i++){//0<len
+					for(j=0, len2=pseudo_legal_arr[i].length; j<len2; j++){//0<len2
+						current_cached_square=that.getSquare(pseudo_legal_arr[i][j], {
 							isUnreferenced : true
 						});
 						
@@ -1750,7 +1746,7 @@
 		
 		//p = {returnType, squareType, delimiter}
 		function _legalMoves(target_qos, p){
-			var i, len, that, temp, temp2, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, rtn;
+			var i, len, that, temp, temp2, temp3, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, rtn;
 			
 			that=this;
 			
@@ -1787,10 +1783,12 @@
 					temp2=legal_uci_in_bos[i];
 					
 					if(is_fen_or_san){
+						temp3=that.playMove(temp2, {isMockMove : true, isLegalMove : true, isUnreferenced : true});
+						
 						if(p.returnType==="fen"){
-							temp.push(that.playMove(temp2, {isMockMove : true, isLegalMove : true}).fen);
+							temp.push(temp3.fen);
 						}else{//type "san"
-							temp.push(that.playMove(temp2, {isMockMove : true, isLegalMove : true}).san);
+							temp.push(temp3.san);
 						}
 						
 						continue;
@@ -2692,7 +2690,7 @@
 			return rtn;
 		}
 		
-		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
+		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds, isUnreferenced}
 		function _playMove(mov, p){
 			var i, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, rtn_move_obj;
 			
@@ -2706,6 +2704,7 @@
 				p.isMockMove=(p.isMockMove===true);
 				p.isInanimated=(p.isInanimated===true);
 				p.playSounds=(p.playSounds===true);
+				p.isUnreferenced=(p.isUnreferenced===true);
 				
 				if(p.isMockMove){
 					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p], {promoteTo : that.promoteTo, skipFenValidation : true});
@@ -2811,27 +2810,10 @@
 				temp2=(toBal(pgn_obj.promotedVal).replace("*", "") || "").toLowerCase();//promotion
 				temp3=(initial_cached_square.bos+""+final_cached_square.bos+""+temp2);//uci
 				
-				rtn_move_obj={
-					colorMoved : that.nonActiveColor,
-					colorToPlay : that.activeColor,
-					fen : that.fen,
-					san : complete_san,
-					uci : temp3,
-					comment : autogen_comment,
-					moveResult : move_res,
-					canDraw : that.inDraw,
-					isCapture : pgn_obj.isCapture,
-					fromBos : initial_cached_square.bos,
-					toBos : final_cached_square.bos,
-					piece : temp,
-					promotion : temp2
-				};
-				
 				if(that.currentMove!==that.moveList.length){
 					that.moveList=that.moveList.slice(0, that.currentMove);
 				}
 				
-				/*NO push referenced rtn_move_obj*/
 				that.moveList.push({
 					colorMoved : that.nonActiveColor,
 					colorToPlay : that.activeColor,
@@ -2847,6 +2829,29 @@
 					piece : temp,
 					promotion : temp2
 				});
+				
+				rtn_move_obj=that.moveList[that.moveList.length-1];
+				
+				if(p.isUnreferenced){
+					temp={};
+					temp2=rtn_move_obj;
+					
+					temp.colorMoved=temp2.colorMoved;
+					temp.colorToPlay=temp2.colorToPlay;
+					temp.fen=temp2.fen;
+					temp.san=temp2.san;
+					temp.uci=temp2.uci;
+					temp.comment=temp2.comment;
+					temp.moveResult=temp2.moveResult;
+					temp.canDraw=temp2.canDraw;
+					temp.isCapture=temp2.isCapture;
+					temp.fromBos=temp2.fromBos;
+					temp.toBos=temp2.toBos;
+					temp.piece=temp2.piece;
+					temp.promotion=temp2.promotion;
+					
+					rtn_move_obj=temp;
+				}
 				
 				temp=that.isHidden;
 				
@@ -3346,7 +3351,7 @@
 			
 			switch(fn_name){
 				case "playMove" :
-					rtn=(board_created ? _playMove.apply(board, [args[0], _unreferenceP(args[1], [["isMockMove", false]])]) : null);
+					rtn=(board_created ? _playMove.apply(board, [args[0], _unreferenceP(args[1], [["isMockMove", false], ["isUnreferenced", true]])]) : null);
 					break;
 				case "legalMoves" :
 					rtn=(board_created ? _legalMoves.apply(board, args) : []);

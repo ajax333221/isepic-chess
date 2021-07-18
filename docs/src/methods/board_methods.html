@@ -155,7 +155,8 @@
 						{name : "delimiter", type : "String", icon : "eight_spoked_asterisk"},
 						{name : "isLegalMove", type : "Boolean", icon : "eight_spoked_asterisk"},
 						{name : "isInanimated", type : "Boolean", icon : "eight_spoked_asterisk"},
-						{name : "playSounds", type : "Boolean", icon : "eight_spoked_asterisk"}
+						{name : "playSounds", type : "Boolean", icon : "eight_spoked_asterisk"},
+						{name : "isUnreferenced", type : "Boolean", icon : "eight_spoked_asterisk"}
 					]
 				}
 			]
@@ -186,7 +187,8 @@
 		board.playMove.description.push("`isLegalMove = true` skips the legal move validation. This should only be used if the move is known to be a legal move for a specific fen and the current board fen matches it.");
 		board.playMove.description.push("`isInanimated = true` prevents the **piece animation** in UI <sup>(the UI refresh takes place normally)</sup>.");
 		board.playMove.description.push("`playSounds = true` plays the move with **sound effects** in UI.");
-		board.playMove.description.push("The Boolean options (`isMockMove`, `isLegalMove`, `isInanimated` and `playSounds`) default to `false` when not set to a Boolean value of `true`.");
+		board.playMove.description.push("`isUnreferenced = true` means that the returned **move** will not be referenced (modifying these unreferenced copies will not affect the corresponding elements in the **move list** or the other way around).");
+		board.playMove.description.push("The Boolean options (`isMockMove`, `isLegalMove`, `isInanimated`, `playSounds` and `isUnreferenced`) default to `false` when not set to a Boolean value of `true`.");
 		board.playMove.description.push("`promoteTo` takes precedence over everything when specified and a pawn promotion takes place.");
 		board.playMove.description.push("`delimiter` is a single character to look for in **moveJoined** (like `\"-\" in \"a2-a4\"`) to allow the use of any delimiters. Defaults to `\"-\"` if not specified.");
 		board.playMove.description.push("Successfully playing a move will set `\"*\"` to `board.manualResult`.");
@@ -574,7 +576,7 @@
 		board.getSquare.description=[];
 		board.getSquare.description.push("Returns a :pushpin:**square**.");
 		board.getSquare.description.push("If the **square** is invalid (before or after shifting by `rankShift` and `fileShift`), then `null` will be returned.");
-		board.getSquare.description.push("`isUnreferenced = true` means that the returned **square** will not be referenced (updates made to the **board** do not affect these unreferenced copies).");
+		board.getSquare.description.push("`isUnreferenced = true` means that the returned **square** will not be referenced (updates made to the **board** do not affect these unreferenced copies or the other way around).");
 		board.getSquare.description.push("The Boolean option `isUnreferenced` defaults to `false` when not set to a Boolean value of `true`.");
 		
 		board.getSquare.links=PIN_SQUARE;
@@ -602,15 +604,32 @@
 			]
 		};
 		
-		board.setSquare.returnVal={
-			children : [{type : "Boolean"}]
-		};
+		board.setSquare.returnVal=[
+			{
+				children : [
+					{
+						name : "square",
+						type : "Object",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "null"
+					}
+				]
+			}
+		];
 		
 		board.setSquare.description=[];
-		board.setSquare.description.push("Changes the **board property** of `board.squares.x`.");
+		board.setSquare.description.push("Changes the **board property** of `board.squares.x` and returns the :pushpin:**square**.");
 		board.setSquare.description.push("It updates the **king bos** (`board.w.kingBos` or `board.b.kingBos`) when setting a king.");
 		board.setSquare.description.push("The **square** object will have every non-static property updated.");
 		board.setSquare.description.push("**:warning:Important:** this method is not meant to be used unless you know exactly how everything works (the validation, castle rights and UI must be manually checked, updated and refreshed).");
+		
+		board.setSquare.links=PIN_SQUARE;
 		
 		board.setSquare.examples=[];
 		board.setSquare.examples.push("board.setSquare(\"e4\", 0) //true");
