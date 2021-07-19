@@ -182,7 +182,7 @@
 		];
 		
 		board.playMove.description=[];
-		board.playMove.description.push("Generates a :pushpin:**move** <sup>(unreferenced copy)</sup>.");
+		board.playMove.description.push("Generates and returns a :pushpin:**move**.");
 		board.playMove.description.push("`isMockMove = true` plays the move on a **temporal board** instead of affecting the **board**.");
 		board.playMove.description.push("`isLegalMove = true` skips the legal move validation. This should only be used if the move is known to be a legal move for a specific fen and the current board fen matches it.");
 		board.playMove.description.push("`isInanimated = true` prevents the **piece animation** in UI <sup>(the UI refresh takes place normally)</sup>.");
