@@ -398,26 +398,21 @@ describe("Misc.", () => {
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.playMove("e3-b3");
-			board_other.playMove("e6-b3");
+			board_other.playMoves(["e3-b3", "e6-b3"]);
 			
 			//stalemate (white turn)
 			expect(board_other.moveList[board_other.moveList.length-1].moveResult).toBe("1/2-1/2");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.playMove("e3-d4");
-			board_other.playMove("e6-b6");
-			board_other.playMove("d4-b6");
+			board_other.playMoves(["e3-d4", "e6-b6", "d4-b6"]);
 			
 			//stalemate (black turn)
 			expect(board_other.moveList[board_other.moveList.length-1].moveResult).toBe("1/2-1/2");
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.playMove("e3-b6");
-			board_other.playMove("e6-h3");
-			board_other.playMove("b6-b8");
+			board_other.playMoves(["e3-b6", "e6-h3", "b6-b8"]);
 			
 			//checkmate (white win)
 			expect(board_other.moveList[board_other.moveList.length-1].san).toBe("Qb8#");
@@ -425,10 +420,7 @@ describe("Misc.", () => {
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.playMove("e3-f4");
-			board_other.playMove("e6-b3");
-			board_other.playMove("f4-h6");
-			board_other.playMove("b3-b1");
+			board_other.playMoves(["e3-f4", "e6-b3", "f4-h6", "b3-b1"]);
 			
 			//checkmate (black win)
 			expect(board_other.moveList[board_other.moveList.length-1].san).toBe("Qb1#");
@@ -443,8 +435,7 @@ describe("Misc.", () => {
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.playMove("e3-h6");
-			board_other.playMove("e6-e5");
+			board_other.playMoves(["e3-h6", "e6-e5"]);
 			
 			//check (black performs check)
 			expect(board_other.moveList[board_other.moveList.length-1].san).toBe("Qe5+");
@@ -482,9 +473,7 @@ describe("Misc.", () => {
 			temp=board_obj.getSquare("b2", {isUnreferenced : false});
 			temp2=board_obj.getSquare("b2", {isUnreferenced : true});
 			
-			board_obj.playMove("b2-b3");
-			board_obj.playMove("h7-h6");
-			board_obj.playMove("c1-b2");
+			board_obj.playMoves(["b2-b3", "h7-h6", "c1-b2"]);
 			
 			expect(temp.isBishop).toBe(true);
 			expect(temp2.isPawn).toBe(true);
@@ -497,8 +486,7 @@ describe("Misc.", () => {
 			
 			temp2=board_other.getSquare("b2", {isUnreferenced : false});
 			
-			board_obj.playMove("h6-h5");
-			board_obj.playMove("b2-c1");
+			board_obj.playMoves(["h6-h5", "b2-c1"]);
 			
 			expect(temp.isBishop).toBe(true);
 			expect(temp2.isBishop).toBe(true);
@@ -585,9 +573,7 @@ describe("Misc.", () => {
 				skipFenValidation : true
 			});
 			
-			board_obj.playMove("e2-e4");
-			board_obj.playMove("f7-f5");
-			board_obj.playMove("d1-h5");
+			board_obj.playMoves(["e2-e4", "f7-f5", "d1-h5"]);
 			
 			//checks
 			expect(board_obj.checks).toBe(1);
@@ -601,16 +587,12 @@ describe("Misc.", () => {
 			expect(board_obj.moveList[2].fen).toBe("rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2");
 			expect(board_obj.moveList[3].fen).toBe("rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2");
 			
-			board_obj.playMove("g7-g6");
-			board_obj.playMove("h5-g6");
+			board_obj.playMoves(["g7-g6", "h5-g6"]);
 			
 			//remove check via pawn capture
 			expect(board_obj.legalMoves("h7").sort()).toEqual(["g6"].sort());
 			
-			board_obj.playMove("h7-g6");
-			board_obj.playMove("f1-b5");
-			board_obj.playMove("h8-h2");
-			board_obj.playMove("b5-d7");
+			board_obj.playMoves(["h7-g6", "f1-b5", "h8-h2", "b5-d7"]);
 			
 			//remove check via (knight, bishop, queen, king) capture and via (king) moving out of check
 			expect(board_obj.legalMoves("b8").sort()).toEqual(["d7"].sort());
@@ -618,19 +600,7 @@ describe("Misc.", () => {
 			expect(board_obj.legalMoves("d8").sort()).toEqual(["d7"].sort());
 			expect(board_obj.legalMoves("e8").sort()).toEqual(["d7", "f7"].sort());
 			
-			board_obj.playMove("e8-f7");
-			board_obj.playMove("e4-f5");
-			board_obj.playMove("h2-h6");
-			board_obj.playMove("g1-f3");
-			board_obj.playMove("a7-a5");
-			board_obj.playMove("f5-g6");
-			board_obj.playMove("f7-f6");
-			board_obj.playMove("g6-g7");
-			board_obj.playMove("a8-a6");
-			board_obj.playMove("d7-e8");
-			board_obj.playMove("f6-f5");
-			board_obj.playMove("e8-f7");
-			board_obj.playMove("h6-c6");
+			board_obj.playMoves(["e8-f7", "e4-f5", "h2-h6", "g1-f3", "a7-a5", "f5-g6", "f7-f6", "g6-g7", "a8-a6", "d7-e8", "f6-f5", "e8-f7", "h6-c6"]);
 			
 			board_obj.setPromoteTo(4);
 			
@@ -639,14 +609,12 @@ describe("Misc.", () => {
 			//SAN underpromote to rook
 			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("gxf8=R");
 			
-			board_obj.playMove("a5-a4");
-			board_obj.playMove("f7-g6");
+			board_obj.playMoves(["a5-a4", "f7-g6"]);
 			
 			//two active checks via discovered check
 			expect(board_obj.checks).toBe(2);
 			
-			board_obj.playMove("f5-g6");
-			board_obj.playMove("e1-g1");
+			board_obj.playMoves(["f5-g6", "e1-g1"]);
 			
 			//wrong legal moves for empty square, b to move
 			expect(board_obj.legalMoves("e4").sort()).toEqual([].sort());
@@ -732,18 +700,12 @@ describe("Misc.", () => {
 			//allowing to long castle with b1 occupied
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f1", "g1", "d1"].sort());
 			
-			board_other.playMove("g5-h3");
-			board_other.playMove("b1-d2");
-			board_other.playMove("h3-g5");
-			board_other.playMove("d2-f1");
+			board_other.playMoves(["g5-h3", "b1-d2", "h3-g5", "d2-f1"]);
 			
 			//allowing to short castle with f1 occupied
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["f1", "c1", "d1"].sort());
 			
-			board_other.playMove("g5-h3");
-			board_other.playMove("f1-d2");
-			board_other.playMove("h3-g5");
-			board_other.playMove("g4-e3");
+			board_other.playMoves(["g5-h3", "f1-d2", "h3-g5", "g4-e3"]);
 			
 			//allowing to long castle with d1 attacked
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual([].sort());
@@ -757,26 +719,19 @@ describe("Misc.", () => {
 			
 			Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 			
-			board_other.playMove("b4-b5");
-			board_other.playMove("c4-a3");
-			board_other.playMove("b5-b6");
-			board_other.playMove("a3-c2");
+			board_other.playMoves(["b4-b5", "c4-a3", "b5-b6", "a3-c2"]);
 			
 			//allowing to castle with king at check (white)
 			expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(["d1", "f1"].sort());
 			
 			board_other.setPromoteTo("wn");
 			
-			board_other.playMove("e1-d1");
-			board_other.playMove("f3-f2");
-			board_other.playMove("d1-c1");
-			board_other.playMove("f2-f1");
+			board_other.playMoves(["e1-d1", "f3-f2", "d1-c1", "f2-f1"]);
 			
 			//setPromoteTo(wrong color className: w to b)
 			expect(board_other.getSquare("f1").val).toBe(-2);
 			
-			board_other.playMove("b6-b7");
-			board_other.playMove("g4-h2");
+			board_other.playMoves(["b6-b7", "g4-h2"]);
 			
 			board_other.setPromoteTo("bn");
 			

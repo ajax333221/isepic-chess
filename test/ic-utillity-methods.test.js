@@ -433,11 +433,7 @@ describe("Ic utility methods", () => {
 		
 		board_obj.playMove("c3-e4");
 		
-		board_other.playMove("g2-g3");
-		board_other.playMove("h7-h6");
-		board_other.playMove("f1-g2");
-		board_other.playMove("h6-h5");
-		board_other.playMove("g2-e4");
+		board_other.playMoves(["g2-g3", "h7-h6", "f1-g2", "h6-h5", "g2-e4"]);
 		
 		Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
 		
@@ -449,13 +445,7 @@ describe("Ic utility methods", () => {
 		
 		expect(board_other.isEqualBoard(board_obj)).toBe(true);
 		
-		board_other.playMove("g7-g5");
-		board_other.playMove("e4-g5");
-		board_other.playMove("e7-e5");
-		board_other.playMove("e2-e4");
-		board_other.playMove("d8-g5");
-		board_other.playMove("d2-d3");
-		board_other.playMove("g5-c1");
+		board_other.playMoves(["g7-g5", "e4-g5", "e7-e5", "e2-e4", "d8-g5", "d2-d3", "g5-c1"]);
 		
 		expect(board_other.w.materialDiff).toEqual([1]);
 		expect(board_other.b.materialDiff).toEqual([-2, -3]);

@@ -1101,8 +1101,7 @@ describe("Board methods", () => {
 			temp=board_a.reset();
 			expect(temp).toBe(false);
 			
-			board_a.playMove("e4");
-			board_a.playMove("e5");
+			board_a.playMoves(["e4", "e5"]);
 			
 			temp=board_a.reset();
 			expect(temp).toBe(true);
@@ -1118,8 +1117,7 @@ describe("Board methods", () => {
 			temp=board_b.reset();
 			expect(temp).toBe(false);
 			
-			board_b.playMove("e4");
-			board_b.playMove("e5");
+			board_b.playMoves(["e4", "e5"]);
 			
 			temp=board_b.reset();
 			expect(temp).toBe(true);
@@ -1148,10 +1146,7 @@ describe("Board methods", () => {
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
 			
-			board_b.playMove("e4");
-			board_b.playMove("e5");
-			board_b.playMove("Nf3");
-			board_b.playMove("Nc6");
+			board_b.playMoves(["e4", "e5", "Nf3", "Nc6"]);
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
 			
@@ -1177,9 +1172,7 @@ describe("Board methods", () => {
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
 			
-			board_b.playMove("d5");
-			board_b.playMove("d4");
-			board_b.playMove("dxe4");
+			board_b.playMoves(["d5", "d4", "dxe4"]);
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
 			
@@ -1211,8 +1204,7 @@ describe("Board methods", () => {
 			expect(temp).toBe(false);
 			expect(board_a.manualResult).toBe("1/2-1/2");
 			
-			board_a.playMove("e4");
-			board_a.playMove("e5");
+			board_a.playMoves(["e4", "e5"]);
 			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.deleteMoves();
@@ -1233,8 +1225,7 @@ describe("Board methods", () => {
 			expect(temp).toBe(false);
 			expect(board_b.manualResult).toBe("*");
 			
-			board_b.playMove("e4");
-			board_b.playMove("e5");
+			board_b.playMoves(["e4", "e5"]);
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.deleteMoves();
@@ -1273,8 +1264,7 @@ describe("Board methods", () => {
 			expect(temp).toBe(false);
 			expect(board_a.manualResult).toBe("1/2-1/2");
 			
-			board_a.playMove("e4");
-			board_a.playMove("e5");
+			board_a.playMoves(["e4", "e5"]);
 			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.deleteMoves();
@@ -1295,8 +1285,7 @@ describe("Board methods", () => {
 			expect(temp).toBe(false);
 			expect(board_b.manualResult).toBe("*");
 			
-			board_b.playMove("e4");
-			board_b.playMove("e5");
+			board_b.playMoves(["e4", "e5"]);
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.deleteMoves();
