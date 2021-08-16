@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.1.0";
+		var _VERSION="7.1.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2868,7 +2868,7 @@
 		
 		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
 		function _playMoves(arr, p){
-			var i, len, that, current_p, p_cache, everything_parsed, rtn;
+			var i, len, that, p_cache, at_least_one_parsed, everything_parsed, rtn;
 			
 			that=this;
 			
@@ -2876,6 +2876,7 @@
 			
 			p_cache=_unreferenceP(p, [["isUnreferenced", false]]);
 			p=_unreferenceP(p, [["isInanimated", true], ["playSounds", false], ["isUnreferenced", false]]);
+			at_least_one_parsed=false;
 			
 			block:
 			{
@@ -2886,11 +2887,11 @@
 				everything_parsed=true;
 				
 				for(i=0, len=arr.length; i<len; i++){//0<len
-					current_p=((i+1)===len ? p_cache : p);
-					
-					if(that.playMove(arr[i], current_p)===null){
+					if(that.playMove(arr[i], p)===null){
 						everything_parsed=false;
 						break;
+					}else{
+						at_least_one_parsed=true;
 					}
 				}
 				
@@ -2899,6 +2900,10 @@
 				}
 				
 				rtn=true;
+			}
+			
+			if(at_least_one_parsed){
+				that.refreshUi((p_cache.isInanimated ? 0 : 1), p_cache.playSounds);//autorefresh
 			}
 			
 			return rtn;
