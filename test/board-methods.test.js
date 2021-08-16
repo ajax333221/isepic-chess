@@ -4,6 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
+//playMoves
 //readValidatedFen
 //updateFenAndMisc
 //refinedFenTest (hay unos fen en misc.)

@@ -18,125 +18,130 @@
 				name : "playMove",
 				refreshUi : true
 			},
-			toggleIsRotated : {
+			playMoves : {
 				index : 2,
+				name : "playMoves",
+				refreshUi : true
+			},
+			toggleIsRotated : {
+				index : 3,
 				name : "toggleIsRotated",
 				refreshUi : true
 			},
 			setPromoteTo : {
-				index : 3,
+				index : 4,
 				name : "setPromoteTo",
 				refreshUi : true
 			},
 			setManualResult : {
-				index : 4,
+				index : 5,
 				name : "setManualResult",
 				refreshUi : true
 			},
 			setCurrentMove : {
-				index : 5,
+				index : 6,
 				name : "setCurrentMove",
 				refreshUi : true
 			},
 			navFirst : {
-				index : 6,
+				index : 7,
 				name : "navFirst",
 				refreshUi : true
 			},
 			navPrevious : {
-				index : 7,
+				index : 8,
 				name : "navPrevious",
 				refreshUi : true
 			},
 			navNext : {
-				index : 8,
+				index : 9,
 				name : "navNext",
 				refreshUi : true
 			},
 			navLast : {
-				index : 9,
+				index : 10,
 				name : "navLast",
 				refreshUi : true
 			},
 			navLinkMove : {
-				index : 10,
+				index : 11,
 				name : "navLinkMove",
 				refreshUi : true
 			},
 			cloneBoardFrom : {
-				index : 11,
+				index : 12,
 				name : "cloneBoardFrom",
 				refreshUi : true
 			},
 			cloneBoardTo : {
-				index : 12,
+				index : 13,
 				name : "cloneBoardTo",
 				refreshUi : true
 			},
 			reset : {
-				index : 13,
+				index : 14,
 				name : "reset",
 				refreshUi : true
 			},
 			deleteMoves : {
-				index : 14,
+				index : 15,
 				name : "deleteMoves",
 				refreshUi : true
 			},
 			countLightDarkBishops : {
-				index : 15,
+				index : 16,
 				name : "countLightDarkBishops"
 			},
 			fenHistoryExport : {
-				index : 16,
+				index : 17,
 				name : "fenHistoryExport"
 			},
 			pgnExport : {
-				index : 17,
+				index : 18,
 				name : "pgnExport"
 			},
 			uciExport : {
-				index : 18,
+				index : 19,
 				name : "uciExport"
 			},
 			ascii : {
-				index : 19,
+				index : 20,
 				name : "ascii"
 			},
 			getSquare : {
-				index : 20,
+				index : 21,
 				name : "getSquare"
 			},
 			setSquare : {
-				index : 21,
+				index : 22,
 				name : "setSquare"
 			},
 			countAttacks : {
-				index : 22,
+				index : 23,
 				name : "countAttacks"
 			},
 			isLegalMove : {
-				index : 23,
+				index : 24,
 				name : "isLegalMove"
 			},
 			legalMoves : {
-				index : 24,
+				index : 25,
 				name : "legalMoves"
 			},
 			legalFenMoves : {
-				index : 25,
+				index : 26,
 				name : "legalFenMoves"
 			},
 			legalSanMoves : {
-				index : 26,
+				index : 27,
 				name : "legalSanMoves"
 			},
 			legalUciMoves : {
-				index : 27,
+				index : 28,
 				name : "legalUciMoves"
 			},
 			isEqualBoard : {
-				index : 28,
+				index : 29,
 				name : "isEqualBoard"
 			}
 		};
@@ -200,6 +205,62 @@
 		
 		board.playMove.links=PIN_MOVE;
 		//end: playMove
+		
+		//start: playMoves
+		board.playMoves.params={
+			children : [
+				{
+					name : "movArray",
+					type : "Array",
+				},
+				{
+					name : "p",
+					type : "Object",
+					icon : "eight_pointed_black_star",
+					children : [
+						{name : "isMockMove", type : "Boolean", icon : "eight_spoked_asterisk"},
+						overwriteAndUnreference(p_qal, [["name", "promoteTo"], ["icon", "eight_spoked_asterisk"]]),
+						{name : "delimiter", type : "String", icon : "eight_spoked_asterisk"},
+						{name : "isLegalMove", type : "Boolean", icon : "eight_spoked_asterisk"},
+						{name : "isInanimated", type : "Boolean", icon : "eight_spoked_asterisk"},
+						{name : "playSounds", type : "Boolean", icon : "eight_spoked_asterisk"}
+					]
+				}
+			]
+		};
+		
+		board.playMoves.returnVal=[
+			{
+				children : [{type : "Boolean"}]
+			},
+			{
+				children : [
+					{
+						type : "Boolean",
+						codeAfter : "false"
+					}
+				]
+			}
+		];
+		
+		board.playMoves.description=[];
+		board.playMoves.description.push("It tries to play all the moves consecutively and tells you if all moves were successfully played or not.");
+		board.playMoves.description.push("`isMockMove = true` plays the moves on a **temporal board** instead of affecting the **board**.");
+		board.playMoves.description.push(":zap:**Tip:** when **isMockMove** is used, all the moves are expected to be from the active side (do not alternate them with the non-active side as the moves will not be being played). However, it is preferred to validate multiple moves with `board.isLegalMove(...)` and a loop with early break.");
+		board.playMoves.description.push("`isLegalMove = true` skips the legal move validation. This should only be used if the moves are known to be legal moves for a specific fen and the current board fen matches it.");
+		board.playMoves.description.push("`isInanimated = true` prevents the **piece animations** in UI <sup>(the UI refresh takes place normally)</sup>.");
+		board.playMoves.description.push("`playSounds = true` plays the moves with **sound effects** in UI.");
+		board.playMoves.description.push("The Boolean options (`isMockMove`, `isLegalMove`, `isInanimated` and `playSounds`) default to `false` when not set to a Boolean value of `true`.");
+		board.playMoves.description.push("`promoteTo` takes precedence over everything when specified and a pawn promotion takes place.");
+		board.playMoves.description.push("`delimiter` is a single character to look for in **moveJoined** (like `\"-\" in \"a2-a4\"`) to allow the use of any delimiters. Defaults to `\"-\"` if not specified.");
+		board.playMoves.description.push("Successfully playing a move will set `\"*\"` to `board.manualResult`.");
+		
+		board.playMoves.examples=[];
+		board.playMoves.examples.push("board.playMoves([\"e4\", \"e7-e5\", \"Nf3\"]) //true");
+		board.playMoves.examples.push("board.playMoves([\"e2_e4\", \"e5\", \"Nf3\"], {delimiter: \"_\"}) //true");
+		board.playMoves.examples.push("board.playMoves([\"0invalidmove0\"]) //false");
+		board.playMoves.examples.push("board.playMoves([\"e4\", \"0invalidmove0\"]) //false");
+		//end: playMoves
 		
 		//start: toggleIsRotated
 		board.toggleIsRotated.params={

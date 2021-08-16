@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.0.0";
+		var _VERSION="7.1.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -383,6 +383,7 @@
 					getWrappedMove : _getWrappedMove,
 					draftMove : _draftMove,
 					playMove : _playMove,
+					playMoves : _playMoves,
 					navFirst : _navFirst,
 					navPrevious : _navPrevious,
 					navNext : _navNext,
@@ -2865,6 +2866,44 @@
 			return rtn_move_obj;
 		}
 		
+		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
+		function _playMoves(arr, p){
+			var i, len, that, current_p, p_cache, everything_parsed, rtn;
+			
+			that=this;
+			
+			rtn=false;
+			
+			p_cache=_unreferenceP(p, [["isUnreferenced", false]]);
+			p=_unreferenceP(p, [["isInanimated", true], ["playSounds", false], ["isUnreferenced", false]]);
+			
+			block:
+			{
+				if(!_isArray(arr) || !arr.length){
+					break block;
+				}
+				
+				everything_parsed=true;
+				
+				for(i=0, len=arr.length; i<len; i++){//0<len
+					current_p=((i+1)===len ? p_cache : p);
+					
+					if(that.playMove(arr[i], current_p)===null){
+						everything_parsed=false;
+						break;
+					}
+				}
+				
+				if(!everything_parsed){
+					break block;
+				}
+				
+				rtn=true;
+			}
+			
+			return rtn;
+		}
+		
 		//---------------- board (using IcUi)
 		
 		function _refreshUi(animation_type, play_sounds){
@@ -3158,7 +3197,7 @@
 		
 		//p = {boardName, fen, pgn, uci, moveIndex, isRotated, skipFenValidation, isHidden, promoteTo, manualResult, validOrBreak}
 		function initBoard(p){
-			var i, len, temp, board_created, board_name, fen_was_valid, postfen_was_valid, new_board, everything_parsed, finished_block, rtn;
+			var temp, board_created, board_name, fen_was_valid, postfen_was_valid, new_board, everything_parsed, finished_block, rtn;
 			
 			rtn=null;
 			p=_unreferenceP(p);
@@ -3260,14 +3299,7 @@
 				}
 				
 				if(p.pgn){
-					everything_parsed=true;
-					
-					for(i=0, len=p.pgn.sanMoves.length; i<len; i++){//0<len
-						if(new_board.playMove(p.pgn.sanMoves[i])===null){
-							everything_parsed=false;
-							break;
-						}
-					}
+					everything_parsed=new_board.playMoves(p.pgn.sanMoves);/*NO p.validOrBreak short-circuit*/
 					
 					if(p.validOrBreak && !everything_parsed){
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad PGN");
@@ -3278,14 +3310,7 @@
 						}
 					}
 				}else if(p.uci){
-					everything_parsed=true;
-					
-					for(i=0, len=p.uci.length; i<len; i++){//0<len
-						if(new_board.playMove(p.uci[i])===null){
-							everything_parsed=false;
-							break;
-						}
-					}
+					everything_parsed=new_board.playMoves(p.uci);/*NO p.validOrBreak short-circuit*/
 					
 					if(p.validOrBreak && !everything_parsed){
 						_consoleLog("Error[initBoard]: \""+board_name+"\" bad UCI");
@@ -3352,6 +3377,9 @@
 			switch(fn_name){
 				case "playMove" :
 					rtn=(board_created ? _playMove.apply(board, [args[0], _unreferenceP(args[1], [["isMockMove", false], ["isUnreferenced", true]])]) : null);
+					break;
+				case "playMoves" :
+					rtn=(board_created ? _playMoves.apply(board, args) : false);
 					break;
 				case "legalMoves" :
 					rtn=(board_created ? _legalMoves.apply(board, args) : []);
