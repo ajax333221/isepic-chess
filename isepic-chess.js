@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.1.1";
+		var _VERSION="7.2.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -376,6 +376,8 @@
 					cloneBoardFrom : _cloneBoardFrom,
 					cloneBoardTo : _cloneBoardTo,
 					reset : _reset,
+					undoMove : _undoMove,
+					undoMoves : _undoMoves,
 					deleteMoves : _deleteMoves,
 					countLightDarkBishops : _countLightDarkBishops,
 					fenWrapmoveHelper : _fenWrapmoveHelper,
@@ -2189,36 +2191,73 @@
 			return rtn_changed;
 		}
 		
-		function _deleteMoves(){
-			var that, temp, hash_cache, rtn_changed;
+		function _undoMove(){
+			var that;
+			
+			that=this;
+			
+			return that.undoMoves(1);
+		}
+		
+		function _undoMoves(decrese_by){
+			var that, temp, current_move_cache, hash_cache, rtn_changed;
 			
 			that=this;
 			
 			rtn_changed=false;
 			
-			hash_cache=that.boardHash();
-			
-			temp=that.isHidden;
-			
-			that.isHidden=true;
-			that.navFirst();
-			that.isHidden=temp;
-			
-			that.moveList=that.moveList.slice(0, 1);
-			
-			if(that.boardHash()!==hash_cache){
-				rtn_changed=true;
+			block:
+			{
+				if(that.moveList.length<2){
+					break block;
+				}
+				
+				if(!decrese_by && decrese_by!==0){//both 0 and -0
+					decrese_by=(that.moveList.length-1);
+				}
+				
+				decrese_by=_toInt(decrese_by, 0, (that.moveList.length-1));
+				
+				if(!decrese_by){
+					break block;
+				}
+				
+				hash_cache=that.boardHash();
+				current_move_cache=that.currentMove;
 				
 				temp=that.isHidden;
 				
 				that.isHidden=true;
-				that.setManualResult(_RESULT_ONGOING);
+				that.navLinkMove(Math.min((that.moveList.length-decrese_by-1), current_move_cache));
 				that.isHidden=temp;
 				
-				that.refreshUi(0, false);//autorefresh
+				that.moveList=that.moveList.slice(0, -decrese_by);
+				
+				if(that.boardHash()!==hash_cache){
+					rtn_changed=true;
+					
+					temp=that.isHidden;
+					
+					that.isHidden=true;
+					that.setManualResult(_RESULT_ONGOING);
+					that.isHidden=temp;
+					
+					//the next moveList element was removed, not possible to reverse animation
+					//is_goto=(Math.abs(that.currentMove-current_move_cache)!==1);
+					
+					that.refreshUi(0, false);//autorefresh
+				}
 			}
 			
 			return rtn_changed;
+		}
+		
+		function _deleteMoves(decrese_by){
+			var that;
+			
+			that=this;
+			
+			return that.undoMoves(decrese_by);
 		}
 		
 		function _countLightDarkBishops(){

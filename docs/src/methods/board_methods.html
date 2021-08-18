@@ -83,65 +83,75 @@
 				name : "reset",
 				refreshUi : true
 			},
-			deleteMoves : {
+			undoMove : {
 				index : 15,
+				name : "undoMove",
+				refreshUi : true
+			},
+			undoMoves : {
+				index : 16,
+				name : "undoMoves",
+				refreshUi : true
+			},
+			deleteMoves : {
+				index : 17,
 				name : "deleteMoves",
 				refreshUi : true
 			},
 			countLightDarkBishops : {
-				index : 16,
+				index : 18,
 				name : "countLightDarkBishops"
 			},
 			fenHistoryExport : {
-				index : 17,
+				index : 19,
 				name : "fenHistoryExport"
 			},
 			pgnExport : {
-				index : 18,
+				index : 20,
 				name : "pgnExport"
 			},
 			uciExport : {
-				index : 19,
+				index : 21,
 				name : "uciExport"
 			},
 			ascii : {
-				index : 20,
+				index : 22,
 				name : "ascii"
 			},
 			getSquare : {
-				index : 21,
+				index : 23,
 				name : "getSquare"
 			},
 			setSquare : {
-				index : 22,
+				index : 24,
 				name : "setSquare"
 			},
 			countAttacks : {
-				index : 23,
+				index : 25,
 				name : "countAttacks"
 			},
 			isLegalMove : {
-				index : 24,
+				index : 26,
 				name : "isLegalMove"
 			},
 			legalMoves : {
-				index : 25,
+				index : 27,
 				name : "legalMoves"
 			},
 			legalFenMoves : {
-				index : 26,
+				index : 28,
 				name : "legalFenMoves"
 			},
 			legalSanMoves : {
-				index : 27,
+				index : 29,
 				name : "legalSanMoves"
 			},
 			legalUciMoves : {
-				index : 28,
+				index : 30,
 				name : "legalUciMoves"
 			},
 			isEqualBoard : {
-				index : 29,
+				index : 31,
 				name : "isEqualBoard"
 			}
 		};
@@ -500,20 +510,55 @@
 		board.reset.examples.push("board.reset(true) //false");
 		//end: reset
 		
+		//start: undoMove
+		board.undoMove.params={};
+		
+		board.undoMove.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.undoMove.description=[];
+		board.undoMove.description.push("Removes the last move played.");
+		board.undoMove.description.push("The **current move** will be decreased as necessary if it was pointing to the removed move.");
+		board.undoMove.description.push("Successfully removing a move will set `\"*\"` to `board.manualResult`.");
+		
+		board.undoMove.examples=[];
+		board.undoMove.examples.push("board.undoMove() //true");
+		board.undoMove.examples.push("board.undoMove() //false");
+		//end: undoMove
+		
+		//start: undoMoves
+		board.undoMoves.params={
+			children : [{name : "decreaseBy", type : "Number", icon : "eight_pointed_black_star"}]
+		};
+		
+		board.undoMoves.returnVal={
+			children : [{type : "Boolean"}]
+		};
+		
+		board.undoMoves.description=[];
+		board.undoMoves.description.push("Removes N moves from the right.");
+		board.undoMoves.description.push("If `decreaseBy` is omitted, all the moves will be removed.");
+		board.undoMoves.description.push("The **current move** will be decreased as necessary if it was pointing to one of the removed moves.");
+		board.undoMoves.description.push("Successfully removing a move will set `\"*\"` to `board.manualResult`.");
+		
+		board.undoMoves.examples=[];
+		board.undoMoves.examples.push("board.undoMoves() //true");
+		board.undoMoves.examples.push("board.undoMoves() //false");
+		//end: undoMoves
+		
 		//start: deleteMoves
-		board.deleteMoves.params={};
+		board.deleteMoves.params={
+			children : [{name : "decreaseBy", type : "Number", icon : "eight_pointed_black_star"}]
+		};
 		
 		board.deleteMoves.returnVal={
 			children : [{type : "Boolean"}]
 		};
 		
 		board.deleteMoves.description=[];
-		board.deleteMoves.description.push("Navigates to the **starting position** and deletes all the played moves.");
-		board.deleteMoves.description.push("Successfully deleting a move will set `\"*\"` to `board.manualResult`.");
-		
-		board.deleteMoves.examples=[];
-		board.deleteMoves.examples.push("board.deleteMoves() //true");
-		board.deleteMoves.examples.push("board.deleteMoves() //false");
+		board.deleteMoves.description.push(":no_entry_sign: **Deprecated:** use `board.undoMoves()` instead.");
+		board.deleteMoves.description.push("This will continue to work as an alias of `board.undoMoves()` until **v8.X.X**.");
 		//end: deleteMoves
 		
 		//start: countLightDarkBishops
