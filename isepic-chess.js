@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.2.0";
+		var _VERSION="7.3.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -367,6 +367,8 @@
 					legalFenMoves : _legalFenMoves,
 					legalSanMoves : _legalSanMoves,
 					legalUciMoves : _legalUciMoves,
+					getCheckmateMoves : _getCheckmateMoves,
+					getDrawMoves : _getDrawMoves,
 					fenHistoryExport : _fenHistoryExport,
 					pgnExport : _pgnExport,
 					uciExport : _uciExport,
@@ -1890,6 +1892,53 @@
 				}
 				
 				rtn=_strContains(legal_uci_in_bos.join(","), (wrapped_move.fromBos+""+wrapped_move.toBos));
+			}
+			
+			return rtn;
+		}
+		
+		function _getCheckmateMoves(early_break){
+			var i, len, that, temp, rtn;
+			
+			that=this;
+			
+			rtn=[];
+			
+			outer:
+			for(i=0, len=that.legalUci.length; i<len; i++){//0<len
+				temp=that.playMove(that.legalUci[i], {isLegalMove : true, isMockMove : true});
+				
+				if(temp.moveResult && !temp.canDraw){
+					rtn.push(temp.uci);
+					
+					if(early_break){
+						break outer;
+					}
+				}
+			}
+			
+			return rtn;
+		}
+		
+		function _getDrawMoves(early_break){
+			var i, len, that, temp, rtn;
+			
+			that=this;
+			
+			rtn=[];
+			
+			outer:
+			for(i=0, len=that.legalUci.length; i<len; i++){//0<len
+				/*BUG: obj.canDraw wrong threefold repetition*/
+				temp=that.playMove(that.legalUci[i], {isLegalMove : true, isMockMove : true});
+				
+				if(temp.canDraw){
+					rtn.push(temp.uci);
+					
+					if(early_break){
+						break outer;
+					}
+				}
 			}
 			
 			return rtn;

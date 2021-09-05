@@ -102,56 +102,64 @@
 				index : 18,
 				name : "countLightDarkBishops"
 			},
-			fenHistoryExport : {
+			getCheckmateMoves : {
 				index : 19,
+				name : "getCheckmateMoves"
+			},
+			getDrawMoves : {
+				index : 20,
+				name : "getDrawMoves"
+			},
+			fenHistoryExport : {
+				index : 21,
 				name : "fenHistoryExport"
 			},
 			pgnExport : {
-				index : 20,
+				index : 22,
 				name : "pgnExport"
 			},
 			uciExport : {
-				index : 21,
+				index : 23,
 				name : "uciExport"
 			},
 			ascii : {
-				index : 22,
+				index : 24,
 				name : "ascii"
 			},
 			getSquare : {
-				index : 23,
+				index : 25,
 				name : "getSquare"
 			},
 			setSquare : {
-				index : 24,
+				index : 26,
 				name : "setSquare"
 			},
 			countAttacks : {
-				index : 25,
+				index : 27,
 				name : "countAttacks"
 			},
 			isLegalMove : {
-				index : 26,
+				index : 28,
 				name : "isLegalMove"
 			},
 			legalMoves : {
-				index : 27,
+				index : 29,
 				name : "legalMoves"
 			},
 			legalFenMoves : {
-				index : 28,
+				index : 30,
 				name : "legalFenMoves"
 			},
 			legalSanMoves : {
-				index : 29,
+				index : 31,
 				name : "legalSanMoves"
 			},
 			legalUciMoves : {
-				index : 30,
+				index : 32,
 				name : "legalUciMoves"
 			},
 			isEqualBoard : {
-				index : 31,
+				index : 33,
 				name : "isEqualBoard"
 			}
 		};
@@ -575,6 +583,55 @@
 		board.countLightDarkBishops.examples=[];
 		board.countLightDarkBishops.examples.push("board.countLightDarkBishops() //Object{...}");
 		//end: countLightDarkBishops
+		
+		//start: getCheckmateMoves
+		board.getCheckmateMoves.params={
+			children : [{name : "earlyBreak", type : "Boolean", icon : "eight_pointed_black_star"}]
+		};
+		
+		board.getCheckmateMoves.returnVal={
+			children : [
+				{
+					name : "finalUciArray",
+					type : "Array",
+					isBold : true
+				}
+			]
+		};
+		
+		board.getCheckmateMoves.description=[];
+		board.getCheckmateMoves.description.push("Returns a **final uci array** with all the uci moves that deliver checkmate after playing any of them.");
+		board.getCheckmateMoves.description.push("Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single move is found.");
+		
+		board.getCheckmateMoves.examples=[];
+		board.getCheckmateMoves.examples.push("board.getCheckmateMoves() //[]");
+		board.getCheckmateMoves.examples.push("board_after_f4_e6_g4.getCheckmateMoves() //[\"d8h4\"]");
+		//end: getCheckmateMoves
+		
+		//start: getDrawMoves
+		board.getDrawMoves.params={
+			children : [{name : "earlyBreak", type : "Boolean", icon : "eight_pointed_black_star"}]
+		};
+		
+		board.getDrawMoves.returnVal={
+			children : [
+				{
+					name : "finalUciArray",
+					type : "Array",
+					isBold : true
+				}
+			]
+		};
+		
+		board.getDrawMoves.description=[];
+		board.getDrawMoves.description.push("Returns a **final uci array** with all the uci moves that draw or a draw is claimable after playing any of them.");
+		board.getDrawMoves.description.push("Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single move is found.");
+		board.getDrawMoves.description.push("**:warning:Known-bug:** threefold repetition is not working in this method.");
+		
+		board.getDrawMoves.examples=[];
+		board.getDrawMoves.examples.push("board.getDrawMoves() //[]");
+		board.getDrawMoves.examples.push("a8_cornered_k_vs_kq.getDrawMoves() //[\"d6b6\", \"d6c7\"]");
+		//end: getDrawMoves
 		
 		//start: fenHistoryExport
 		board.fenHistoryExport.params={};
