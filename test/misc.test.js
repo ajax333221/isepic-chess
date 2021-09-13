@@ -556,6 +556,33 @@ describe("Misc.", () => {
 			
 			expect(Ic.fenGet(fen, "isCheckmate isFiftyMove inDraw", {skipFenValidation : true})).toEqual({isCheckmate:true, isFiftyMove:true, inDraw:false});
 		});
+		
+		test("Threefold repetition with isMockMove", () => {
+			var board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_obj.playMoves(["Nf3", "Nf6", "Ng1", "Ng8", "Nf3", "Nf6", "Ng1"]);
+			
+			expect(board_obj.playMove("Ng8", {isMockMove : true}).canDraw).toBe(true);
+			
+			board_obj.playMoves(["Ng8", "h4", "h5"]);
+			
+			board_obj.navPrevious();
+			board_obj.navPrevious();
+			board_obj.navPrevious();
+			
+			expect(board_obj.playMove("Ng8", {isMockMove : true}).canDraw).toBe(true);
+			
+			board_obj.navPrevious();
+			board_obj.navPrevious();
+			board_obj.navPrevious();
+			board_obj.navPrevious();
+			
+			expect(board_obj.playMove("Ng8", {isMockMove : true}).canDraw).toBe(false);
+		});
 	});
 	
 	describe("Old tests", () => {

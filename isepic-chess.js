@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.3.0";
+		var _VERSION="7.3.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -1254,7 +1254,7 @@
 			return rtn;
 		}
 		
-		function _updateFenAndMisc(){
+		function _updateFenAndMisc(sliced_fen_history){
 			var i, j, k, m, len, that, temp, temp2, current_diff, from_bos, to_bos, total_pieces, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark;
 			
 			that=this;
@@ -1315,13 +1315,17 @@
 			
 			that.isThreefold=false;
 			
-			if(that.currentMove>7 && that.halfMove>7){
+			if(sliced_fen_history || (that.moveList && that.currentMove>7 && that.halfMove>7)){
 				times_found=1;
 				
-				for(i=(that.currentMove-1); i>=0; i--){//(len-1)...0
-					temp=that.moveList[i].fen.split(" ");
+				temp=(sliced_fen_history || that.fenHistoryExport());
+				
+				i=(sliced_fen_history ? (sliced_fen_history.length-1) : (that.currentMove-1));
+				
+				for(; i>=0; i--){//(len-1)...0
+					temp2=temp[i].split(" ");
 					
-					if(temp.slice(0, 4).join(" ")===clockless_fen){
+					if(temp2.slice(0, 4).join(" ")===clockless_fen){
 						times_found++;
 						
 						if(times_found>2){
@@ -1330,7 +1334,7 @@
 						}
 					}
 					
-					if(temp[4]==="0"){
+					if(temp2[4]==="0"){
 						break;
 					}
 				}
@@ -1929,7 +1933,6 @@
 			
 			outer:
 			for(i=0, len=that.legalUci.length; i<len; i++){//0<len
-				/*BUG: obj.canDraw wrong threefold repetition*/
 				temp=that.playMove(that.legalUci[i], {isLegalMove : true, isMockMove : true});
 				
 				if(temp.canDraw){
@@ -2780,7 +2783,7 @@
 		}
 		
 		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds, isUnreferenced}
-		function _playMove(mov, p){
+		function _playMove(mov, p, sliced_fen_history){
 			var i, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, autogen_comment, rtn_move_obj;
 			
 			that=this;
@@ -2796,7 +2799,11 @@
 				p.isUnreferenced=(p.isUnreferenced===true);
 				
 				if(p.isMockMove){
-					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p], {promoteTo : that.promoteTo, skipFenValidation : true});
+					if(that.moveList){
+						sliced_fen_history=that.fenHistoryExport().slice(0, (that.currentMove+1));
+					}
+					
+					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p, sliced_fen_history], {promoteTo : that.promoteTo, skipFenValidation : true});
 					
 					break block;
 				}
@@ -2867,7 +2874,7 @@
 				}
 				
 				that.currentMove++;/*NO move below updateFenAndMisc()*/
-				that.updateFenAndMisc();
+				that.updateFenAndMisc(sliced_fen_history);
 				
 				complete_san=pgn_obj.partialSan;
 				move_res="";
@@ -2955,7 +2962,7 @@
 		}
 		
 		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
-		function _playMoves(arr, p){
+		function _playMoves(arr, p, sliced_fen_history){
 			var i, len, that, p_cache, at_least_one_parsed, everything_parsed, rtn;
 			
 			that=this;
@@ -2975,7 +2982,7 @@
 				everything_parsed=true;
 				
 				for(i=0, len=arr.length; i<len; i++){//0<len
-					if(that.playMove(arr[i], p)===null){
+					if(that.playMove(arr[i], p, sliced_fen_history)===null){
 						everything_parsed=false;
 						break;
 					}else{
@@ -3469,7 +3476,7 @@
 			
 			switch(fn_name){
 				case "playMove" :
-					rtn=(board_created ? _playMove.apply(board, [args[0], _unreferenceP(args[1], [["isMockMove", false], ["isUnreferenced", true]])]) : null);
+					rtn=(board_created ? _playMove.apply(board, [args[0], _unreferenceP(args[1], [["isMockMove", false], ["isUnreferenced", true]]), args[2]]) : null);
 					break;
 				case "playMoves" :
 					rtn=(board_created ? _playMoves.apply(board, args) : false);
