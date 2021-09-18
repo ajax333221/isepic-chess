@@ -169,6 +169,16 @@ describe("Misc.", () => {
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "B", skipFenValidation : true}).san).toBe("bxa8=B");
 				expect(Ic.fenApply(shared_fen, "playMove", ["bxa8=X", {promoteTo : "X"}], {promoteTo : "X", skipFenValidation : true}).san).toBe("bxa8=Q");
 			});
+			
+			test("getDrawMoves() and getCheckmateMoves()", () => {
+				var fen;
+				
+				fen="3n4/3pP3/1RbkbQ2/8/3K4/8/8/8 w - - 0 1";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["e7e8n"].sort());
+				
+				expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation : true}).sort()).toEqual(["e7d8b", "e7d8q"].sort());
+			});
 		});
 		
 		describe("Enpassant related", () => {
