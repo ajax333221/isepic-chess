@@ -148,14 +148,16 @@ https://ajax333221.github.io/isepic-chess-ui/
 :rocket: Features
 -------------
 
+- Get legal moves
+- Lookahead moves that result in checkmate / draw
+- Check / checkmate / draw detection
+- Pawn promotion options
 - PGN import / export
 - UCI import / export
-- Get legal moves
+- ASCII diagram
 - Material difference
 - Multiple boards at once
-- ASCII diagram
-- Pawn promotion options
-- Check / checkmate / draw detection
+- Navigable move history and helper methods (first, last, previous, undo move, reset, etc.)
 - Powerful FEN one-liner operations <sup>(`Ic.fenApply()` and `Ic.fenGet()`)</sup>
 - Advanced FEN validation
 - SAN parsing

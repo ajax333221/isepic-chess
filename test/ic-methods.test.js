@@ -1395,6 +1395,10 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			
 			Ic.setSilentMode(true);
 			
+			expect(Ic.fenApply("0invalidfen0", "getCheckmateMoves").sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			
+			expect(Ic.fenApply("0invalidfen0", "getDrawMoves").sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			
 			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();//NO use {skipFenValidation : true}
 			
 			expect(Ic.fenApply("0invalidfen0", "countAttacks", ["a2"])).toBe(0);//NO use {skipFenValidation : true}

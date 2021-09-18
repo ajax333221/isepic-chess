@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.3.1";
+		var _VERSION="7.4.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -3498,6 +3498,12 @@
 					break;
 				case "isLegalFen" :
 					rtn=board_created;
+					break;
+				case "getCheckmateMoves" :
+					rtn=(board_created ? _getCheckmateMoves.apply(board, args) : []);
+					break;
+				case "getDrawMoves" :
+					rtn=(board_created ? _getDrawMoves.apply(board, args) : []);
 					break;
 				case "getSquare" :
 					rtn=(board_created ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [["isUnreferenced", true]])]) : null);

@@ -4,8 +4,6 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
-//getCheckmateMoves
-//getDrawMoves
 //playMoves (con sliced_fen_history)
 //updateFenAndMisc (con sliced_fen_history)
 //readValidatedFen
@@ -546,6 +544,150 @@ describe("Board methods", () => {
 			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["c2-a2"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(true);
 			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["a2-c2"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(false);
 			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["c9-a9"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(false);
+		});
+	});
+	
+	describe("b.getCheckmateMoves()", () => {
+		describe("white to move", () => {
+			test("two or more checkmates", () => {
+				var fen;
+				
+				fen="k7/8/KQ6/8/8/8/8/8 w - - 0 1";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["b6b7", "b6d8", "b6a7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["b6b7", "b6d8", "b6a7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				
+				fen="rn3r2/pbppq1p1/1p2pN2/8/3P2NP/6P1/PPP1BP1R/R3K1k1 w Q - 5 18";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["e1d2", "e1c1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["e1d2", "e1c1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+			});
+			
+			test("one checkmate", () => {
+				var fen;
+				
+				fen="r1bqkbnr/ppp2ppp/2np4/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["f3f7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["f3f7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+			});
+			
+			test("zero checkmates", () => {
+				var fen;
+				
+				fen="r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(0);
+			});
+		});
+		
+		describe("black to move", () => {
+			test("two or more checkmates", () => {
+				var fen;
+				
+				fen="8/8/8/8/8/6qk/8/7K b - - 0 1";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["g3g2", "g3h2", "g3e1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["g3g2", "g3h2", "g3e1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				
+				fen="1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/r5P1/2K5 b - - 15 41";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["b4a3", "a2c2"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["b4a3", "a2c2"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+			});
+			
+			test("one checkmate", () => {
+				var fen;
+				
+				fen="rnbqkbnr/pppp1ppp/4p3/8/5PP1/8/PPPPP2P/RNBQKBNR b KQkq g3 0 2";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["d8h4"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["d8h4"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+			});
+			
+			test("zero checkmates", () => {
+				var fen;
+				
+				fen="rnbqk1nr/pppp1ppp/8/4p3/1bB1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3";
+				
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(0);
+			});
+		});
+	});
+	
+	describe("b.getDrawMoves()", () => {
+		var board_name;
+		
+		board_name="board_get_draw_moves";
+		
+		test("stalemate", () => {
+			var fen;
+			
+			fen="k7/8/KQ6/8/8/8/8/8 w - - 0 1";
+			
+			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation : true}).sort()).toEqual(["a6b5", "a6a5", "b6d6", "b6b5", "b6b4", "b6b3", "b6b2", "b6b1", "b6c7"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation : true}).sort()).toEqual(["a6b5", "a6a5", "b6d6", "b6b5", "b6b4", "b6b3", "b6b2", "b6b1", "b6c7"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation : true}).length).toBe(1);
+		});
+		
+		test("insufficient material", () => {
+			var fen;
+			
+			fen="8/8/7k/8/8/2b1r3/3B1K2/8 w - - 0 1";
+			
+			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation : true}).sort()).toEqual(["d2e3", "f2e3"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation : true}).sort()).toEqual(["d2e3", "f2e3"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation : true}).length).toBe(1);
+		});
+		
+		test("threefold repetition", () => {
+			var board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name
+			});
+			
+			board_obj.playMoves(["Nf3", "Nf6", "Ng1", "Ng8", "Nf3", "Nf6", "Ng1"]);
+			
+			expect(board_obj.getDrawMoves().sort()).toEqual(["f6g8"].sort());
+			
+			board_obj.playMoves(["Ng8", "Nc3", "Nc6", "Nb1", "Nf6", "Nc3", "Nb8", "Nb1", "Nc6", "Nc3", "Nb8", "Nb1"]);
+			
+			expect(board_obj.getDrawMoves().sort()).toEqual(["f6g8", "b8c6"].sort());
+		});
+		
+		test("50 move rule", () => {
+			var fen;
+			
+			fen="rnbqkb1r/pppp1ppp/4p3/8/1n1N4/8/PPPPPPPP/RNBQKB1R w KQkq - 99 53";
+			
+			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation : true}).sort()).toEqual(["d4f3", "d4b5", "d4f5", "d4b3", "d4c6", "b1c3", "b1a3", "h1g1"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation : true}).sort()).toEqual(["d4f3", "d4b5", "d4f5", "d4b3", "d4c6", "b1c3", "b1a3", "h1g1"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation : true}).length).toBe(1);
+		});
+		
+		test("mixed (stalemate + insufficient material + threefold repetition)", () => {
+			var board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "8/8/8/8/8/5N1K/7p/7k w - - 0 1",
+				skipFenValidation : true
+			});
+			
+			board_obj.playMoves(["Ne1", "Kg1", "Nf3+", "Kh1", "Ne1", "Kg1", "Nf3+", "Kh1"]);
+			
+			expect(board_obj.getDrawMoves().sort()).toEqual(["f3h2", "f3e1", "h3g3"].sort());
 		});
 	});
 	
