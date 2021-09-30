@@ -165,6 +165,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 :book: Documentation
 -------------
 
+- [Examples](https://github.com/ajax333221/isepic-chess/blob/master/docs/examples.md#examples)
 - [Ic methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/ic-methods.md#ic-methods)
 - [Board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
 - [Board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
