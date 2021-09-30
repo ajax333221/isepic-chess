@@ -29,11 +29,10 @@
 <pre>var board = Ic.initBoard();</pre>
 
 <h5>Method B:</h5>
-<pre>var p = {
+<pre>Ic.initBoard({
     boardName: "board_name"
-};
-<br>Ic.initBoard(p);
-<br>var board=Ic.getBoard("board_name");</pre>
+});
+<br>var board = Ic.getBoard("board_name");</pre>
 
 <hr>
 
@@ -98,7 +97,8 @@ board.inDraw;
 
 Or
 
-<pre>var temp = Ic.fenGet(fen, "isCheck");
+<pre>var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+<br>var temp = Ic.fenGet(fen, "isCheck");
 <br>var in_check = (temp !== null ? temp.isCheck : false);</pre>
 
 <small><strong>Note:</strong> we need to guard against `Ic.fenGet()` returning `null` (because `null.isCheck` would cause a breaking error).</small>
