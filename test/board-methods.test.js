@@ -6,7 +6,7 @@ Ic.setSilentMode(false);
 //
 //playMoves (con sliced_fen_history)
 //updateFenAndMisc (con sliced_fen_history)
-//readValidatedFen
+//loadValidatedFen
 //refinedFenTest (hay unos fen en misc.)
 //testCollision
 //toggleIsRotated (re-hacer asi bien con y sin boolean + return value)
@@ -15,6 +15,7 @@ Ic.setSilentMode(false);
 //toggleActiveNonActive (return value)
 //getWrappedMove
 //draftMove
+//updateHelper
 //
 //(x) undoMove (se hara por b.undoMoves())
 //(x) fenWrapmoveHelper (se hara por b.getWrappedMove())
