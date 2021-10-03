@@ -4,6 +4,7 @@ Ic.setSilentMode(false);
 
 //---to do:
 //
+//loadFen
 //playMoves (con sliced_fen_history)
 //updateFenAndMisc (con sliced_fen_history)
 //loadValidatedFen
@@ -22,6 +23,8 @@ Ic.setSilentMode(false);
 //(x) sanWrapmoveHelper (se hara por b.getWrappedMove())
 //(x) legalMovesHelper (se hara por b.legalMoves() y b.legalSanMoves())
 //(x) getClocklessFenHelper (se hara por b.updateFenAndMisc())
+//(x) silentlyResetOptions (no ocupa)
+//(x) silentlyResetManualResult (no ocupa)
 //(x) refreshUi (N/A)(ui only)
 
 describe("Board methods", () => {

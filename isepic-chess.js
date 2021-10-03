@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.4.1";
+		var _VERSION="7.5.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -354,8 +354,11 @@
 					toggleActiveNonActive : _toggleActiveNonActive,
 					toggleIsRotated : _toggleIsRotated,
 					setPromoteTo : _setPromoteTo,
+					silentlyResetOptions : _silentlyResetOptions,
+					silentlyResetManualResult : _silentlyResetManualResult,
 					setManualResult : _setManualResult,
 					setCurrentMove : _setCurrentMove,
+					loadFen : _loadFen,
 					loadValidatedFen : _loadValidatedFen,
 					getClocklessFenHelper : _getClocklessFenHelper,
 					updateFenAndMisc : _updateFenAndMisc,
@@ -1079,6 +1082,30 @@
 			return rtn_changed;
 		}
 		
+		function _silentlyResetOptions(){
+			var that;
+			
+			that=this;
+			
+			that.isHidden=true;//prevents ui refresh from setPromoteTo()
+			
+			that.isRotated=false;
+			that.setPromoteTo(_QUEEN);
+			that.isHidden=false;
+		}
+		
+		function _silentlyResetManualResult(){
+			var that, temp;
+			
+			that=this;
+			
+			temp=that.isHidden;
+			
+			that.isHidden=true;
+			that.setManualResult(_RESULT_ONGOING);
+			that.isHidden=temp;
+		}
+		
 		function _setManualResult(str){
 			var that, temp, rtn_changed;
 			
@@ -1181,6 +1208,47 @@
 			that=this;
 			
 			return that.setCurrentMove(move_index);//autorefresh (sometimes)
+		}
+		
+		//p = {skipFenValidation, keepOptions}
+		function _loadFen(fen, p){
+			var that, temp, hash_cache, rtn_changed;
+			
+			that=this;
+			
+			rtn_changed=false;
+			p=_unreferenceP(p);
+			
+			block:
+			{
+				p.skipFenValidation=(p.skipFenValidation===true);
+				p.keepOptions=(p.keepOptions===true);
+				
+				hash_cache=that.boardHash();
+				
+				temp=that.updateHelper({
+					currentMove : 0,
+					fen : fen,
+					skipFenValidation : p.skipFenValidation,
+					resetOptions : !p.keepOptions,
+					resetMoveList : true
+				});
+				
+				if(!temp){
+					_consoleLog("Error[_loadFen]: bad FEN");
+					break block;
+				}
+				
+				that.silentlyResetManualResult();
+				
+				if(that.boardHash()!==hash_cache){
+					rtn_changed=true;
+					
+					that.refreshUi(0, false);//autorefresh
+				}
+			}
+			
+			return rtn_changed;
 		}
 		
 		function _loadValidatedFen(fen){
@@ -2195,7 +2263,7 @@
 		}
 		
 		function _reset(keep_options){
-			var that, temp, hash_cache, rtn_changed;
+			var that, hash_cache, rtn_changed;
 			
 			that=this;
 			
@@ -2207,22 +2275,11 @@
 				currentMove : 0,
 				fen : _DEFAULT_FEN,
 				skipFenValidation : true,
+				resetOptions : !keep_options,
 				resetMoveList : true
 			});/*NO remove skipFenValidation*/
 			
-			temp=that.isHidden;
-			
-			that.isHidden=true;
-			that.setManualResult(_RESULT_ONGOING);
-			that.isHidden=temp;
-			
-			if(!keep_options){
-				that.isHidden=true;//prevents ui refresh from setPromoteTo()
-				
-				that.isRotated=false;
-				that.setPromoteTo(_QUEEN);
-				that.isHidden=false;
-			}
+			that.silentlyResetManualResult();
 			
 			if(that.boardHash()!==hash_cache){
 				rtn_changed=true;
@@ -2278,11 +2335,7 @@
 				if(that.boardHash()!==hash_cache){
 					rtn_changed=true;
 					
-					temp=that.isHidden;
-					
-					that.isHidden=true;
-					that.setManualResult(_RESULT_ONGOING);
-					that.isHidden=temp;
+					that.silentlyResetManualResult();
 					
 					//the next moveList element was removed, not possible to reverse animation
 					//is_goto=(Math.abs(that.currentMove-current_move_cache)!==1);
@@ -2345,7 +2398,7 @@
 				}
 				
 				if(obj.fen){
-					fen_was_valid=(obj.skipFenValidation || !isLegalFen(obj.fen));
+					fen_was_valid=(obj.skipFenValidation || isLegalFen(obj.fen));
 					
 					if(!fen_was_valid){
 						_consoleLog("Error[_updateHelper]: bad FEN");
@@ -2385,6 +2438,10 @@
 						piece : "",
 						promotion : ""
 					}];
+				}
+				
+				if(obj.resetOptions){
+					that.silentlyResetOptions();
 				}
 				
 				rtn=true;
@@ -3003,11 +3060,7 @@
 					rtn_move_obj=temp;
 				}
 				
-				temp=that.isHidden;
-				
-				that.isHidden=true;
-				that.setManualResult(_RESULT_ONGOING);
-				that.isHidden=temp;
+				that.silentlyResetManualResult();
 				
 				that.refreshUi((p.isInanimated ? 0 : 1), p.playSounds);//autorefresh
 			}

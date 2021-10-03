@@ -7,17 +7,17 @@
 <ul>
 <li><a href="#1">Creating a board</a></li>
 <li><a href="#2">Creating a board (and keeping a reference)</a></li>
-<li><a href="#3">Validating a FEN position</a></li>
-<li><a href="#4">PGN parsing</a></li>
-<li><a href="#5">How to know if a position is in check/checkmate/draw/etc.?</a></li>
-<li><a href="#6">How to get legal moves? (for a specific square)</a></li>
-<li><a href="#7">How to get legal moves? (all legal moves)</a></li>
-<li><a href="#8">Playing a move</a></li>
-<li><a href="#9">Playing multiple moves</a></li>
+<li><a href="#3">Loading a FEN position</a></li>
+<li><a href="#4">Validating a FEN position</a></li>
+<li><a href="#5">PGN parsing</a></li>
+<li><a href="#6">How to know if a position is in check/checkmate/draw/etc.?</a></li>
+<li><a href="#7">How to get legal moves? (for a specific square)</a></li>
+<li><a href="#8">How to get legal moves? (all legal moves)</a></li>
+<li><a href="#9">Playing a move</a></li>
+<li><a href="#10">Playing multiple moves</a></li>
 </ul>
 
 <h3 id="1">→ Creating a board</h3>
-
 <strong>Method A:</strong>
 
 ```js
@@ -27,7 +27,6 @@ Ic.initBoard();
 <hr>
 
 <h3 id="2">→ Creating a board (and keeping a reference)</h3>
-
 <strong>Method A:</strong>
 
 ```js
@@ -46,8 +45,26 @@ var board = Ic.getBoard("board_name");
 
 <hr>
 
-<h3 id="3">→ Validating a FEN position</h3>
+<h3 id="3">→ Loading a FEN position</h3>
+<strong>Loading into a board (Object):</strong>
 
+```js
+var board = Ic.initBoard();
+
+board.loadFen("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3");
+```
+
+<strong>Initializing/overwriting a board (Object):</strong>
+
+```js
+Ic.initBoard({
+  fen: "r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3"
+});
+```
+
+<hr>
+
+<h3 id="4">→ Validating a FEN position</h3>
 <strong>Method A:</strong>
 
 ```js
@@ -76,7 +93,7 @@ var p = {
 
 <hr>
 
-<h3 id="4">→ PGN parsing</h3>
+<h3 id="5">→ PGN parsing</h3>
 <strong>Method A:</strong>
 
 ```js
@@ -105,7 +122,7 @@ var board = Ic.initBoard({
 
 <hr>
 
-<h3 id="5">→ How to know if a position is in check/checkmate/draw/etc.?</h3>
+<h3 id="6">→ How to know if a position is in check/checkmate/draw/etc.?</h3>
 <strong>From the board properties of a board (Object):</strong>
 
 ```js
@@ -145,7 +162,7 @@ var in_check = (temp !== null ? temp.isCheck : false);
 
 <hr>
 
-<h3 id="6">→ How to get legal moves? (for a specific square)</h3>
+<h3 id="7">→ How to get legal moves? (for a specific square)</h3>
 <strong>From a board method call of a board (Object):</strong>
 
 ```js
@@ -176,7 +193,7 @@ Ic.fenApply(fen, "legalUciMoves", ["b1"]); //["b1c3", "b1a3"]
 
 <hr>
 
-<h3 id="7">→ How to get legal moves? (all legal moves)</h3>
+<h3 id="8">→ How to get legal moves? (all legal moves)</h3>
 <strong>From the board properties of a board (Object):</strong>
 
 ```js
@@ -232,7 +249,7 @@ if(temp !== null){ ... }
 
 <hr>
 
-<h3 id="8">→ Playing a move</h3>
+<h3 id="9">→ Playing a move</h3>
 <strong>Affecting the board:</strong>
 
 ```js
@@ -261,7 +278,7 @@ Ic.fenApply(fen, "playMove", ["e4"]);
 
 <hr>
 
-<h3 id="9">→ Playing multiple moves</h3>
+<h3 id="10">→ Playing multiple moves</h3>
 <strong>Playing moves into a board (Object):</strong>
 
 ```js

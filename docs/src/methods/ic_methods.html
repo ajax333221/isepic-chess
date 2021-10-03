@@ -892,11 +892,11 @@
 		ic.initBoard.description.push("If both `pgn` and `uci` are supplied, the **pgn** will take precedence and the **uci** will be ignored.");
 		
 		ic.initBoard.examples=[];
-		ic.initBoard.examples.push("Ic.initBoard({ boardName : \"main\" }) //Object{...}");
-		ic.initBoard.examples.push("Ic.initBoard({ fen : \"8/k7/P7/K7/8/8/8/8 b - - 0 1\", isRotated : true, promoteTo : \"b\" }) //Object{...}");
-		ic.initBoard.examples.push("Ic.initBoard({ pgn : \"0invalidpgn0\", validOrBreak : true }) //null");
-		ic.initBoard.examples.push("Ic.initBoard({ uci : \"0invaliduci0\", validOrBreak : true }) //null");
-		ic.initBoard.examples.push("Ic.initBoard({ fen : \"0invalidfen0\", validOrBreak : true }) //null");
+		ic.initBoard.examples.push("Ic.initBoard({boardName: \"main\"}) //Object{...}");
+		ic.initBoard.examples.push("Ic.initBoard({fen: \"8/k7/P7/K7/8/8/8/8 b - - 0 1\", isRotated: true, promoteTo: \"b\"}) //Object{...}");
+		ic.initBoard.examples.push("Ic.initBoard({pgn: \"0invalidpgn0\", validOrBreak: true}) //null");
+		ic.initBoard.examples.push("Ic.initBoard({uci: \"0invaliduci0\", validOrBreak: true}) //null");
+		ic.initBoard.examples.push("Ic.initBoard({fen: \"0invalidfen0\", validOrBreak: true}) //null");
 		
 		ic.initBoard.links=PIN_BOARD;
 		
@@ -954,7 +954,7 @@
 		ic.fenApply.examples.push("Ic.fenApply(\"r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4\", \"ascii\") //\"...\"");
 		ic.fenApply.examples.push("Ic.fenApply(\"r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4\") //true");
 		ic.fenApply.examples.push("Ic.fenApply(\"0invalidfen0\") //false");
-		ic.fenApply.examples.push("Ic.fenApply(\"8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1\", \"playMove\", [\"c2_a2\", {delimiter : \"_\"}]) //Object{...}");
+		ic.fenApply.examples.push("Ic.fenApply(\"8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1\", \"playMove\", [\"c2_a2\", {delimiter: \"_\"}]) //Object{...}");
 		ic.fenApply.examples.push("Ic.fenApply(\"8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1\", \"0invalidfnname0\", [\"a1\"]) //null");
 		
 		ic.fenApply.errors=[];
@@ -1014,10 +1014,10 @@
 		ic.fenGet.description.push("The **p** option `skipFenValidation` is passed to `Ic.initBoard()` when creating the **temporal board**.");
 		
 		ic.fenGet.examples=[];
-		ic.fenGet.examples.push("Ic.fenGet(\"6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54\", \"isStalemate inDraw\") //{isStalemate : true, inDraw : true}");
-		ic.fenGet.examples.push("Ic.fenGet(\"6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54\", [\"halfMove\", \"fullMove\"]) //{halfMove : 0, fullMove : 54}");
+		ic.fenGet.examples.push("Ic.fenGet(\"6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54\", \"isStalemate inDraw\") //{isStalemate: true, inDraw: true}");
+		ic.fenGet.examples.push("Ic.fenGet(\"6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54\", [\"halfMove\", \"fullMove\"]) //{halfMove: 0, fullMove: 54}");
 		ic.fenGet.examples.push("Ic.fenGet(\"0invalidfen0\", \"isCheck\") //null");
-		ic.fenGet.examples.push("Ic.fenGet(\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\") //{...}");
+		ic.fenGet.examples.push("Ic.fenGet(\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\") //Object{...}");
 		ic.fenGet.examples.push("Ic.fenGet(\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\", \"fen 0invalidprop0\") //null");
 		
 		ic.fenGet.errors=[];
