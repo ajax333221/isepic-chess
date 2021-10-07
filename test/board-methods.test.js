@@ -45,7 +45,7 @@ describe("Board methods", () => {
 				skipFenValidation : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(1777410014);
+			expect(board_obj.boardHash()).toBe(-1570681866);
 			
 			board_obj=Ic.initBoard({
 				boardName : board_name,
@@ -54,8 +54,8 @@ describe("Board methods", () => {
 				skipFenValidation : true
 			});
 			
-			expect(board_obj.boardHash()).toBe(-959186031);
-			expect(Ic.fenApply(shared_fen, "boardHash", [], {skipFenValidation : true})).toBe(-959186031);
+			expect(board_obj.boardHash()).toBe(-1205736327);
+			expect(Ic.fenApply(shared_fen, "boardHash", [], {skipFenValidation : true})).toBe(-1205736327);
 		});
 		
 		test("boardName not used in the hash", () => {
@@ -78,7 +78,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(1985490660);
+			expect(hash_a).toBe(-685294970);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});

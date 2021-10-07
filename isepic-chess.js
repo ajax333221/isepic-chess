@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.5.0";
+		var _VERSION="7.6.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2429,14 +2429,16 @@
 						fen : that.fen,
 						san : "",
 						uci : "",
+						fromBos : "",
+						toBos : "",
+						enPassantBos : "",
+						piece : "",
+						captured : "",
+						promotion : "",
 						comment : "",
 						moveResult : temp,
 						canDraw : that.inDraw,
-						isCapture : false,
-						fromBos : "",
-						toBos : "",
-						piece : "",
-						promotion : ""
+						isEnPassantCapture : false
 					}];
 				}
 				
@@ -2722,7 +2724,7 @@
 		
 		//p = {promoteTo, delimiter, isLegalMove}
 		function _draftMove(mov, p){
-			var that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, promoted_val, is_capture, wrapped_move, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, active_side, non_active_side, is_ambiguous, rtn;
+			var that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, is_en_passant_capture, promoted_val, lc_captured, wrapped_move, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, active_side, non_active_side, is_ambiguous, rtn;
 			
 			that=this;
 			
@@ -2768,8 +2770,9 @@
 				non_active_side=that[that.nonActiveColor];
 				
 				pawn_moved=false;
-				is_capture=!final_cached_square.isEmptySquare;
+				is_en_passant_capture=false;
 				new_en_passant_bos="";
+				lc_captured=(final_cached_square.bal.replace("*", "") || "").toLowerCase();
 				promoted_val=0;
 				king_castled=0;
 				
@@ -2797,7 +2800,8 @@
 							rankShift : non_active_side.singlePawnRankShift
 						}).bos;
 					}else if(sameSquare(final_cached_square, that.enPassantBos)){//enpassant capture
-						is_capture=true;
+						lc_captured="p";
+						is_en_passant_capture=true;
 						
 						rtn.enPassantCaptureAtRankShift=non_active_side.singlePawnRankShift;
 					}else if(final_cached_square.rankPos===active_side.lastRankPos){//promotion
@@ -2881,9 +2885,10 @@
 				}
 				
 				rtn.pawnMoved=pawn_moved;
+				rtn.isEnPassantCapture=is_en_passant_capture;
 				rtn.newEnPassantBos=new_en_passant_bos;
+				rtn.captured=lc_captured;
 				rtn.promotedVal=promoted_val;
-				rtn.isCapture=is_capture;
 				rtn.partialSan=partial_san;
 				rtn.withOverdisambiguated=with_overdisambiguated;
 			}
@@ -3027,14 +3032,16 @@
 					fen : that.fen,
 					san : complete_san,
 					uci : temp3,
+					fromBos : initial_cached_square.bos,
+					toBos : final_cached_square.bos,
+					enPassantBos : that.enPassantBos,
+					piece : temp,
+					captured : pgn_obj.captured,
+					promotion : temp2,
 					comment : autogen_comment,
 					moveResult : move_res,
 					canDraw : that.inDraw,
-					isCapture : pgn_obj.isCapture,
-					fromBos : initial_cached_square.bos,
-					toBos : final_cached_square.bos,
-					piece : temp,
-					promotion : temp2
+					isEnPassantCapture : pgn_obj.isEnPassantCapture
 				});
 				
 				rtn_move_obj=that.moveList[that.moveList.length-1];
@@ -3048,14 +3055,16 @@
 					temp.fen=temp2.fen;
 					temp.san=temp2.san;
 					temp.uci=temp2.uci;
+					temp.fromBos=temp2.fromBos;
+					temp.toBos=temp2.toBos;
+					temp.enPassantBos=temp2.enPassantBos;
+					temp.piece=temp2.piece;
+					temp.captured=temp2.captured;
+					temp.promotion=temp2.promotion;
 					temp.comment=temp2.comment;
 					temp.moveResult=temp2.moveResult;
 					temp.canDraw=temp2.canDraw;
-					temp.isCapture=temp2.isCapture;
-					temp.fromBos=temp2.fromBos;
-					temp.toBos=temp2.toBos;
-					temp.piece=temp2.piece;
-					temp.promotion=temp2.promotion;
+					temp.isEnPassantCapture=temp2.isEnPassantCapture;
 					
 					rtn_move_obj=temp;
 				}
