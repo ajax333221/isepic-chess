@@ -35,7 +35,7 @@ Property | Type | Description
 **toBos** | String | The destination (to) **squareBos**.
 **enPassantBos** | String | The En passant **squareBos** if there was a pawn push of two squares, it holds an empty string otherwise.
 **piece** | String | The **lowercased piece bal** character.
-**captured** | String | The **lowercased piece bal** character, it holds an empty string if no captured.
+**captured** | String | The **lowercased captured bal** character, it holds an empty string if no captured.
 **promotion** | String | The **lowercased promotion bal** character, it holds an empty string if no promotion.
 **comment** | String | `"{...}"` a **comment** to be shown after the san for this move, it holds an empty string if no comment.
 **moveResult** | String | If a checkmate or stalemate happened in this move, the value will be a **result** `"1-0", "0-1", "1/2-1/2"`, it holds an empty string otherwise.
