@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.0.0";
+		var _VERSION="8.0.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2436,7 +2436,7 @@
 						uci : "",
 						fromBos : "",
 						toBos : "",
-						enPassantBos : "",
+						enPassantBos : that.enPassantBos,
 						piece : "",
 						captured : "",
 						promotion : "",

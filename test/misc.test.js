@@ -229,18 +229,46 @@ describe("Misc.", () => {
 				});
 				
 				test("regression test - issue #27", () => {
-					var board;
+					var temp, board_obj;
 					
-					board=Ic.initBoard({
+					board_obj=Ic.initBoard({
 						boardName : board_name,
 						fen : "Qnk2b1r/4p2p/2p2pb1/1Q1p1Pp1/3P4/N1P4N/1PK1P1PP/R1B2B1R b - - 4 30",
 						skipFenValidation : true
 					});
 					
-					board.playMoves(["e5", "Kd2", "Kd8", "Kc2", "Kc8", "Kd2", "Kd8", "Kc2"]);
+					board_obj.playMoves(["e5", "Kd2", "Kd8", "Kc2", "Kc8", "Kd2", "Kd8", "Kc2"]);
 					
-					expect(board.getDrawMoves().sort()).toEqual(["d8c8"].sort());
+					expect(board_obj.getDrawMoves().sort()).toEqual(["d8c8"].sort());
+					
+					board_obj=Ic.initBoard({
+						boardName : board_name
+					});
+					
+					board_obj.playMoves(["e4", "d6", "e5", "f5", "Nf3", "Nf6", "Ng1", "Ng8", "Nh3", "Nh6", "Ng1", "Ng8", "Nc3", "Nc6", "Nb1", "Nb8"]);
+					
+					temp=board_obj.moveList.map(function(obj){
+						return (obj.canDraw*1);
+					});
+					
+					expect(temp.join("")).toBe("00000000000000001");
 				});
+			});
+			
+			test("regression test - issue #29", () => {
+				var board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName : board_name,
+					fen : "rnbqkbnr/ppp1p1pp/3p4/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3",
+					skipFenValidation : true
+				});
+				
+				expect(board_obj.moveList[0].enPassantBos).toBe("f6");
+				
+				board_obj.loadFen("rnbqkbnr/pppp1ppp/8/8/3PpP2/8/PPP1P1PP/RNBQKBNR b KQkq f3 0 3", {skipFenValidation : true});
+				
+				expect(board_obj.moveList[0].enPassantBos).toBe("f3");
 			});
 		});
 		
