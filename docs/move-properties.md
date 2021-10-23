@@ -33,7 +33,7 @@ Property | Type | Description
 **uci** | String | The **uci** for this move.
 **fromBos** | String | The origin (from) **squareBos**.
 **toBos** | String | The destination (to) **squareBos**.
-**enPassantBos** | String | The En passant **squareBos** if there was a pawn push of two squares and there is an enemy pawn that can legally make the capture via En passant, it holds an empty string otherwise.
+**enPassantBos** | String | The En passant **squareBos** if there was a pawn push of two squares and a pawn can legally make the capture via En passant, it holds an empty string otherwise.
 **piece** | String | The **lowercased piece bal** character.
 **captured** | String | The **lowercased captured bal** character, it holds an empty string if no captured.
 **promotion** | String | The **lowercased promotion bal** character, it holds an empty string if no promotion.
