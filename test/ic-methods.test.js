@@ -732,7 +732,7 @@ describe("Ic methods", () => {
 		
 		expect(Ic.countPieces("1n1Rkb1r/p4ppp/4q3/4p1B1/4P3/8/PPP2PPP/2K5 b k - 1 17")).toEqual({w:{p:7, n:0, b:1, r:1, q:0, k:1}, b:{p:5, n:1, b:1, r:1, q:1, k:1}});
 		
-		expect(Ic.countPieces("rnbqkbnr/p1pp2pp/p3p3/5P2/1P6/8/P1PP1PPP/RNBQK1NR b KQkq b3 0 4")).toEqual({w:{p:8, n:2, b:1, r:2, q:1, k:1}, b:{p:7, n:2, b:2, r:2, q:1, k:1}});
+		expect(Ic.countPieces("rnbqkbnr/p1pp2pp/p3p3/5P2/1P6/8/P1PP1PPP/RNBQK1NR b KQkq - 0 4")).toEqual({w:{p:8, n:2, b:1, r:2, q:1, k:1}, b:{p:7, n:2, b:2, r:2, q:1, k:1}});
 		
 		expect(Ic.countPieces(" rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ")).toEqual({w:{p:8, n:2, b:2, r:2, q:1, k:1}, b:{p:8, n:2, b:2, r:2, q:1, k:1}});
 		
@@ -878,7 +878,7 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("r1bqkbnr/pppppppp/2n5/8/P7/5N2/1PPPPPPP/RNBQKB1R b KQkq a3 0 2");
+			expect(board_obj.fen).toBe("r1bqkbnr/pppppppp/2n5/8/P7/5N2/1PPPPPPP/RNBQKB1R b KQkq - 0 2");
 			board_obj.navFirst();
 			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
@@ -896,7 +896,7 @@ describe("Ic methods", () => {
 			});
 			
 			expect(board_obj).not.toBeNull();
-			expect(board_obj.fen).toBe("r1bqkbnr/pppppppp/2n5/8/P7/5N2/1PPPPPPP/RNBQKB1R b KQkq a3 0 2");
+			expect(board_obj.fen).toBe("r1bqkbnr/pppppppp/2n5/8/P7/5N2/1PPPPPPP/RNBQKB1R b KQkq - 0 2");
 			board_obj.navFirst();
 			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
@@ -1251,15 +1251,8 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				"8/8/8/1K6/1r3k2/6P1/8/8 w - - 0 1",
 				"8/8/4N3/1K6/5k2/8/8/8 w - - 0 1",
 				"8/8/4K3/4k3/8/8/8/8 w - - 0 1",
-				"8/8/2K5/8/6P1/2k5/8/8 w - g3 0 1",
-				"8/8/2K5/6p1/6P1/2k5/8/8 b - g6 0 1",
-				"8/8/2K5/8/8/2k5/8/8 w - g6 0 1",
-				"8/8/2K3N1/6p1/8/2k5/8/8 w - g6 0 1",
-				"8/8/2K3N1/6p1/6P1/2k3n1/8/8 b - g3 0 1",
-				"8/8/2K5/8/6p1/2k5/8/8 w - g3 0 1",
 				"8/8/2K5/8/6p1/2k5/8/8 b - g3 0 1",
 				"8/8/2K5/6P1/8/2k5/8/8 w - g6 0 1",
-				"8/8/2K5/6P1/8/2k5/8/8 b - g6 0 1",
 				"8/7P/2k4P/7P/7P/2K4P/7P/8 w - - 0 1",
 				"8/P7/P1k5/P7/P7/P1K5/P7/8 w - - 0 1",
 				"3knbnr/2pppppp/8/P7/P7/P3K3/P7/8 w - - 0 1",
@@ -1281,6 +1274,17 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				"rnbqkb1r/pppppppp/8/8/3N1n2/8/PPPPPPPP/RNBQKB1R b KQkq - 8 4",
 				"rnbqkb1r/pppppppp/8/5N2/5n2/8/PPPPPPPP/RNBQKB1R w KQkq - 7 4"
 			];
+			
+			/*these are now legal in v8.0.0 because the en passant gets discarded
+			before there is the chance to validate it. The positions will be loaded
+			without the bad en passant though, so it's all good and very low priority*/
+			//8/8/2K5/8/6P1/2k5/8/8 w - g3 0 1
+			//8/8/2K5/6p1/6P1/2k5/8/8 b - g6 0 1
+			//8/8/2K5/8/8/2k5/8/8 w - g6 0 1
+			//8/8/2K3N1/6p1/8/2k5/8/8 w - g6 0 1
+			//8/8/2K3N1/6p1/6P1/2k3n1/8/8 b - g3 0 1
+			//8/8/2K5/8/6p1/2k5/8/8 w - g3 0 1
+			//8/8/2K5/6P1/8/2k5/8/8 b - g6 0 1
 			
 			//"more than 8 wp"
 			arr.push("rnbqkbnr/pppppppp/8/8/8/P7/PPPPPPPP/RNBQKBNR w KQkq - 0 1");

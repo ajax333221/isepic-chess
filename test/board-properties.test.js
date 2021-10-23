@@ -326,15 +326,40 @@ describe("Board properties", () => {
 		expect(get_custom.squares["f6"].isKing).toBe(false);
 	});
 	
-	test("b.enPassantBos", () => {
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("e3");
-		expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("e6");
-		expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P2P/8/PPPP1PP1/RNBQKBNR b KQkq h3 0 2", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("h3");
-		expect(Ic.fenGet("rnbqkbnr/pppp1pp1/8/4p2p/4P2P/8/PPPP1PP1/RNBQKBNR w KQkq h6 0 3", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("h6");
-		expect(Ic.fenGet("rnbqkbnr/pppp1pp1/8/4p2p/P3P2P/8/1PPP1PP1/RNBQKBNR b KQkq a3", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("a3");
-		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P3P2P/8/1PPP1PP1/RNBQKBNR w KQkq a6 0 4", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("a6");
-		expect(Ic.fenGet("rnbqkbnr/1ppp1pp1/8/p3p2p/P1B1P2P/8/1PPP1PP1/RNBQK1NR b KQkq - 1 4", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+	describe("b.enPassantBos", () => {
+		describe("normal usage", () => {
+			test("with en passant", () => {
+				expect(Ic.fenGet("rnbqkbnr/1ppp4/8/p3ppPp/P1B1P3/8/1PPP1PP1/RNBQK1NR w KQkq f6 0 6", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("f6");
+				
+				expect(Ic.fenGet("rnbqkbnr/1ppp4/8/p3p1Pp/P3pP2/8/1PPP2P1/RNBQKBNR b KQkq f3 0 7", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("f3");
+			});
+			
+			test("without en passant", () => {
+				expect(Ic.fenGet("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				
+				expect(Ic.fenGet("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+			});
+		});
+		
+		describe("unnecessary en passant square", () => {
+			test("no immediate moves to en passant", () => {
+				expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				
+				expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+			});
+			
+			test("no pawn moves to en passant, but other piece to en passant", () => {
+				expect(Ic.fenGet("r1bqkbnr/ppp2ppp/n7/1N1pp3/4P3/8/PPPP1PPP/R1BQKBNR w KQkq d6 0 4", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				
+				expect(Ic.fenGet("rnbqkb1r/ppppp1pp/8/1N3p2/4P1n1/7N/PPPP1PPP/R1BQKB1R b KQkq e3 0 4", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+			});
+			
+			test("hard pinned pawn", () => {
+				expect(Ic.fenGet("rnb1kbnr/ppp2ppp/6q1/3ppP2/2PP4/8/PPK1P1PP/RNBQ1BNR w kq e6 0 7", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				
+				expect(Ic.fenGet("rnbq1b1r/p1p1pppp/1k1p3n/8/PpP5/1R6/1P1PPPPP/1NBQKBNR b K c3 0 8", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+			});
+		});
 	});
 	
 	test("b.checks", () => {

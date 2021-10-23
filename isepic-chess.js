@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="7.6.0";
+		var _VERSION="8.0.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -383,7 +383,6 @@
 					reset : _reset,
 					undoMove : _undoMove,
 					undoMoves : _undoMoves,
-					deleteMoves : _deleteMoves,
 					countLightDarkBishops : _countLightDarkBishops,
 					updateHelper : _updateHelper,
 					fenWrapmoveHelper : _fenWrapmoveHelper,
@@ -1326,7 +1325,7 @@
 		}
 		
 		function _updateFenAndMisc(sliced_fen_history){
-			var i, j, k, m, len, that, temp, temp2, current_diff, from_bos, to_bos, total_pieces, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark;
+			var i, j, k, m, len, that, temp, temp2, current_diff, from_bos, to_bos, can_en_passant, total_pieces, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark;
 			
 			that=this;
 			
@@ -1379,6 +1378,18 @@
 			
 			that.isCheckmate=(that.isCheck && !that.legalUci.length);
 			that.isStalemate=(!that.isCheck && !that.legalUci.length);
+			
+			if(that.enPassantBos){
+				can_en_passant=false;
+				
+				if(that.legalRevTree[that.enPassantBos] && that.legalRevTree[that.enPassantBos]["p"]){
+					can_en_passant=true;
+				}
+				
+				if(!can_en_passant){
+					that.enPassantBos="";//remove inexecutable en passants
+				}
+			}
 			
 			clockless_fen=that.getClocklessFenHelper();
 			
@@ -1492,6 +1503,7 @@
 						rankShift : non_active_side.singlePawnRankShift
 					}).val;
 					
+					//it is OK if the en passant can't be played next turn or no adjacent pawns exist
 					if(that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos!==(active_side.isBlack ? 5 : 2) || !infront_ep_is_empty || behind_ep_val!==non_active_side.pawn){
 						rtn_msg="Error [3] bad en-passant";
 						break block;
@@ -2347,14 +2359,6 @@
 			return rtn_changed;
 		}
 		
-		function _deleteMoves(decrese_by){
-			var that;
-			
-			that=this;
-			
-			return that.undoMoves(decrese_by);
-		}
-		
 		function _countLightDarkBishops(){
 			var i, j, that, current_square, current_side, rtn;
 			
@@ -2394,6 +2398,7 @@
 			block:
 			{
 				if(!_isObject(obj)){
+					_consoleLog("Error[_updateHelper]: wrong input type");
 					break block;
 				}
 				

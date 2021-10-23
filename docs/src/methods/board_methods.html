@@ -98,73 +98,68 @@
 				name : "undoMoves",
 				refreshUi : true
 			},
-			deleteMoves : {
-				index : 18,
-				name : "deleteMoves",
-				refreshUi : true
-			},
 			countLightDarkBishops : {
-				index : 19,
+				index : 18,
 				name : "countLightDarkBishops"
 			},
 			getCheckmateMoves : {
-				index : 20,
+				index : 19,
 				name : "getCheckmateMoves"
 			},
 			getDrawMoves : {
-				index : 21,
+				index : 20,
 				name : "getDrawMoves"
 			},
 			fenHistoryExport : {
-				index : 22,
+				index : 21,
 				name : "fenHistoryExport"
 			},
 			pgnExport : {
-				index : 23,
+				index : 22,
 				name : "pgnExport"
 			},
 			uciExport : {
-				index : 24,
+				index : 23,
 				name : "uciExport"
 			},
 			ascii : {
-				index : 25,
+				index : 24,
 				name : "ascii"
 			},
 			getSquare : {
-				index : 26,
+				index : 25,
 				name : "getSquare"
 			},
 			setSquare : {
-				index : 27,
+				index : 26,
 				name : "setSquare"
 			},
 			countAttacks : {
-				index : 28,
+				index : 27,
 				name : "countAttacks"
 			},
 			isLegalMove : {
-				index : 29,
+				index : 28,
 				name : "isLegalMove"
 			},
 			legalMoves : {
-				index : 30,
+				index : 29,
 				name : "legalMoves"
 			},
 			legalFenMoves : {
-				index : 31,
+				index : 30,
 				name : "legalFenMoves"
 			},
 			legalSanMoves : {
-				index : 32,
+				index : 31,
 				name : "legalSanMoves"
 			},
 			legalUciMoves : {
-				index : 33,
+				index : 32,
 				name : "legalUciMoves"
 			},
 			isEqualBoard : {
-				index : 34,
+				index : 33,
 				name : "isEqualBoard"
 			}
 		};
@@ -596,20 +591,6 @@
 		board.undoMoves.examples.push("board.undoMoves() //false");
 		//end: undoMoves
 		
-		//start: deleteMoves
-		board.deleteMoves.params={
-			children : [{name : "decreaseBy", type : "Number", icon : "eight_pointed_black_star"}]
-		};
-		
-		board.deleteMoves.returnVal={
-			children : [{type : "Boolean"}]
-		};
-		
-		board.deleteMoves.description=[];
-		board.deleteMoves.description.push(":no_entry_sign: **Deprecated:** use `board.undoMoves()` instead.");
-		board.deleteMoves.description.push("This will continue to work as an alias of `board.undoMoves()` until **v8.X.X**.");
-		//end: deleteMoves
-		
 		//start: countLightDarkBishops
 		board.countLightDarkBishops.params={};
 		
@@ -686,7 +667,7 @@
 		
 		board.fenHistoryExport.examples=[];
 		board.fenHistoryExport.examples.push("board.fenHistoryExport() //[\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\"]");
-		board.fenHistoryExport.examples.push("board_after_e4.fenHistoryExport() //[\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\", \"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1\"]");
+		board.fenHistoryExport.examples.push("board_after_e4.fenHistoryExport() //[\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\", \"rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1\"]");
 		//end: fenHistoryExport
 		
 		//start: pgnExport

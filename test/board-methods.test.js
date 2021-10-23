@@ -61,7 +61,7 @@ describe("Board methods", () => {
 		test("boardName not used in the hash", () => {
 			var board_a, board_b, hash_a, hash_b, shared_fen;
 			
-			shared_fen="Bnb1kb1r/2qpppp1/1pp5/p6p/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b k d3 0 8";
+			shared_fen="Bnb1kb1r/2qpppp1/1pp5/p6p/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b k - 0 8";
 			
 			board_a=Ic.initBoard({
 				boardName : board_name,
@@ -78,7 +78,7 @@ describe("Board methods", () => {
 			hash_a=board_a.boardHash();
 			hash_b=board_b.boardHash();
 			
-			expect(hash_a).toBe(-685294970);
+			expect(hash_a).toBe(1607255615);
 			expect(hash_a===hash_b).toBe(true);
 			expect(board_a===board_b).toBe(false);
 		});
@@ -331,7 +331,7 @@ describe("Board methods", () => {
 			
 			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1"].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1"].sort());
 		});
 		
 		test("returnType=san", () => {
@@ -376,7 +376,7 @@ describe("Board methods", () => {
 		
 		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalFenMoves", ["b7"], {skipFenValidation : true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
 		
-		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalFenMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true})], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq a3 0 1"].sort());
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalFenMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true})], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1"].sort());
 	});
 	
 	test("b.legalSanMoves()", () => {
@@ -549,6 +549,18 @@ describe("Board methods", () => {
 			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["a2-c2"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(false);
 			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["c9-a9"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(false);
 		});
+		
+		test("unnecessary en passant square", () => {
+			var from_fen, move_fen;
+			
+			from_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+			
+			move_fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
+			expect(Ic.fenApply(from_fen, "isLegalMove", [move_fen], {skipFenValidation : true})).toBe(true);
+			
+			move_fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1";
+			expect(Ic.fenApply(from_fen, "isLegalMove", [move_fen], {skipFenValidation : true})).toBe(true);
+		});
 	});
 	
 	describe("b.getCheckmateMoves()", () => {
@@ -610,7 +622,7 @@ describe("Board methods", () => {
 			test("one checkmate", () => {
 				var fen;
 				
-				fen="rnbqkbnr/pppp1ppp/4p3/8/5PP1/8/PPPPP2P/RNBQKBNR b KQkq g3 0 2";
+				fen="rnbqkbnr/pppp1ppp/4p3/8/5PP1/8/PPPPP2P/RNBQKBNR b KQkq - 0 2";
 				
 				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["d8h4"].sort());
 				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["d8h4"].sort());
@@ -980,7 +992,7 @@ describe("Board methods", () => {
 			
 			board_b=Ic.initBoard({
 				boardName : other_board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq e3 0 2",
+				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
 				skipFenValidation : true
 			});
 			
@@ -1311,13 +1323,13 @@ describe("Board methods", () => {
 			
 			board_a=Ic.initBoard({
 				boardName : board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq e3 0 2",
+				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
 				skipFenValidation : true
 			});
 			
 			board_b=Ic.initBoard({
 				boardName : other_board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq e3 0 2",
+				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
 				skipFenValidation : true
 			});
 			

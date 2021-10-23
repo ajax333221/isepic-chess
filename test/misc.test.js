@@ -183,7 +183,7 @@ describe("Misc.", () => {
 		
 		describe("Enpassant related", () => {
 			test("enpassant capture made with a non-pawn piece", () => {
-				expect(Ic.fenApply("rnbqkbnr/1pp1pp2/p7/3pQ1p1/2K4p/3P4/PPP1PPPP/RNB2BNR w kq d6 0 8", "legalMoves", ["e5"], {skipFenValidation : true}).sort()).toEqual(["d5"].sort());
+				expect(Ic.fenApply("rnbqkbnr/1pp1pp2/p7/2PpQ1p1/2K4p/3P4/PP2PPPP/RNB2BNR w kq d6 0 8", "legalMoves", ["e5"], {skipFenValidation : true}).sort()).toEqual(["d5"].sort());
 			});
 			
 			test("taking enpassant results in self check", () => {
@@ -207,6 +207,40 @@ describe("Misc.", () => {
 				board_obj.playMove("h5-g6");
 				
 				expect(board_obj.checks).toBe(2);
+			});
+			
+			describe("unnecessary en passant square", () => {
+				test("initBoard() hash", () => {
+					var board_a, board_b;
+					
+					board_a=Ic.initBoard({
+						boardName : board_name,
+						fen : "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1",
+						validOrBreak : true
+					});//NO use {skipFenValidation : true}
+					
+					board_b=Ic.initBoard({
+						boardName : other_board_name,
+						fen : "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
+						validOrBreak : true
+					});//NO use {skipFenValidation : true}
+					
+					expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
+				});
+				
+				test("regression test - issue #27", () => {
+					var board;
+					
+					board=Ic.initBoard({
+						boardName : board_name,
+						fen : "Qnk2b1r/4p2p/2p2pb1/1Q1p1Pp1/3P4/N1P4N/1PK1P1PP/R1B2B1R b - - 4 30",
+						skipFenValidation : true
+					});
+					
+					board.playMoves(["e5", "Kd2", "Kd8", "Kc2", "Kc8", "Kd2", "Kd8", "Kc2"]);
+					
+					expect(board.getDrawMoves().sort()).toEqual(["d8c8"].sort());
+				});
 			});
 		});
 		
@@ -620,8 +654,8 @@ describe("Misc.", () => {
 			
 			//basic b.moveList format, enpassant and clocks
 			expect(board_obj.moveList[0].fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-			expect(board_obj.moveList[1].fen).toBe("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
-			expect(board_obj.moveList[2].fen).toBe("rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 2");
+			expect(board_obj.moveList[1].fen).toBe("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1");
+			expect(board_obj.moveList[2].fen).toBe("rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
 			expect(board_obj.moveList[3].fen).toBe("rnbqkbnr/ppppp1pp/8/5p1Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 2");
 			
 			board_obj.playMoves(["g7-g6", "h5-g6"]);
