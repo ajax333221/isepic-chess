@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.0.1";
+		var _VERSION="8.1.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -2213,11 +2213,11 @@
 		}
 		
 		function _cloneBoardFrom(from_woard){
-			var that, from_board, rtn;
+			var that, hash_cache, from_board, rtn_changed;
 			
 			that=this;
 			
-			rtn=false;
+			rtn_changed=false;
 			
 			block:
 			{
@@ -2233,22 +2233,26 @@
 					break block;
 				}
 				
+				hash_cache=that.boardHash();
+				
 				_cloneBoardObjs(that, from_board);
 				
-				that.refreshUi(0, false);//autorefresh
-				
-				rtn=true;
+				if(that.boardHash()!==hash_cache){
+					rtn_changed=true;
+					
+					that.refreshUi(0, false);//autorefresh
+				}
 			}
 			
-			return rtn;
+			return rtn_changed;
 		}
 		
 		function _cloneBoardTo(to_woard){
-			var that, to_board, rtn;
+			var that, hash_cache, to_board, rtn_changed;
 			
 			that=this;
 			
-			rtn=false;
+			rtn_changed=false;
 			
 			block:
 			{
@@ -2264,14 +2268,18 @@
 					break block;
 				}
 				
+				hash_cache=to_board.boardHash();
+				
 				_cloneBoardObjs(to_board, that);
 				
-				to_board.refreshUi(0, false);//autorefresh
-				
-				rtn=true;
+				if(to_board.boardHash()!==hash_cache){
+					rtn_changed=true;
+					
+					to_board.refreshUi(0, false);//autorefresh
+				}
 			}
 			
-			return rtn;
+			return rtn_changed;
 		}
 		
 		function _reset(keep_options){

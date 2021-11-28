@@ -942,6 +942,7 @@ describe("Board methods", () => {
 		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(false);
 		
 		expect(board_b.cloneBoardFrom(board_a)).toBe(true);
+		expect(board_b.cloneBoardFrom(board_a)).toBe(false);//hash unchanged for subsequent calls
 		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(true);
 		expect(board_b.fen).toBe("r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4");
 		
@@ -949,6 +950,7 @@ describe("Board methods", () => {
 		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(false);
 		
 		expect(board_a.cloneBoardTo(board_b)).toBe(true);
+		expect(board_a.cloneBoardTo(board_b)).toBe(false);//hash unchanged for subsequent calls
 		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(true);
 		expect(board_b.fen).toBe("r1bk1bnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 w - - 5 5");
 	});
