@@ -557,18 +557,36 @@
 		//start: undoMove
 		board.undoMove.params={};
 		
-		board.undoMove.returnVal={
-			children : [{type : "Boolean"}]
-		};
+		board.undoMove.returnVal=[
+			{
+				children : [
+					{
+						name : "move",
+						type : "Object",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "null"
+					}
+				]
+			}
+		];
 		
 		board.undoMove.description=[];
-		board.undoMove.description.push("Removes the last move played.");
+		board.undoMove.description.push("Removes the last :pushpin:**move** played and returns it.");
+		board.undoMove.description.push("The returned move is unreferenced and no longer tied to the board (modifying this unreferenced copy will not affect the corresponding element in the **move list** or the other way around).");
 		board.undoMove.description.push("The **current move** will be decreased as necessary if it was pointing to the removed move.");
 		board.undoMove.description.push("Successfully removing a move will set `\"*\"` to `board.manualResult`.");
 		
 		board.undoMove.examples=[];
-		board.undoMove.examples.push("board.undoMove() //true");
-		board.undoMove.examples.push("board.undoMove() //false");
+		board.undoMove.examples.push("board.undoMove() //Object{...}");
+		board.undoMove.examples.push("board.undoMove() //null");
+		
+		board.undoMove.links=PIN_MOVE;
 		//end: undoMove
 		
 		//start: undoMoves
@@ -577,18 +595,25 @@
 		};
 		
 		board.undoMoves.returnVal={
-			children : [{type : "Boolean"}]
+			name : "moveArray",
+			type : "Array",
+			isBold : true
 		};
 		
 		board.undoMoves.description=[];
-		board.undoMoves.description.push("Removes N moves from the right.");
+		board.undoMoves.description.push("Removes the last N :pushpin:**move**s played and returns them as a **move array**.");
 		board.undoMoves.description.push("If `decreaseBy` is omitted, all the moves will be removed.");
+		board.undoMoves.description.push("The returned moves are unreferenced and no longer tied to the board (modifying these unreferenced copies will not affect the corresponding elements in the **move list** or the other way around).");
 		board.undoMoves.description.push("The **current move** will be decreased as necessary if it was pointing to one of the removed moves.");
 		board.undoMoves.description.push("Successfully removing a move will set `\"*\"` to `board.manualResult`.");
 		
 		board.undoMoves.examples=[];
-		board.undoMoves.examples.push("board.undoMoves() //true");
-		board.undoMoves.examples.push("board.undoMoves() //false");
+		board.undoMoves.examples.push("board.undoMoves() //[{...}, {...}, ..., {...}]");
+		board.undoMoves.examples.push("board.undoMoves(2) //[{...}, {...}]");
+		board.undoMoves.examples.push("board.undoMoves(1) //[{...}]");
+		board.undoMoves.examples.push("board.undoMoves(0) //[]");
+		
+		board.undoMoves.links=PIN_MOVE;
 		//end: undoMoves
 		
 		//start: countLightDarkBishops

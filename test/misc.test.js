@@ -655,6 +655,22 @@ describe("Misc.", () => {
 			
 			expect(board_obj.playMove("Ng8", {isMockMove : true}).canDraw).toBe(false);
 		});
+		
+		test("Should play UCI instead of SAN in b.playMoves() + b.undoMoves()", () => {
+			var board_obj, game_pgn;
+			
+			game_pgn="1. b4 b5 2. c4 c5 3. d4 d5 4. Qd2 a6 5. Nh3 Ra7 6. Na3 Ra8 7. Nb1 Ra7 8. Qd1 Ra8 9. Bd2 Ra7 10. Bh6 Ra8 11. Bd2";
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				pgn : game_pgn,
+				moveIndex : 10,
+				validOrBreak : true
+			});
+			
+			expect(board_obj.playMoves(board_obj.undoMoves(3))).toBe(true);
+			expect(board_obj.fen).toBe("rnbqkbnr/4pppp/p7/1ppp4/1PPP4/7N/P2QPPPP/RNB1KB1R b KQk - 5 7");
+		});
 	});
 	
 	describe("Old tests", () => {

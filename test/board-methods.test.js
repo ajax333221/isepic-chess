@@ -1362,43 +1362,49 @@ describe("Board methods", () => {
 			});
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_a.manualResult).toBe("1/2-1/2");
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_a.manualResult).toBe("1/2-1/2");
 			
 			board_a.playMoves(["e4", "e5"]);
 			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(true);
+			expect(temp.length).toBe(2);
+			expect(temp[0].san).toBe("e4");
+			expect(temp[1].san).toBe("e5");
 			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_a.manualResult).toBe("*");
 			
 			//---
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(true);
+			expect(temp.length).toBe(2);
+			expect(temp[0].san).toBe("e4");
+			expect(temp[1].san).toBe("e5");
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_b.manualResult).toBe("*");
 			
 			board_b.playMoves(["e4", "e5"]);
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(true);
+			expect(temp.length).toBe(2);
+			expect(temp[0].san).toBe("e4");
+			expect(temp[1].san).toBe("e5");
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_b.manualResult).toBe("*");
 		});
 		
@@ -1422,43 +1428,49 @@ describe("Board methods", () => {
 			});
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_a.manualResult).toBe("1/2-1/2");
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_a.manualResult).toBe("1/2-1/2");
 			
 			board_a.playMoves(["e4", "e5"]);
 			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(true);
+			expect(temp.length).toBe(2);
+			expect(temp[0].san).toBe("e4");
+			expect(temp[1].san).toBe("e5");
 			expect(board_a.manualResult).toBe("*");
 			
 			temp=board_a.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_a.manualResult).toBe("*");
 			
 			//---
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(true);
+			expect(temp.length).toBe(2);
+			expect(temp[0].san).toBe("e4");
+			expect(temp[1].san).toBe("e5");
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_b.manualResult).toBe("*");
 			
 			board_b.playMoves(["e4", "e5"]);
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(true);
+			expect(temp.length).toBe(2);
+			expect(temp[0].san).toBe("e4");
+			expect(temp[1].san).toBe("e5");
 			expect(board_b.manualResult).toBe("*");
 			
 			temp=board_b.undoMoves();
-			expect(temp).toBe(false);
+			expect(temp.length).toBe(0);
 			expect(board_b.manualResult).toBe("*");
 		});
 		
@@ -1468,17 +1480,17 @@ describe("Board methods", () => {
 			shared_pgn="1. a3 a6 2. c3 c6 3. e3 e6 4. g3 h6 5. d4 d5 6. e4";
 			
 			arr=[
-				[undef, [[1, 0], [1, 0], [1, 0], [1, 0]]],
-				[-0, [[1, 0], [12, 3], [12, 0], [12, 11]]],
-				[0, [[1, 0], [12, 3], [12, 0], [12, 11]]],
-				[1, [[1, 0], [11, 3], [11, 0], [11, 10]]],
-				[2, [[1, 0], [10, 3], [10, 0], [10, 9]]],
-				[8, [[1, 0], [4, 3], [4, 0], [4, 3]]],
-				[9, [[1, 0], [3, 2], [3, 0], [3, 2]]],
-				[10, [[1, 0], [2, 1], [2, 0], [2, 1]]],
-				[12, [[1, 0], [1, 0], [1, 0], [1, 0]]],
-				[13, [[1, 0], [1, 0], [1, 0], [1, 0]]],
-				[20, [[1, 0], [1, 0], [1, 0], [1, 0]]]
+				[undef, [[1, 0, 0], [1, 0, 11], [1, 0, 11], [1, 0, 11]]],
+				[-0, [[1, 0, 0], [12, 3, 0], [12, 0, 0], [12, 11, 0]]],
+				[0, [[1, 0, 0], [12, 3, 0], [12, 0, 0], [12, 11, 0]]],
+				[1, [[1, 0, 0], [11, 3, 1], [11, 0, 1], [11, 10, 1]]],
+				[2, [[1, 0, 0], [10, 3, 2], [10, 0, 2], [10, 9, 2]]],
+				[8, [[1, 0, 0], [4, 3, 8], [4, 0, 8], [4, 3, 8]]],
+				[9, [[1, 0, 0], [3, 2, 9], [3, 0, 9], [3, 2, 9]]],
+				[10, [[1, 0, 0], [2, 1, 10], [2, 0, 10], [2, 1, 10]]],
+				[11, [[1, 0, 0], [1, 0, 11], [1, 0, 11], [1, 0, 11]]],
+				[13, [[1, 0, 0], [1, 0, 11], [1, 0, 11], [1, 0, 11]]],
+				[20, [[1, 0, 0], [1, 0, 11], [1, 0, 11], [1, 0, 11]]]
 			];
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
@@ -1507,24 +1519,24 @@ describe("Board methods", () => {
 				});
 				
 				temp=board_a.undoMoves(arr[i][0]);
-				expect(temp).toBe(false);
 				expect(board_a.moveList.length).toBe(arr[i][1][0][0]);
 				expect(board_a.currentMove).toBe(arr[i][1][0][1]);
+				expect(temp.length).toBe(arr[i][1][0][2]);
 				
 				temp=board_b.undoMoves(arr[i][0]);
-				expect(temp).toBe(arr[i][0]!==0);//both 0 and -0
 				expect(board_b.moveList.length).toBe(arr[i][1][1][0]);
 				expect(board_b.currentMove).toBe(arr[i][1][1][1]);
+				expect(temp.length).toBe(arr[i][1][1][2]);
 				
 				temp=board_c.undoMoves(arr[i][0]);
-				expect(temp).toBe(arr[i][0]!==0);//both 0 and -0
 				expect(board_c.moveList.length).toBe(arr[i][1][2][0]);
 				expect(board_c.currentMove).toBe(arr[i][1][2][1]);
+				expect(temp.length).toBe(arr[i][1][2][2]);
 				
 				temp=board_d.undoMoves(arr[i][0]);
-				expect(temp).toBe(arr[i][0]!==0);//both 0 and -0
 				expect(board_d.moveList.length).toBe(arr[i][1][3][0]);
 				expect(board_d.currentMove).toBe(arr[i][1][3][1]);
+				expect(temp.length).toBe(arr[i][1][3][2]);
 			}
 		});
 	});

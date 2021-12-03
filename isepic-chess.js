@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.1.0";
+		var _VERSION="8.2.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -336,6 +336,30 @@
 				
 				rtn=[[mov.fromBos, mov.toBos], possible_promote];
 			}
+			
+			return rtn;
+		}
+		
+		function _unreferencedMoveHelper(obj){
+			var rtn;
+			
+			rtn={};
+			
+			rtn.colorMoved=obj.colorMoved;
+			rtn.colorToPlay=obj.colorToPlay;
+			rtn.fen=obj.fen;
+			rtn.san=obj.san;
+			rtn.uci=obj.uci;
+			rtn.fromBos=obj.fromBos;
+			rtn.toBos=obj.toBos;
+			rtn.enPassantBos=obj.enPassantBos;
+			rtn.piece=obj.piece;
+			rtn.captured=obj.captured;
+			rtn.promotion=obj.promotion;
+			rtn.comment=obj.comment;
+			rtn.moveResult=obj.moveResult;
+			rtn.canDraw=obj.canDraw;
+			rtn.isEnPassantCapture=obj.isEnPassantCapture;
 			
 			return rtn;
 		}
@@ -2311,19 +2335,32 @@
 		}
 		
 		function _undoMove(){
-			var that;
+			var that, temp, rtn;
 			
 			that=this;
 			
-			return that.undoMoves(1);
+			rtn=null;
+			
+			block:
+			{
+				temp=that.undoMoves(1);
+				
+				if(temp.length!==1){
+					break block;
+				}
+				
+				rtn=temp[0];
+			}
+			
+			return rtn;
 		}
 		
-		function _undoMoves(decrese_by){
-			var that, temp, current_move_cache, hash_cache, rtn_changed;
+		function _undoMoves(decrease_by){
+			var i, that, temp, hash_cache, rtn;
 			
 			that=this;
 			
-			rtn_changed=false;
+			rtn=[];
 			
 			block:
 			{
@@ -2331,40 +2368,40 @@
 					break block;
 				}
 				
-				if(!decrese_by && decrese_by!==0){//both 0 and -0
-					decrese_by=(that.moveList.length-1);
+				if(!decrease_by && decrease_by!==0){//both 0 and -0
+					decrease_by=(that.moveList.length-1);
 				}
 				
-				decrese_by=_toInt(decrese_by, 0, (that.moveList.length-1));
+				decrease_by=_toInt(decrease_by, 0, (that.moveList.length-1));
 				
-				if(!decrese_by){
+				if(!decrease_by){
 					break block;
 				}
 				
 				hash_cache=that.boardHash();
-				current_move_cache=that.currentMove;
 				
 				temp=that.isHidden;
 				
 				that.isHidden=true;
-				that.navLinkMove(Math.min((that.moveList.length-decrese_by-1), current_move_cache));
+				that.navLinkMove(Math.min((that.moveList.length-decrease_by-1), that.currentMove));
 				that.isHidden=temp;
 				
-				that.moveList=that.moveList.slice(0, -decrese_by);
+				rtn=new Array(decrease_by);//safe to use because every spot will be assigned below
+				
+				for(i=0; i<decrease_by; i++){//0<decrease_by
+					rtn[decrease_by-i-1]=_unreferencedMoveHelper(that.moveList[that.moveList.length-i-1]);
+				}
+				
+				that.moveList=that.moveList.slice(0, -decrease_by);
 				
 				if(that.boardHash()!==hash_cache){
-					rtn_changed=true;
-					
 					that.silentlyResetManualResult();
-					
-					//the next moveList element was removed, not possible to reverse animation
-					//is_goto=(Math.abs(that.currentMove-current_move_cache)!==1);
 					
 					that.refreshUi(0, false);//autorefresh
 				}
 			}
 			
-			return rtn_changed;
+			return rtn;
 		}
 		
 		function _countLightDarkBishops(){
@@ -3060,26 +3097,7 @@
 				rtn_move_obj=that.moveList[that.moveList.length-1];
 				
 				if(p.isUnreferenced){
-					temp={};
-					temp2=rtn_move_obj;
-					
-					temp.colorMoved=temp2.colorMoved;
-					temp.colorToPlay=temp2.colorToPlay;
-					temp.fen=temp2.fen;
-					temp.san=temp2.san;
-					temp.uci=temp2.uci;
-					temp.fromBos=temp2.fromBos;
-					temp.toBos=temp2.toBos;
-					temp.enPassantBos=temp2.enPassantBos;
-					temp.piece=temp2.piece;
-					temp.captured=temp2.captured;
-					temp.promotion=temp2.promotion;
-					temp.comment=temp2.comment;
-					temp.moveResult=temp2.moveResult;
-					temp.canDraw=temp2.canDraw;
-					temp.isEnPassantCapture=temp2.isEnPassantCapture;
-					
-					rtn_move_obj=temp;
+					rtn_move_obj=_unreferencedMoveHelper(rtn_move_obj);
 				}
 				
 				that.silentlyResetManualResult();
