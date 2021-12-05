@@ -671,6 +671,25 @@ describe("Misc.", () => {
 			expect(board_obj.playMoves(board_obj.undoMoves(3))).toBe(true);
 			expect(board_obj.fen).toBe("rnbqkbnr/4pppp/p7/1ppp4/1PPP4/7N/P2QPPPP/RNB1KB1R b KQk - 5 7");
 		});
+		
+		test("b.attackersFromNonActive() while in check", () => {
+			var shared_fen;
+			
+			shared_fen="8/2PR4/8/p5PK/P1Q2n2/3PNp2/5q1r/4nb1k w - - 0 1";
+			
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [], {skipFenValidation : true})).toBe(2);
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null], {skipFenValidation : true})).toBe(2);
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, true], {skipFenValidation : true})).toBe(1);
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, false], {skipFenValidation : true})).toBe(2);
+			
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", ["g2"], {skipFenValidation : true})).toBe(7);
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", ["g2", true], {skipFenValidation : true})).toBe(1);
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", ["g2", false], {skipFenValidation : true})).toBe(7);
+			
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", ["g4"], {skipFenValidation : true})).toBe(0);
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", ["g4", false], {skipFenValidation : true})).toBe(0);
+			expect(Ic.fenApply(shared_fen, "attackersFromNonActive", ["g4", true], {skipFenValidation : true})).toBe(0);
+		});
 	});
 	
 	describe("Old tests", () => {

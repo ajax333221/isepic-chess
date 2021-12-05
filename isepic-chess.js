@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.2.0";
+		var _VERSION="8.3.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -374,7 +374,8 @@
 					boardName : board_name,
 					getSquare : _getSquare,
 					setSquare : _setSquare,
-					countAttacks : _countAttacks,
+					attackersFromActive : _attackersFromActive,
+					attackersFromNonActive : _attackersFromNonActive,
 					toggleActiveNonActive : _toggleActiveNonActive,
 					toggleIsRotated : _toggleIsRotated,
 					setPromoteTo : _setPromoteTo,
@@ -1017,8 +1018,20 @@
 			return rtn;
 		}
 		
-		function _countAttacks(target_qos, early_break){
-			var i, j, that, as_knight, active_side, rtn_total_checks;
+		function _attackersFromActive(target_qos, early_break){
+			var that, rtn_total_attackers;
+			
+			that=this;
+			
+			that.toggleActiveNonActive();
+			rtn_total_attackers=that.attackersFromNonActive(target_qos, early_break);
+			that.toggleActiveNonActive();
+			
+			return rtn_total_attackers;
+		}
+		
+		function _attackersFromNonActive(target_qos, early_break){
+			var i, j, that, as_knight, active_side, rtn_total_attackers;
 			
 			that=this;
 			
@@ -1026,7 +1039,7 @@
 				return that.testCollision(2, qos, piece_direction, as_knight, null, null).isAttacked;
 			}
 			
-			rtn_total_checks=0;
+			rtn_total_attackers=0;
 			
 			active_side=that[that.activeColor];
 			target_qos=(target_qos || active_side.kingBos);
@@ -1037,7 +1050,7 @@
 				
 				for(j=_DIRECTION_TOP; j<=_DIRECTION_TOP_LEFT; j++){//1...8
 					if(_isAttacked(target_qos, j, as_knight)){
-						rtn_total_checks++;
+						rtn_total_attackers++;
 						
 						if(early_break){
 							break outer;
@@ -1046,7 +1059,7 @@
 				}
 			}
 			
-			return rtn_total_checks;
+			return rtn_total_attackers;
 		}
 		
 		function _toggleActiveNonActive(new_active){
@@ -1353,7 +1366,7 @@
 			
 			that=this;
 			
-			that.checks=that.countAttacks(null);
+			that.checks=that.attackersFromNonActive(null);
 			that.isCheck=!!that.checks;/*NO move below legalMovesHelper()*/
 			
 			that.legalUci=[];
@@ -1507,14 +1520,10 @@
 					break block;
 				}
 				
-				that.toggleActiveNonActive();
-				
-				if(that.countAttacks(null, true)){
+				if(that.attackersFromActive(null, true)){
 					rtn_msg="Error [2] non-active king in check";
 					break block;
 				}
-				
-				that.toggleActiveNonActive();
 				
 				if(that.enPassantBos){
 					en_passant_square=that.getSquare(that.enPassantBos);
@@ -1766,7 +1775,7 @@
 								continue;
 							}
 							
-							if(that.countAttacks(that.getSquare(target_cached_square, {fileShift : temp2.singleFileShift}), true)){
+							if(that.attackersFromNonActive(that.getSquare(target_cached_square, {fileShift : temp2.singleFileShift}), true)){
 								continue;
 							}
 							
@@ -1839,7 +1848,7 @@
 							}
 						}
 						
-						if(!that.countAttacks(null, true)){
+						if(!that.attackersFromNonActive(null, true)){
 							rtn.uciMoves.push(target_cached_square.bos+current_cached_square.bos);
 						}
 						
@@ -3621,8 +3630,11 @@
 				case "getSquare" :
 					rtn=(board_created ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [["isUnreferenced", true]])]) : null);
 					break;
-				case "countAttacks" :
-					rtn=(board_created ? _countAttacks.apply(board, args) : 0);
+				case "attackersFromActive" :
+					rtn=(board_created ? _attackersFromActive.apply(board, args) : 0);
+					break;
+				case "attackersFromNonActive" :
+					rtn=(board_created ? _attackersFromNonActive.apply(board, args) : 0);
 					break;
 				case "ascii" :
 					rtn=(board_created ? _ascii.apply(board, args) : "");

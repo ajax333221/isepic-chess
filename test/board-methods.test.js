@@ -828,23 +828,76 @@ describe("Board methods", () => {
 		expect(board_a.b.castling).toBe(3);//castling was not affected (this is by design)
 	});
 	
-	test("b.countAttacks()", () => {
-		var shared_fen;
+	test("b.attackersFromActive() + b.attackersFromNonActive()", () => {
+		var i, j, shared_fen, results_a, results_b;
 		
-		shared_fen="8/2PR4/8/p5PK/P1Q2n2/3PNp2/5q1r/4nb1k w - - 0 1";
+		shared_fen="r7/1q4R1/2q5/3q4/4q3/5r1n/1p4P1/k2b1n1K b - - 0 1";
 		
-		expect(Ic.fenApply(shared_fen, "countAttacks", [], {skipFenValidation : true})).toBe(2);
-		expect(Ic.fenApply(shared_fen, "countAttacks", [null], {skipFenValidation : true})).toBe(2);
-		expect(Ic.fenApply(shared_fen, "countAttacks", [null, true], {skipFenValidation : true})).toBe(1);
-		expect(Ic.fenApply(shared_fen, "countAttacks", [null, false], {skipFenValidation : true})).toBe(2);
+		results_a=[[1, 2, 3, 2, 3, 2, 2, 1],
+		[2, 1, 2, 3, 2, 3, 1, 1],
+		[3, 2, 2, 2, 3, 2, 2, 1],
+		[2, 3, 2, 2, 2, 3, 2, 1],
+		[4, 2, 3, 2, 1, 3, 1, 1],
+		[2, 4, 2, 3, 3, 2, 2, 1],
+		[3, 2, 3, 2, 2, 2, 0, 1],
+		[2, 2, 2, 1, 1, 1, 1, 0]];
 		
-		expect(Ic.fenApply(shared_fen, "countAttacks", ["g2"], {skipFenValidation : true})).toBe(7);
-		expect(Ic.fenApply(shared_fen, "countAttacks", ["g2", true], {skipFenValidation : true})).toBe(1);
-		expect(Ic.fenApply(shared_fen, "countAttacks", ["g2", false], {skipFenValidation : true})).toBe(7);
+		results_b=[[0, 0, 0, 0, 0, 0, 1, 0],
+		[0, 1, 1, 1, 1, 1, 0, 1],
+		[0, 0, 0, 0, 0, 0, 1, 0],
+		[0, 0, 0, 0, 0, 0, 1, 0],
+		[0, 0, 0, 0, 0, 0, 1, 0],
+		[0, 0, 0, 0, 0, 1, 1, 1],
+		[0, 0, 0, 0, 0, 0, 2, 1],
+		[0, 0, 0, 0, 0, 0, 1, 0]];
 		
-		expect(Ic.fenApply(shared_fen, "countAttacks", ["g4"], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "countAttacks", ["g4", false], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "countAttacks", ["g4", true], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, true], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, false], {skipFenValidation : true})).toBe(0);
+		
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, true], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, false], {skipFenValidation : true})).toBe(0);
+		
+		shared_fen=shared_fen.replace(" b ", " w ");
+		
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, true], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, false], {skipFenValidation : true})).toBe(0);
+		
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, true], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, false], {skipFenValidation : true})).toBe(0);
+		
+		shared_fen=shared_fen.replace(" w ", " b ");
+		
+		for(i=0; i<8; i++){//0...7
+			for(j=0; j<8; j++){//0...7
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j]], {skipFenValidation : true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], false], {skipFenValidation : true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_a[i][j])*1);
+				
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j]], {skipFenValidation : true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], false], {skipFenValidation : true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_b[i][j])*1);
+				
+				shared_fen=shared_fen.replace(" b ", " w ");
+				
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j]], {skipFenValidation : true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], false], {skipFenValidation : true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_b[i][j])*1);
+				
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j]], {skipFenValidation : true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], false], {skipFenValidation : true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_a[i][j])*1);
+				
+				shared_fen=shared_fen.replace(" w ", " b ");
+			}
+		}
 	});
 	
 	test("b.ascii()", () => {

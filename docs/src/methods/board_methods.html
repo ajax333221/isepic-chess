@@ -134,32 +134,36 @@
 				index : 26,
 				name : "setSquare"
 			},
-			countAttacks : {
+			attackersFromActive : {
 				index : 27,
-				name : "countAttacks"
+				name : "attackersFromActive"
+			},
+			attackersFromNonActive : {
+				index : 28,
+				name : "attackersFromNonActive"
 			},
 			isLegalMove : {
-				index : 28,
+				index : 29,
 				name : "isLegalMove"
 			},
 			legalMoves : {
-				index : 29,
+				index : 30,
 				name : "legalMoves"
 			},
 			legalFenMoves : {
-				index : 30,
+				index : 31,
 				name : "legalFenMoves"
 			},
 			legalSanMoves : {
-				index : 31,
+				index : 32,
 				name : "legalSanMoves"
 			},
 			legalUciMoves : {
-				index : 32,
+				index : 33,
 				name : "legalUciMoves"
 			},
 			isEqualBoard : {
-				index : 33,
+				index : 34,
 				name : "isEqualBoard"
 			}
 		};
@@ -846,32 +850,59 @@
 		board.setSquare.examples.push("board.setSquare(\"0invalidsquare0\", \"wr\") //false");
 		//end: setSquare
 		
-		//start: countAttacks
-		board.countAttacks.params={
+		//start: attackersFromActive
+		board.attackersFromActive.params={
 			children : [
 				overwriteAndUnreference(p_qos, [["icon", "eight_pointed_black_star"]]),
 				{name : "earlyBreak", type : "Boolean", icon : "eight_pointed_black_star"}
 			]
 		};
 		
-		board.countAttacks.returnVal={
+		board.attackersFromActive.returnVal={
 			children : [{type : "Number"}]
 		};
 		
-		board.countAttacks.description=[];
-		board.countAttacks.description.push("This can be called to know how many times enemy pieces are attacking a square.");
-		board.countAttacks.description.push("Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single attack on the square (in this case, either a 0 or 1 will be returned).");
-		board.countAttacks.description.push("The active side **king bos** will be used as default if the optional **qos** is missing.");
-		board.countAttacks.description.push("It is a waste of resources to re-count the times attacked to the king square (this information is already calculated and stored in `board.checks`).");
+		board.attackersFromActive.description=[];
+		board.attackersFromActive.description.push("This can be called to know how many times active side pieces are attacking a square.");
+		board.attackersFromActive.description.push("Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single attack on the square (in this case, either a 0 or 1 will be returned).");
+		board.attackersFromActive.description.push("The non-active side **king bos** will be used as default if the optional **qos** is missing.");
+		board.attackersFromActive.description.push("It is a waste of resources to re-count the times attacked to the non-active side king square by active side pieces attacks (it is not possible to have the non-active side king at check while still be the active side to move, the result will always be `0`).");
 		
-		board.countAttacks.examples=[];
-		board.countAttacks.examples.push("board.countAttacks(\"c6\") //3");
-		board.countAttacks.examples.push("board.countAttacks(\"c6\", true) //1");
-		board.countAttacks.examples.push("board.countAttacks(\"c6\", false) //3");
-		board.countAttacks.examples.push("board.countAttacks(\"e4\") //0");
-		board.countAttacks.examples.push("board.countAttacks(\"e4\", true) //0");
-		board.countAttacks.examples.push("board.countAttacks(\"e4\", false) //0");
-		//end: countAttacks
+		board.attackersFromActive.examples=[];
+		board.attackersFromActive.examples.push("board.attackersFromActive(\"c3\") //3");
+		board.attackersFromActive.examples.push("board.attackersFromActive(\"c3\", true) //1");
+		board.attackersFromActive.examples.push("board.attackersFromActive(\"c3\", false) //3");
+		board.attackersFromActive.examples.push("board.attackersFromActive(\"e4\") //0");
+		board.attackersFromActive.examples.push("board.attackersFromActive(\"e4\", true) //0");
+		board.attackersFromActive.examples.push("board.attackersFromActive(\"e4\", false) //0");
+		//end: attackersFromActive
+		
+		//start: attackersFromNonActive
+		board.attackersFromNonActive.params={
+			children : [
+				overwriteAndUnreference(p_qos, [["icon", "eight_pointed_black_star"]]),
+				{name : "earlyBreak", type : "Boolean", icon : "eight_pointed_black_star"}
+			]
+		};
+		
+		board.attackersFromNonActive.returnVal={
+			children : [{type : "Number"}]
+		};
+		
+		board.attackersFromNonActive.description=[];
+		board.attackersFromNonActive.description.push("This can be called to know how many times non-active side pieces are attacking a square.");
+		board.attackersFromNonActive.description.push("Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single attack on the square (in this case, either a 0 or 1 will be returned).");
+		board.attackersFromNonActive.description.push("The active side **king bos** will be used as default if the optional **qos** is missing.");
+		board.attackersFromNonActive.description.push("It is a waste of resources to re-count the times attacked to the active side king square by non-active side pieces attacks (this information is already calculated and stored in `board.checks`).");
+		
+		board.attackersFromNonActive.examples=[];
+		board.attackersFromNonActive.examples.push("board.attackersFromNonActive(\"c6\") //3");
+		board.attackersFromNonActive.examples.push("board.attackersFromNonActive(\"c6\", true) //1");
+		board.attackersFromNonActive.examples.push("board.attackersFromNonActive(\"c6\", false) //3");
+		board.attackersFromNonActive.examples.push("board.attackersFromNonActive(\"e4\") //0");
+		board.attackersFromNonActive.examples.push("board.attackersFromNonActive(\"e4\", true) //0");
+		board.attackersFromNonActive.examples.push("board.attackersFromNonActive(\"e4\", false) //0");
+		//end: attackersFromNonActive
 		
 		//start: isLegalMove
 		board.isLegalMove.params={
