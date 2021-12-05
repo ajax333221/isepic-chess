@@ -187,9 +187,19 @@
 			]
 		};
 		
-		board.loadFen.returnVal={
-			children : [{type : "Boolean"}]
-		};
+		board.loadFen.returnVal=[
+			{
+				children : [{type : "Boolean"}]
+			},
+			{
+				children : [
+					{
+						type : "Boolean",
+						codeAfter : "false"
+					}
+				]
+			}
+		];
 		
 		board.loadFen.description=[];
 		board.loadFen.description.push("Loads a **fen position**.");
@@ -202,6 +212,9 @@
 		board.loadFen.examples.push("board.loadFen(\"r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4\") //true");
 		board.loadFen.examples.push("board.loadFen(\"2k5/8/1K1R4/8/8/8/8/8 b - - 0 1\", {keepOptions: true}) //true");
 		board.loadFen.examples.push("board.loadFen(\"0invalidfen0\") //false");
+		
+		board.loadFen.errors=[];
+		board.loadFen.errors.push("`fen` is an **invalid fen**.");
 		//end: loadFen
 		
 		//start: playMove
