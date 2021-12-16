@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.3.0";
+		var _VERSION="8.4.0";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -416,6 +416,7 @@
 					draftMove : _draftMove,
 					playMove : _playMove,
 					playMoves : _playMoves,
+					playRandomMove : _playRandomMove,
 					navFirst : _navFirst,
 					navPrevious : _navPrevious,
 					navNext : _navNext,
@@ -3160,6 +3161,48 @@
 			return rtn;
 		}
 		
+		//p = {isMockMove, promoteTo, isInanimated, playSounds, isUnreferenced}
+		function _playRandomMove(p, sliced_fen_history){
+			var i, len, that, temp, temp2, used_keys, rtn;
+			
+			that=this;
+			
+			rtn=null;
+			p=_unreferenceP(p, [["isLegalMove", true]]);
+			
+			block:
+			{
+				temp=that.legalUci.slice(0);
+				
+				//when there is a promotion overwrite (promoteTo), we should collapse them
+				//into one move in order to keep the correct distribution of probabilities
+				if(toVal(p.promoteTo)){
+					temp=[];
+					used_keys={};
+					
+					for(i=0, len=that.legalUci.length; i<len; i++){//0<len
+						temp2=that.legalUci[i].slice(0, 4);//uci without promotion char
+						
+						if(used_keys[temp2]){
+							continue;
+						}
+						
+						used_keys[temp2]=true;
+						
+						temp.push(temp2);
+					}
+				}
+				
+				if(!temp.length){
+					break block;
+				}
+				
+				rtn=that.playMove(temp[Math.floor(Math.random()*temp.length)], p, sliced_fen_history);
+			}
+			
+			return rtn;
+		}
+		
 		//---------------- board (using IcUi)
 		
 		function _refreshUi(animation_type, play_sounds){
@@ -3602,6 +3645,9 @@
 					break;
 				case "playMoves" :
 					rtn=(board_created ? _playMoves.apply(board, args) : false);
+					break;
+				case "playRandomMove" :
+					rtn=(board_created ? _playRandomMove.apply(board, [_unreferenceP(args[0], [["isUnreferenced", true]]), args[1]]) : null);
 					break;
 				case "legalMoves" :
 					rtn=(board_created ? _legalMoves.apply(board, args) : []);

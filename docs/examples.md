@@ -15,6 +15,7 @@
 <li><a href="#8">How to get legal moves? (all legal moves)</a></li>
 <li><a href="#9">Playing a move</a></li>
 <li><a href="#10">Playing multiple moves</a></li>
+<li><a href="#11">Playing a random move</a></li>
 </ul>
 
 <h3 id="1">→ Creating a board</h3>
@@ -296,5 +297,33 @@ Ic.fenApply(fen, "playMoves", [["e4", "e7-e5", "Nf3", "f8c5"]]); //notice the do
 ```
 
 <small><strong>Note:</strong> playing multiple moves into a temporal board that will instantly get deleted is very unusual and will have only one specific narrow goal (the returned Boolean to test if all the moves can be successfully played to the FEN or not), but I chose to include this example out of consistency.</small>
+
+<hr>
+
+<h3 id="11">→ Playing a random move</h3>
+<strong>Playing a random move into a board (Object):</strong>
+
+```js
+var board = Ic.initBoard();
+
+board.playRandomMove();
+```
+
+<strong>Playing a random move into a board (Object), but enforcing a promotion piece:</strong>
+
+```js
+var board = Ic.initBoard();
+
+board.playRandomMove({promoteTo: "q"});
+```
+
+<strong>From a FEN position:</strong>
+
+```js
+var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+Ic.fenApply(fen, "playRandomMove");
+Ic.fenApply(fen, "playRandomMove", [{promoteTo: "q"}]);
+```
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>

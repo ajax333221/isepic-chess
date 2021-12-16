@@ -527,6 +527,106 @@ describe("Misc.", () => {
 			expect(temp===Ic.toPos(board_obj.squares["a2"].pos).sort()).toBe(false);/*NO b.getSquare()*/
 		});
 		
+		test("b.playMove() isUnreferenced not working", () => {
+			var temp, temp2, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "8/k1P5/2p5/1pP5/1Pp5/KpP5/pP6/8 w - - 0 1",
+				skipFenValidation : true
+			});
+			
+			temp=board_obj.playMove("c7c8q", {isUnreferenced : true});
+			
+			temp2=temp.san;
+			
+			temp.san="x";
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+			
+			temp.san=temp2;
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+			
+			board_obj.undoMove();
+			
+			temp=board_obj.playMove("c7c8q", {isUnreferenced : false});
+			
+			temp2=temp.san;
+			
+			temp.san="x";
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("x");
+			
+			temp.san=temp2;
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+			
+			board_obj.undoMove();
+			
+			temp=board_obj.playMove("c7c8q");
+			
+			temp2=temp.san;
+			
+			temp.san="x";
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("x");
+			
+			temp.san=temp2;
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+		});
+		
+		test("b.playRandomMove() isUnreferenced not working", () => {
+			var temp, temp2, board_obj;
+			
+			board_obj=Ic.initBoard({
+				boardName : board_name,
+				fen : "8/k1P5/2p5/1pP5/1Pp5/KpP5/pP6/8 w - - 0 1",
+				skipFenValidation : true
+			});
+			
+			temp=board_obj.playRandomMove({promoteTo : "q", isUnreferenced : true});
+			
+			temp2=temp.san;
+			
+			temp.san="x";
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+			
+			temp.san=temp2;
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+			
+			board_obj.undoMove();
+			
+			temp=board_obj.playRandomMove({promoteTo : "q", isUnreferenced : false});
+			
+			temp2=temp.san;
+			
+			temp.san="x";
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("x");
+			
+			temp.san=temp2;
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+			
+			board_obj.undoMove();
+			
+			temp=board_obj.playRandomMove({promoteTo : "q"});
+			
+			temp2=temp.san;
+			
+			temp.san="x";
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("x");
+			
+			temp.san=temp2;
+			
+			expect(board_obj.moveList[board_obj.moveList.length-1].san).toBe("c8=Q");
+		});
+		
 		test("b.getSquare() isUnreferenced not working", () => {
 			var temp, temp2, board_obj, board_other;
 			

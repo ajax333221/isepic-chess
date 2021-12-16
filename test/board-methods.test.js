@@ -5,7 +5,9 @@ Ic.setSilentMode(false);
 //---to do:
 //
 //loadFen
+//playMove (con sliced_fen_history)
 //playMoves (con sliced_fen_history)
+//playRandomMove (con sliced_fen_history)
 //updateFenAndMisc (con sliced_fen_history)
 //loadValidatedFen
 //refinedFenTest (hay unos fen en misc.)
@@ -751,6 +753,27 @@ describe("Board methods", () => {
 			expect(board_a.uciExport()).toBe("e2e4 _e5_ _Nf3_");
 			expect(board_b.uciExport()).toBe("e2e4 e7e5 _Nf3_");
 		});
+	});
+	
+	test("b.playRandomMove()", () => {
+		var temp, board, board_name;
+		
+		board_name="board_play_random_move";
+		
+		board=Ic.initBoard({
+			boardName : board_name,
+			fen : "8/k1P5/2p5/1pP5/1Pp5/KpP5/pP6/8 w - - 0 1",
+			skipFenValidation : true
+		});
+		
+		temp=board.playRandomMove({promoteTo : "q"});
+		expect(temp.san).toBe("c8=Q");
+		
+		temp=board.playRandomMove({promoteTo : "r"});
+		expect(temp.san).toBe("a1=R#");
+		
+		temp=board.playRandomMove();
+		expect(temp).toBeNull();
 	});
 	
 	test("b.getSquare()", () => {

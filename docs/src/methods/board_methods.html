@@ -28,142 +28,147 @@
 				name : "playMoves",
 				refreshUi : true
 			},
-			toggleIsRotated : {
+			playRandomMove : {
 				index : 4,
+				name : "playRandomMove",
+				refreshUi : true
+			},
+			toggleIsRotated : {
+				index : 5,
 				name : "toggleIsRotated",
 				refreshUi : true
 			},
 			setPromoteTo : {
-				index : 5,
+				index : 6,
 				name : "setPromoteTo",
 				refreshUi : true
 			},
 			setManualResult : {
-				index : 6,
+				index : 7,
 				name : "setManualResult",
 				refreshUi : true
 			},
 			setCurrentMove : {
-				index : 7,
+				index : 8,
 				name : "setCurrentMove",
 				refreshUi : true
 			},
 			navFirst : {
-				index : 8,
+				index : 9,
 				name : "navFirst",
 				refreshUi : true
 			},
 			navPrevious : {
-				index : 9,
+				index : 10,
 				name : "navPrevious",
 				refreshUi : true
 			},
 			navNext : {
-				index : 10,
+				index : 11,
 				name : "navNext",
 				refreshUi : true
 			},
 			navLast : {
-				index : 11,
+				index : 12,
 				name : "navLast",
 				refreshUi : true
 			},
 			navLinkMove : {
-				index : 12,
+				index : 13,
 				name : "navLinkMove",
 				refreshUi : true
 			},
 			cloneBoardFrom : {
-				index : 13,
+				index : 14,
 				name : "cloneBoardFrom",
 				refreshUi : true
 			},
 			cloneBoardTo : {
-				index : 14,
+				index : 15,
 				name : "cloneBoardTo",
 				refreshUi : true
 			},
 			reset : {
-				index : 15,
+				index : 16,
 				name : "reset",
 				refreshUi : true
 			},
 			undoMove : {
-				index : 16,
+				index : 17,
 				name : "undoMove",
 				refreshUi : true
 			},
 			undoMoves : {
-				index : 17,
+				index : 18,
 				name : "undoMoves",
 				refreshUi : true
 			},
 			countLightDarkBishops : {
-				index : 18,
+				index : 19,
 				name : "countLightDarkBishops"
 			},
 			getCheckmateMoves : {
-				index : 19,
+				index : 20,
 				name : "getCheckmateMoves"
 			},
 			getDrawMoves : {
-				index : 20,
+				index : 21,
 				name : "getDrawMoves"
 			},
 			fenHistoryExport : {
-				index : 21,
+				index : 22,
 				name : "fenHistoryExport"
 			},
 			pgnExport : {
-				index : 22,
+				index : 23,
 				name : "pgnExport"
 			},
 			uciExport : {
-				index : 23,
+				index : 24,
 				name : "uciExport"
 			},
 			ascii : {
-				index : 24,
+				index : 25,
 				name : "ascii"
 			},
 			getSquare : {
-				index : 25,
+				index : 26,
 				name : "getSquare"
 			},
 			setSquare : {
-				index : 26,
+				index : 27,
 				name : "setSquare"
 			},
 			attackersFromActive : {
-				index : 27,
+				index : 28,
 				name : "attackersFromActive"
 			},
 			attackersFromNonActive : {
-				index : 28,
+				index : 29,
 				name : "attackersFromNonActive"
 			},
 			isLegalMove : {
-				index : 29,
+				index : 30,
 				name : "isLegalMove"
 			},
 			legalMoves : {
-				index : 30,
+				index : 31,
 				name : "legalMoves"
 			},
 			legalFenMoves : {
-				index : 31,
+				index : 32,
 				name : "legalFenMoves"
 			},
 			legalSanMoves : {
-				index : 32,
+				index : 33,
 				name : "legalSanMoves"
 			},
 			legalUciMoves : {
-				index : 33,
+				index : 34,
 				name : "legalUciMoves"
 			},
 			isEqualBoard : {
-				index : 34,
+				index : 35,
 				name : "isEqualBoard"
 			}
 		};
@@ -332,6 +337,61 @@
 		board.playMoves.examples.push("board.playMoves([\"0invalidmove0\"]) //false");
 		board.playMoves.examples.push("board.playMoves([\"e4\", \"0invalidmove0\"]) //false");
 		//end: playMoves
+		
+		//start: playRandomMove
+		board.playRandomMove.params={
+			children : [
+				{
+					name : "p",
+					type : "Object",
+					icon : "eight_pointed_black_star",
+					children : [
+						{name : "isMockMove", type : "Boolean", icon : "eight_spoked_asterisk"},
+						overwriteAndUnreference(p_qal, [["name", "promoteTo"], ["icon", "eight_spoked_asterisk"]]),
+						{name : "isInanimated", type : "Boolean", icon : "eight_spoked_asterisk"},
+						{name : "playSounds", type : "Boolean", icon : "eight_spoked_asterisk"},
+						{name : "isUnreferenced", type : "Boolean", icon : "eight_spoked_asterisk"}
+					]
+				}
+			]
+		};
+		
+		board.playRandomMove.returnVal=[
+			{
+				children : [
+					{
+						name : "move",
+						type : "Object",
+						isBold : true
+					}
+				]
+			},
+			{
+				children : [
+					{
+						type : "null"
+					}
+				]
+			}
+		];
+		
+		board.playRandomMove.description=[];
+		board.playRandomMove.description.push("Generates and returns a :pushpin:**move**.");
+		board.playRandomMove.description.push("`isMockMove = true` plays the move on a **temporal board** instead of affecting the **board**.");
+		board.playRandomMove.description.push("`isInanimated = true` prevents the **piece animation** in UI <sup>(the UI refresh takes place normally)</sup>.");
+		board.playRandomMove.description.push("`playSounds = true` plays the move with **sound effects** in UI.");
+		board.playRandomMove.description.push("`isUnreferenced = true` means that the returned **move** will not be referenced (modifying these unreferenced copies will not affect the corresponding elements in the **move list** or the other way around).");
+		board.playRandomMove.description.push("The Boolean options (`isMockMove`, `isInanimated`, `playSounds` and `isUnreferenced`) default to `false` when not set to a Boolean value of `true`.");
+		board.playRandomMove.description.push("`promoteTo` takes precedence over everything when specified and a pawn promotion takes place.");
+		board.playRandomMove.description.push("Successfully playing a move will set `\"*\"` to `board.manualResult`.");
+		
+		board.playRandomMove.examples=[];
+		board.playRandomMove.examples.push("board.playRandomMove() //Object{...}");
+		board.playRandomMove.examples.push("board_game_over.playRandomMove() //null");
+		board.playRandomMove.examples.push("other_board.playRandomMove({promoteTo: \"q\"}) //Object{...}");
+		
+		board.playRandomMove.links=PIN_MOVE;
+		//end: playRandomMove
 		
 		//start: toggleIsRotated
 		board.toggleIsRotated.params={

@@ -1383,6 +1383,8 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			
 			expect(Ic.fenApply("0invalidfen0", "playMoves", [["a3"]])).toBe(false);//NO use {skipFenValidation : true}
 			
+			expect(Ic.fenApply("0invalidfen0", "playRandomMove")).toBeNull();//NO use {skipFenValidation : true}
+			
 			expect(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
 			
 			expect(Ic.fenApply("0invalidfen0", "legalFenMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
