@@ -6,120 +6,120 @@
 	</head>
 	<body>
 		<h1>ic-methods.md</h1>
-		<textarea id="result" style="width:100%;height:400px">...</textarea>
+		<textarea id="result" style="width:100%; height:400px;">...</textarea>
 	</body>
 	<script src="../doco-gen.js"></script>
 	<script>
 		var ic, res;
 		
 		ic={
-			setSilentMode : {
-				index : 1,
-				name : "setSilentMode"
+			setSilentMode: {
+				index: 1,
+				name: "setSilentMode"
 			},
-			isLegalFen : {
-				index : 2,
-				name : "isLegalFen"
+			isLegalFen: {
+				index: 2,
+				name: "isLegalFen"
 			},
-			getBoard : {
-				index : 3,
-				name : "getBoard"
+			getBoard: {
+				index: 3,
+				name: "getBoard"
 			},
-			toVal : {
-				index : 4,
-				name : "toVal"
+			toVal: {
+				index: 4,
+				name: "toVal"
 			},
-			toAbsVal : {
-				index : 5,
-				name : "toAbsVal"
+			toAbsVal: {
+				index: 5,
+				name: "toAbsVal"
 			},
-			toBal : {
-				index : 6,
-				name : "toBal"
+			toBal: {
+				index: 6,
+				name: "toBal"
 			},
-			toAbsBal : {
-				index : 7,
-				name : "toAbsBal"
+			toAbsBal: {
+				index: 7,
+				name: "toAbsBal"
 			},
-			toClassName : {
-				index : 8,
-				name : "toClassName"
+			toClassName: {
+				index: 8,
+				name: "toClassName"
 			},
-			toBos : {
-				index : 9,
-				name : "toBos"
+			toBos: {
+				index: 9,
+				name: "toBos"
 			},
-			toPos : {
-				index : 10,
-				name : "toPos"
+			toPos: {
+				index: 10,
+				name: "toPos"
 			},
-			getSign : {
-				index : 11,
-				name : "getSign"
+			getSign: {
+				index: 11,
+				name: "getSign"
 			},
-			getRankPos : {
-				index : 12,
-				name : "getRankPos"
+			getRankPos: {
+				index: 12,
+				name: "getRankPos"
 			},
-			getFilePos : {
-				index : 13,
-				name : "getFilePos"
+			getFilePos: {
+				index: 13,
+				name: "getFilePos"
 			},
-			getRankBos : {
-				index : 14,
-				name : "getRankBos"
+			getRankBos: {
+				index: 14,
+				name: "getRankBos"
 			},
-			getFileBos : {
-				index : 15,
-				name : "getFileBos"
+			getFileBos: {
+				index: 15,
+				name: "getFileBos"
 			},
-			isInsideBoard : {
-				index : 16,
-				name : "isInsideBoard"
+			isInsideBoard: {
+				index: 16,
+				name: "isInsideBoard"
 			},
-			sameSquare : {
-				index : 17,
-				name : "sameSquare"
+			sameSquare: {
+				index: 17,
+				name: "sameSquare"
 			},
-			countPieces : {
-				index : 18,
-				name : "countPieces"
+			countPieces: {
+				index: 18,
+				name: "countPieces"
 			},
-			removeBoard : {
-				index : 19,
-				name : "removeBoard"
+			removeBoard: {
+				index: 19,
+				name: "removeBoard"
 			},
-			isEqualBoard : {
-				index : 20,
-				name : "isEqualBoard"
+			isEqualBoard: {
+				index: 20,
+				name: "isEqualBoard"
 			},
-			cloneBoard : {
-				index : 21,
-				name : "cloneBoard",
-				refreshUi : true
+			cloneBoard: {
+				index: 21,
+				name: "cloneBoard",
+				refreshUi: true
 			},
-			initBoard : {
-				index : 22,
-				name : "initBoard",
-				refreshUi : true
+			initBoard: {
+				index: 22,
+				name: "initBoard",
+				refreshUi: true
 			},
-			fenApply : {
-				index : 23,
-				name : "fenApply"
+			fenApply: {
+				index: 23,
+				name: "fenApply"
 			},
-			fenGet : {
-				index : 24,
-				name : "fenGet"
+			fenGet: {
+				index: 24,
+				name: "fenGet"
 			},
-			getBoardNames : {
-				index : 25,
-				name : "getBoardNames"
+			getBoardNames: {
+				index: 25,
+				name: "getBoardNames"
 			}
 		};
 		
 		//start: setSilentMode
 		ic.setSilentMode.params={
-			children : [{name : "muteConsole", type : "Boolean"}]
+			children: [{name: "muteConsole", type: "Boolean"}]
 		};
 		
 		ic.setSilentMode.returnVal={};
@@ -135,11 +135,11 @@
 		
 		//start: isLegalFen
 		ic.isLegalFen.params={
-			children : [{name : "fen", type : "String"}]
+			children: [{name: "fen", type: "String"}]
 		};
 		
 		ic.isLegalFen.returnVal={
-			children : [{type : "Boolean"}]
+			children: [{type: "Boolean"}]
 		};
 		
 		ic.isLegalFen.description=[];
@@ -154,23 +154,23 @@
 		
 		//start: getBoard
 		ic.getBoard.params={
-			children : [p_board]
+			children: [p_board]
 		};
 		
 		ic.getBoard.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "board",
-						type : "Object",
-						isBold : true
+						name: "board",
+						type: "Object",
+						isBold: true
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -190,25 +190,25 @@
 		
 		//start: toVal
 		ic.toVal.params={
-			children : [p_qal]
+			children: [p_qal]
 		};
 		
 		ic.toVal.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareVal",
-						type : "Number",
-						isBold : true,
-						codeAfter : "-6 to 6"
+						name: "squareVal",
+						type: "Number",
+						isBold: true,
+						codeAfter: "-6 to 6"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "Number",
-						codeAfter : "0"
+						type: "Number",
+						codeAfter: "0"
 					}
 				]
 			}
@@ -230,25 +230,25 @@
 		
 		//start: toAbsVal
 		ic.toAbsVal.params={
-			children : [p_qal]
+			children: [p_qal]
 		};
 		
 		ic.toAbsVal.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareAbsVal",
-						type : "Number",
-						isBold : true,
-						codeAfter : "0 to 6"
+						name: "squareAbsVal",
+						type: "Number",
+						isBold: true,
+						codeAfter: "0 to 6"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "Number",
-						codeAfter : "0"
+						type: "Number",
+						codeAfter: "0"
 					}
 				]
 			}
@@ -270,25 +270,25 @@
 		
 		//start: toBal
 		ic.toBal.params={
-			children : [p_qal]
+			children: [p_qal]
 		};
 		
 		ic.toBal.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareBal",
-						type : "String",
-						isBold : true,
-						codeAfter : "\"k\", \"q\", \"r\", \"b\", \"n\", \"p\", \"*\", \"P\", \"N\", \"B\", \"R\", \"Q\", \"K\""
+						name: "squareBal",
+						type: "String",
+						isBold: true,
+						codeAfter: "\"k\", \"q\", \"r\", \"b\", \"n\", \"p\", \"*\", \"P\", \"N\", \"B\", \"R\", \"Q\", \"K\""
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "String",
-						codeAfter : "*"
+						type: "String",
+						codeAfter: "*"
 					}
 				]
 			}
@@ -310,25 +310,25 @@
 		
 		//start: toAbsBal
 		ic.toAbsBal.params={
-			children : [p_qal]
+			children: [p_qal]
 		};
 		
 		ic.toAbsBal.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareAbsBal",
-						type : "String",
-						isBold : true,
-						codeAfter : "\"*\", \"P\", \"N\", \"B\", \"R\", \"Q\", \"K\""
+						name: "squareAbsBal",
+						type: "String",
+						isBold: true,
+						codeAfter: "\"*\", \"P\", \"N\", \"B\", \"R\", \"Q\", \"K\""
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "String",
-						codeAfter : "*"
+						type: "String",
+						codeAfter: "*"
 					}
 				]
 			}
@@ -350,25 +350,25 @@
 		
 		//start: toClassName
 		ic.toClassName.params={
-			children : [p_qal]
+			children: [p_qal]
 		};
 		
 		ic.toClassName.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareClassName",
-						type : "String",
-						isBold : true,
-						codeAfter : "\"bk\", \"bq\", \"br\", \"bb\", \"bn\", \"bp\", \"\", \"wp\", \"wn\", \"wb\", \"wr\", \"wq\", \"wk\""
+						name: "squareClassName",
+						type: "String",
+						isBold: true,
+						codeAfter: "\"bk\", \"bq\", \"br\", \"bb\", \"bn\", \"bp\", \"\", \"wp\", \"wn\", \"wb\", \"wr\", \"wq\", \"wk\""
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "String",
-						codeAfter : "\"\""
+						type: "String",
+						codeAfter: "\"\""
 					}
 				]
 			}
@@ -390,24 +390,24 @@
 		
 		//start: toBos
 		ic.toBos.params={
-			children : [p_qos]
+			children: [p_qos]
 		};
 		
 		ic.toBos.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareBos",
-						type : "String",
-						isBold : true,
-						codeAfter : "\"a1\" to \"h8\""
+						name: "squareBos",
+						type: "String",
+						isBold: true,
+						codeAfter: "\"a1\" to \"h8\""
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -426,24 +426,24 @@
 		
 		//start: toPos
 		ic.toPos.params={
-			children : [p_qos]
+			children: [p_qos]
 		};
 		
 		ic.toPos.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squarePos",
-						type : "Array",
-						isBold : true,
-						codeAfter : "[0-7, 0-7]"
+						name: "squarePos",
+						type: "Array",
+						isBold: true,
+						codeAfter: "[0-7, 0-7]"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -462,25 +462,25 @@
 		
 		//start: getSign
 		ic.getSign.params={
-			children : [{name : "zal", children : [{type : "Boolean"}, p_qal]}]
+			children: [{name: "zal", children: [{type: "Boolean"}, p_qal]}]
 		};
 		
 		ic.getSign.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareSign",
-						type : "Number",
-						isBold : true,
-						codeAfter : "-1 or 1"
+						name: "squareSign",
+						type: "Number",
+						isBold: true,
+						codeAfter: "-1 or 1"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "Number",
-						codeAfter : "-1"
+						type: "Number",
+						codeAfter: "-1"
 					}
 				]
 			}
@@ -505,24 +505,24 @@
 		
 		//start: getRankPos
 		ic.getRankPos.params={
-			children : [p_qos]
+			children: [p_qos]
 		};
 		
 		ic.getRankPos.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareRankPos",
-						type : "Number",
-						isBold : true,
-						codeAfter : "0-7"
+						name: "squareRankPos",
+						type: "Number",
+						isBold: true,
+						codeAfter: "0-7"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -542,24 +542,24 @@
 		
 		//start: getFilePos
 		ic.getFilePos.params={
-			children : [p_qos]
+			children: [p_qos]
 		};
 		
 		ic.getFilePos.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareFilePos",
-						type : "Number",
-						isBold : true,
-						codeAfter : "0-7"
+						name: "squareFilePos",
+						type: "Number",
+						isBold: true,
+						codeAfter: "0-7"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -579,24 +579,24 @@
 		
 		//start: getRankBos
 		ic.getRankBos.params={
-			children : [p_qos]
+			children: [p_qos]
 		};
 		
 		ic.getRankBos.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareRankBos",
-						type : "String",
-						isBold : true,
-						codeAfter : "1-8"
+						name: "squareRankBos",
+						type: "String",
+						isBold: true,
+						codeAfter: "1-8"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -616,24 +616,24 @@
 		
 		//start: getFileBos
 		ic.getFileBos.params={
-			children : [p_qos]
+			children: [p_qos]
 		};
 		
 		ic.getFileBos.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "squareFileBos",
-						type : "String",
-						isBold : true,
-						codeAfter : "a-h"
+						name: "squareFileBos",
+						type: "String",
+						isBold: true,
+						codeAfter: "a-h"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -653,11 +653,11 @@
 		
 		//start: isInsideBoard
 		ic.isInsideBoard.params={
-			children : [p_qos]
+			children: [p_qos]
 		};
 		
 		ic.isInsideBoard.returnVal={
-			children : [{type : "Boolean"}]
+			children: [{type: "Boolean"}]
 		};
 		
 		ic.isInsideBoard.description=[];
@@ -673,7 +673,7 @@
 		
 		//start: sameSquare
 		ic.sameSquare.params={
-			children : [
+			children: [
 				overwriteAndUnreference(p_qos, [["name", "qos1"]]),
 				overwriteAndUnreference(p_qos, [["name", "qos2"]])
 			]
@@ -681,13 +681,13 @@
 		
 		ic.sameSquare.returnVal=[
 			{
-				children : [{type : "Boolean"}]
+				children: [{type: "Boolean"}]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "Boolean",
-						codeAfter : "false"
+						type: "Boolean",
+						codeAfter: "false"
 					}
 				]
 			}
@@ -704,23 +704,23 @@
 		
 		//start: countPieces
 		ic.countPieces.params={
-			children : [{name : "fen", type : "String"}]
+			children: [{name: "fen", type: "String"}]
 		};
 		
 		ic.countPieces.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						type : "Object",
-						codeAfter : "{w:{...}, b:{...}}"
+						type: "Object",
+						codeAfter: "{w: {...}, b: {...}}"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "Object",
-						codeAfter : "{w:{p:0, n:0, b:0, r:0, q:0, k:0}, b:{p:0, n:0, b:0, r:0, q:0, k:0}}"
+						type: "Object",
+						codeAfter: "{w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}}"
 					}
 				]
 			}
@@ -731,17 +731,17 @@
 		ic.countPieces.description.push("The **fen** doesn't need to be valid (it can be any string and it will stop after a white space or the end of the string).");
 		
 		ic.countPieces.examples=[];
-		ic.countPieces.examples.push("Ic.countPieces(defaultFen) //{w:{p:8, n:2, b:2, r:2, q:1, k:1}, b:{p:8, n:2, b:2, r:2, q:1, k:1}}");
-		ic.countPieces.examples.push("Ic.countPieces(\"badFenGetsParsedAnyway up until first space\") //{w:{p:1, n:0, b:0, r:0, q:0, k:0}, b:{p:0, n:2, b:1, r:1, q:0, k:0}}");
+		ic.countPieces.examples.push("Ic.countPieces(defaultFen) //{w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}, b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}}");
+		ic.countPieces.examples.push("Ic.countPieces(\"badFenGetsParsedAnyway up until first space\") //{w: {p: 1, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 2, b: 1, r: 1, q: 0, k: 0}}");
 		//end: countPieces
 		
 		//start: removeBoard
 		ic.removeBoard.params={
-			children : [p_board]
+			children: [p_board]
 		};
 		
 		ic.removeBoard.returnVal={
-			children : [{type : "Boolean"}]
+			children: [{type: "Boolean"}]
 		};
 		
 		ic.removeBoard.description=[];
@@ -756,7 +756,7 @@
 		
 		//start: isEqualBoard
 		ic.isEqualBoard.params={
-			children : [
+			children: [
 				overwriteAndUnreference(p_board, [["name", "leftBoard"]]),
 				overwriteAndUnreference(p_board, [["name", "rightBoard"]])
 			]
@@ -764,13 +764,13 @@
 		
 		ic.isEqualBoard.returnVal=[
 			{
-				children : [{type : "Boolean"}]
+				children: [{type: "Boolean"}]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "Boolean",
-						codeAfter : "false"
+						type: "Boolean",
+						codeAfter: "false"
 					}
 				]
 			}
@@ -792,7 +792,7 @@
 		
 		//start: cloneBoard
 		ic.cloneBoard.params={
-			children : [
+			children: [
 				overwriteAndUnreference(p_board, [["name", "toBoard"]]),
 				overwriteAndUnreference(p_board, [["name", "fromBoard"]])
 			]
@@ -800,18 +800,18 @@
 		
 		ic.cloneBoard.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						type : "Boolean",
-						codeAfter : "true"
+						type: "Boolean",
+						codeAfter: "true"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "Boolean",
-						codeAfter : "false"
+						type: "Boolean",
+						codeAfter: "false"
 					}
 				]
 			}
@@ -834,40 +834,40 @@
 		
 		//start: initBoard
 		ic.initBoard.params={
-			children : [{
-				name : "p",
-				type : "Object",
-				icon : "eight_pointed_black_star",
-				children : [
-					{name : "boardName", type : "String", icon : "eight_spoked_asterisk"},
-					{name : "pgn", type : "String", icon : "eight_spoked_asterisk"},
-					{name : "uci", type : "String", icon : "eight_spoked_asterisk"},
-					{name : "fen", type : "String", icon : "eight_spoked_asterisk"},
-					{name : "moveIndex", type : "Number", icon : "eight_spoked_asterisk"},
-					{name : "isRotated", type : "Boolean", icon : "eight_spoked_asterisk"},
-					{name : "skipFenValidation", type : "Boolean", icon : "eight_spoked_asterisk"},
-					{name : "isHidden", type : "Boolean", icon : "eight_spoked_asterisk"},
+			children: [{
+				name: "p",
+				type: "Object",
+				icon: "eight_pointed_black_star",
+				children: [
+					{name: "boardName", type: "String", icon: "eight_spoked_asterisk"},
+					{name: "pgn", type: "String", icon: "eight_spoked_asterisk"},
+					{name: "uci", type: "String", icon: "eight_spoked_asterisk"},
+					{name: "fen", type: "String", icon: "eight_spoked_asterisk"},
+					{name: "moveIndex", type: "Number", icon: "eight_spoked_asterisk"},
+					{name: "isRotated", type: "Boolean", icon: "eight_spoked_asterisk"},
+					{name: "skipFenValidation", type: "Boolean", icon: "eight_spoked_asterisk"},
+					{name: "isHidden", type: "Boolean", icon: "eight_spoked_asterisk"},
 					overwriteAndUnreference(p_qal, [["name", "promoteTo"], ["icon", "eight_spoked_asterisk"]]),
-					{name : "manualResult", type : "String", icon : "eight_spoked_asterisk"},
-					{name : "validOrBreak", type : "Boolean", icon : "eight_spoked_asterisk"}
+					{name: "manualResult", type: "String", icon: "eight_spoked_asterisk"},
+					{name: "validOrBreak", type: "Boolean", icon: "eight_spoked_asterisk"}
 				]
 			}]
 		};
 		
 		ic.initBoard.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "board",
-						type : "Object",
-						isBold : true
+						name: "board",
+						type: "Object",
+						isBold: true
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -909,18 +909,18 @@
 		
 		//start: fenApply
 		ic.fenApply.params={
-			children : [
-				{name : "fen", type : "String"},
-				{name : "fnName", type : "String", icon : "eight_pointed_black_star"},
-				{name : "args", type : "Array", icon : "eight_pointed_black_star"},
+			children: [
+				{name: "fen", type: "String"},
+				{name: "fnName", type: "String", icon: "eight_pointed_black_star"},
+				{name: "args", type: "Array", icon: "eight_pointed_black_star"},
 				{
-					name : "p",
-					type : "Object",
-					icon : "eight_pointed_black_star",
-					children : [
-						{name : "isRotated", type : "Boolean", icon : "eight_spoked_asterisk"},
+					name: "p",
+					type: "Object",
+					icon: "eight_pointed_black_star",
+					children: [
+						{name: "isRotated", type: "Boolean", icon: "eight_spoked_asterisk"},
 						overwriteAndUnreference(p_qal, [["name", "promoteTo"], ["icon", "eight_spoked_asterisk"]]),
-						{name : "skipFenValidation", type : "Boolean", icon : "eight_spoked_asterisk"}
+						{name: "skipFenValidation", type: "Boolean", icon: "eight_spoked_asterisk"}
 					]
 				}
 			]
@@ -928,16 +928,16 @@
 		
 		ic.fenApply.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						name : "(mixed results)"
+						name: "(mixed results)"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						name : "(mixed results)"
+						name: "(mixed results)"
 					}
 				]
 			}
@@ -963,25 +963,25 @@
 		
 		//start: fenGet
 		ic.fenGet.params={
-			children : [
+			children: [
 				{
-					name : "fen",
-					type : "String"
+					name: "fen",
+					type: "String"
 				},
 				{
-					name : "props",
-					icon : "eight_pointed_black_star",
-					children : [
-						{name : "strList", type : "String", isBold : true},
-						{name : "arrList", type : "Array", isBold : true}
+					name: "props",
+					icon: "eight_pointed_black_star",
+					children: [
+						{name: "strList", type: "String", isBold: true},
+						{name: "arrList", type: "Array", isBold: true}
 					]
 				},
 				{
-					name : "p",
-					type : "Object",
-					icon : "eight_pointed_black_star",
-					children : [
-						{name : "skipFenValidation", type : "Boolean", icon : "eight_spoked_asterisk"}
+					name: "p",
+					type: "Object",
+					icon: "eight_pointed_black_star",
+					children: [
+						{name: "skipFenValidation", type: "Boolean", icon: "eight_spoked_asterisk"}
 					]
 				}
 			]
@@ -989,17 +989,17 @@
 		
 		ic.fenGet.returnVal=[
 			{
-				children : [
+				children: [
 					{
-						type : "Object",
-						codeAfter : "{propA:valA, propB:valB, ..., propZ:valZ}"
+						type: "Object",
+						codeAfter: "{propA: valA, propB: valB, ..., propZ: valZ}"
 					}
 				]
 			},
 			{
-				children : [
+				children: [
 					{
-						type : "null"
+						type: "null"
 					}
 				]
 			}
@@ -1029,9 +1029,9 @@
 		ic.getBoardNames.params={};
 		
 		ic.getBoardNames.returnVal={
-			name : "boardNamesArray",
-			type : "Array",
-			isBold : true
+			name: "boardNamesArray",
+			type: "Array",
+			isBold: true
 		};
 		
 		ic.getBoardNames.description=[];

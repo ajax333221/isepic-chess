@@ -23,9 +23,9 @@ describe("Board properties", () => {
 		
 		str_list="w b activeColor nonActiveColor halfMove fullMove";
 		
-		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", str_list, {skipFenValidation : true});
-		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", str_list, {skipFenValidation : true});
-		get_checkmate_double_check=Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", str_list, {skipFenValidation : true});
+		get_stalemate=Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", str_list, {skipFenValidation: true});
+		get_checkmate=Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", str_list, {skipFenValidation: true});
+		get_checkmate_double_check=Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", str_list, {skipFenValidation: true});
 		
 		describe("b[b.activeColor]", () => {
 			describe("static", () => {
@@ -190,31 +190,31 @@ describe("Board properties", () => {
 		arr_list=["fen", "w", "b"];
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.fen).toBe(current_fen);
 		expect(temp.w.castling).toBe(3);
 		expect(temp.b.castling).toBe(3);
 		
 		current_fen="rnbqkbnr/1ppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 b Qkq -";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.fen).toBe(current_fen+" 0 1");
 		expect(temp.w.castling).toBe(2);
 		expect(temp.b.castling).toBe(3);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPP1PPR/RNBQKBN1 w Qk - 2 5";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.fen).toBe(current_fen);
 		expect(temp.w.castling).toBe(2);
 		expect(temp.b.castling).toBe(1);
 		
 		current_fen="1nbqkbnr/rppp1pp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 b k - 3 5";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.fen).toBe(current_fen);
 		expect(temp.w.castling).toBe(0);
 		expect(temp.b.castling).toBe(1);
 		
 		current_fen="1nbq1bnr/rpppkpp1/p3p2p/8/8/P3P2P/1PPPKPPR/RNBQ1BN1 w - -";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.fen).toBe(current_fen+" 0 1");
 		expect(temp.w.castling).toBe(0);
 		expect(temp.b.castling).toBe(0);
@@ -226,22 +226,22 @@ describe("Board properties", () => {
 		arr_list=["w", "b"];
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.w.materialDiff).toEqual([]);
 		expect(temp.b.materialDiff).toEqual([]);
 		
 		current_fen="k7/1r6/8/p6R/Pp6/8/1RR5/K7 b - -";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.w.materialDiff).toEqual([4, 4]);
 		expect(temp.b.materialDiff).toEqual([-1]);
 		
 		current_fen="8/1rr5/nn4k1/2p1P3/2PP4/B5K1/Q1R5/8 w - -";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.w.materialDiff).toEqual([1, 1, 3, 5]);
 		expect(temp.b.materialDiff).toEqual([-2, -2, -4]);
 		
 		current_fen="8/kr3pn1/qp4p1/p4b1p/P4B1P/QP4P1/KR3PN1/8 w - - 0 1";
-		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation : true});
+		temp=Ic.fenGet(current_fen, arr_list, {skipFenValidation: true});
 		expect(temp.w.materialDiff).toEqual([]);
 		expect(temp.b.materialDiff).toEqual([]);
 	});
@@ -249,7 +249,7 @@ describe("Board properties", () => {
 	test("b.squares", () => {
 		var get_custom;
 		
-		get_custom=Ic.fenGet("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "squares", {skipFenValidation : true});
+		get_custom=Ic.fenGet("4k3/8/3K1R2/8/8/8/8/8 b - - 0 1", "squares", {skipFenValidation: true});
 		
 		expect(Object.keys(get_custom.squares).length).toBe(64);
 		
@@ -329,67 +329,67 @@ describe("Board properties", () => {
 	describe("b.enPassantBos", () => {
 		describe("normal usage", () => {
 			test("with en passant", () => {
-				expect(Ic.fenGet("rnbqkbnr/1ppp4/8/p3ppPp/P1B1P3/8/1PPP1PP1/RNBQK1NR w KQkq f6 0 6", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("f6");
+				expect(Ic.fenGet("rnbqkbnr/1ppp4/8/p3ppPp/P1B1P3/8/1PPP1PP1/RNBQK1NR w KQkq f6 0 6", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("f6");
 				
-				expect(Ic.fenGet("rnbqkbnr/1ppp4/8/p3p1Pp/P3pP2/8/1PPP2P1/RNBQKBNR b KQkq f3 0 7", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("f3");
+				expect(Ic.fenGet("rnbqkbnr/1ppp4/8/p3p1Pp/P3pP2/8/1PPP2P1/RNBQKBNR b KQkq f3 0 7", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("f3");
 			});
 			
 			test("without en passant", () => {
-				expect(Ic.fenGet("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 				
-				expect(Ic.fenGet("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 			});
 		});
 		
 		describe("unnecessary en passant square", () => {
 			test("no immediate moves to en passant", () => {
-				expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 				
-				expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 			});
 			
 			test("no pawn moves to en passant, but other piece to en passant", () => {
-				expect(Ic.fenGet("r1bqkbnr/ppp2ppp/n7/1N1pp3/4P3/8/PPPP1PPP/R1BQKBNR w KQkq d6 0 4", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("r1bqkbnr/ppp2ppp/n7/1N1pp3/4P3/8/PPPP1PPP/R1BQKBNR w KQkq d6 0 4", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 				
-				expect(Ic.fenGet("rnbqkb1r/ppppp1pp/8/1N3p2/4P1n1/7N/PPPP1PPP/R1BQKB1R b KQkq e3 0 4", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("rnbqkb1r/ppppp1pp/8/1N3p2/4P1n1/7N/PPPP1PPP/R1BQKB1R b KQkq e3 0 4", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 			});
 			
 			test("hard pinned pawn", () => {
-				expect(Ic.fenGet("rnb1kbnr/ppp2ppp/6q1/3ppP2/2PP4/8/PPK1P1PP/RNBQ1BNR w kq e6 0 7", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("rnb1kbnr/ppp2ppp/6q1/3ppP2/2PP4/8/PPK1P1PP/RNBQ1BNR w kq e6 0 7", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 				
-				expect(Ic.fenGet("rnbq1b1r/p1p1pppp/1k1p3n/8/PpP5/1R6/1P1PPPPP/1NBQKBNR b K c3 0 8", "enPassantBos", {skipFenValidation : true}).enPassantBos).toBe("");
+				expect(Ic.fenGet("rnbq1b1r/p1p1pppp/1k1p3n/8/PpP5/1R6/1P1PPPPP/1NBQKBNR b K c3 0 8", "enPassantBos", {skipFenValidation: true}).enPassantBos).toBe("");
 			});
 		});
 	});
 	
 	test("b.checks", () => {
-		expect(Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", "checks", {skipFenValidation : true}).checks).toBe(0);
-		expect(Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", "checks", {skipFenValidation : true}).checks).toBe(1);
-		expect(Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", "checks", {skipFenValidation : true}).checks).toBe(2);
+		expect(Ic.fenGet("5bnr/4p1pq/4Qpkr/7p/7P/4P3/PPPP1PP1/RNB1KBNR b KQ - 2 10", "checks", {skipFenValidation: true}).checks).toBe(0);
+		expect(Ic.fenGet("rnb1kbnr/pppp1ppp/4p3/8/5PPq/8/PPPPP2P/RNBQKBNR w KQkq - 1 3", "checks", {skipFenValidation: true}).checks).toBe(1);
+		expect(Ic.fenGet("rnbqkbr1/pp1pn1pp/2pN4/5p1Q/4p3/4P3/PPPP1PPP/RNBK1B1R b q - 5 7", "checks", {skipFenValidation: true}).checks).toBe(2);
 		
-		expect(Ic.fenGet("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "checks", {skipFenValidation : true}).checks).toBe(2);
-		expect(Ic.fenGet("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "checks", {skipFenValidation : true}).checks).toBe(0);
+		expect(Ic.fenGet("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "checks", {skipFenValidation: true}).checks).toBe(2);
+		expect(Ic.fenGet("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "checks", {skipFenValidation: true}).checks).toBe(0);
 		
-		expect(Ic.fenGet("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "checks", {skipFenValidation : true}).checks).toBe(1);
-		expect(Ic.fenGet("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "checks", {skipFenValidation : true}).checks).toBe(1);
+		expect(Ic.fenGet("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "checks", {skipFenValidation: true}).checks).toBe(1);
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "checks", {skipFenValidation: true}).checks).toBe(1);
 		
-		expect(Ic.fenGet("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "checks", {skipFenValidation : true}).checks).toBe(0);
-		expect(Ic.fenGet("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "checks", {skipFenValidation : true}).checks).toBe(0);
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "checks", {skipFenValidation: true}).checks).toBe(0);
+		expect(Ic.fenGet("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "checks", {skipFenValidation: true}).checks).toBe(0);
 	});
 	
 	test("b.isCheck", () => {
-		expect(Ic.fenGet("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck", {skipFenValidation : true}).isCheck).toBe(true);
-		expect(Ic.fenGet("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck", {skipFenValidation : true}).isCheck).toBe(false);
+		expect(Ic.fenGet("8/k7/r7/8/8/2b5/8/K7 w - - 0 1", "isCheck", {skipFenValidation: true}).isCheck).toBe(true);
+		expect(Ic.fenGet("8/kB4p1/8/2N2P2/8/8/8/K7 b - - 0 1", "isCheck", {skipFenValidation: true}).isCheck).toBe(false);
 	});
 	
 	test("b.isCheckmate", () => {
-		expect(Ic.fenGet("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate", {skipFenValidation : true}).isCheckmate).toBe(true);
-		expect(Ic.fenGet("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate", {skipFenValidation : true}).isCheckmate).toBe(false);
+		expect(Ic.fenGet("8/8/8/4b3/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate", {skipFenValidation: true}).isCheckmate).toBe(true);
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1B6/K1r5 w - - 0 1", "isCheckmate", {skipFenValidation: true}).isCheckmate).toBe(false);
 	});
 	
 	test("b.isStalemate", () => {
-		expect(Ic.fenGet("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "isStalemate", {skipFenValidation : true}).isStalemate).toBe(true);
-		expect(Ic.fenGet("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "isStalemate", {skipFenValidation : true}).isStalemate).toBe(false);
+		expect(Ic.fenGet("8/8/8/8/8/1k6/1r6/K7 w - - 0 1", "isStalemate", {skipFenValidation: true}).isStalemate).toBe(true);
+		expect(Ic.fenGet("8/8/8/4B3/8/1k6/1r6/K7 w - - 0 1", "isStalemate", {skipFenValidation: true}).isStalemate).toBe(false);
 	});
 	
 	test("b.isThreefold and b.isFiftyMove", () => {
@@ -398,9 +398,9 @@ describe("Board properties", () => {
 		board_name="board_is_threefold_is_fifty_move";
 		
 		board_obj=Ic.initBoard({
-			boardName : board_name,
-			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			skipFenValidation : true
+			boardName: board_name,
+			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation: true
 		});
 		
 		arr=["b1-c3", "b8-c6", "c3-b1", "c6-b8", "g1-f3", "g8-f6", "f3-g1", "f6-g8", "g1-f3", "g8-f6", "f3-g1", "f6-g8", "b1-c3", "b8-a6", "c3-d5", "a6-b8", "d5-c3", "g8-f6", "c3-b1", "h8-g8", "g1-f3", "g8-h8", "f3-g1", "f6-g8", "g1-f3", "g8-f6", "f3-d4", "f6-d5", "d4-b5", "d5-b4", "b5-a3", "b4-a6", "b1-c3", "b8-c6", "a3-b1", "a6-b8", "c3-e4", "c6-e5", "e4-g5", "e5-g4", "g5-f3", "g4-f6"];
@@ -444,7 +444,7 @@ describe("Board properties", () => {
 			arr=["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "K6k/8/8/8/8/8/8/3BB3 w - - 0 1", "K6k/8/8/8/8/8/8/3BB3 b - - 0 1", "K6k/8/8/8/8/8/8/3bb3 w - - 0 1", "K6k/8/8/8/8/8/8/3bb3 b - - 0 1", "K6k/8/8/8/8/8/2bBb3/8 w - - 0 1", "K6k/8/8/8/8/8/2bBb3/8 b - - 0 1", "K6k/8/8/8/8/8/2BbB3/8 w - - 0 1", "K6k/8/8/8/8/8/2BbB3/8 b - - 0 1", "K6k/8/8/8/8/3Nb3/8/8 w - - 0 1", "K6k/8/8/8/8/3Nn3/8/8 w - - 0 1", "K6k/8/8/8/8/3NB3/8/8 w - - 0 1", "K6k/8/8/8/8/3NN3/8/8 w - - 0 1", "K6k/8/8/8/4P3/8/8/8 w - - 0 1", "K6k/8/8/8/4p3/8/8/8 w - - 0 1", "K6k/8/8/8/4R3/8/8/8 w - - 0 1", "K6k/8/8/8/4r3/8/8/8 w - - 0 1", "K6k/8/8/8/8/8/8/4Q3 w - - 0 1", "K6k/8/8/8/8/8/8/4q3 w - - 0 1"];
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
-				expect(Ic.fenGet(arr[i], "isInsufficientMaterial", {skipFenValidation : true}).isInsufficientMaterial).toBe(false);
+				expect(Ic.fenGet(arr[i], "isInsufficientMaterial", {skipFenValidation: true}).isInsufficientMaterial).toBe(false);
 			}
 		});
 		
@@ -454,7 +454,7 @@ describe("Board properties", () => {
 			arr=["K6k/8/8/8/8/8/8/8 w - - 0 1", "K6k/8/8/8/8/3N4/8/8 w - - 0 1", "K6k/8/8/8/8/3N4/8/8 b - - 0 1", "K6k/8/8/8/8/3n4/8/8 w - - 0 1", "K6k/8/8/8/8/3n4/8/8 b - - 0 1", "K6k/8/8/8/8/3B4/8/8 w - - 0 1", "K6k/8/8/8/8/3B4/8/8 b - - 0 1", "K6k/8/8/8/8/3b4/8/8 w - - 0 1", "K6k/8/8/8/8/3b4/8/8 b - - 0 1", "K6k/8/8/8/8/3B4/2B5/1B6 w - - 0 1", "K6k/8/8/8/8/3B4/2B5/1B6 b - - 0 1", "K6k/8/8/8/8/3b4/2b5/1b6 w - - 0 1", "K6k/8/8/8/8/3b4/2b5/1b6 b - - 0 1", "K6k/8/8/8/8/3b4/2b1B3/1b1B4 w - - 0 1", "K6k/8/8/8/8/3b4/2b1B3/1b1B4 b - - 0 1", "K6k/8/8/8/8/4B3/3B4/2B5 w - - 0 1", "K6k/8/8/8/8/4B3/3B4/2B5 b - - 0 1", "K6k/8/8/8/8/4b3/3b4/2b5 w - - 0 1", "K6k/8/8/8/8/4b3/3b4/2b5 b - - 0 1", "K6k/8/8/8/8/4b3/3b1B2/2b1B3 w - - 0 1", "K6k/8/8/8/8/4b3/3b1B2/2b1B3 b - - 0 1"];
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
-				expect(Ic.fenGet(arr[i], "isInsufficientMaterial", {skipFenValidation : true}).isInsufficientMaterial).toBe(true);
+				expect(Ic.fenGet(arr[i], "isInsufficientMaterial", {skipFenValidation: true}).isInsufficientMaterial).toBe(true);
 			}
 		});
 	});

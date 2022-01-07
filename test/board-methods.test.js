@@ -42,22 +42,22 @@ describe("Board methods", () => {
 			shared_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				skipFenValidation : true
+				boardName: board_name,
+				fen: shared_fen,
+				skipFenValidation: true
 			});
 			
 			expect(board_obj.boardHash()).toBe(-1570681866);
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				isHidden : true,
-				skipFenValidation : true
+				boardName: board_name,
+				fen: shared_fen,
+				isHidden: true,
+				skipFenValidation: true
 			});
 			
 			expect(board_obj.boardHash()).toBe(-1205736327);
-			expect(Ic.fenApply(shared_fen, "boardHash", [], {skipFenValidation : true})).toBe(-1205736327);
+			expect(Ic.fenApply(shared_fen, "boardHash", [], {skipFenValidation: true})).toBe(-1205736327);
 		});
 		
 		test("boardName not used in the hash", () => {
@@ -66,15 +66,15 @@ describe("Board methods", () => {
 			shared_fen="Bnb1kb1r/2qpppp1/1pp5/p6p/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b k - 0 8";
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				skipFenValidation : true
+				boardName: board_name,
+				fen: shared_fen,
+				skipFenValidation: true
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				fen : shared_fen,
-				skipFenValidation : true
+				boardName: other_board_name,
+				fen: shared_fen,
+				skipFenValidation: true
 			});
 			
 			hash_a=board_a.boardHash();
@@ -98,15 +98,15 @@ describe("Board methods", () => {
 			shared_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				skipFenValidation : true
+				boardName: board_name,
+				fen: shared_fen,
+				skipFenValidation: true
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				fen : shared_fen,
-				skipFenValidation : true
+				boardName: other_board_name,
+				fen: shared_fen,
+				skipFenValidation: true
 			});
 			
 			expect(board_a.isEqualBoard(board_b)).toBe(true);
@@ -131,34 +131,34 @@ describe("Board methods", () => {
 	
 	describe("b.legalMoves()", () => {
 		test("returnType=(default)toSquare, squareType=(default)bos", () => {
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"], {skipFenValidation : true}).sort()).toEqual(["a2", "d2", "b2"].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2"], {skipFenValidation: true}).sort()).toEqual(["a2", "d2", "b2"].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2"], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5"], {skipFenValidation : true}).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5"], {skipFenValidation: true}).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7"], {skipFenValidation : true}).sort()).toEqual(["b8", "c8", "a8"].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7"], {skipFenValidation: true}).sort()).toEqual(["b8", "c8", "a8"].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true})], {skipFenValidation : true}).sort()).toEqual(["a3", "a4"].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true})], {skipFenValidation: true}).sort()).toEqual(["a3", "a4"].sort());
 		});
 		
 		test("returnType=(default)toSquare, squareType=square", () => {
 			var p, temp;
 			
-			p={squareType : "square"};
+			p={squareType: "square"};
 			
-			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true});
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true});
 			expect(temp.length).toBe(3);
 			expect(Ic.utilityMisc.isSquare(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isSquare(temp[1])).toBe(true);
 			expect(Ic.utilityMisc.isSquare(temp[2])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["a2", "d2", "b2"].sort());
 			
-			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true});
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true});
 			expect(temp.length).toBe(0);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual([].sort());
 			
-			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true});
+			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true});
 			expect(temp.length).toBe(4);
 			expect(Ic.utilityMisc.isSquare(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isSquare(temp[1])).toBe(true);
@@ -166,14 +166,14 @@ describe("Board methods", () => {
 			expect(Ic.utilityMisc.isSquare(temp[3])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
 			
-			temp=Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true});
+			temp=Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true});
 			expect(temp.length).toBe(3);
 			expect(Ic.utilityMisc.isSquare(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isSquare(temp[1])).toBe(true);
 			expect(Ic.utilityMisc.isSquare(temp[2])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["b8", "c8", "a8"].sort());
 			
-			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true});
+			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true});
 			expect(temp.length).toBe(2);
 			expect(Ic.utilityMisc.isSquare(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isSquare(temp[1])).toBe(true);
@@ -183,20 +183,20 @@ describe("Board methods", () => {
 		test("returnType=(default)toSquare, squareType=pos", () => {
 			var p, temp;
 			
-			p={squareType : "pos"};
+			p={squareType: "pos"};
 			
-			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true});
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true});
 			expect(temp.length).toBe(3);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["a2", "d2", "b2"].sort());
 			
-			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true});
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true});
 			expect(temp.length).toBe(0);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual([].sort());
 			
-			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true});
+			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true});
 			expect(temp.length).toBe(4);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
@@ -204,14 +204,14 @@ describe("Board methods", () => {
 			expect(Ic.utilityMisc.isArray(temp[3])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
 			
-			temp=Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true});
+			temp=Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true});
 			expect(temp.length).toBe(3);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x)).sort()).toEqual(["b8", "c8", "a8"].sort());
 			
-			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true});
+			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true});
 			expect(temp.length).toBe(2);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
@@ -221,84 +221,84 @@ describe("Board methods", () => {
 		test("returnType=joined, delimiter=(default)-", () => {
 			var p;
 			
-			p={returnType : "joined"};
+			p={returnType: "joined"};
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual(["c2-a2", "c2-d2", "c2-b2"].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true}).sort()).toEqual(["c2-a2", "c2-d2", "c2-b2"].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual(["b5-c6", "b5-d7", "b5-c4", "b5-a6"].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true}).sort()).toEqual(["b5-c6", "b5-d7", "b5-c4", "b5-a6"].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["b7-b8", "b7-c8", "b7-a8"].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true}).sort()).toEqual(["b7-b8", "b7-c8", "b7-a8"].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["a2-a3", "a2-a4"].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true}).sort()).toEqual(["a2-a3", "a2-a4"].sort());
 		});
 		
 		test("returnType=joined, delimiter=_", () => {
 			var p;
 			
-			p={returnType : "joined", delimiter : "_"};
+			p={returnType: "joined", delimiter: "_"};
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual(["c2_a2", "c2_d2", "c2_b2"].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true}).sort()).toEqual(["c2_a2", "c2_d2", "c2_b2"].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual(["b5_c6", "b5_d7", "b5_c4", "b5_a6"].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true}).sort()).toEqual(["b5_c6", "b5_d7", "b5_c4", "b5_a6"].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["b7_b8", "b7_c8", "b7_a8"].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true}).sort()).toEqual(["b7_b8", "b7_c8", "b7_a8"].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["a2_a3", "a2_a4"].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true}).sort()).toEqual(["a2_a3", "a2_a4"].sort());
 		});
 		
 		test("returnType=fromToSquares, squareType=(default)bos", () => {
 			var p;
 			
-			p={returnType : "fromToSquares"};
+			p={returnType: "fromToSquares"};
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual([["c2", "a2"], ["c2", "d2"], ["c2", "b2"]].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true}).sort()).toEqual([["c2", "a2"], ["c2", "d2"], ["c2", "b2"]].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual([["b5", "c6"], ["b5", "d7"], ["b5", "c4"], ["b5", "a6"]].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true}).sort()).toEqual([["b5", "c6"], ["b5", "d7"], ["b5", "c4"], ["b5", "a6"]].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual([["b7", "b8"], ["b7", "c8"], ["b7", "a8"]].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true}).sort()).toEqual([["b7", "b8"], ["b7", "c8"], ["b7", "a8"]].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual([["a2", "a3"], ["a2", "a4"]].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true}).sort()).toEqual([["a2", "a3"], ["a2", "a4"]].sort());
 		});
 		
 		test("returnType=fromToSquares, squareType=pos", () => {
 			var p;
 			
-			p={returnType : "fromToSquares", squareType : "pos"};
+			p={returnType: "fromToSquares", squareType: "pos"};
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual([[[6, 2], [6, 0]], [[6, 2], [6, 3]], [[6, 2], [6, 1]]].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true}).sort()).toEqual([[[6, 2], [6, 0]], [[6, 2], [6, 3]], [[6, 2], [6, 1]]].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual([[[3, 1], [2, 2]], [[3, 1], [1, 3]], [[3, 1], [4, 2]], [[3, 1], [2, 0]]].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true}).sort()).toEqual([[[3, 1], [2, 2]], [[3, 1], [1, 3]], [[3, 1], [4, 2]], [[3, 1], [2, 0]]].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual([[[1, 1], [0, 1]], [[1, 1], [0, 2]], [[1, 1], [0, 0]]].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true}).sort()).toEqual([[[1, 1], [0, 1]], [[1, 1], [0, 2]], [[1, 1], [0, 0]]].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual([[[6, 0], [5, 0]], [[6, 0], [4, 0]]].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true}).sort()).toEqual([[[6, 0], [5, 0]], [[6, 0], [4, 0]]].sort());
 		});
 		
 		test("returnType=fromToSquares, squareType=square", () => {
 			var p, temp;
 			
-			p={returnType : "fromToSquares", squareType : "square"};
+			p={returnType: "fromToSquares", squareType: "square"};
 			
-			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true});
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true});
 			expect(temp.length).toBe(3);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual(["a2", "d2", "b2"].sort());
 			
-			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true});
+			temp=Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true});
 			expect(temp.length).toBe(0);
 			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual([].sort());
 			
-			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true});
+			temp=Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true});
 			expect(temp.length).toBe(4);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
@@ -306,14 +306,14 @@ describe("Board methods", () => {
 			expect(Ic.utilityMisc.isArray(temp[3])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual(["c6", "d7", "c4", "a6"].sort());
 			
-			temp=Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true});
+			temp=Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true});
 			expect(temp.length).toBe(3);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[2])).toBe(true);
 			expect(temp.map(x => Ic.toBos(x[1])).sort()).toEqual(["b8", "c8", "a8"].sort());
 			
-			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true});
+			temp=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true});
 			expect(temp.length).toBe(2);
 			expect(Ic.utilityMisc.isArray(temp[0])).toBe(true);
 			expect(Ic.utilityMisc.isArray(temp[1])).toBe(true);
@@ -323,86 +323,86 @@ describe("Board methods", () => {
 		test("returnType=fen", () => {
 			var p;
 			
-			p={returnType : "fen"};
+			p={returnType: "fen"};
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual(["8/8/8/4k3/8/8/r2RK3/8 b - - 1 1", "8/8/8/4k3/8/8/rR2K3/8 b - - 1 1", "8/8/8/4k3/8/8/R3K3/8 b - - 0 1"].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true}).sort()).toEqual(["8/8/8/4k3/8/8/r2RK3/8 b - - 1 1", "8/8/8/4k3/8/8/rR2K3/8 b - - 1 1", "8/8/8/4k3/8/8/R3K3/8 b - - 0 1"].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual(["1rq1k2r/p1pb1pp1/1pB2n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1", "1rq1k2r/p1pB1pp1/1p3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/1p3n1p/2b1N3/P1B1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/Bp3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1"].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true}).sort()).toEqual(["1rq1k2r/p1pb1pp1/1pB2n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1", "1rq1k2r/p1pB1pp1/1p3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/1p3n1p/2b1N3/P1B1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/Bp3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1"].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1"].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1"].sort());
 		});
 		
 		test("returnType=san", () => {
 			var p;
 			
-			p={returnType : "san"};
+			p={returnType: "san"};
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual(["Rd2", "Rb2", "Rxa2"].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true}).sort()).toEqual(["Rd2", "Rb2", "Rxa2"].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual(["Bc6", "Bxd7+", "Bxc4", "Ba6"].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true}).sort()).toEqual(["Bc6", "Bxd7+", "Bxc4", "Ba6"].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["b8=Q+", "b8=N", "b8=B+", "b8=R", "bxc8=Q+", "bxc8=N", "bxc8=B", "bxc8=R+", "bxa8=Q", "bxa8=N#", "bxa8=B", "bxa8=R"].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true}).sort()).toEqual(["b8=Q+", "b8=N", "b8=B+", "b8=R", "bxc8=Q+", "bxc8=N", "bxc8=B", "bxc8=R+", "bxa8=Q", "bxa8=N#", "bxa8=B", "bxa8=R"].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["a3", "a4"].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true}).sort()).toEqual(["a3", "a4"].sort());
 		});
 		
 		test("returnType=uci", () => {
 			var p;
 			
-			p={returnType : "uci"};
+			p={returnType: "uci"};
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation : true}).sort()).toEqual(["c2d2", "c2b2", "c2a2"].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["c2", p], {skipFenValidation: true}).sort()).toEqual(["c2d2", "c2b2", "c2a2"].sort());
 			
-			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation : true}).sort()).toEqual([].sort());
+			expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalMoves", ["a2", p], {skipFenValidation: true}).sort()).toEqual([].sort());
 			
-			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation : true}).sort()).toEqual(["b5c6", "b5d7", "b5c4", "b5a6"].sort());
+			expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalMoves", ["b5", p], {skipFenValidation: true}).sort()).toEqual(["b5c6", "b5d7", "b5c4", "b5a6"].sort());
 			
-			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation : true}).sort()).toEqual(["b7b8q", "b7b8n", "b7b8b", "b7b8r", "b7c8q", "b7c8n", "b7c8b", "b7c8r", "b7a8q", "b7a8n", "b7a8b", "b7a8r"].sort());
+			expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalMoves", ["b7", p], {skipFenValidation: true}).sort()).toEqual(["b7b8q", "b7b8n", "b7b8b", "b7b8r", "b7c8q", "b7c8n", "b7c8b", "b7c8r", "b7a8q", "b7a8n", "b7a8b", "b7a8r"].sort());
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), p], {skipFenValidation : true}).sort()).toEqual(["a2a3", "a2a4"].sort());
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), p], {skipFenValidation: true}).sort()).toEqual(["a2a3", "a2a4"].sort());
 		});
 	});
 	
 	test("b.legalFenMoves()", () => {
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalFenMoves", ["c2"], {skipFenValidation : true}).sort()).toEqual(["8/8/8/4k3/8/8/r2RK3/8 b - - 1 1", "8/8/8/4k3/8/8/rR2K3/8 b - - 1 1", "8/8/8/4k3/8/8/R3K3/8 b - - 0 1"].sort());
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalFenMoves", ["c2"], {skipFenValidation: true}).sort()).toEqual(["8/8/8/4k3/8/8/r2RK3/8 b - - 1 1", "8/8/8/4k3/8/8/rR2K3/8 b - - 1 1", "8/8/8/4k3/8/8/R3K3/8 b - - 0 1"].sort());
 		
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalFenMoves", ["a2"], {skipFenValidation : true}).sort()).toEqual([].sort());
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalFenMoves", ["a2"], {skipFenValidation: true}).sort()).toEqual([].sort());
 		
-		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalFenMoves", ["b5"], {skipFenValidation : true}).sort()).toEqual(["1rq1k2r/p1pb1pp1/1pB2n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1", "1rq1k2r/p1pB1pp1/1p3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/1p3n1p/2b1N3/P1B1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/Bp3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1"].sort());
+		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalFenMoves", ["b5"], {skipFenValidation: true}).sort()).toEqual(["1rq1k2r/p1pb1pp1/1pB2n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1", "1rq1k2r/p1pB1pp1/1p3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/1p3n1p/2b1N3/P1B1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 0 1", "1rq1k2r/p1pb1pp1/Bp3n1p/2b1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K b k - 1 1"].sort());
 		
-		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalFenMoves", ["b7"], {skipFenValidation : true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
+		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalFenMoves", ["b7"], {skipFenValidation: true}).sort()).toEqual(["rNbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rBbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rRbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "rQbn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Nn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Rn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "r1Qn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "N1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "B1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "R1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20", "Q1bn3r/p1kpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 b - - 0 20"].sort());
 		
-		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalFenMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true})], {skipFenValidation : true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1"].sort());
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalFenMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true})], {skipFenValidation: true}).sort()).toEqual(["rnbqkbnr/pppppppp/8/8/8/P7/1PPPPPPP/RNBQKBNR b KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1"].sort());
 	});
 	
 	test("b.legalSanMoves()", () => {
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalSanMoves", ["c2"], {skipFenValidation : true}).sort()).toEqual(["Rd2", "Rb2", "Rxa2"].sort());
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalSanMoves", ["c2"], {skipFenValidation: true}).sort()).toEqual(["Rd2", "Rb2", "Rxa2"].sort());
 		
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalSanMoves", ["a2"], {skipFenValidation : true}).sort()).toEqual([].sort());
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalSanMoves", ["a2"], {skipFenValidation: true}).sort()).toEqual([].sort());
 		
-		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalSanMoves", ["b5"], {skipFenValidation : true}).sort()).toEqual(["Bc6", "Bxd7+", "Bxc4", "Ba6"].sort());
+		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalSanMoves", ["b5"], {skipFenValidation: true}).sort()).toEqual(["Bc6", "Bxd7+", "Bxc4", "Ba6"].sort());
 		
-		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalSanMoves", ["b7"], {skipFenValidation : true}).sort()).toEqual(["b8=Q+", "b8=N", "b8=B+", "b8=R", "bxc8=Q+", "bxc8=N", "bxc8=B", "bxc8=R+", "bxa8=Q", "bxa8=N#", "bxa8=B", "bxa8=R"].sort());
+		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalSanMoves", ["b7"], {skipFenValidation: true}).sort()).toEqual(["b8=Q+", "b8=N", "b8=B+", "b8=R", "bxc8=Q+", "bxc8=N", "bxc8=B", "bxc8=R+", "bxa8=Q", "bxa8=N#", "bxa8=B", "bxa8=R"].sort());
 		
-		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalSanMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true})], {skipFenValidation : true}).sort()).toEqual(["a3", "a4"].sort());
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalSanMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true})], {skipFenValidation: true}).sort()).toEqual(["a3", "a4"].sort());
 	});
 	
 	test("b.legalUciMoves()", () => {
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalUciMoves", ["c2"], {skipFenValidation : true}).sort()).toEqual(["c2d2", "c2b2", "c2a2"].sort());
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalUciMoves", ["c2"], {skipFenValidation: true}).sort()).toEqual(["c2d2", "c2b2", "c2a2"].sort());
 		
-		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalUciMoves", ["a2"], {skipFenValidation : true}).sort()).toEqual([].sort());
+		expect(Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "legalUciMoves", ["a2"], {skipFenValidation: true}).sort()).toEqual([].sort());
 		
-		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalUciMoves", ["b5"], {skipFenValidation : true}).sort()).toEqual(["b5c6", "b5d7", "b5c4", "b5a6"].sort());
+		expect(Ic.fenApply("1rq1k2r/p1pb1pp1/1p3n1p/1Bb1N3/P1p1P3/2P2P1P/1P4P1/R1BQ1R1K w k - 0 1", "legalUciMoves", ["b5"], {skipFenValidation: true}).sort()).toEqual(["b5c6", "b5d7", "b5c4", "b5a6"].sort());
 		
-		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalUciMoves", ["b7"], {skipFenValidation : true}).sort()).toEqual(["b7b8q", "b7b8n", "b7b8b", "b7b8r", "b7c8q", "b7c8n", "b7c8b", "b7c8r", "b7a8q", "b7a8n", "b7a8b", "b7a8r"].sort());
+		expect(Ic.fenApply("r1bn3r/pPkpppbp/2n3p1/8/2N5/1R6/1PPPPPPR/2BQKBN1 w - - 7 20", "legalUciMoves", ["b7"], {skipFenValidation: true}).sort()).toEqual(["b7b8q", "b7b8n", "b7b8b", "b7b8r", "b7c8q", "b7c8n", "b7c8b", "b7c8r", "b7a8q", "b7a8n", "b7a8b", "b7a8r"].sort());
 		
-		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalUciMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true})], {skipFenValidation : true}).sort()).toEqual(["a2a3", "a2a4"].sort());
+		expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "legalUciMoves", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true})], {skipFenValidation: true}).sort()).toEqual(["a2a3", "a2a4"].sort());
 	});
 	
 	describe("b.isLegalMove()", () => {
@@ -415,141 +415,141 @@ describe("Board methods", () => {
 			var fen;
 			
 			fen="8/8/8/4k3/8/8/R3K3/8 b - -";
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 7 4"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 7 4"], {skipFenValidation: true})).toBe(true);
 			
 			fen="8/8/8/4k3/8/2R5/r3K3/8 b - -";
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 7 4"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 7 4"], {skipFenValidation: true})).toBe(false);
 			
 			fen="8/8/8/4k3/8/2R5/r3K3/8 w - -";
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation: true})).toBe(false);
 			
 			fen="Qn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 0 5"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 1 5"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 0 5"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 1 5"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 0 1"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen+" 1 1"], {skipFenValidation: true})).toBe(true);
 			
 			fen="Rn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(true);
 			
 			fen="Bn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(true);
 			
 			fen="Nn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(true);
 			
 			fen="Kn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="Pn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="Xn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="1n1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="qn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="rn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="rn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQkq -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="bn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="nn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="kn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="pn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 			
 			fen="xn1qkbnr/3ppppp/2p5/8/8/8/1PPPPPPP/RNBQKB1R b KQk -";
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", [fen], {skipFenValidation: true})).toBe(false);
 		});
 		
 		test("san move", () => {
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa2"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Ra2"], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa9"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa2"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Ra2"], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["Rxa9"], {skipFenValidation: true})).toBe(false);
 			
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8="], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=p"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=k"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=P"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=K"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=0"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=1"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=6"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=9"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=5"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8="], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=z"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=p"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=k"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Z"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=P"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=K"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=0"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=1"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=6"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=9"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=q"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=Q"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["bxa8=5"], {skipFenValidation: true})).toBe(true);
 		});
 		
 		test("uci move", () => {
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2a2"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2c2"], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c9a9"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2a2"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2c2"], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c9a9"], {skipFenValidation: true})).toBe(false);
 			
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8 "], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8="], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8p"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8k"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Z"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8P"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8K"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a80"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a81"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a86"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a89"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Q"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a85"], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8 "], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8="], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8z"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8p"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8k"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Z"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8P"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8K"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a80"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a81"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a86"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a89"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8q"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a8Q"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_promo_fen, "isLegalMove", ["b7a85"], {skipFenValidation: true})).toBe(true);
 		});
 		
 		test("joined move", () => {
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2-a2"], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2-c2"], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a9-c9"], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2-a2"], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2-c2"], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a9-c9"], {skipFenValidation: true})).toBe(false);
 			
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2_a2", {delimiter : "_"}], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2_c2", {delimiter : "_"}], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a9_c9", {delimiter : "_"}], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["c2_a2", {delimiter: "_"}], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a2_c2", {delimiter: "_"}], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", ["a9_c9", {delimiter: "_"}], {skipFenValidation: true})).toBe(false);
 		});
 		
 		test("from to move", () => {
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [["c2", "a2"]], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [["a2", "c2"]], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [["a9", "c9"]], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [["c2", "a2"]], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [["a2", "c2"]], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [["a9", "c9"]], {skipFenValidation: true})).toBe(false);
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalMove", [[Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation : true}), Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a4"], {skipFenValidation : true})]], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "isLegalMove", [[Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a2"], {skipFenValidation: true}), Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["a4"], {skipFenValidation: true})]], {skipFenValidation: true})).toBe(true);
 		});
 		
 		test("object move", () => {
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["c2-a2"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(true);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["a2-c2"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(false);
-			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["c9-a9"], {skipFenValidation : true})], {skipFenValidation : true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["c2-a2"], {skipFenValidation: true})], {skipFenValidation: true})).toBe(true);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["a2-c2"], {skipFenValidation: true})], {skipFenValidation: true})).toBe(false);
+			expect(Ic.fenApply(shared_fen, "isLegalMove", [Ic.fenApply(shared_fen, "playMove", ["c9-a9"], {skipFenValidation: true})], {skipFenValidation: true})).toBe(false);
 		});
 		
 		test("unnecessary en passant square", () => {
@@ -558,10 +558,10 @@ describe("Board methods", () => {
 			from_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 			
 			move_fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1";
-			expect(Ic.fenApply(from_fen, "isLegalMove", [move_fen], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(from_fen, "isLegalMove", [move_fen], {skipFenValidation: true})).toBe(true);
 			
 			move_fen="rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1";
-			expect(Ic.fenApply(from_fen, "isLegalMove", [move_fen], {skipFenValidation : true})).toBe(true);
+			expect(Ic.fenApply(from_fen, "isLegalMove", [move_fen], {skipFenValidation: true})).toBe(true);
 		});
 	});
 	
@@ -572,15 +572,15 @@ describe("Board methods", () => {
 				
 				fen="k7/8/KQ6/8/8/8/8/8 w - - 0 1";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["b6b7", "b6d8", "b6a7"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["b6b7", "b6d8", "b6a7"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual(["b6b7", "b6d8", "b6a7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual(["b6b7", "b6d8", "b6a7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(1);
 				
 				fen="rn3r2/pbppq1p1/1p2pN2/8/3P2NP/6P1/PPP1BP1R/R3K1k1 w Q - 5 18";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["e1d2", "e1c1"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["e1d2", "e1c1"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual(["e1d2", "e1c1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual(["e1d2", "e1c1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(1);
 			});
 			
 			test("one checkmate", () => {
@@ -588,9 +588,9 @@ describe("Board methods", () => {
 				
 				fen="r1bqkbnr/ppp2ppp/2np4/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["f3f7"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["f3f7"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual(["f3f7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual(["f3f7"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(1);
 			});
 			
 			test("zero checkmates", () => {
@@ -598,9 +598,9 @@ describe("Board methods", () => {
 				
 				fen="r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual([].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual([].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(0);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(0);
 			});
 		});
 		
@@ -610,15 +610,15 @@ describe("Board methods", () => {
 				
 				fen="8/8/8/8/8/6qk/8/7K b - - 0 1";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["g3g2", "g3h2", "g3e1"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["g3g2", "g3h2", "g3e1"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual(["g3g2", "g3h2", "g3e1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual(["g3g2", "g3h2", "g3e1"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(1);
 				
 				fen="1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/r5P1/2K5 b - - 15 41";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["b4a3", "a2c2"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["b4a3", "a2c2"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual(["b4a3", "a2c2"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual(["b4a3", "a2c2"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(1);
 			});
 			
 			test("one checkmate", () => {
@@ -626,9 +626,9 @@ describe("Board methods", () => {
 				
 				fen="rnbqkbnr/pppp1ppp/4p3/8/5PP1/8/PPPPP2P/RNBQKBNR b KQkq - 0 2";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual(["d8h4"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual(["d8h4"].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(1);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual(["d8h4"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual(["d8h4"].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(1);
 			});
 			
 			test("zero checkmates", () => {
@@ -636,9 +636,9 @@ describe("Board methods", () => {
 				
 				fen="rnbqk1nr/pppp1ppp/8/4p3/1bB1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3";
 				
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation : true}).sort()).toEqual([].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation : true}).sort()).toEqual([].sort());
-				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation : true}).length).toBe(0);
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [], {skipFenValidation: true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [false], {skipFenValidation: true}).sort()).toEqual([].sort());
+				expect(Ic.fenApply(fen, "getCheckmateMoves", [true], {skipFenValidation: true}).length).toBe(0);
 			});
 		});
 	});
@@ -653,9 +653,9 @@ describe("Board methods", () => {
 			
 			fen="k7/8/KQ6/8/8/8/8/8 w - - 0 1";
 			
-			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation : true}).sort()).toEqual(["a6b5", "a6a5", "b6d6", "b6b5", "b6b4", "b6b3", "b6b2", "b6b1", "b6c7"].sort());
-			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation : true}).sort()).toEqual(["a6b5", "a6a5", "b6d6", "b6b5", "b6b4", "b6b3", "b6b2", "b6b1", "b6c7"].sort());
-			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation : true}).length).toBe(1);
+			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation: true}).sort()).toEqual(["a6b5", "a6a5", "b6d6", "b6b5", "b6b4", "b6b3", "b6b2", "b6b1", "b6c7"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation: true}).sort()).toEqual(["a6b5", "a6a5", "b6d6", "b6b5", "b6b4", "b6b3", "b6b2", "b6b1", "b6c7"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation: true}).length).toBe(1);
 		});
 		
 		test("insufficient material", () => {
@@ -663,16 +663,16 @@ describe("Board methods", () => {
 			
 			fen="8/8/7k/8/8/2b1r3/3B1K2/8 w - - 0 1";
 			
-			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation : true}).sort()).toEqual(["d2e3", "f2e3"].sort());
-			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation : true}).sort()).toEqual(["d2e3", "f2e3"].sort());
-			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation : true}).length).toBe(1);
+			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation: true}).sort()).toEqual(["d2e3", "f2e3"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation: true}).sort()).toEqual(["d2e3", "f2e3"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation: true}).length).toBe(1);
 		});
 		
 		test("threefold repetition", () => {
 			var board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_obj.playMoves(["Nf3", "Nf6", "Ng1", "Ng8", "Nf3", "Nf6", "Ng1"]);
@@ -689,18 +689,18 @@ describe("Board methods", () => {
 			
 			fen="rnbqkb1r/pppp1ppp/4p3/8/1n1N4/8/PPPPPPPP/RNBQKB1R w KQkq - 99 53";
 			
-			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation : true}).sort()).toEqual(["d4f3", "d4b5", "d4f5", "d4b3", "d4c6", "b1c3", "b1a3", "h1g1"].sort());
-			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation : true}).sort()).toEqual(["d4f3", "d4b5", "d4f5", "d4b3", "d4c6", "b1c3", "b1a3", "h1g1"].sort());
-			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation : true}).length).toBe(1);
+			expect(Ic.fenApply(fen, "getDrawMoves", [], {skipFenValidation: true}).sort()).toEqual(["d4f3", "d4b5", "d4f5", "d4b3", "d4c6", "b1c3", "b1a3", "h1g1"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [false], {skipFenValidation: true}).sort()).toEqual(["d4f3", "d4b5", "d4f5", "d4b3", "d4c6", "b1c3", "b1a3", "h1g1"].sort());
+			expect(Ic.fenApply(fen, "getDrawMoves", [true], {skipFenValidation: true}).length).toBe(1);
 		});
 		
 		test("mixed (stalemate + insufficient material + threefold repetition)", () => {
 			var board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "8/8/8/8/8/5N1K/7p/7k w - - 0 1",
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "8/8/8/8/8/5N1K/7p/7k w - - 0 1",
+				skipFenValidation: true
 			});
 			
 			board_obj.playMoves(["Ne1", "Kg1", "Nf3+", "Kh1", "Ne1", "Kg1", "Nf3+", "Kh1"]);
@@ -719,27 +719,27 @@ describe("Board methods", () => {
 			var temp, temp2, board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name
+				boardName: other_board_name
 			});
 			
-			board_a.playMove("e4", {isMockMove : true});
-			board_b.playMove("e4", {isMockMove : true});
+			board_a.playMove("e4", {isMockMove: true});
+			board_b.playMove("e4", {isMockMove: true});
 			
 			expect(board_a.uciExport()).toBe("");
 			expect(board_b.uciExport()).toBe("");
 			
 			board_a.playMove("e4");
-			board_b.playMove("e4", {isMockMove : false});
+			board_b.playMove("e4", {isMockMove: false});
 			
 			expect(board_a.uciExport()).toBe("e2e4");
 			expect(board_b.uciExport()).toBe("e2e4");
 			
-			temp=board_a.playMove("e5", {isUnreferenced : false});
-			temp2=board_b.playMove("e5", {isUnreferenced : true});
+			temp=board_a.playMove("e5", {isUnreferenced: false});
+			temp2=board_b.playMove("e5", {isUnreferenced: true});
 			
 			temp.uci="_e5_";
 			temp2.uci="_e5_";
@@ -761,15 +761,15 @@ describe("Board methods", () => {
 		board_name="board_play_random_move";
 		
 		board=Ic.initBoard({
-			boardName : board_name,
-			fen : "8/k1P5/2p5/1pP5/1Pp5/KpP5/pP6/8 w - - 0 1",
-			skipFenValidation : true
+			boardName: board_name,
+			fen: "8/k1P5/2p5/1pP5/1Pp5/KpP5/pP6/8 w - - 0 1",
+			skipFenValidation: true
 		});
 		
-		temp=board.playRandomMove({promoteTo : "q"});
+		temp=board.playRandomMove({promoteTo: "q"});
 		expect(temp.san).toBe("c8=Q");
 		
-		temp=board.playRandomMove({promoteTo : "r"});
+		temp=board.playRandomMove({promoteTo: "r"});
 		expect(temp.san).toBe("a1=R#");
 		
 		temp=board.playRandomMove();
@@ -781,23 +781,23 @@ describe("Board methods", () => {
 		
 		shared_fen="4k3/8/3K1R2/8/8/8/8/8 b - - 0 1";
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", ["e8"], {skipFenValidation : true}).val).toBe(-6);
+		expect(Ic.fenApply(shared_fen, "getSquare", ["e8"], {skipFenValidation: true}).val).toBe(-6);
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", [[2, 5]], {skipFenValidation : true}).val).toBe(4);
+		expect(Ic.fenApply(shared_fen, "getSquare", [[2, 5]], {skipFenValidation: true}).val).toBe(4);
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", ["d7", {rankShift : 1, fileShift : 2}], {skipFenValidation : true}).isRook).toBe(true);
+		expect(Ic.fenApply(shared_fen, "getSquare", ["d7", {rankShift: 1, fileShift: 2}], {skipFenValidation: true}).isRook).toBe(true);
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", [[3, 3], {rankShift : -1}], {skipFenValidation : true}).val).toBe(6);
+		expect(Ic.fenApply(shared_fen, "getSquare", [[3, 3], {rankShift: -1}], {skipFenValidation: true}).val).toBe(6);
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["f8"], {skipFenValidation : true}), {fileShift : -1}], {skipFenValidation : true}).val).toBe(-6);
+		expect(Ic.fenApply(shared_fen, "getSquare", [Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["f8"], {skipFenValidation: true}), {fileShift: -1}], {skipFenValidation: true}).val).toBe(-6);
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", ["e8", {rankShift : -1}], {skipFenValidation : true})).toBeNull();
+		expect(Ic.fenApply(shared_fen, "getSquare", ["e8", {rankShift: -1}], {skipFenValidation: true})).toBeNull();
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", ["e1", {rankShift : 1}], {skipFenValidation : true})).toBeNull();
+		expect(Ic.fenApply(shared_fen, "getSquare", ["e1", {rankShift: 1}], {skipFenValidation: true})).toBeNull();
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", ["a4", {fileShift : -1}], {skipFenValidation : true})).toBeNull();
+		expect(Ic.fenApply(shared_fen, "getSquare", ["a4", {fileShift: -1}], {skipFenValidation: true})).toBeNull();
 		
-		expect(Ic.fenApply(shared_fen, "getSquare", ["h4", {fileShift : 1}], {skipFenValidation : true})).toBeNull();
+		expect(Ic.fenApply(shared_fen, "getSquare", ["h4", {fileShift: 1}], {skipFenValidation: true})).toBeNull();
 	});
 	
 	test("b.setSquare()", () => {
@@ -809,22 +809,22 @@ describe("Board methods", () => {
 		shared_fen="r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4";
 		
 		board_a=Ic.initBoard({
-			boardName : board_a_name,
-			fen : shared_fen,
-			skipFenValidation : true
+			boardName: board_a_name,
+			fen: shared_fen,
+			skipFenValidation: true
 		});
 		
 		board_b=Ic.initBoard({
-			boardName : board_b_name,
-			fen : shared_fen,
-			skipFenValidation : true
+			boardName: board_b_name,
+			fen: shared_fen,
+			skipFenValidation: true
 		});
 		
 		get_ref=board_a.getSquare("c4");
 		board_b.getSquare("c4");
 		
-		get_unref=board_a.getSquare("c4", {isUnreferenced : true});
-		board_b.getSquare("c4", {isUnreferenced : true});
+		get_unref=board_a.getSquare("c4", {isUnreferenced: true});
+		board_b.getSquare("c4", {isUnreferenced: true});
 		
 		get_via_set_square=board_a.setSquare("c4", 0);
 		board_b.setSquare("c4", 0);
@@ -874,49 +874,49 @@ describe("Board methods", () => {
 		[0, 0, 0, 0, 0, 0, 2, 1],
 		[0, 0, 0, 0, 0, 0, 1, 0]];
 		
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, true], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, false], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, true], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, false], {skipFenValidation: true})).toBe(0);
 		
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, true], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, false], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, true], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, false], {skipFenValidation: true})).toBe(0);
 		
 		shared_fen=shared_fen.replace(" b ", " w ");
 		
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, true], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, false], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, true], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromActive", [null, false], {skipFenValidation: true})).toBe(0);
 		
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, true], {skipFenValidation : true})).toBe(0);
-		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, false], {skipFenValidation : true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, true], {skipFenValidation: true})).toBe(0);
+		expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [null, false], {skipFenValidation: true})).toBe(0);
 		
 		shared_fen=shared_fen.replace(" w ", " b ");
 		
 		for(i=0; i<8; i++){//0...7
 			for(j=0; j<8; j++){//0...7
-				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j]], {skipFenValidation : true})).toBe(results_a[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], false], {skipFenValidation : true})).toBe(results_a[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_a[i][j])*1);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j]], {skipFenValidation: true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], false], {skipFenValidation: true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], true], {skipFenValidation: true})).toBe((!!results_a[i][j])*1);
 				
-				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j]], {skipFenValidation : true})).toBe(results_b[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], false], {skipFenValidation : true})).toBe(results_b[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_b[i][j])*1);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j]], {skipFenValidation: true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], false], {skipFenValidation: true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], true], {skipFenValidation: true})).toBe((!!results_b[i][j])*1);
 				
 				shared_fen=shared_fen.replace(" b ", " w ");
 				
-				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j]], {skipFenValidation : true})).toBe(results_b[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], false], {skipFenValidation : true})).toBe(results_b[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_b[i][j])*1);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j]], {skipFenValidation: true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], false], {skipFenValidation: true})).toBe(results_b[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromActive", [[i, j], true], {skipFenValidation: true})).toBe((!!results_b[i][j])*1);
 				
-				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j]], {skipFenValidation : true})).toBe(results_a[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], false], {skipFenValidation : true})).toBe(results_a[i][j]);
-				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], true], {skipFenValidation : true})).toBe((!!results_a[i][j])*1);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j]], {skipFenValidation: true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], false], {skipFenValidation: true})).toBe(results_a[i][j]);
+				expect(Ic.fenApply(shared_fen, "attackersFromNonActive", [[i, j], true], {skipFenValidation: true})).toBe((!!results_a[i][j])*1);
 				
 				shared_fen=shared_fen.replace(" w ", " b ");
 			}
@@ -954,33 +954,33 @@ describe("Board methods", () => {
      h  g  f  e  d  c  b  a
 `;
 		
-		expect(Ic.fenApply(shared_fen, "ascii", [], {skipFenValidation : true})).toBe(w_view_diagram);
-		expect(Ic.fenApply(shared_fen, "ascii", [], {isRotated : false, skipFenValidation : true})).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [], {skipFenValidation: true})).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [], {isRotated: false, skipFenValidation: true})).toBe(w_view_diagram);
 		
-		expect(Ic.fenApply(shared_fen, "ascii", [], {isRotated : true, skipFenValidation : true})).toBe(b_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [], {isRotated: true, skipFenValidation: true})).toBe(b_view_diagram);
 		
-		expect(Ic.fenApply(shared_fen, "ascii", [false], {skipFenValidation : true})).toBe(w_view_diagram);
-		expect(Ic.fenApply(shared_fen, "ascii", [false], {isRotated : false, skipFenValidation : true})).toBe(w_view_diagram);
-		expect(Ic.fenApply(shared_fen, "ascii", [false], {isRotated : true, skipFenValidation : true})).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [false], {skipFenValidation: true})).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [false], {isRotated: false, skipFenValidation: true})).toBe(w_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [false], {isRotated: true, skipFenValidation: true})).toBe(w_view_diagram);
 		
-		expect(Ic.fenApply(shared_fen, "ascii", [true], {skipFenValidation : true})).toBe(b_view_diagram);
-		expect(Ic.fenApply(shared_fen, "ascii", [true], {isRotated : false, skipFenValidation : true})).toBe(b_view_diagram);
-		expect(Ic.fenApply(shared_fen, "ascii", [true], {isRotated : true, skipFenValidation : true})).toBe(b_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [true], {skipFenValidation: true})).toBe(b_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [true], {isRotated: false, skipFenValidation: true})).toBe(b_view_diagram);
+		expect(Ic.fenApply(shared_fen, "ascii", [true], {isRotated: true, skipFenValidation: true})).toBe(b_view_diagram);
 	});
 	
 	test("b.countLightDarkBishops()", () => {
 		var current_fen;
 		
 		current_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-		expect(Ic.fenApply(current_fen, "countLightDarkBishops", [], {skipFenValidation : true})).toEqual({
-			w : {lightSquaredBishops : 1, darkSquaredBishops : 1},
-			b : {lightSquaredBishops : 1, darkSquaredBishops : 1}
+		expect(Ic.fenApply(current_fen, "countLightDarkBishops", [], {skipFenValidation: true})).toEqual({
+			w: {lightSquaredBishops: 1, darkSquaredBishops: 1},
+			b: {lightSquaredBishops: 1, darkSquaredBishops: 1}
 		});
 		
 		current_fen="8/q5n1/p2k1b1r/Qp2bb1p/1P5P/RK1B3N/4B3/8 b - - 0 1";
-		expect(Ic.fenApply(current_fen, "countLightDarkBishops", [], {skipFenValidation : true})).toEqual({
-			w : {lightSquaredBishops : 2, darkSquaredBishops : 0},
-			b : {lightSquaredBishops : 1, darkSquaredBishops : 2}
+		expect(Ic.fenApply(current_fen, "countLightDarkBishops", [], {skipFenValidation: true})).toEqual({
+			w: {lightSquaredBishops: 2, darkSquaredBishops: 0},
+			b: {lightSquaredBishops: 1, darkSquaredBishops: 2}
 		});
 	});
 	
@@ -994,15 +994,15 @@ describe("Board methods", () => {
 		board_b_name="board_b";
 		
 		board_a=Ic.initBoard({
-			boardName : board_a_name,
-			fen : "r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4",
-			skipFenValidation : true
+			boardName: board_a_name,
+			fen: "r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4",
+			skipFenValidation: true
 		});
 		
 		board_b=Ic.initBoard({
-			boardName : board_b_name,
-			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			skipFenValidation : true
+			boardName: board_b_name,
+			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation: true
 		});
 		
 		Ic.setSilentMode(true);
@@ -1041,13 +1041,13 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				skipFenValidation : true
+				boardName: other_board_name,
+				fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				skipFenValidation: true
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
@@ -1065,13 +1065,13 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
-				skipFenValidation : true
+				boardName: other_board_name,
+				fen: "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
+				skipFenValidation: true
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
@@ -1089,17 +1089,17 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				isRotated : true,
-				promoteTo : "N",
-				isHidden : true
+				boardName: board_name,
+				isRotated: true,
+				promoteTo: "N",
+				isHidden: true
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				isRotated : true,
-				promoteTo : "N",
-				isHidden : true
+				boardName: other_board_name,
+				isRotated: true,
+				promoteTo: "N",
+				isHidden: true
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
@@ -1113,14 +1113,14 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				isRotated : true,
-				promoteTo : "N",
-				isHidden : true
+				boardName: other_board_name,
+				isRotated: true,
+				promoteTo: "N",
+				isHidden: true
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
@@ -1134,17 +1134,17 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				isRotated : true,
-				promoteTo : "N",
-				isHidden : true
+				boardName: board_name,
+				isRotated: true,
+				promoteTo: "N",
+				isHidden: true
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				isRotated : true,
-				promoteTo : "N",
-				isHidden : true
+				boardName: other_board_name,
+				isRotated: true,
+				promoteTo: "N",
+				isHidden: true
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
@@ -1158,14 +1158,14 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				isRotated : true,
-				promoteTo : "N",
-				isHidden : true
+				boardName: other_board_name,
+				isRotated: true,
+				promoteTo: "N",
+				isHidden: true
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(false);
@@ -1179,7 +1179,7 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			expect(board_obj.manualResult).toBe("*");
@@ -1197,8 +1197,8 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				manualResult : "*"
+				boardName: board_name,
+				manualResult: "*"
 			});
 			
 			expect(board_obj.manualResult).toBe("*");
@@ -1216,8 +1216,8 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				manualResult : "1-0"
+				boardName: board_name,
+				manualResult: "1-0"
 			});
 			
 			expect(board_obj.manualResult).toBe("1-0");
@@ -1235,8 +1235,8 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				manualResult : "0-1"
+				boardName: board_name,
+				manualResult: "0-1"
 			});
 			
 			expect(board_obj.manualResult).toBe("0-1");
@@ -1254,7 +1254,7 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			expect(board_obj.manualResult).toBe("*");
@@ -1272,8 +1272,8 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				manualResult : "*"
+				boardName: board_name,
+				manualResult: "*"
 			});
 			
 			expect(board_obj.manualResult).toBe("*");
@@ -1291,8 +1291,8 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				manualResult : "1-0"
+				boardName: board_name,
+				manualResult: "1-0"
 			});
 			
 			expect(board_obj.manualResult).toBe("1-0");
@@ -1310,8 +1310,8 @@ describe("Board methods", () => {
 			var temp, board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				manualResult : "0-1"
+				boardName: board_name,
+				manualResult: "0-1"
 			});
 			
 			expect(board_obj.manualResult).toBe("0-1");
@@ -1329,12 +1329,12 @@ describe("Board methods", () => {
 			var temp, board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "r1bqkbnr/pppppppp/2n5/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 2 2"
+				boardName: other_board_name,
+				fen: "r1bqkbnr/pppppppp/2n5/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 2 2"
 			});
 			
 			temp=board_a.reset();
@@ -1378,11 +1378,11 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name
+				boardName: board_name
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name
+				boardName: other_board_name
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
@@ -1400,15 +1400,15 @@ describe("Board methods", () => {
 			var board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
+				skipFenValidation: true
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
-				skipFenValidation : true
+				boardName: other_board_name,
+				fen: "rnbqkb1r/pppppppp/5n2/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2",
+				skipFenValidation: true
 			});
 			
 			expect(board_a.boardHash()===board_b.boardHash()).toBe(true);
@@ -1426,15 +1426,15 @@ describe("Board methods", () => {
 			var temp, board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				manualResult : "1/2-1/2"
+				boardName: board_name,
+				manualResult: "1/2-1/2"
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				uci : "e2e4 e7e5",
-				manualResult : "1/2-1/2",
-				validOrBreak : true
+				boardName: other_board_name,
+				uci: "e2e4 e7e5",
+				manualResult: "1/2-1/2",
+				validOrBreak: true
 			});
 			
 			temp=board_a.undoMoves();
@@ -1488,19 +1488,19 @@ describe("Board methods", () => {
 			var temp, board_a, board_b;
 			
 			board_a=Ic.initBoard({
-				boardName : board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-				skipFenValidation : true,
-				manualResult : "1/2-1/2"
+				boardName: board_name,
+				fen: "rnbqkb1r/pppppppp/5n2/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+				skipFenValidation: true,
+				manualResult: "1/2-1/2"
 			});
 			
 			board_b=Ic.initBoard({
-				boardName : other_board_name,
-				fen : "rnbqkb1r/pppppppp/5n2/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-				uci : "e2e4 e7e5",
-				skipFenValidation : true,
-				manualResult : "1/2-1/2",
-				validOrBreak : true
+				boardName: other_board_name,
+				fen: "rnbqkb1r/pppppppp/5n2/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+				uci: "e2e4 e7e5",
+				skipFenValidation: true,
+				manualResult: "1/2-1/2",
+				validOrBreak: true
 			});
 			
 			temp=board_a.undoMoves();
@@ -1571,27 +1571,27 @@ describe("Board methods", () => {
 			
 			for(i=0, len=arr.length; i<len; i++){//0<len
 				board_a=Ic.initBoard({
-					boardName : board_name
+					boardName: board_name
 				});
 				
 				board_b=Ic.initBoard({
-					boardName : other_board_name,
-					pgn : shared_pgn,
-					moveIndex : 3,
-					validOrBreak : true
+					boardName: other_board_name,
+					pgn: shared_pgn,
+					moveIndex: 3,
+					validOrBreak: true
 				});
 				
 				board_c=Ic.initBoard({
-					boardName : another_board_name,
-					pgn : shared_pgn,
-					moveIndex : 0,
-					validOrBreak : true
+					boardName: another_board_name,
+					pgn: shared_pgn,
+					moveIndex: 0,
+					validOrBreak: true
 				});
 				
 				board_d=Ic.initBoard({
-					boardName : another_another_board_name,
-					pgn : shared_pgn,
-					validOrBreak : true
+					boardName: another_another_board_name,
+					pgn: shared_pgn,
+					validOrBreak: true
 				});
 				
 				temp=board_a.undoMoves(arr[i][0]);
@@ -1626,11 +1626,11 @@ describe("Board methods", () => {
 			var temp, board_obj, rotated_yes, rotated_no;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "8/2PR4/8/p5PK/P1Q2n2/3PNp2/5q1r/4nb1k w - - 0 1",
-				isRotated : true,
-				promoteTo : "b",
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "8/2PR4/8/p5PK/P1Q2n2/3PNp2/5q1r/4nb1k w - - 0 1",
+				isRotated: true,
+				promoteTo: "b",
+				skipFenValidation: true
 			});
 			
 			rotated_no=board_obj.ascii(false);
@@ -1699,9 +1699,9 @@ describe("Board methods", () => {
 		board_name="board_fen_history_export";
 		
 		board_obj=Ic.initBoard({
-			boardName : board_name,
-			fen : "8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1",
-			skipFenValidation : true
+			boardName: board_name,
+			fen: "8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1",
+			skipFenValidation: true
 		});
 		
 		fen_arr_to_compare=["8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1"];
@@ -1752,11 +1752,11 @@ _MOVES_`;
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				pgn : w_win_pgn,
-				skipFenValidation : true,
-				validOrBreak : true
+				boardName: board_name,
+				fen: shared_fen,
+				pgn: w_win_pgn,
+				skipFenValidation: true,
+				validOrBreak: true
 			});
 			
 			pgn_to_compare=pgn_base.replace("_RESULT_", "1-0").replace("_MOVES_", (w_win_pgn+" 1-0"));
@@ -1808,11 +1808,11 @@ _MOVES_`;
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				pgn : b_win_pgn,
-				skipFenValidation : true,
-				validOrBreak : true
+				boardName: board_name,
+				fen: shared_fen,
+				pgn: b_win_pgn,
+				skipFenValidation: true,
+				validOrBreak: true
 			});
 			
 			pgn_to_compare=pgn_base.replace("_RESULT_", "0-1").replace("_MOVES_", (b_win_pgn+" 0-1"));
@@ -1864,11 +1864,11 @@ _MOVES_`;
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				pgn : stalemate_pgn,
-				skipFenValidation : true,
-				validOrBreak : true
+				boardName: board_name,
+				fen: shared_fen,
+				pgn: stalemate_pgn,
+				skipFenValidation: true,
+				validOrBreak: true
 			});
 			
 			pgn_to_compare=pgn_base.replace("_RESULT_", "1/2-1/2").replace("_MOVES_", (stalemate_pgn+" {Stalemate} 1/2-1/2"));
@@ -1920,11 +1920,11 @@ _MOVES_`;
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : shared_fen,
-				pgn : unfinished_pgn,
-				skipFenValidation : true,
-				validOrBreak : true
+				boardName: board_name,
+				fen: shared_fen,
+				pgn: unfinished_pgn,
+				skipFenValidation: true,
+				validOrBreak: true
 			});
 			
 			pgn_to_compare=pgn_base.replace("_RESULT_", "*").replace("_MOVES_", (unfinished_pgn+" *"));
@@ -1976,9 +1976,9 @@ _MOVES_`;
 			var board_obj, pgn_to_compare;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102",
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102",
+				skipFenValidation: true
 			});
 			
 			pgn_to_compare=pgn_base.replace("_RESULT_", "*").replace("_MOVES_", "*").replace("1k6/8/K7/3Q4/8/8/p7/8 w - - 0 1", "8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102");
@@ -2005,9 +2005,9 @@ _MOVES_`;
 		board_name="board_uci_export";
 		
 		board_obj=Ic.initBoard({
-			boardName : board_name,
-			fen : "8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1",
-			skipFenValidation : true
+			boardName: board_name,
+			fen: "8/7P/8/4p3/5p2/1n3P2/pk4P1/4K2R b K - 0 1",
+			skipFenValidation: true
 		});
 		
 		uci_to_compare="";
@@ -2036,9 +2036,9 @@ _MOVES_`;
 		board_name="board_nav";
 		
 		board_obj=Ic.initBoard({
-			boardName : board_name,
-			fen : "2kr1bnr/pppbpppp/2n5/7q/5B2/2NP1N2/PPPQ1PPP/R3KB1R b KQ - 4 7",
-			skipFenValidation : true
+			boardName: board_name,
+			fen: "2kr1bnr/pppbpppp/2n5/7q/5B2/2NP1N2/PPPQ1PPP/R3KB1R b KQ - 4 7",
+			skipFenValidation: true
 		});
 		
 		temp=board_obj.navFirst();

@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.4.0";
+		var _VERSION="8.4.1";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -203,9 +203,9 @@
 				}
 				
 				rtn={
-					tags : meta_tags,
-					sanMoves : move_list,
-					result : game_result
+					tags: meta_tags,
+					sanMoves: move_list,
+					result: game_result
 				};
 			}
 			
@@ -371,58 +371,58 @@
 			
 			if(target===null){
 				_BOARDS[board_name]={
-					boardName : board_name,
-					getSquare : _getSquare,
-					setSquare : _setSquare,
-					attackersFromActive : _attackersFromActive,
-					attackersFromNonActive : _attackersFromNonActive,
-					toggleActiveNonActive : _toggleActiveNonActive,
-					toggleIsRotated : _toggleIsRotated,
-					setPromoteTo : _setPromoteTo,
-					silentlyResetOptions : _silentlyResetOptions,
-					silentlyResetManualResult : _silentlyResetManualResult,
-					setManualResult : _setManualResult,
-					setCurrentMove : _setCurrentMove,
-					loadFen : _loadFen,
-					loadValidatedFen : _loadValidatedFen,
-					getClocklessFenHelper : _getClocklessFenHelper,
-					updateFenAndMisc : _updateFenAndMisc,
-					refinedFenTest : _refinedFenTest,
-					testCollision : _testCollision,
-					isLegalMove : _isLegalMove,
-					legalMovesHelper : _legalMovesHelper,
-					legalMoves : _legalMoves,
-					legalFenMoves : _legalFenMoves,
-					legalSanMoves : _legalSanMoves,
-					legalUciMoves : _legalUciMoves,
-					getCheckmateMoves : _getCheckmateMoves,
-					getDrawMoves : _getDrawMoves,
-					fenHistoryExport : _fenHistoryExport,
-					pgnExport : _pgnExport,
-					uciExport : _uciExport,
-					ascii : _ascii,
-					boardHash : _boardHash,
-					isEqualBoard : _isEqualBoard,
-					cloneBoardFrom : _cloneBoardFrom,
-					cloneBoardTo : _cloneBoardTo,
-					reset : _reset,
-					undoMove : _undoMove,
-					undoMoves : _undoMoves,
-					countLightDarkBishops : _countLightDarkBishops,
-					updateHelper : _updateHelper,
-					fenWrapmoveHelper : _fenWrapmoveHelper,
-					sanWrapmoveHelper : _sanWrapmoveHelper,
-					getWrappedMove : _getWrappedMove,
-					draftMove : _draftMove,
-					playMove : _playMove,
-					playMoves : _playMoves,
-					playRandomMove : _playRandomMove,
-					navFirst : _navFirst,
-					navPrevious : _navPrevious,
-					navNext : _navNext,
-					navLast : _navLast,
-					navLinkMove : _navLinkMove,
-					refreshUi : _refreshUi
+					boardName: board_name,
+					getSquare: _getSquare,
+					setSquare: _setSquare,
+					attackersFromActive: _attackersFromActive,
+					attackersFromNonActive: _attackersFromNonActive,
+					toggleActiveNonActive: _toggleActiveNonActive,
+					toggleIsRotated: _toggleIsRotated,
+					setPromoteTo: _setPromoteTo,
+					silentlyResetOptions: _silentlyResetOptions,
+					silentlyResetManualResult: _silentlyResetManualResult,
+					setManualResult: _setManualResult,
+					setCurrentMove: _setCurrentMove,
+					loadFen: _loadFen,
+					loadValidatedFen: _loadValidatedFen,
+					getClocklessFenHelper: _getClocklessFenHelper,
+					updateFenAndMisc: _updateFenAndMisc,
+					refinedFenTest: _refinedFenTest,
+					testCollision: _testCollision,
+					isLegalMove: _isLegalMove,
+					legalMovesHelper: _legalMovesHelper,
+					legalMoves: _legalMoves,
+					legalFenMoves: _legalFenMoves,
+					legalSanMoves: _legalSanMoves,
+					legalUciMoves: _legalUciMoves,
+					getCheckmateMoves: _getCheckmateMoves,
+					getDrawMoves: _getDrawMoves,
+					fenHistoryExport: _fenHistoryExport,
+					pgnExport: _pgnExport,
+					uciExport: _uciExport,
+					ascii: _ascii,
+					boardHash: _boardHash,
+					isEqualBoard: _isEqualBoard,
+					cloneBoardFrom: _cloneBoardFrom,
+					cloneBoardTo: _cloneBoardTo,
+					reset: _reset,
+					undoMove: _undoMove,
+					undoMoves: _undoMoves,
+					countLightDarkBishops: _countLightDarkBishops,
+					updateHelper: _updateHelper,
+					fenWrapmoveHelper: _fenWrapmoveHelper,
+					sanWrapmoveHelper: _sanWrapmoveHelper,
+					getWrappedMove: _getWrappedMove,
+					draftMove: _draftMove,
+					playMove: _playMove,
+					playMoves: _playMoves,
+					playRandomMove: _playRandomMove,
+					navFirst: _navFirst,
+					navPrevious: _navPrevious,
+					navNext: _navNext,
+					navLast: _navLast,
+					navLinkMove: _navLinkMove,
+					refreshUi: _refreshUi
 				};
 				
 				target=_BOARDS[board_name];
@@ -430,44 +430,44 @@
 			
 			target.w={
 				//static
-				isBlack : false,
-				sign : 1,
-				firstRankPos : 7,
-				secondRankPos : 6,
-				lastRankPos : 0,
-				singlePawnRankShift : -1,
-				pawn : _PAWN,
-				knight : _KNIGHT,
-				bishop : _BISHOP,
-				rook : _ROOK,
-				queen : _QUEEN,
-				king : _KING,
+				isBlack: false,
+				sign: 1,
+				firstRankPos: 7,
+				secondRankPos: 6,
+				lastRankPos: 0,
+				singlePawnRankShift: -1,
+				pawn: _PAWN,
+				knight: _KNIGHT,
+				bishop: _BISHOP,
+				rook: _ROOK,
+				queen: _QUEEN,
+				king: _KING,
 				
 				//mutable
-				kingBos : null,
-				castling : null,
-				materialDiff : null
+				kingBos: null,
+				castling: null,
+				materialDiff: null
 			};
 			
 			target.b={
 				//static
-				isBlack : true,
-				sign : -1,
-				firstRankPos : 0,
-				secondRankPos : 1,
-				lastRankPos : 7,
-				singlePawnRankShift : 1,
-				pawn : -_PAWN,
-				knight : -_KNIGHT,
-				bishop : -_BISHOP,
-				rook : -_ROOK,
-				queen : -_QUEEN,
-				king : -_KING,
+				isBlack: true,
+				sign: -1,
+				firstRankPos: 0,
+				secondRankPos: 1,
+				lastRankPos: 7,
+				singlePawnRankShift: 1,
+				pawn: -_PAWN,
+				knight: -_KNIGHT,
+				bishop: -_BISHOP,
+				rook: -_ROOK,
+				queen: -_QUEEN,
+				king: -_KING,
 				
 				//mutable
-				kingBos : null,
-				castling : null,
-				materialDiff : null
+				kingBos: null,
+				castling: null,
+				materialDiff: null
 			};
 			
 			target.activeColor=null;
@@ -901,7 +901,7 @@
 					if(depth===1){
 						count++;
 					}else{
-						board.playMove(board.legalUci[i], {isLegalMove : true});
+						board.playMove(board.legalUci[i], {isLegalMove: true});
 						count+=_perft(board, (depth-1));
 						board.navPrevious();
 					}
@@ -1194,9 +1194,9 @@
 				}
 				
 				that.updateHelper({
-					currentMove : temp,
-					fen : that.moveList[temp].fen,
-					skipFenValidation : true
+					currentMove: temp,
+					fen: that.moveList[temp].fen,
+					skipFenValidation: true
 				});/*NO remove skipFenValidation*/
 				
 				that.refreshUi((is_goto ? 0 : num), true);//autorefresh
@@ -1264,11 +1264,11 @@
 				hash_cache=that.boardHash();
 				
 				temp=that.updateHelper({
-					currentMove : 0,
-					fen : fen,
-					skipFenValidation : p.skipFenValidation,
-					resetOptions : !p.keepOptions,
-					resetMoveList : true
+					currentMove: 0,
+					fen: fen,
+					skipFenValidation: p.skipFenValidation,
+					resetOptions: !p.keepOptions,
+					resetMoveList: true
 				});
 				
 				if(!temp){
@@ -1530,11 +1530,11 @@
 					en_passant_square=that.getSquare(that.enPassantBos);
 					
 					infront_ep_is_empty=that.getSquare(en_passant_square, {
-						rankShift : active_side.singlePawnRankShift
+						rankShift: active_side.singlePawnRankShift
 					}).isEmptySquare;
 					
 					behind_ep_val=that.getSquare(en_passant_square, {
-						rankShift : non_active_side.singlePawnRankShift
+						rankShift: non_active_side.singlePawnRankShift
 					}).val;
 					
 					//it is OK if the en passant can't be played next turn or no adjacent pawns exist
@@ -1606,10 +1606,10 @@
 					
 					if(current_side.castling){
 						temp={
-							completeActiveColor : (i ? "black" : "white"),
-							originalKingBos : (i ? "e8" : "e1"),
-							originalLongRookBos : (i ? "a8" : "a1"),
-							originalShortRookBos : (i ? "h8" : "h1")
+							completeActiveColor: (i ? "black" : "white"),
+							originalKingBos: (i ? "e8" : "e1"),
+							originalLongRookBos: (i ? "a8" : "a1"),
+							originalShortRookBos: (i ? "h8" : "h1")
 						};
 						
 						if(that.getSquare(temp.originalKingBos).val!==current_side.king){
@@ -1636,8 +1636,8 @@
 			that=this;
 			
 			rtn={
-				candidateMoves : [],
-				isAttacked : false
+				candidateMoves: [],
+				isAttacked: false
 			};
 			
 			active_side=that[that.activeColor];
@@ -1650,8 +1650,8 @@
 			
 			for(i=0; i<max_shifts; i++){//0<max_shifts
 				current_square=that.getSquare(initial_qos, {
-					rankShift : (rank_change*(i+1)),
-					fileShift : (file_change*(i+1))
+					rankShift: (rank_change*(i+1)),
+					fileShift: (file_change*(i+1))
 				});
 				
 				if(current_square===null){
@@ -1722,15 +1722,15 @@
 			}
 			
 			rtn={
-				uciMoves : [],
-				piece : "",
-				isPromotion : false
+				uciMoves: [],
+				piece: "",
+				isPromotion: false
 			};
 			
 			block:
 			{
 				target_cached_square=that.getSquare(target_qos, {
-					isUnreferenced : true
+					isUnreferenced: true
 				});
 				
 				if(target_cached_square===null){
@@ -1762,10 +1762,10 @@
 					if(active_side.castling && !that.isCheck){
 						for(i=0; i<2; i++){//0...1
 							temp2={
-								castleToSkip : (i ? _SHORT_CASTLE : _LONG_CASTLE),
-								direction : (i ? _DIRECTION_LEFT : _DIRECTION_RIGHT),
-								consecutiveEmpty : (i ? 3 : 2),
-								singleFileShift : (i ? -1 : 1)
+								castleToSkip: (i ? _SHORT_CASTLE : _LONG_CASTLE),
+								direction: (i ? _DIRECTION_LEFT : _DIRECTION_RIGHT),
+								consecutiveEmpty: (i ? 3 : 2),
+								singleFileShift: (i ? -1 : 1)
 							};
 							
 							if(active_side.castling===temp2.castleToSkip){
@@ -1776,12 +1776,12 @@
 								continue;
 							}
 							
-							if(that.attackersFromNonActive(that.getSquare(target_cached_square, {fileShift : temp2.singleFileShift}), true)){
+							if(that.attackersFromNonActive(that.getSquare(target_cached_square, {fileShift: temp2.singleFileShift}), true)){
 								continue;
 							}
 							
 							temp=that.getSquare(target_cached_square, {
-								fileShift : (temp2.singleFileShift*2)
+								fileShift: (temp2.singleFileShift*2)
 							});
 							
 							pseudo_legal_arr.push([temp]);
@@ -1799,8 +1799,8 @@
 					
 					for(i=0; i<2; i++){//0...1
 						current_diagonal_square=that.getSquare(target_cached_square, {
-							rankShift : active_side.singlePawnRankShift,
-							fileShift : (i ? -1 : 1)
+							rankShift: active_side.singlePawnRankShift,
+							fileShift: (i ? -1 : 1)
 						});
 						
 						if(current_diagonal_square===null){
@@ -1815,8 +1815,8 @@
 						
 						if(temp){
 							en_passant_capturable_cached_square=that.getSquare(current_diagonal_square, {
-								rankShift : non_active_side.singlePawnRankShift,
-								isUnreferenced : true
+								rankShift: non_active_side.singlePawnRankShift,
+								isUnreferenced: true
 							});
 						}
 					}
@@ -1837,7 +1837,7 @@
 				for(i=0, len=pseudo_legal_arr.length; i<len; i++){//0<len
 					for(j=0, len2=pseudo_legal_arr[i].length; j<len2; j++){//0<len2
 						current_cached_square=that.getSquare(pseudo_legal_arr[i][j], {
-							isUnreferenced : true
+							isUnreferenced: true
 						});
 						
 						that.setSquare(current_cached_square, target_cached_square.val);
@@ -1909,7 +1909,7 @@
 					temp2=legal_uci_in_bos[i];
 					
 					if(is_fen_or_san){
-						temp3=that.playMove(temp2, {isMockMove : true, isLegalMove : true, isUnreferenced : true});
+						temp3=that.playMove(temp2, {isMockMove: true, isLegalMove: true, isUnreferenced: true});
 						
 						if(p.returnType==="fen"){
 							temp.push(temp3.fen);
@@ -1933,7 +1933,7 @@
 						temp.push(from_bos+p.delimiter+to_bos);
 					}else if(p.returnType==="fromToSquares"){
 						if(p.squareType==="square"){
-							temp.push([that.getSquare(from_bos, {isUnreferenced : true}), that.getSquare(to_bos, {isUnreferenced : true})]);
+							temp.push([that.getSquare(from_bos, {isUnreferenced: true}), that.getSquare(to_bos, {isUnreferenced: true})]);
 						}else if(p.squareType==="pos"){
 							temp.push([toPos(from_bos), toPos(to_bos)]);
 						}else{//type "bos"
@@ -1941,7 +1941,7 @@
 						}
 					}else{//type "toSquare"
 						if(p.squareType==="square"){
-							temp.push(that.getSquare(to_bos, {isUnreferenced : true}));
+							temp.push(that.getSquare(to_bos, {isUnreferenced: true}));
 						}else if(p.squareType==="pos"){
 							temp.push(toPos(to_bos));
 						}else{//type "bos"
@@ -1965,7 +1965,7 @@
 			
 			that=this;
 			
-			return that.legalMoves(target_qos, {returnType : "fen"});
+			return that.legalMoves(target_qos, {returnType: "fen"});
 		}
 		
 		function _legalSanMoves(target_qos){
@@ -1973,7 +1973,7 @@
 			
 			that=this;
 			
-			return that.legalMoves(target_qos, {returnType : "san"});
+			return that.legalMoves(target_qos, {returnType: "san"});
 		}
 		
 		function _legalUciMoves(target_qos){
@@ -1981,7 +1981,7 @@
 			
 			that=this;
 			
-			return that.legalMoves(target_qos, {returnType : "uci"});
+			return that.legalMoves(target_qos, {returnType: "uci"});
 		}
 		
 		//p = {delimiter}
@@ -2027,7 +2027,7 @@
 			
 			outer:
 			for(i=0, len=that.legalUci.length; i<len; i++){//0<len
-				temp=that.playMove(that.legalUci[i], {isLegalMove : true, isMockMove : true});
+				temp=that.playMove(that.legalUci[i], {isLegalMove: true, isMockMove: true});
 				
 				if(temp.moveResult && !temp.canDraw){
 					rtn.push(temp.uci);
@@ -2050,7 +2050,7 @@
 			
 			outer:
 			for(i=0, len=that.legalUci.length; i<len; i++){//0<len
-				temp=that.playMove(that.legalUci[i], {isLegalMove : true, isMockMove : true});
+				temp=that.playMove(that.legalUci[i], {isLegalMove: true, isMockMove: true});
 				
 				if(temp.canDraw){
 					rtn.push(temp.uci);
@@ -2326,11 +2326,11 @@
 			hash_cache=that.boardHash();
 			
 			that.updateHelper({
-				currentMove : 0,
-				fen : _DEFAULT_FEN,
-				skipFenValidation : true,
-				resetOptions : !keep_options,
-				resetMoveList : true
+				currentMove: 0,
+				fen: _DEFAULT_FEN,
+				skipFenValidation: true,
+				resetOptions: !keep_options,
+				resetMoveList: true
 			});/*NO remove skipFenValidation*/
 			
 			that.silentlyResetManualResult();
@@ -2420,8 +2420,8 @@
 			that=this;
 			
 			rtn={
-				w : {lightSquaredBishops : 0, darkSquaredBishops : 0},
-				b : {lightSquaredBishops : 0, darkSquaredBishops : 0}
+				w: {lightSquaredBishops: 0, darkSquaredBishops: 0},
+				b: {lightSquaredBishops: 0, darkSquaredBishops: 0}
 			};
 			
 			for(i=0; i<8; i++){//0...7
@@ -2484,21 +2484,21 @@
 					}
 					
 					that.moveList=[{
-						colorMoved : that.nonActiveColor,
-						colorToPlay : that.activeColor,
-						fen : that.fen,
-						san : "",
-						uci : "",
-						fromBos : "",
-						toBos : "",
-						enPassantBos : that.enPassantBos,
-						piece : "",
-						captured : "",
-						promotion : "",
-						comment : "",
-						moveResult : temp,
-						canDraw : that.inDraw,
-						isEnPassantCapture : false
+						colorMoved: that.nonActiveColor,
+						colorToPlay: that.activeColor,
+						fen: that.fen,
+						san: "",
+						uci: "",
+						fromBos: "",
+						toBos: "",
+						enPassantBos: that.enPassantBos,
+						piece: "",
+						captured: "",
+						promotion: "",
+						comment: "",
+						moveResult: temp,
+						canDraw: that.inDraw,
+						isEnPassantCapture: false
 					}];
 				}
 				
@@ -2677,7 +2677,7 @@
 				
 				outer:
 				for(i=0, len=temp.length; i<len; i++){//0<len
-					pgn_obj=that.draftMove([temp[i], to_bos], {isLegalMove : true});/*NO pass unnecessary promoteTo*/
+					pgn_obj=that.draftMove([temp[i], to_bos], {isLegalMove: true});/*NO pass unnecessary promoteTo*/
 					
 					if(!pgn_obj.canMove){
 						continue;
@@ -2772,10 +2772,10 @@
 				temp=(toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN);/*NO remove toAbsVal()*/
 				
 				rtn={
-					fromBos : rtn[0],
-					toBos : rtn[1],
-					promotion : _promoteValHelper(temp),
-					isConfirmedLegalMove : is_confirmed_legal
+					fromBos: rtn[0],
+					toBos: rtn[1],
+					promotion: _promoteValHelper(temp),
+					isConfirmedLegalMove: is_confirmed_legal
 				};
 			}
 			
@@ -2816,11 +2816,11 @@
 				bubbling_promoted_to=_promoteValHelper(toAbsVal(p.promoteTo) || wrapped_move.promotion);/*NO remove toAbsVal()*/
 				
 				initial_cached_square=that.getSquare(wrapped_move.fromBos, {
-					isUnreferenced : true
+					isUnreferenced: true
 				});
 				
 				final_cached_square=that.getSquare(wrapped_move.toBos, {
-					isUnreferenced : true
+					isUnreferenced: true
 				});
 				
 				rtn.initialCachedSquare=initial_cached_square;
@@ -2857,7 +2857,7 @@
 					
 					if(Math.abs(initial_cached_square.rankPos-final_cached_square.rankPos)>1){//new enpassant
 						new_en_passant_bos=that.getSquare(final_cached_square, {
-							rankShift : non_active_side.singlePawnRankShift
+							rankShift: non_active_side.singlePawnRankShift
 						}).bos;
 					}else if(sameSquare(final_cached_square, that.enPassantBos)){//enpassant capture
 						lc_captured="p";
@@ -2977,7 +2977,7 @@
 						sliced_fen_history=that.fenHistoryExport().slice(0, (that.currentMove+1));
 					}
 					
-					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p, sliced_fen_history], {promoteTo : that.promoteTo, skipFenValidation : true});
+					rtn_move_obj=fenApply(that.fen, "playMove", [mov, p, sliced_fen_history], {promoteTo: that.promoteTo, skipFenValidation: true});
 					
 					break block;
 				}
@@ -3000,19 +3000,19 @@
 				
 				if(pgn_obj.putRookAtFileShift){
 					that.setSquare(final_cached_square, active_side.rook, {
-						fileShift : pgn_obj.putRookAtFileShift
+						fileShift: pgn_obj.putRookAtFileShift
 					});
 				}
 				
 				if(pgn_obj.removeRookAtFileShift){
 					that.setSquare(final_cached_square, _EMPTY_SQR, {
-						fileShift : pgn_obj.removeRookAtFileShift
+						fileShift: pgn_obj.removeRookAtFileShift
 					});
 				}
 				
 				if(pgn_obj.enPassantCaptureAtRankShift){
 					that.setSquare(final_cached_square, _EMPTY_SQR, {
-						rankShift : pgn_obj.enPassantCaptureAtRankShift
+						rankShift: pgn_obj.enPassantCaptureAtRankShift
 					});
 				}
 				
@@ -3048,8 +3048,8 @@
 				}
 				
 				that.updateHelper({
-					currentMove : (that.currentMove+1),
-					slicedFenHistory : sliced_fen_history
+					currentMove: (that.currentMove+1),
+					slicedFenHistory: sliced_fen_history
 				});
 				
 				complete_san=pgn_obj.partialSan;
@@ -3087,21 +3087,21 @@
 				}
 				
 				that.moveList.push({
-					colorMoved : that.nonActiveColor,
-					colorToPlay : that.activeColor,
-					fen : that.fen,
-					san : complete_san,
-					uci : temp3,
-					fromBos : initial_cached_square.bos,
-					toBos : final_cached_square.bos,
-					enPassantBos : that.enPassantBos,
-					piece : temp,
-					captured : pgn_obj.captured,
-					promotion : temp2,
-					comment : autogen_comment,
-					moveResult : move_res,
-					canDraw : that.inDraw,
-					isEnPassantCapture : pgn_obj.isEnPassantCapture
+					colorMoved: that.nonActiveColor,
+					colorToPlay: that.activeColor,
+					fen: that.fen,
+					san: complete_san,
+					uci: temp3,
+					fromBos: initial_cached_square.bos,
+					toBos: final_cached_square.bos,
+					enPassantBos: that.enPassantBos,
+					piece: temp,
+					captured: pgn_obj.captured,
+					promotion: temp2,
+					comment: autogen_comment,
+					moveResult: move_res,
+					canDraw: that.inDraw,
+					isEnPassantCapture: pgn_obj.isEnPassantCapture
 				});
 				
 				rtn_move_obj=that.moveList[that.moveList.length-1];
@@ -3412,8 +3412,8 @@
 			var i, j, fen_board, current_side, rtn;
 			
 			rtn={
-				w : {p : 0, n : 0, b : 0, r : 0, q : 0, k : 0},
-				b : {p : 0, n : 0, b : 0, r : 0, q : 0, k : 0}
+				w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0},
+				b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}
 			};
 			
 			if(_isNonBlankStr(fen)){
@@ -3541,10 +3541,10 @@
 				temp=(fen_was_valid ? p.fen : _DEFAULT_FEN);
 				
 				new_board.updateHelper({
-					currentMove : 0,
-					fen : temp,
-					skipFenValidation : true,
-					resetMoveList : true
+					currentMove: 0,
+					fen: temp,
+					skipFenValidation: true,
+					resetMoveList: true
 				});/*NO remove skipFenValidation*/
 				
 				postfen_was_valid=(p.skipFenValidation || !new_board.refinedFenTest());
@@ -3556,10 +3556,10 @@
 				
 				if(!postfen_was_valid){
 					new_board.updateHelper({
-						currentMove : 0,
-						fen : _DEFAULT_FEN,
-						skipFenValidation : true,
-						resetMoveList : true
+						currentMove: 0,
+						fen: _DEFAULT_FEN,
+						skipFenValidation: true,
+						resetMoveList: true
 					});/*NO remove skipFenValidation*/
 				}
 				
@@ -3624,13 +3624,13 @@
 			}
 			
 			board=initBoard({
-				boardName : ("board_fenApply_"+fn_name),
-				fen : fen,
-				isRotated : p.isRotated,
-				promoteTo : p.promoteTo,
-				skipFenValidation : p.skipFenValidation,
-				isHidden : true,
-				validOrBreak : true
+				boardName: ("board_fenApply_"+fn_name),
+				fen: fen,
+				isRotated: p.isRotated,
+				promoteTo: p.promoteTo,
+				skipFenValidation: p.skipFenValidation,
+				isHidden: true,
+				validOrBreak: true
 			});
 			
 			if(fn_name==="isLegalFen"){
@@ -3689,7 +3689,7 @@
 					rtn=(board_created ? _boardHash.apply(board, args) : "");
 					break;
 				case "countLightDarkBishops" :
-					rtn=(board_created ? _countLightDarkBishops.apply(board, args) : {w:{lightSquaredBishops:0, darkSquaredBishops:0}, b:{lightSquaredBishops:0, darkSquaredBishops:0}});
+					rtn=(board_created ? _countLightDarkBishops.apply(board, args) : {w: {lightSquaredBishops: 0, darkSquaredBishops: 0}, b: {lightSquaredBishops: 0, darkSquaredBishops: 0}});
 					break;
 				default :
 					_consoleLog("Error[fenApply]: invalid function name \""+fn_name+"\"");
@@ -3713,11 +3713,11 @@
 			block:
 			{
 				board=initBoard({
-					boardName : "board_fenGet",
-					fen : fen,
-					skipFenValidation : p.skipFenValidation,
-					isHidden : true,
-					validOrBreak : true
+					boardName: "board_fenGet",
+					fen: fen,
+					skipFenValidation: p.skipFenValidation,
+					isHidden: true,
+					validOrBreak: true
 				});
 				
 				if(board===null){
@@ -3778,54 +3778,54 @@
 		}
 		
 		return {
-			version : _VERSION,
-			setSilentMode : setSilentMode,
-			isLegalFen : isLegalFen,
-			getBoard : getBoard,
-			toVal : toVal,
-			toAbsVal : toAbsVal,
-			toBal : toBal,
-			toAbsBal : toAbsBal,
-			toClassName : toClassName,
-			toBos : toBos,
-			toPos : toPos,
-			getSign : getSign,
-			getRankPos : getRankPos,
-			getFilePos : getFilePos,
-			getRankBos : getRankBos,
-			getFileBos : getFileBos,
-			isInsideBoard : isInsideBoard,
-			sameSquare : sameSquare,
-			countPieces : countPieces,
-			removeBoard : removeBoard,
-			isEqualBoard : isEqualBoard,
-			cloneBoard : cloneBoard,
-			initBoard : initBoard,
-			fenApply : fenApply,
-			fenGet : fenGet,
-			getBoardNames : getBoardNames,
-			utilityMisc : {
-				consoleLog : _consoleLog,
-				isObject : _isObject,
-				isArray : _isArray,
-				isSquare : _isSquare,
-				isBoard : _isBoard,
-				isMove : _isMove,
-				trimSpaces : _trimSpaces,
-				formatName : _formatName,
-				strContains : _strContains,
-				occurrences : _occurrences,
-				toInt : _toInt,
-				isIntOrStrInt : _isIntOrStrInt,
-				isNonEmptyStr : _isNonEmptyStr,
-				isNonBlankStr : _isNonBlankStr,
-				hashCode : _hashCode,
-				castlingChars : _castlingChars,
-				unreferenceP : _unreferenceP,
-				cleanSan : _cleanSan,
-				cloneBoardObjs : _cloneBoardObjs,
-				basicFenTest : _basicFenTest,
-				perft : _perft
+			version: _VERSION,
+			setSilentMode: setSilentMode,
+			isLegalFen: isLegalFen,
+			getBoard: getBoard,
+			toVal: toVal,
+			toAbsVal: toAbsVal,
+			toBal: toBal,
+			toAbsBal: toAbsBal,
+			toClassName: toClassName,
+			toBos: toBos,
+			toPos: toPos,
+			getSign: getSign,
+			getRankPos: getRankPos,
+			getFilePos: getFilePos,
+			getRankBos: getRankBos,
+			getFileBos: getFileBos,
+			isInsideBoard: isInsideBoard,
+			sameSquare: sameSquare,
+			countPieces: countPieces,
+			removeBoard: removeBoard,
+			isEqualBoard: isEqualBoard,
+			cloneBoard: cloneBoard,
+			initBoard: initBoard,
+			fenApply: fenApply,
+			fenGet: fenGet,
+			getBoardNames: getBoardNames,
+			utilityMisc: {
+				consoleLog: _consoleLog,
+				isObject: _isObject,
+				isArray: _isArray,
+				isSquare: _isSquare,
+				isBoard: _isBoard,
+				isMove: _isMove,
+				trimSpaces: _trimSpaces,
+				formatName: _formatName,
+				strContains: _strContains,
+				occurrences: _occurrences,
+				toInt: _toInt,
+				isIntOrStrInt: _isIntOrStrInt,
+				isNonEmptyStr: _isNonEmptyStr,
+				isNonBlankStr: _isNonBlankStr,
+				hashCode: _hashCode,
+				castlingChars: _castlingChars,
+				unreferenceP: _unreferenceP,
+				cleanSan: _cleanSan,
+				cloneBoardObjs: _cloneBoardObjs,
+				basicFenTest: _basicFenTest,
+				perft: _perft
 			}
 		};
 	})(windw);

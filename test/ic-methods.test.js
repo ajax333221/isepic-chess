@@ -63,7 +63,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation: true});
 			
 			expect(Ic.toVal(square_c8)).toBe(-6);
 		});
@@ -113,7 +113,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation: true});
 			
 			expect(Ic.toAbsVal(square_c8)).toBe(6);
 		});
@@ -163,7 +163,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation: true});
 			
 			expect(Ic.toBal(square_c8)).toBe("k");
 		});
@@ -213,7 +213,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation: true});
 			
 			expect(Ic.toAbsBal(square_c8)).toBe("K");
 		});
@@ -263,7 +263,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation: true});
 			
 			expect(Ic.toClassName(square_c8)).toBe("bk");
 		});
@@ -315,7 +315,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_c8;
 			
-			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation : true});
+			square_c8=Ic.fenApply("2k5/8/8/p3R2p/P2r3P/8/8/5K2 w - - 0 1", "getSquare", ["c8"], {skipFenValidation: true});
 			
 			expect(Ic.getSign(square_c8)).toBe(-1);
 		});
@@ -364,7 +364,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.toBos(square_e7)).toBe("e7");
 		});
@@ -413,7 +413,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.toPos(square_e7)).toEqual([1, 4]);
 		});
@@ -462,7 +462,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.getRankPos(square_e7)).toBe(1);
 		});
@@ -511,7 +511,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.getFilePos(square_e7)).toBe(4);
 		});
@@ -560,7 +560,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.getRankBos(square_e7)).toBe("7");
 		});
@@ -609,7 +609,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.getFileBos(square_e7)).toBe("e");
 		});
@@ -660,7 +660,7 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.isInsideBoard(square_e7)).toBe(true);
 		});
@@ -721,24 +721,24 @@ describe("Ic methods", () => {
 		test("square input", () => {
 			var square_e7;
 			
-			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation : true});
+			square_e7=Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "getSquare", ["e7"], {skipFenValidation: true});
 			
 			expect(Ic.sameSquare(square_e7, "e7")).toBe(true);
 		});
 	});
 	
 	test("Ic.countPieces()", () => {
-		expect(Ic.countPieces("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")).toEqual({w:{p:8, n:2, b:2, r:2, q:1, k:1}, b:{p:8, n:2, b:2, r:2, q:1, k:1}});
+		expect(Ic.countPieces("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")).toEqual({w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}, b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}});
 		
-		expect(Ic.countPieces("1n1Rkb1r/p4ppp/4q3/4p1B1/4P3/8/PPP2PPP/2K5 b k - 1 17")).toEqual({w:{p:7, n:0, b:1, r:1, q:0, k:1}, b:{p:5, n:1, b:1, r:1, q:1, k:1}});
+		expect(Ic.countPieces("1n1Rkb1r/p4ppp/4q3/4p1B1/4P3/8/PPP2PPP/2K5 b k - 1 17")).toEqual({w: {p: 7, n: 0, b: 1, r: 1, q: 0, k: 1}, b: {p: 5, n: 1, b: 1, r: 1, q: 1, k: 1}});
 		
-		expect(Ic.countPieces("rnbqkbnr/p1pp2pp/p3p3/5P2/1P6/8/P1PP1PPP/RNBQK1NR b KQkq - 0 4")).toEqual({w:{p:8, n:2, b:1, r:2, q:1, k:1}, b:{p:7, n:2, b:2, r:2, q:1, k:1}});
+		expect(Ic.countPieces("rnbqkbnr/p1pp2pp/p3p3/5P2/1P6/8/P1PP1PPP/RNBQK1NR b KQkq - 0 4")).toEqual({w: {p: 8, n: 2, b: 1, r: 2, q: 1, k: 1}, b: {p: 7, n: 2, b: 2, r: 2, q: 1, k: 1}});
 		
-		expect(Ic.countPieces(" rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ")).toEqual({w:{p:8, n:2, b:2, r:2, q:1, k:1}, b:{p:8, n:2, b:2, r:2, q:1, k:1}});
+		expect(Ic.countPieces(" rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ")).toEqual({w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}, b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}});
 		
-		expect(Ic.countPieces("badFenGetsParsedAnyway up until first space")).toEqual({w:{p:1, n:0, b:0, r:0, q:0, k:0}, b:{p:0, n:2, b:1, r:1, q:0, k:0}});
+		expect(Ic.countPieces("badFenGetsParsedAnyway up until first space")).toEqual({w: {p: 1, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 2, b: 1, r: 1, q: 0, k: 0}});
 		
-		expect(Ic.countPieces("BBBBBBBBBBBBBBBBBBBbBpPpb nNkK")).toEqual({w:{p:1, n:0, b:20, r:0, q:0, k:0}, b:{p:2, n:0, b:2, r:0, q:0, k:0}});
+		expect(Ic.countPieces("BBBBBBBBBBBBBBBBBBBbBpPpb nNkK")).toEqual({w: {p: 1, n: 0, b: 20, r: 0, q: 0, k: 0}, b: {p: 2, n: 0, b: 2, r: 0, q: 0, k: 0}});
 	});
 	
 	test("Ic.isEqualBoard() and Ic.cloneBoard()", () => {
@@ -751,15 +751,15 @@ describe("Ic methods", () => {
 		board_b_name="board_b";
 		
 		board_a=Ic.initBoard({
-			boardName : board_a_name,
-			fen : "r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4",
-			skipFenValidation : true
+			boardName: board_a_name,
+			fen: "r1b1kbnr/ppppqppp/2n1p3/8/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 4",
+			skipFenValidation: true
 		});
 		
 		board_b=Ic.initBoard({
-			boardName : board_b_name,
-			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			skipFenValidation : true
+			boardName: board_b_name,
+			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation: true
 		});
 		
 		expect(Ic.isEqualBoard(board_a_name, board_b_name)).toBe(false);
@@ -790,9 +790,9 @@ describe("Ic methods", () => {
 			var board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "8/8/k7/r6p/1R5P/8/K7/8 b - - 0 1"
-			});//NO use {skipFenValidation : true}
+				boardName: board_name,
+				fen: "8/8/k7/r6p/1R5P/8/K7/8 b - - 0 1"
+			});//NO use {skipFenValidation: true}
 			
 			expect(board_obj.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		});
@@ -801,9 +801,9 @@ describe("Ic methods", () => {
 			var board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "8/r6k/8/8/8/R6K/8/8 w - -",
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "8/r6k/8/8/8/R6K/8/8 w - -",
+				skipFenValidation: true
 			});
 			
 			expect(board_obj.fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
@@ -816,9 +816,9 @@ describe("Ic methods", () => {
 			expect(temp.fen).toBe("8/r6k/8/8/8/R6K/8/8 w - - 0 1");
 			
 			Ic.initBoard({
-				boardName : board_name,
-				fen : "8/1r5k/8/8/8/1R5K/8/8 w - - 0 1",
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "8/1r5k/8/8/8/1R5K/8/8 w - - 0 1",
+				skipFenValidation: true
 			});
 			
 			expect(temp.fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
@@ -831,10 +831,10 @@ describe("Ic methods", () => {
 			Ic.setSilentMode(true);
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "0invalidfen0",
-				validOrBreak : true
-			});//NO use {skipFenValidation : true}
+				boardName: board_name,
+				fen: "0invalidfen0",
+				validOrBreak: true
+			});//NO use {skipFenValidation: true}
 			
 			Ic.setSilentMode(false);
 			
@@ -844,9 +844,9 @@ describe("Ic methods", () => {
 		
 		test("original board is not overwritten by creating other board", () => {
 			Ic.initBoard({
-				boardName : other_board_name,
-				fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-				skipFenValidation : true
+				boardName: other_board_name,
+				fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+				skipFenValidation: true
 			});
 			
 			expect(Ic.getBoard(board_name).fen).toBe("8/1r5k/8/8/8/1R5K/8/8 w - - 0 1");
@@ -856,9 +856,9 @@ describe("Ic methods", () => {
 			var board_obj;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "0invalidfen0"
-			});//NO use {skipFenValidation : true}
+				boardName: board_name,
+				fen: "0invalidfen0"
+			});//NO use {skipFenValidation: true}
 			
 			expect(Ic.getBoard(board_name).fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 			expect(board_obj).not.toBeNull();
@@ -872,9 +872,9 @@ describe("Ic methods", () => {
 1. Nf3 Nc6 2. a4`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				validOrBreak : true
+				boardName: board_name,
+				pgn: game_pgn,
+				validOrBreak: true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -891,8 +891,8 @@ describe("Ic methods", () => {
 1. Nf3 Nc6 2. a4`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn
+				boardName: board_name,
+				pgn: game_pgn
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -911,9 +911,9 @@ describe("Ic methods", () => {
 			Ic.setSilentMode(true);
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				validOrBreak : true
+				boardName: board_name,
+				pgn: game_pgn,
+				validOrBreak: true
 			});
 			
 			Ic.setSilentMode(false);
@@ -929,8 +929,8 @@ describe("Ic methods", () => {
 1. Nf3 Xc6 2. a4`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn
+				boardName: board_name,
+				pgn: game_pgn
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -949,10 +949,10 @@ describe("Ic methods", () => {
 3...Nc6 4. Nf3 Rb8`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				skipFenValidation : true,
-				validOrBreak : true
+				boardName: board_name,
+				pgn: game_pgn,
+				skipFenValidation: true,
+				validOrBreak: true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -971,9 +971,9 @@ describe("Ic methods", () => {
 3...Nc6 4. Nf3 Rb8`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				skipFenValidation : true
+				boardName: board_name,
+				pgn: game_pgn,
+				skipFenValidation: true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -994,10 +994,10 @@ describe("Ic methods", () => {
 			Ic.setSilentMode(true);
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				skipFenValidation : true,
-				validOrBreak : true
+				boardName: board_name,
+				pgn: game_pgn,
+				skipFenValidation: true,
+				validOrBreak: true
 			});
 			
 			Ic.setSilentMode(false);
@@ -1015,9 +1015,9 @@ describe("Ic methods", () => {
 3...Nc6 4. Xf3 Rb8`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				skipFenValidation : true
+				boardName: board_name,
+				pgn: game_pgn,
+				skipFenValidation: true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1032,10 +1032,10 @@ describe("Ic methods", () => {
 			game_pgn=`3...Nc6 4. Nf3 Rb8`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3",
-				pgn : game_pgn,
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "rnbqkbn1/ppppppp1/7r/P6p/8/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3",
+				pgn: game_pgn,
+				skipFenValidation: true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1054,10 +1054,10 @@ describe("Ic methods", () => {
 3...Nc6 4. Nf3 Rb8`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "rnbqkbn1/ppppppp1/7r/7p/P7/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3",
-				pgn : game_pgn,
-				skipFenValidation : true
+				boardName: board_name,
+				fen: "rnbqkbn1/ppppppp1/7r/7p/P7/2N5/1PPPPPPP/R1BQKBNR b KQq - 2 3",
+				pgn: game_pgn,
+				skipFenValidation: true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1089,10 +1089,10 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 366666 ..... Ra7+!? Bc7 $5 37. h4 g6 38. h5 h6 39. hxg6 h5 40. g7 h4 41. g8=b h3 42. Kf1 h2 43. b4 h1=4 o ---  1;rest`;
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				pgn : game_pgn,
-				validOrBreak : true
-			});//NO use {skipFenValidation : true}
+				boardName: board_name,
+				pgn: game_pgn,
+				validOrBreak: true
+			});//NO use {skipFenValidation: true}
 			
 			expect(board_obj).not.toBeNull();
 			expect(board_obj.fen).toBe("6B1/R1bk4/2p1p3/5p2/1P6/5P2/5P2/4nK1r w - - 0 44");
@@ -1108,9 +1108,9 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			Ic.setSilentMode(true);
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				uci : game_uci,
-				validOrBreak : true
+				boardName: board_name,
+				uci: game_uci,
+				validOrBreak: true
 			});
 			
 			Ic.setSilentMode(false);
@@ -1124,8 +1124,8 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			game_uci="e2e4 e7e5 f1c4 b8c6 d2d3 d8f6 ffX55 e5f4";
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				uci : game_uci
+				boardName: board_name,
+				uci: game_uci
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1140,11 +1140,11 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 			game_uci="  C6D5   c2c4  g8f6 b1c3 b8c6 g1f3 c8g4 c4d5 f6d5 f1b5 d8a5 d1b3 g4f3 g2f3 d5c3 b5c6 b7c6 b3b7 c3d5 c1d2 a5b6 b7a8 e8d7 e1g1 d5c7 d2a5 c7a8 a5b6 a8b6 f1c1 e7e6 c1c2 f8e7 a1c1 e7g5 c1d1 h8b8 c2c5 b6d5 c5a5 b8b7 d1d3 g5d8 d3b3 b7b3 a5a7 d5c7 a2b3 d8f6 a7b7 f6d4 b7b8 d4b2 h2h3 f7f5 g1f1 c7d5 f1g2 b2e5 b8a8 d5f4 g2h2 f4d3 h2g1 d3e1 a8a7 e5c7 h3h4 g7g6 h4h5 h7h6 h5g6 h6h5 g6g7 h5h4 g7g8B h4h3 g1f1 h3h2   b3b4  h2h14  ";
 			
 			board_obj=Ic.initBoard({
-				boardName : board_name,
-				fen : "rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3",
-				uci : game_uci,
-				skipFenValidation : true,
-				validOrBreak : true
+				boardName: board_name,
+				fen: "rnbqkbnr/pp2pppp/2p5/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3",
+				uci: game_uci,
+				skipFenValidation: true,
+				validOrBreak: true
 			});
 			
 			expect(board_obj).not.toBeNull();
@@ -1341,9 +1341,9 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		expect(Ic.getBoard(board_name)).toBeNull();
 		
 		Ic.initBoard({
-			boardName : board_name,
-			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			skipFenValidation : true
+			boardName: board_name,
+			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation: true
 		});
 		
 		expect(Ic.getBoard(board_name)).not.toBeNull();
@@ -1358,8 +1358,8 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		expect(Ic.getBoard(board_name)).toBeNull();
 		
 		Ic.initBoard({
-			fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-			skipFenValidation : true
+			fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+			skipFenValidation: true
 		});
 		
 		temp=Ic.getBoardNames();
@@ -1379,48 +1379,48 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		test("default value", () => {
 			Ic.setSilentMode(true);
 			
-			expect(Ic.fenApply("0invalidfen0", "playMove", ["a3"])).toBeNull();//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "playMove", ["a3"])).toBeNull();//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "playMoves", [["a3"]])).toBe(false);//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "playMoves", [["a3"]])).toBe(false);//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "playRandomMove")).toBeNull();//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "playRandomMove")).toBeNull();//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "legalMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "legalFenMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "legalFenMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "legalSanMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "legalSanMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "legalUciMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "legalUciMoves", ["a2"]).sort()).toEqual([].sort());//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2-a3"])).toBe(false);//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "isLegalMove", ["a2-a3"])).toBe(false);//NO use {skipFenValidation: true}
 			
 			Ic.setSilentMode(false);
 			
-			expect(Ic.fenApply("0invalidfen0", "isLegalFen")).toBe(false);//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "isLegalFen")).toBe(false);//NO use {skipFenValidation: true}
 			
 			Ic.setSilentMode(true);
 			
-			expect(Ic.fenApply("0invalidfen0", "getCheckmateMoves").sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "getCheckmateMoves").sort()).toEqual([].sort());//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "getDrawMoves").sort()).toEqual([].sort());//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "getDrawMoves").sort()).toEqual([].sort());//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "getSquare", ["a2"])).toBeNull();//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "attackersFromActive", ["a2"])).toBe(0);//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "attackersFromActive", ["a2"])).toBe(0);//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "attackersFromNonActive", ["a2"])).toBe(0);//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "attackersFromNonActive", ["a2"])).toBe(0);//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "ascii")).toBe("");//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "ascii")).toBe("");//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("0invalidfen0", "boardHash")).toBe("");//NO use {skipFenValidation : true}
+			expect(Ic.fenApply("0invalidfen0", "boardHash")).toBe("");//NO use {skipFenValidation: true}
 			
 			expect(Ic.fenApply("0invalidfen0", "countLightDarkBishops")).toEqual({
-				w : {lightSquaredBishops : 0, darkSquaredBishops : 0},
-				b : {lightSquaredBishops : 0, darkSquaredBishops : 0}
-			});//NO use {skipFenValidation : true}
+				w: {lightSquaredBishops: 0, darkSquaredBishops: 0},
+				b: {lightSquaredBishops: 0, darkSquaredBishops: 0}
+			});//NO use {skipFenValidation: true}
 			
-			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "0invalidfn0", [], {skipFenValidation : true})).toBeNull();
+			expect(Ic.fenApply("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "0invalidfn0", [], {skipFenValidation: true})).toBeNull();
 			
 			Ic.setSilentMode(false);
 		});
@@ -1431,9 +1431,9 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				
 				shared_fen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 				
-				expect(Ic.fenApply(shared_fen, "playMove", undef_args, {skipFenValidation : true})).toBeNull();
+				expect(Ic.fenApply(shared_fen, "playMove", undef_args, {skipFenValidation: true})).toBeNull();
 				
-				expect(Ic.fenApply(shared_fen, "getSquare", undef_args, {skipFenValidation : true})).toBeNull();
+				expect(Ic.fenApply(shared_fen, "getSquare", undef_args, {skipFenValidation: true})).toBeNull();
 			});
 		});
 		
@@ -1445,19 +1445,19 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 				
 				for(i=0, len=bad_shared_fen.length; i<len; i++){//0<len
 					//explicit fn_name
-					expect(Ic.fenApply(bad_shared_fen[i], "isLegalFen")).toBe(default_val);//NO use {skipFenValidation : true}
+					expect(Ic.fenApply(bad_shared_fen[i], "isLegalFen")).toBe(default_val);//NO use {skipFenValidation: true}
 					
 					//implicit fn_name
-					expect(Ic.fenApply(bad_shared_fen[i])).toBe(default_val);//NO use {skipFenValidation : true}
+					expect(Ic.fenApply(bad_shared_fen[i])).toBe(default_val);//NO use {skipFenValidation: true}
 				}
 			});
 			
 			test("normal inputs", () => {
 				//explicit fn_name
-				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen", [], {skipFenValidation : true})).toBe(true);
+				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1", "isLegalFen", [], {skipFenValidation: true})).toBe(true);
 				
 				//implicit fn_name
-				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1")).toBe(true);//NO use {skipFenValidation : true}
+				expect(Ic.fenApply("8/8/8/8/8/1k6/8/1K1r4 w - - 0 1")).toBe(true);//NO use {skipFenValidation: true}
 			});
 		});
 	});
@@ -1467,26 +1467,26 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
 		
 		Ic.setSilentMode(true);
 		
-		expect(Ic.fenGet("0invalidfen0", "isCheck")).toBeNull();//NO use {skipFenValidation : true}
+		expect(Ic.fenGet("0invalidfen0", "isCheck")).toBeNull();//NO use {skipFenValidation: true}
 		
-		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0", {skipFenValidation : true})).toBeNull();
+		expect(Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0", {skipFenValidation: true})).toBeNull();
 		
 		Ic.setSilentMode(false);
 		
-		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");//NO use {skipFenValidation : true}
+		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");//NO use {skipFenValidation: true}
 		expect(temp).not.toBeNull();
 		expect(temp.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		
-		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "", {skipFenValidation : true});
+		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "", {skipFenValidation: true});
 		expect(temp).not.toBeNull();
 		expect(temp.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		
-		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", [], {skipFenValidation : true});
+		temp=Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", [], {skipFenValidation: true});
 		expect(temp).not.toBeNull();
 		expect(temp.fen).toBe("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 		
-		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", ["isStalemate", "inDraw"], {skipFenValidation : true})).toEqual({inDraw:true, isStalemate:true});
+		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", ["isStalemate", "inDraw"], {skipFenValidation: true})).toEqual({inDraw: true, isStalemate: true});
 		
-		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", "isStalemate inDraw", {skipFenValidation : true})).toEqual({isStalemate:true, inDraw:true});
+		expect(Ic.fenGet("k7/8/KR6/8/8/8/8/8 b - - 0 1", "isStalemate inDraw", {skipFenValidation: true})).toEqual({isStalemate: true, inDraw: true});
 	});
 });

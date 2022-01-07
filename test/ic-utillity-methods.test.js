@@ -13,11 +13,11 @@ describe("Ic utility methods", () => {
 	
 	test("Ic.utilityMisc.isObject()", () => {
 		expect(Ic.utilityMisc.isObject({})).toBe(true);
-		expect(Ic.utilityMisc.isObject({hello:"world"})).toBe(true);
-		expect(Ic.utilityMisc.isObject(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation : true}).squares["c3"])).toBe(true);
-		expect(Ic.utilityMisc.isObject({bos : "this technically is a square"})).toBe(true);
+		expect(Ic.utilityMisc.isObject({hello: "world"})).toBe(true);
+		expect(Ic.utilityMisc.isObject(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation: true}).squares["c3"])).toBe(true);
+		expect(Ic.utilityMisc.isObject({bos: "this technically is a square"})).toBe(true);
 		expect(Ic.utilityMisc.isObject(Ic.initBoard())).toBe(true);
-		expect(Ic.utilityMisc.isObject({boardName : "this technically is a board"})).toBe(true);
+		expect(Ic.utilityMisc.isObject({boardName: "this technically is a board"})).toBe(true);
 		expect(Ic.utilityMisc.isObject([])).toBe(false);
 		expect(Ic.utilityMisc.isObject(["hello", "world", "!"])).toBe(false);
 		expect(Ic.utilityMisc.isObject(null)).toBe(false);
@@ -25,11 +25,11 @@ describe("Ic utility methods", () => {
 	
 	test("Ic.utilityMisc.isArray()", () => {
 		expect(Ic.utilityMisc.isArray({})).toBe(false);
-		expect(Ic.utilityMisc.isArray({hello:"world"})).toBe(false);
-		expect(Ic.utilityMisc.isArray(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation : true}).squares["c3"])).toBe(false);
-		expect(Ic.utilityMisc.isArray({bos : "this technically is a square"})).toBe(false);
+		expect(Ic.utilityMisc.isArray({hello: "world"})).toBe(false);
+		expect(Ic.utilityMisc.isArray(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation: true}).squares["c3"])).toBe(false);
+		expect(Ic.utilityMisc.isArray({bos: "this technically is a square"})).toBe(false);
 		expect(Ic.utilityMisc.isArray(Ic.initBoard())).toBe(false);
-		expect(Ic.utilityMisc.isArray({boardName : "this technically is a board"})).toBe(false);
+		expect(Ic.utilityMisc.isArray({boardName: "this technically is a board"})).toBe(false);
 		expect(Ic.utilityMisc.isArray([])).toBe(true);
 		expect(Ic.utilityMisc.isArray(["hello", "world", "!"])).toBe(true);
 		expect(Ic.utilityMisc.isArray(null)).toBe(false);
@@ -37,11 +37,11 @@ describe("Ic utility methods", () => {
 	
 	test("Ic.utilityMisc.isSquare()", () => {
 		expect(Ic.utilityMisc.isSquare({})).toBe(false);
-		expect(Ic.utilityMisc.isSquare({hello : "world"})).toBe(false);
-		expect(Ic.utilityMisc.isSquare(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation : true}).squares["c3"])).toBe(true);
-		expect(Ic.utilityMisc.isSquare({bos : "this technically is a square"})).toBe(true);
+		expect(Ic.utilityMisc.isSquare({hello: "world"})).toBe(false);
+		expect(Ic.utilityMisc.isSquare(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation: true}).squares["c3"])).toBe(true);
+		expect(Ic.utilityMisc.isSquare({bos: "this technically is a square"})).toBe(true);
 		expect(Ic.utilityMisc.isSquare(Ic.initBoard())).toBe(false);
-		expect(Ic.utilityMisc.isSquare({boardName : "this technically is a board"})).toBe(false);
+		expect(Ic.utilityMisc.isSquare({boardName: "this technically is a board"})).toBe(false);
 		expect(Ic.utilityMisc.isSquare([])).toBe(false);
 		expect(Ic.utilityMisc.isSquare(["hello", "world", "!"])).toBe(false);
 		expect(Ic.utilityMisc.isSquare(null)).toBe(false);
@@ -49,11 +49,11 @@ describe("Ic utility methods", () => {
 	
 	test("Ic.utilityMisc.isBoard()", () => {
 		expect(Ic.utilityMisc.isBoard({})).toBe(false);
-		expect(Ic.utilityMisc.isBoard({hello : "world"})).toBe(false);
-		expect(Ic.utilityMisc.isBoard(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation : true}).squares["c3"])).toBe(false);
-		expect(Ic.utilityMisc.isBoard({bos : "this technically is a square"})).toBe(false);
+		expect(Ic.utilityMisc.isBoard({hello: "world"})).toBe(false);
+		expect(Ic.utilityMisc.isBoard(Ic.fenGet("8/3k4/3p4/8/2P5/2KP4/8/8 w - - 0 1", "squares", {skipFenValidation: true}).squares["c3"])).toBe(false);
+		expect(Ic.utilityMisc.isBoard({bos: "this technically is a square"})).toBe(false);
 		expect(Ic.utilityMisc.isBoard(Ic.initBoard())).toBe(true);
-		expect(Ic.utilityMisc.isBoard({boardName : "this technically is a board"})).toBe(true);
+		expect(Ic.utilityMisc.isBoard({boardName: "this technically is a board"})).toBe(true);
 		expect(Ic.utilityMisc.isBoard([])).toBe(false);
 		expect(Ic.utilityMisc.isBoard(["hello", "world", "!"])).toBe(false);
 		expect(Ic.utilityMisc.isBoard(null)).toBe(false);
@@ -63,13 +63,13 @@ describe("Ic utility methods", () => {
 		test("should return true", () => {
 			var temp;
 			
-			temp={fromBos : "a2", toBos : "a3"};
+			temp={fromBos: "a2", toBos: "a3"};
 			expect(Ic.utilityMisc.isMove(temp)).toBe(true);
 			
-			temp={fromBos : "a2", toBos : "a3", someExtraKey : 9};
+			temp={fromBos: "a2", toBos: "a3", someExtraKey: 9};
 			expect(Ic.utilityMisc.isMove(temp)).toBe(true);
 			
-			temp={fromBos : "", toBos : ""};
+			temp={fromBos: "", toBos: ""};
 			expect(Ic.utilityMisc.isMove(temp)).toBe(true);
 		});
 		
@@ -79,13 +79,13 @@ describe("Ic utility methods", () => {
 			temp={};
 			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
 			
-			temp={fromBos : "a2"};
+			temp={fromBos: "a2"};
 			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
 			
-			temp={toBos : "a3"};
+			temp={toBos: "a3"};
 			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
 			
-			temp={fromBos : true, toBos : true};
+			temp={fromBos: true, toBos: true};
 			expect(Ic.utilityMisc.isMove(temp)).toBe(false);
 		});
 	});
@@ -250,7 +250,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.isNonEmptyStr([])).toBe(false);
 		expect(Ic.utilityMisc.isNonEmptyStr(["a"])).toBe(false);
 		expect(Ic.utilityMisc.isNonEmptyStr({})).toBe(false);
-		expect(Ic.utilityMisc.isNonEmptyStr({a : "a"})).toBe(false);
+		expect(Ic.utilityMisc.isNonEmptyStr({a: "a"})).toBe(false);
 	});
 	
 	describe("Ic.utilityMisc.isNonBlankStr()", () => {
@@ -271,7 +271,7 @@ describe("Ic utility methods", () => {
 		expect(Ic.utilityMisc.isNonBlankStr([])).toBe(false);
 		expect(Ic.utilityMisc.isNonBlankStr(["a"])).toBe(false);
 		expect(Ic.utilityMisc.isNonBlankStr({})).toBe(false);
-		expect(Ic.utilityMisc.isNonBlankStr({a : "a"})).toBe(false);
+		expect(Ic.utilityMisc.isNonBlankStr({a: "a"})).toBe(false);
 	});
 	
 	describe("Ic.utilityMisc.hashCode()", () => {
@@ -326,12 +326,12 @@ describe("Ic utility methods", () => {
 		});
 		
 		test("normal inputs", () => {
-			expect(Ic.utilityMisc.unreferenceP({}, [["henlo", "frend"]])).toEqual({henlo : "frend"});
-			expect(Ic.utilityMisc.unreferenceP({henlo : "worlmnd"}, [["henlo", "frend"]])).toEqual({henlo : "frend"});
-			expect(Ic.utilityMisc.unreferenceP({a : "x"}, [["a", "y"], ["a", "z"]])).toEqual({a : "z"});
+			expect(Ic.utilityMisc.unreferenceP({}, [["henlo", "frend"]])).toEqual({henlo: "frend"});
+			expect(Ic.utilityMisc.unreferenceP({henlo: "worlmnd"}, [["henlo", "frend"]])).toEqual({henlo: "frend"});
+			expect(Ic.utilityMisc.unreferenceP({a: "x"}, [["a", "y"], ["a", "z"]])).toEqual({a: "z"});
 			
 			Ic.setSilentMode(true);
-			expect(Ic.utilityMisc.unreferenceP({henlo : "worlmnd", other : true, unchanged : 3}, [["henlo", "frend"], ["three", "get", "skipped"], ["other", false]])).toEqual({henlo : "frend", other : false, unchanged : 3});
+			expect(Ic.utilityMisc.unreferenceP({henlo: "worlmnd", other: true, unchanged: 3}, [["henlo", "frend"], ["three", "get", "skipped"], ["other", false]])).toEqual({henlo: "frend", other: false, unchanged: 3});
 			Ic.setSilentMode(false);
 		});
 	});
@@ -420,15 +420,15 @@ describe("Ic utility methods", () => {
 		other_board_name="board_clone_board_objs_other";
 		
 		board_obj=Ic.initBoard({
-			boardName : board_name,
-			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-			skipFenValidation : true
+			boardName: board_name,
+			fen: "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+			skipFenValidation: true
 		});
 		
 		board_other=Ic.initBoard({
-			boardName : other_board_name,
-			fen : "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
-			skipFenValidation : true
+			boardName: other_board_name,
+			fen: "r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2",
+			skipFenValidation: true
 		});
 		
 		board_obj.playMove("c3-e4");
@@ -662,7 +662,7 @@ describe("Ic utility methods", () => {
 		
 		board_name="board_perft";
 		
-		current_p={fen : "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", boardName : board_name, skipFenValidation : true};
+		current_p={fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", boardName: board_name, skipFenValidation: true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0)).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 1)).toBe(20);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 2)).toBe(400);
@@ -672,7 +672,7 @@ describe("Ic utility methods", () => {
 		//depth=6 ... toBe(119060324) ... [untested]
 		//depth=7 ... toBe(3195901860) ... [untested]
 		
-		current_p={fen : "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", boardName : board_name, skipFenValidation : true};
+		current_p={fen: "r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", boardName: board_name, skipFenValidation: true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0)).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 1)).toBe(48);
 		//depth=2 ... toBe(2039) ... [v6.3.0 = passed]
@@ -681,7 +681,7 @@ describe("Ic utility methods", () => {
 		//depth=5 ... toBe(193690690) ... [untested]
 		//depth=6 ... toBe(8031647685) ... [untested]
 		
-		current_p={fen : "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", boardName : board_name, skipFenValidation : true};
+		current_p={fen: "8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1", boardName: board_name, skipFenValidation: true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0)).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 1)).toBe(14);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 2)).toBe(191);
@@ -691,7 +691,7 @@ describe("Ic utility methods", () => {
 		//depth=6 ... toBe(11030083) ... [untested]
 		//depth=7 ... toBe(178633661) ... [untested]
 		
-		current_p={fen : "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10", boardName : board_name, skipFenValidation : true};
+		current_p={fen: "r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10", boardName: board_name, skipFenValidation: true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0)).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 1)).toBe(46);
 		//depth=2 ... toBe(2079) ... [v5.9.0 = passed]
@@ -699,7 +699,7 @@ describe("Ic utility methods", () => {
 		//depth=4 ... toBe(3894594) ... [untested]
 		//depth=5 ... toBe(164075551) ... [untested]
 		
-		current_p={fen : "rnbqk1nr/p1pp1ppp/1p6/2b1p1B1/8/1QPP4/PP2PPPP/RN2KBNR b KQkq - 2 4", boardName : board_name, skipFenValidation : true};
+		current_p={fen: "rnbqk1nr/p1pp1ppp/1p6/2b1p1B1/8/1QPP4/PP2PPPP/RN2KBNR b KQkq - 2 4", boardName: board_name, skipFenValidation: true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0)).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 1)).toBe(31);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 2)).toBe(1116);
@@ -708,7 +708,7 @@ describe("Ic utility methods", () => {
 		//depth=5 ... toBe(36838554) ... [untested]
 		//depth=6 ... toBe(1272676278) ... [untested]
 		
-		current_p={fen : "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", boardName : board_name, skipFenValidation : true};
+		current_p={fen: "rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8", boardName: board_name, skipFenValidation: true};
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0, "d7c8")).toBe(1);//uci not found
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0, "d7c8q")).toBe(1);
 		expect(Ic.utilityMisc.perft(Ic.initBoard(current_p), 0)).toBe(1);

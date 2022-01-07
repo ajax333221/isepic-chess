@@ -78,7 +78,7 @@ $1 33. gxh4 Qf4+ 34. Kh3 Bg2+ $1 35. Nxg2 Qf3+ 36. Kh2 Qxg2# { Anderssen won
 the match by this mate (+4, =2, -3).} 0-1`;
 
 var board = Ic.initBoard({
-  pgn : example_pgn
+  pgn: example_pgn
 });
 
 console.log(board.ascii());

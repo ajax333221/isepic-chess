@@ -9,148 +9,148 @@ var URL_SQUARE_PROPS=["square properties", "square-properties.md#square-properti
 var URL_MOVE_PROPS=["move properties", "move-properties.md#move-properties"];
 
 var PIN_BOARD={
-	name : "Board",
-	urls : [URL_BOARD_PROPS, URL_BOARD_METHODS]
+	name: "Board",
+	urls: [URL_BOARD_PROPS, URL_BOARD_METHODS]
 };
 
 var PIN_SQUARE={
-	name : "Square",
-	urls : [URL_SQUARE_PROPS]
+	name: "Square",
+	urls: [URL_SQUARE_PROPS]
 };
 
 var PIN_MOVE={
-	name : "Move",
-	urls : [URL_MOVE_PROPS]
+	name: "Move",
+	urls: [URL_MOVE_PROPS]
 };
 
 //=====================================================
 
 var p_board_ch1={
-	name : "boardName",
-	type : "String",
-	isBold : true
+	name: "boardName",
+	type: "String",
+	isBold: true
 };
 
 var p_board_ch2={
-	name : "board",
-	type : "Object",
-	isBold : true
+	name: "board",
+	type: "Object",
+	isBold: true
 };
 
 var p_board={
-	name : "board",
-	children : [p_board_ch1, p_board_ch2]
+	name: "board",
+	children: [p_board_ch1, p_board_ch2]
 };
 
 //---
 
 var p_qal_ch1={
-	name : "squareBal",
-	type : "String",
-	isBold : true
+	name: "squareBal",
+	type: "String",
+	isBold: true
 };
 
 var p_qal_ch2={
-	name : "squareAbsBal",
-	type : "String",
-	isBold : true
+	name: "squareAbsBal",
+	type: "String",
+	isBold: true
 };
 
 var p_qal_ch3={
-	name : "squareVal",
-	type : "Number",
-	isBold : true
+	name: "squareVal",
+	type: "Number",
+	isBold: true
 };
 
 var p_qal_ch4={
-	name : "squareAbsVal",
-	type : "Number",
-	isBold : true
+	name: "squareAbsVal",
+	type: "Number",
+	isBold: true
 };
 
 var p_qal_ch5={
-	name : "squareClassName",
-	type : "String",
-	isBold : true
+	name: "squareClassName",
+	type: "String",
+	isBold: true
 };
 
 var p_qal_ch6={
-	name : "square",
-	type : "Object",
-	isBold : true
+	name: "square",
+	type: "Object",
+	isBold: true
 };
 
 var p_qal={
-	name : "qal",
-	children : [p_qal_ch1, p_qal_ch2, p_qal_ch3, p_qal_ch4, p_qal_ch5, p_qal_ch6]
+	name: "qal",
+	children: [p_qal_ch1, p_qal_ch2, p_qal_ch3, p_qal_ch4, p_qal_ch5, p_qal_ch6]
 };
 
 //---
 
 var p_qos_ch1={
-	name : "squareBos",
-	type : "String",
-	isBold : true
+	name: "squareBos",
+	type: "String",
+	isBold: true
 };
 
 var p_qos_ch2={
-	name : "squarePos",
-	type : "Array",
-	isBold : true
+	name: "squarePos",
+	type: "Array",
+	isBold: true
 };
 
 var p_qos_ch3={
-	name : "square",
-	type : "Object",
-	isBold : true
+	name: "square",
+	type: "Object",
+	isBold: true
 };
 
 var p_qos={
-	name : "qos",
-	children : [p_qos_ch1, p_qos_ch2, p_qos_ch3]
+	name: "qos",
+	children: [p_qos_ch1, p_qos_ch2, p_qos_ch3]
 };
 
 //---
 
 var p_mov_ch1={
-	name : "moveSan",
-	type : "String",
-	isBold : true
+	name: "moveSan",
+	type: "String",
+	isBold: true
 };
 
 var p_mov_ch2={
-	name : "moveUci",
-	type : "String",
-	isBold : true
+	name: "moveUci",
+	type: "String",
+	isBold: true
 };
 
 var p_mov_ch3={
-	name : "moveJoined",
-	type : "String",
-	isBold : true
+	name: "moveJoined",
+	type: "String",
+	isBold: true
 };
 
 var p_mov_ch4={
-	name : "moveFen",
-	type : "String",
-	isBold : true
+	name: "moveFen",
+	type: "String",
+	isBold: true
 };
 
 var p_mov_ch5={
-	name : "moveFromTo",
-	type : "Array",
-	isBold : true
+	name: "moveFromTo",
+	type: "Array",
+	isBold: true
 };
 
 var p_mov_ch6={
-	name : "move",
-	type : "Object",
-	isBold : true
+	name: "move",
+	type: "Object",
+	isBold: true
 };
 
 var p_mov={
-	name : "mov",
-	children : [p_mov_ch1, p_mov_ch2, p_mov_ch3, p_mov_ch4, p_mov_ch5, p_mov_ch6]
+	name: "mov",
+	children: [p_mov_ch1, p_mov_ch2, p_mov_ch3, p_mov_ch4, p_mov_ch5, p_mov_ch6]
 };
 
 //=====================================================
@@ -318,7 +318,7 @@ function recursiveFormat(obj, options, has_op_params, has_op_keys){
 	
 	if(options && (typeof options.removeKey)==="string"){
 		if(obj.name===options.removeKey){
-			return {html:"", hasOpParams:false, hasOpKeys:false};
+			return {html: "", hasOpParams: false, hasOpKeys: false};
 		}
 	}
 	
@@ -378,7 +378,7 @@ function recursiveFormat(obj, options, has_op_params, has_op_keys){
 		}
 	}
 	
-	return {html:rtn, hasOpParams:has_op_params, hasOpKeys:has_op_keys};
+	return {html: rtn, hasOpParams: has_op_params, hasOpKeys: has_op_keys};
 }
 
 function getHtmlParam(obj, p){
