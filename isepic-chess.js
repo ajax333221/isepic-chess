@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.4.1";
+		var _VERSION="8.4.2";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -3120,7 +3120,7 @@
 		
 		//p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
 		function _playMoves(arr, p, sliced_fen_history){
-			var i, len, that, p_cache, at_least_one_parsed, everything_parsed, rtn;
+			var i, len, that, temp, p_cache, at_least_one_parsed, everything_parsed, rtn;
 			
 			that=this;
 			
@@ -3138,6 +3138,10 @@
 				
 				everything_parsed=true;
 				
+				temp=that.isHidden;
+				
+				that.isHidden=true;
+				
 				for(i=0, len=arr.length; i<len; i++){//0<len
 					if(that.playMove(arr[i], p, sliced_fen_history)===null){
 						everything_parsed=false;
@@ -3146,6 +3150,8 @@
 						at_least_one_parsed=true;
 					}
 				}
+				
+				that.isHidden=temp;
 				
 				if(!everything_parsed){
 					break block;
