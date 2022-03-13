@@ -1,4 +1,4 @@
-/** Copyright (c) 2021 Ajax Isepic (ajax333221) Licensed MIT */
+/** Copyright (c) 2022 Ajax Isepic (ajax333221) Licensed MIT */
 
 /* jshint quotmark:double, undef:true, unused:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, eqeqeq:true, esversion:9 */
 
@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.4.2";
+		var _VERSION="8.4.3";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
