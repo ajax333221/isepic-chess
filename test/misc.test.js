@@ -666,6 +666,31 @@ describe("Misc.", () => {
 			expect(board_obj.getSquare("b2", {isUnreferenced: true}).isEmptySquare).toBe(true);
 		});
 		
+		describe("toPos()", () => {
+			test("not removing the reference on square.pos", () => {
+				var temp, temp2, board_obj;
+				
+				board_obj=Ic.initBoard({
+					boardName: board_name,
+					fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+					skipFenValidation: true
+				});
+				
+				temp=board_obj.getSquare("a8");
+				temp2=Ic.toPos(temp);
+				
+				expect(temp2).toEqual([0, 0]);
+				
+				temp2[0]=99;
+				temp2[1]=99;
+				
+				expect(temp2).toEqual([99, 99]);
+				
+				expect(Ic.toPos(temp)).toEqual([0, 0]);
+				expect(Ic.toPos(temp)).not.toEqual([99, 99]);
+			});
+		});
+		
 		describe("Ic.utilityMisc.cloneBoardObjs()", () => {
 			test("cloning unmutable squares.x.pos", () => {
 				var temp, temp2, board_obj, board_other;
