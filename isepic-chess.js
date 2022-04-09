@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.4.4";
+		var _VERSION="8.4.6";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
