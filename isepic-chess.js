@@ -6,7 +6,7 @@
 
 (function(windw, expts, defin){
 	var Ic=(function(_WIN){
-		var _VERSION="8.4.3";
+		var _VERSION="8.4.4";
 		
 		var _SILENT_MODE=true;
 		var _BOARDS={};
@@ -91,21 +91,36 @@
 			var temp, pc_exec, rtn;
 			
 			rtn=0;
-			str=_trimSpaces(str);
-			pc_exec=/^([wb])([pnbrqk])$/.exec(str.toLowerCase());
 			
-			if(!str){
-				rtn=str;
-			}else if(pc_exec){
-				rtn=("*pnbrqk".indexOf(pc_exec[2])*getSign(pc_exec[1]==="b"));
-			}else if(/^[pnbrqk]$/i.test(str)){
-				temp=str.toLowerCase();
-				rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
-			}else if(_isIntOrStrInt(str)){
-				rtn=str;
+			block:
+			{
+				if(!str){
+					break block;
+				}
+				
+				if(!Number.isNaN(str*1) && _isIntOrStrInt(str)){
+					rtn=_toInt(str, -_KING, _KING);
+					break block;
+				}
+				
+				str=_trimSpaces(str);
+				
+				if(/^[pnbrqk]$/i.test(str)){
+					temp=str.toLowerCase();
+					
+					rtn=(("pnbrqk".indexOf(temp)+1)*getSign(str===temp));
+					break block;
+				}
+				
+				pc_exec=/^([wb])([pnbrqk])$/.exec(str.toLowerCase());
+				
+				if(pc_exec){
+					rtn=(("pnbrqk".indexOf(pc_exec[2])+1)*getSign(pc_exec[1]==="b"));
+					break block;
+				}
 			}
 			
-			return _toInt(rtn, -_KING, _KING);//_toInt() removes sign on negative zero
+			return rtn;
 		}
 		
 		function _strToBosHelper(str){
@@ -252,9 +267,9 @@
 					break block;
 				}
 				
-				temp=_fromToWrapmoveHelper([mov.slice(0, 2), mov.slice(2, 4)]);
+				temp=[_strToBosHelper(mov.slice(0, 2)), _strToBosHelper(mov.slice(2, 4))];
 				
-				if(temp===null){
+				if(temp[0]===null || temp[1]===null){
 					break block;
 				}
 				
@@ -275,8 +290,7 @@
 			
 			block:
 			{
-				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter : "-");
-				p.delimiter=p.delimiter.charAt(0);
+				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : "-");
 				
 				if(!_isNonBlankStr(mov)){
 					break block;
@@ -288,9 +302,10 @@
 					break block;
 				}
 				
-				temp=_fromToWrapmoveHelper(mov.split(p.delimiter));
+				temp=mov.split(p.delimiter);
+				temp=[_strToBosHelper(temp[0]), _strToBosHelper(temp[1])];
 				
-				if(temp===null){
+				if(temp[0]===null || temp[1]===null){
 					break block;
 				}
 				
@@ -658,17 +673,17 @@
 			rtn=(_isNonBlankStr(rtn) ? rtn : "");
 			
 			if(rtn){
-				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "\n")));/*to-do: keep comment*/
+				while(rtn!==(rtn=rtn.replace(/\{[^{}]*\}/g, "\n")));/*TODO: keep comment*/
 				while(rtn!==(rtn=rtn.replace(/\([^()]*\)/g, "\n")));
 				while(rtn!==(rtn=rtn.replace(/\<[^<>]*\>/g, "\n")));
 				
 				rtn=rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, "\n");
 				
-				rtn=rtn.replace(/;+[^\n]*(\n|$)/g, "\n");/*to-do: keep comment*/
+				rtn=rtn.replace(/;+[^\n]*(\n|$)/g, "\n");/*TODO: keep comment*/
 				
 				rtn=rtn.replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "").replace(/\n/g, " ");
 				
-				rtn=rtn.replace(/\$\d+/g, " ");/*to-do: keep NAG*/
+				rtn=rtn.replace(/\$\d+/g, " ");/*TODO: keep NAG*/
 				rtn=rtn.replace(/[^a-h0-9nrqkxo /½=-]/gi, "");//no planned support for P and e.p.
 				rtn=rtn.replace(/\s*\-+\s*/g, "-");
 				rtn=rtn.replace(/0-0-0/g, "w").replace(/0-0/g, "v");
@@ -1893,8 +1908,7 @@
 				
 				p.squareType=(_isNonEmptyStr(p.squareType) ? p.squareType : "bos");
 				
-				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter : "-");
-				p.delimiter=p.delimiter.charAt(0);
+				p.delimiter=(_isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : "-");
 				
 				if(p.returnType==="uci"){
 					rtn=legal_uci_in_bos;
@@ -2012,6 +2026,8 @@
 					break block;
 				}
 				
+				//can't easily use arr.indexOf(str) because the uci promotion char
+				/*NO use overcomplicated legalRevTree*/
 				rtn=_strContains(legal_uci_in_bos.join(","), (wrapped_move.fromBos+""+wrapped_move.toBos));
 			}
 			
@@ -2078,14 +2094,14 @@
 			return rtn;
 		}
 		
-		function _pgnExport(){/*2020 p options: remove comments, max line len, tag white-list*/
+		function _pgnExport(){/*TODO p options: remove comments, max line len, tag white-list*/
 			var i, len, that, header, ordered_tags, result_tag_ow, move_list, black_starts, initial_fen, initial_full_move, text_game, rtn;
 			
 			that=this;
 			
 			rtn="";
 			
-			header=_unreferenceP(header);/*2020 header from _pgnParserHelper()*/
+			header=_unreferenceP(header);/*TODO header from _pgnParserHelper()*/
 			
 			move_list=that.moveList;
 			
@@ -2379,7 +2395,7 @@
 				}
 				
 				if(!decrease_by && decrease_by!==0){//both 0 and -0
-					decrease_by=(that.moveList.length-1);
+					decrease_by=Infinity;
 				}
 				
 				decrease_by=_toInt(decrease_by, 0, (that.moveList.length-1));
@@ -3397,7 +3413,19 @@
 		}
 		
 		function isInsideBoard(qos){
-			return (toPos(qos)!==null);
+			var rtn;
+			
+			rtn=false;
+			
+			if((typeof qos)==="string"){
+				rtn=(_strToBosHelper(qos)!==null)
+			}else if(_isArray(qos)){
+				rtn=(_arrToPosHelper(qos)!==null);
+			}else{
+				rtn=_isSquare(qos);
+			}
+			
+			return rtn;
 		}
 		
 		function sameSquare(qos1, qos2){
@@ -3454,7 +3482,7 @@
 				
 				delete _BOARDS[del_board_name_cache];
 				
-				/*2020 ui problem: autorefresh when removing loaded board. EDIT: can't easily select a non-hidden board*/
+				/*TODO ui problem: autorefresh when removing loaded board. EDIT: can't easily select a non-hidden board*/
 			}
 			
 			return rtn;
