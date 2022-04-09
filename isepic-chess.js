@@ -3418,7 +3418,7 @@
 			rtn=false;
 			
 			if((typeof qos)==="string"){
-				rtn=(_strToBosHelper(qos)!==null)
+				rtn=(_strToBosHelper(qos)!==null);
 			}else if(_isArray(qos)){
 				rtn=(_arrToPosHelper(qos)!==null);
 			}else{
