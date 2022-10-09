@@ -24,8 +24,7 @@
 
 <strong>Dependency-less:</strong> does not depend on any other library.
 
-:pushpin: Table of contents
--------------
+## :pushpin: Table of contents
 
 - [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
 - [Table of contents](https://github.com/ajax333221/isepic-chess#pushpin-table-of-contents)
@@ -36,13 +35,13 @@
 - [Documentation](https://github.com/ajax333221/isepic-chess#book-documentation)
 - [Copyright and license](https://github.com/ajax333221/isepic-chess#page_facing_up-copyright-and-license)
 
-:computer_mouse: Installation
--------------
+## :computer_mouse: Installation
 
 ```
 # NPM
 npm install isepic-chess
 ```
+
 Then: `const {Ic} = require("isepic-chess");`
 
 <hr>
@@ -51,13 +50,13 @@ Then: `const {Ic} = require("isepic-chess");`
 # Web browser
 <script src="./isepic-chess.js"></script>
 ```
+
 The variable `Ic` will be added to window.
 
-:green_heart: Node.js example
--------------
+## :green_heart: Node.js example
 
 ```js
-const {Ic} = require("isepic-chess");
+const { Ic } = require('isepic-chess');
 
 var example_pgn = `[Event "m1 London"]
 [Site "?"]
@@ -78,7 +77,7 @@ $1 33. gxh4 Qf4+ 34. Kh3 Bg2+ $1 35. Nxg2 Qf3+ 36. Kh2 Qxg2# { Anderssen won
 the match by this mate (+4, =2, -3).} 0-1`;
 
 var board = Ic.initBoard({
-  pgn: example_pgn
+  pgn: example_pgn,
 });
 
 console.log(board.ascii());
@@ -98,17 +97,15 @@ console.log(board.fen);
 // "7k/pp4pp/6r1/8/3Pp2P/1P6/P5qK/R1B1Q3 w - - 0 37"
 
 var fen_arr = [
-  "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-  "r1bqk2r/pppp1pbp/2n2n2/4p3/5p2/2N3PN/PPPPP1BP/R1BQK2R w KQkq - 2 8",
-  "r2qkb1r/pbp1p1p1/1pnp1n1p/5p2/4P2P/5NP1/PPPPKPB1/RNBQR3 w kq - 0 8",
-  "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1",
-  "r2qkbnr/ppp4p/2np1p2/4p3/3PP3/P2B1N2/1PP2PpP/RNBQ1RK1 b kq - 1 11"
+  'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+  'r1bqk2r/pppp1pbp/2n2n2/4p3/5p2/2N3PN/PPPPP1BP/R1BQK2R w KQkq - 2 8',
+  'r2qkb1r/pbp1p1p1/1pnp1n1p/5p2/4P2P/5NP1/PPPPKPB1/RNBQR3 w kq - 0 8',
+  'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
+  'r2qkbnr/ppp4p/2np1p2/4p3/3PP3/P2B1N2/1PP2PpP/RNBQ1RK1 b kq - 1 11',
 ];
 
 /* transform each FEN into arrays with their legal UCI moves for the g2 square */
-var mapped = fen_arr.map(function(fen){
-  return Ic.fenApply(fen, "legalUciMoves", ["g2"]);
-});
+var mapped = fen_arr.map((fen) => Ic.fenApply(fen, 'legalSanMoves', ['g2']));
 
 console.log(mapped);
 // [
@@ -120,16 +117,16 @@ console.log(mapped);
 // ]
 
 /* get only the positions where the white king is not in its original square */
-var filtered = fen_arr.filter(function(fen){
+var filtered = fen_arr.filter((fen) => {
   var obj, rtn;
-  
+
   rtn = false;
-  obj = Ic.fenGet(fen, "w");
-  
-  if(obj){
-    rtn = (obj.w.kingBos!=="e1");
+  obj = Ic.fenGet(fen, 'w');
+
+  if (obj) {
+    rtn = obj.w.kingBos !== 'e1';
   }
-  
+
   return rtn;
 });
 
@@ -140,13 +137,11 @@ console.log(filtered);
 // ]
 ```
 
-:eye: Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
--------------
+## :eye: Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
 
 https://ajax333221.github.io/isepic-chess-ui/
 
-:rocket: Features
--------------
+## :rocket: Features
 
 - Get legal moves
 - Lookahead moves that result in checkmate / draw
@@ -163,8 +158,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 - Advanced FEN validation
 - SAN parsing
 
-:book: Documentation
--------------
+## :book: Documentation
 
 - [Examples](https://github.com/ajax333221/isepic-chess/blob/master/docs/examples.md#examples)
 - [Ic methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/ic-methods.md#ic-methods)
@@ -173,8 +167,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 - [Square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
 - [Move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
-:page_facing_up: Copyright and license
--------------
+## :page_facing_up: Copyright and license
 
 Copyright © 2022 Ajax Isepic (ajax333221)
 

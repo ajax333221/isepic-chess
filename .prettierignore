@@ -1,0 +1,5 @@
+# Markdown docs
+docs/*.md
+
+# Jest results
+coverage
