@@ -1,16 +1,15 @@
 /** Copyright (c) 2022 Ajax Isepic (ajax333221) Licensed MIT */
 
-/* jshint quotmark:double, undef:true, unused:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, eqeqeq:true, esversion:9 */
+/* jshint undef:true, unused:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, eqeqeq:true, esversion:9 */
 
 /* globals exports, define */
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.4.7';
+    var _VERSION = '8.4.8';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
-
     var _EMPTY_SQR = 0;
     var _PAWN = 1;
     var _KNIGHT = 2;
@@ -18,7 +17,6 @@
     var _ROOK = 4;
     var _QUEEN = 5;
     var _KING = 6;
-
     var _DIRECTION_TOP = 1;
     var _DIRECTION_TOP_RIGHT = 2;
     var _DIRECTION_RIGHT = 3;
@@ -27,15 +25,12 @@
     var _DIRECTION_BOTTOM_LEFT = 6;
     var _DIRECTION_LEFT = 7;
     var _DIRECTION_TOP_LEFT = 8;
-
     var _SHORT_CASTLE = 1;
     var _LONG_CASTLE = 2;
-
     var _RESULT_ONGOING = '*';
     var _RESULT_W_WINS = '1-0';
     var _RESULT_B_WINS = '0-1';
     var _RESULT_DRAW = '1/2-1/2';
-
     var _DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 
     var _MUTABLE_KEYS = [
@@ -77,8 +72,7 @@
       var rtn;
 
       rtn = '';
-
-      str = ('' + str).replace(/\s/g, '').replace(/o/gi, '0').replace(/½/g, '1/2');
+      str = String(str).replace(/\s/g, '').replace(/o/gi, '0').replace(/½/g, '1/2');
 
       if (str === _RESULT_ONGOING || str === _RESULT_W_WINS || str === _RESULT_B_WINS || str === _RESULT_DRAW) {
         rtn = str;
@@ -106,7 +100,6 @@
 
         if (/^[pnbrqk]$/i.test(str)) {
           temp = str.toLowerCase();
-
           rtn = ('pnbrqk'.indexOf(temp) + 1) * getSign(str === temp);
           break block;
         }
@@ -165,7 +158,6 @@
         meta_tags = {};
         last_index = -1;
         rgxp = /\[\s*(\w+)\s+\"([^\"]*)\"\s*\]/g;
-
         str = str.replace(/“|”/g, '"');
 
         while ((mtch = rgxp.exec(str))) {
@@ -179,14 +171,12 @@
         }
 
         g = ' ' + _cleanSan(str.slice(last_index));
-
         move_list = [];
         last_index = -1;
         rgxp = /\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*([^\s]+)/g;
 
         while ((mtch = rgxp.exec(g))) {
           last_index = rgxp.lastIndex;
-
           temp = mtch[0];
           move_list.push(mtch[2]);
         }
@@ -196,12 +186,10 @@
         }
 
         game_result = _RESULT_ONGOING;
-
         temp = _pgnResultHelper(temp);
 
         if (temp) {
           move_list.pop();
-
           game_result = temp;
         }
 
@@ -210,7 +198,6 @@
 
           if (temp) {
             meta_tags.Result = temp;
-
             game_result = temp;
           }
         }
@@ -272,7 +259,6 @@
         }
 
         possible_promote = mov.charAt(4) || '';
-
         rtn = [temp, possible_promote];
       }
 
@@ -343,7 +329,6 @@
         }
 
         possible_promote = mov.promotion || '';
-
         rtn = [[mov.fromBos, mov.toBos], possible_promote];
       }
 
@@ -354,7 +339,6 @@
       var rtn;
 
       rtn = {};
-
       rtn.colorMoved = obj.colorMoved;
       rtn.colorToPlay = obj.colorToPlay;
       rtn.fen = obj.fen;
@@ -452,7 +436,6 @@
         rook: _ROOK,
         queen: _QUEEN,
         king: _KING,
-
         //mutable
         kingBos: null,
         castling: null,
@@ -473,7 +456,6 @@
         rook: -_ROOK,
         queen: -_QUEEN,
         king: -_KING,
-
         //mutable
         kingBos: null,
         castling: null,
@@ -511,7 +493,6 @@
           //0...7
           current_pos = [i, j];
           current_bos = toBos(current_pos);
-
           target.squares[current_bos] = {};
           temp = target.squares[current_bos];
 
@@ -579,7 +560,9 @@
     }
 
     function _trimSpaces(str) {
-      return ('' + str).replace(/^\s+|\s+$/g, '').replace(/\s\s+/g, ' ');
+      return String(str)
+        .replace(/^\s+|\s+$/g, '')
+        .replace(/\s\s+/g, ' ');
     }
 
     function _formatName(str) {
@@ -589,7 +572,7 @@
     }
 
     function _strContains(str, str_to_find) {
-      return ('' + str).indexOf(str_to_find) !== -1;
+      return String(str).indexOf(str_to_find) !== -1;
     }
 
     function _occurrences(str, str_rgxp) {
@@ -607,7 +590,6 @@
     function _toInt(num, min_val, max_val) {
       num = num * 1 || 0;
       num = num < 0 ? Math.ceil(num) : Math.floor(num);
-
       min_val *= 1;
       max_val *= 1;
 
@@ -619,7 +601,7 @@
     }
 
     function _isIntOrStrInt(num) {
-      return '' + _toInt(num) === '' + num;
+      return String(_toInt(num)) === String(num);
     }
 
     function _isNonEmptyStr(val) {
@@ -659,7 +641,6 @@
           //0<len
           if (!_isArray(changes[i]) || changes[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
             _consoleLog('Error[_unreferenceP]: unexpected format');
-
             continue;
           }
 
@@ -679,7 +660,6 @@
         while (rtn !== (rtn = rtn.replace(/\<[^<>]*\>/g, '\n')));
 
         rtn = rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, '\n');
-
         rtn = rtn.replace(/;+[^\n]*(\n|$)/g, '\n'); /*TODO: keep comment*/
 
         rtn = rtn
@@ -693,6 +673,7 @@
         rtn = rtn.replace(/0-0-0/g, 'w').replace(/0-0/g, 'v');
         rtn = rtn.replace(/o-o-o/gi, 'w').replace(/o-o/gi, 'v');
         rtn = rtn.replace(/o/gi, '0').replace(/½/g, '1/2');
+
         rtn = rtn
           .replace(/1\-0/g, ' i ')
           .replace(/0\-1/g, ' j ')
@@ -701,7 +682,6 @@
         rtn = rtn.replace(/\-/g, ' ');
         rtn = rtn.replace(/w/g, 'O-O-O').replace(/v/g, 'O-O');
         rtn = rtn.replace(/i/g, _RESULT_W_WINS).replace(/j/g, _RESULT_B_WINS).replace(/z/g, _RESULT_DRAW);
-
         rtn = _trimSpaces(rtn);
       }
 
@@ -726,13 +706,11 @@
           //primitive data type
           if (!_isObject(from_prop) && !_isArray(from_prop)) {
             to_board[current_key] = from_board[current_key]; //can't use to_prop, it's not a reference here
-
             continue;
           }
 
           if (current_key === 'legalUci') {
             to_board.legalUci = from_board.legalUci.slice(0);
-
             continue;
           }
 
@@ -743,7 +721,6 @@
             //primitive data type
             to_prop.kingBos = from_prop.kingBos;
             to_prop.castling = from_prop.castling;
-
             continue;
           }
 
@@ -756,7 +733,6 @@
             //primitive data type
             if (!_isObject(current_sub_from) && !_isArray(current_sub_from)) {
               _consoleLog('Error[_cloneBoardObjs]: unexpected primitive data type');
-
               continue;
             }
 
@@ -764,7 +740,6 @@
               //["legalUciTree"] object of (0-64), array of (0-N)
 
               to_prop[sub_keys[j]] = current_sub_from.slice(0);
-
               continue;
             }
 
@@ -788,7 +763,6 @@
               to_prop[sub_keys[j]].isRook = current_sub_from.isRook;
               to_prop[sub_keys[j]].isQueen = current_sub_from.isQueen;
               to_prop[sub_keys[j]].isKing = current_sub_from.isKing;
-
               continue;
             }
 
@@ -796,7 +770,6 @@
 
             if (current_key === 'moveList' || current_key === 'legalRevTree') {
               to_prop[sub_keys[j]] = {};
-
               /*NO put a "continue" in here*/
             }
 
@@ -806,14 +779,12 @@
 
               if (current_key === 'legalRevTree') {
                 to_prop[sub_keys[j]][sub_sub_keys[k]] = temp.slice(0);
-
                 continue;
               }
 
               //object or array data type
               if (_isObject(temp) || _isArray(temp)) {
                 _consoleLog('Error[_cloneBoardObjs]: unexpected type in key "' + sub_sub_keys[k] + '"');
-
                 continue;
               }
 
@@ -841,7 +812,7 @@
       rtn_msg = '';
 
       block: {
-        fen = '' + fen;
+        fen = String(fen);
 
         if (fen.length < 20) {
           rtn_msg = 'Error [0] fen is too short';
@@ -975,7 +946,6 @@
           temp.filePos = getFilePos(my_square.pos);
           temp.rankBos = getRankBos(my_square.pos);
           temp.fileBos = getFileBos(my_square.pos);
-
           temp.bal = my_square.bal;
           temp.absBal = my_square.absBal;
           temp.val = my_square.val;
@@ -999,7 +969,6 @@
       rtn = null;
       p = _unreferenceP(p);
       temp_pos = toPos(qos);
-
       p.isUnreferenced = p.isUnreferenced === true;
 
       if (temp_pos !== null) {
@@ -1018,7 +987,6 @@
       var that, current_side, new_val, new_abs_val, rtn;
 
       that = this;
-
       rtn = that.getSquare(qos, _unreferenceP(p, [['isUnreferenced', false]]));
 
       block: {
@@ -1050,7 +1018,6 @@
 
         if (rtn.isKing) {
           current_side = rtn.sign < 0 ? that.b : that.w;
-
           current_side.kingBos = toBos(qos);
         }
       }
@@ -1062,7 +1029,6 @@
       var that, rtn_total_attackers;
 
       that = this;
-
       that.toggleActiveNonActive();
       rtn_total_attackers = that.attackersFromNonActive(target_qos, early_break);
       that.toggleActiveNonActive();
@@ -1081,7 +1047,6 @@
       }
 
       rtn_total_attackers = 0;
-
       active_side = that[that.activeColor];
       target_qos = target_qos || active_side.kingBos;
 
@@ -1108,13 +1073,11 @@
       var that, temp, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
       temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
 
       if ((temp ? 'b' : 'w') !== that.activeColor || (!temp ? 'b' : 'w') !== that.nonActiveColor) {
         rtn_changed = true;
-
         that.activeColor = temp ? 'b' : 'w';
         that.nonActiveColor = !temp ? 'b' : 'w';
       }
@@ -1126,15 +1089,12 @@
       var that, temp, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
       temp = typeof new_is_rotated === 'boolean' ? new_is_rotated : !that.isRotated;
 
       if (temp !== that.isRotated) {
         rtn_changed = true;
-
         that.isRotated = temp;
-
         that.refreshUi(0, false); //autorefresh
       }
 
@@ -1145,15 +1105,12 @@
       var that, temp, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
       temp = _promoteValHelper(qal);
 
       if (temp !== that.promoteTo) {
         rtn_changed = true;
-
         that.promoteTo = temp;
-
         that.refreshUi(0, false); //autorefresh
       }
 
@@ -1164,9 +1121,7 @@
       var that;
 
       that = this;
-
       that.isHidden = true; //prevents ui refresh from setPromoteTo()
-
       that.isRotated = false;
       that.setPromoteTo(_QUEEN);
       that.isHidden = false;
@@ -1176,9 +1131,7 @@
       var that, temp;
 
       that = this;
-
       temp = that.isHidden;
-
       that.isHidden = true;
       that.setManualResult(_RESULT_ONGOING);
       that.isHidden = temp;
@@ -1188,15 +1141,12 @@
       var that, temp, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
       temp = _pgnResultHelper(str) || _RESULT_ONGOING;
 
       if (temp !== that.manualResult) {
         rtn_changed = true;
-
         that.manualResult = temp;
-
         that.refreshUi(0, false); //autorefresh
       }
 
@@ -1207,7 +1157,6 @@
       var len, that, temp, diff, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
 
       block: {
@@ -1221,12 +1170,10 @@
           num = _toInt(num, 0, len - 1);
           diff = num - that.currentMove;
           is_goto = Math.abs(diff) !== 1;
-
           num = is_goto ? num : diff;
         }
 
         num = _toInt(num);
-
         temp = _toInt(is_goto ? num : num + that.currentMove, 0, len - 1);
 
         if (temp === that.currentMove) {
@@ -1240,7 +1187,6 @@
         }); /*NO remove skipFenValidation*/
 
         that.refreshUi(is_goto ? 0 : num, true); //autorefresh
-
         rtn_changed = true;
       }
 
@@ -1292,14 +1238,12 @@
       var that, temp, hash_cache, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
       p = _unreferenceP(p);
 
       block: {
         p.skipFenValidation = p.skipFenValidation === true;
         p.keepOptions = p.keepOptions === true;
-
         hash_cache = that.boardHash();
 
         temp = that.updateHelper({
@@ -1319,7 +1263,6 @@
 
         if (that.boardHash() !== hash_cache) {
           rtn_changed = true;
-
           that.refreshUi(0, false); //autorefresh
         }
       }
@@ -1341,7 +1284,6 @@
       }
 
       fen = _trimSpaces(fen);
-
       fen_parts = fen.split(' ');
       fen_board_arr = fen_parts[0].split('/');
 
@@ -1379,7 +1321,6 @@
       var i, j, that, fen_board, current_square, consecutive_empty_squares, rtn;
 
       that = this;
-
       fen_board = '';
 
       for (i = 0; i < 8; i++) {
@@ -1430,7 +1371,6 @@
         at_least_one_dark;
 
       that = this;
-
       that.checks = that.attackersFromNonActive(null);
       that.isCheck = !!that.checks; /*NO move below legalMovesHelper()*/
 
@@ -1498,16 +1438,12 @@
       }
 
       clockless_fen = that.getClocklessFenHelper();
-
       that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
-
       that.isThreefold = false;
 
       if (sliced_fen_history || (that.moveList && that.currentMove > 7 && that.halfMove > 7)) {
         times_found = 1;
-
         temp = sliced_fen_history || that.fenHistoryExport();
-
         i = sliced_fen_history ? sliced_fen_history.length - 1 : that.currentMove - 1;
 
         for (; i >= 0; i--) {
@@ -1604,7 +1540,6 @@
         rtn_msg;
 
       that = this;
-
       rtn_msg = '';
 
       block: {
@@ -1657,7 +1592,6 @@
           //0...1
           current_side = i ? total_pieces.b : total_pieces.w;
           current_other_side = i ? total_pieces.w : total_pieces.b;
-
           current_bishop_count = i ? bishop_count.b : bishop_count.w;
 
           //if(current_side.k!==1){...} done in _basicFenTest
@@ -1769,11 +1703,9 @@
       };
 
       active_side = that[that.activeColor];
-
       piece_direction = _toInt(piece_direction, 1, 8);
       rank_change = (as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction - 1];
       file_change = (as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction - 1];
-
       max_shifts = _toInt(as_knight ? 1 : max_shifts || 7);
 
       for (i = 0; i < max_shifts; i++) {
@@ -1892,7 +1824,6 @@
         pseudo_legal_arr = [];
         en_passant_capturable_cached_square = null;
         is_promotion = false;
-
         rtn.piece = target_cached_square.bal.toLowerCase();
 
         if (target_cached_square.isKing) {
@@ -2056,7 +1987,6 @@
       var i, len, that, temp, temp2, temp3, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, rtn;
 
       that = this;
-
       rtn = [];
       p = _unreferenceP(p);
 
@@ -2068,11 +1998,8 @@
         }
 
         legal_uci_in_bos = legal_uci_in_bos.slice(0);
-
         p.returnType = _isNonEmptyStr(p.returnType) ? p.returnType : 'toSquare';
-
         p.squareType = _isNonEmptyStr(p.squareType) ? p.squareType : 'bos';
-
         p.delimiter = _isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : '-';
 
         if (p.returnType === 'uci') {
@@ -2176,7 +2103,6 @@
       var that, wrapped_move, legal_uci_in_bos, rtn;
 
       that = this;
-
       rtn = false;
 
       block: {
@@ -2210,7 +2136,6 @@
       var i, len, that, temp, rtn;
 
       that = this;
-
       rtn = [];
 
       outer: for (i = 0, len = that.legalUci.length; i < len; i++) {
@@ -2233,7 +2158,6 @@
       var i, len, that, temp, rtn;
 
       that = this;
-
       rtn = [];
 
       outer: for (i = 0, len = that.legalUci.length; i < len; i++) {
@@ -2256,7 +2180,6 @@
       var i, len, that, rtn;
 
       that = this;
-
       rtn = [];
 
       for (i = 0, len = that.moveList.length; i < len; i++) {
@@ -2279,17 +2202,15 @@
         black_starts,
         initial_fen,
         initial_full_move,
+        current_move,
         text_game,
         rtn;
 
       that = this;
-
       rtn = '';
 
       header = _unreferenceP(header); /*TODO header from _pgnParserHelper()*/
-
       move_list = that.moveList;
-
       initial_fen = move_list[0].fen;
       black_starts = move_list[0].colorToPlay === 'b';
 
@@ -2300,17 +2221,16 @@
         1;
 
       result_tag_ow = _RESULT_ONGOING;
-
       text_game = '';
 
       for (i = 0, len = move_list.length; i < len; i++) {
         //0<len
         if (i) {
+          current_move = initial_full_move + Math.floor((i + black_starts - 1) / 2);
+
           text_game += i !== 1 ? ' ' : '';
-
-          text_game +=
-            black_starts === !(i % 2) ? initial_full_move + Math.floor((i + black_starts - 1) / 2) + '. ' : '';
-
+          text_game += move_list[i - 1].comment ? current_move + '...' : '';
+          text_game += black_starts === !(i % 2) ? current_move + '. ' : '';
           text_game += move_list[i].san;
 
           if (move_list[i].comment) {
@@ -2374,9 +2294,7 @@
       var i, len, that, uci_arr, rtn;
 
       that = this;
-
       rtn = '';
-
       uci_arr = [];
 
       for (i = 1, len = that.moveList.length; i < len; i++) {
@@ -2395,9 +2313,7 @@
       var i, j, that, bottom_label, current_square, rtn;
 
       that = this;
-
       is_rotated = typeof is_rotated === 'boolean' ? is_rotated : that.isRotated;
-
       rtn = '   +------------------------+\n';
       bottom_label = '';
 
@@ -2425,7 +2341,6 @@
       var i, len, that, temp;
 
       that = this;
-
       temp = '';
 
       for (i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
@@ -2440,7 +2355,6 @@
       var that, to_board, rtn;
 
       that = this;
-
       rtn = false;
 
       block: {
@@ -2461,7 +2375,6 @@
       var that, hash_cache, from_board, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
 
       block: {
@@ -2483,7 +2396,6 @@
 
         if (that.boardHash() !== hash_cache) {
           rtn_changed = true;
-
           that.refreshUi(0, false); //autorefresh
         }
       }
@@ -2495,7 +2407,6 @@
       var that, hash_cache, to_board, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
 
       block: {
@@ -2517,7 +2428,6 @@
 
         if (to_board.boardHash() !== hash_cache) {
           rtn_changed = true;
-
           to_board.refreshUi(0, false); //autorefresh
         }
       }
@@ -2529,9 +2439,7 @@
       var that, hash_cache, rtn_changed;
 
       that = this;
-
       rtn_changed = false;
-
       hash_cache = that.boardHash();
 
       that.updateHelper({
@@ -2546,7 +2454,6 @@
 
       if (that.boardHash() !== hash_cache) {
         rtn_changed = true;
-
         that.refreshUi(0, false); //autorefresh
       }
 
@@ -2557,7 +2464,6 @@
       var that, temp, rtn;
 
       that = this;
-
       rtn = null;
 
       block: {
@@ -2577,7 +2483,6 @@
       var i, that, temp, hash_cache, rtn;
 
       that = this;
-
       rtn = [];
 
       block: {
@@ -2597,9 +2502,7 @@
         }
 
         hash_cache = that.boardHash();
-
         temp = that.isHidden;
-
         that.isHidden = true;
         that.navLinkMove(Math.min(that.moveList.length - decrease_by - 1, that.currentMove));
         that.isHidden = temp;
@@ -2615,7 +2518,6 @@
 
         if (that.boardHash() !== hash_cache) {
           that.silentlyResetManualResult();
-
           that.refreshUi(0, false); //autorefresh
         }
       }
@@ -2658,7 +2560,6 @@
       var that, temp, fen_was_valid, rtn;
 
       that = this;
-
       rtn = false;
 
       block: {
@@ -2741,7 +2642,6 @@
         rtn;
 
       that = this;
-
       rtn = null;
 
       block: {
@@ -2752,11 +2652,8 @@
         }
 
         silent_mode_cache = _SILENT_MODE;
-
         setSilentMode(true);
-
         obj = fenGet(mov, 'squares activeColor');
-
         setSilentMode(silent_mode_cache);
 
         if (!obj || that.activeColor === obj.activeColor) {
@@ -2771,7 +2668,6 @@
           for (j = 0; j < 8; j++) {
             //0...7
             current_bos = Ic.toBos([i, j]);
-
             old_square = that.getSquare(current_bos);
             new_square = obj.squares[current_bos]; //can't use getSquare()
 
@@ -2840,13 +2736,11 @@
       var i, j, len, len2, that, temp, to_bos, validated_move, parsed_promote, lc_piece, parse_exec, pgn_obj, rtn;
 
       that = this;
-
       rtn = null;
 
       block: {
         validated_move = null;
         parsed_promote = '';
-
         mov = (' ' + mov).replace(/^\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*/, '');
 
         if (!_isNonBlankStr(mov)) {
@@ -2855,13 +2749,11 @@
 
         lc_piece = '';
         to_bos = '';
-
         mov = _cleanSan(mov);
 
         if (/^[a-h]/.exec(mov)) {
           //pawn move
           lc_piece = 'p';
-
           parse_exec = /([^=]+)=(.?).*$/.exec(mov);
 
           if (parse_exec) {
@@ -2873,12 +2765,10 @@
         } else if (mov === 'O-O') {
           //castling king (short)
           lc_piece = 'k';
-
           to_bos = that[that.activeColor].isBlack ? 'g8' : 'g1';
         } else if (mov === 'O-O-O') {
           //castling king (long)
           lc_piece = 'k';
-
           to_bos = that[that.activeColor].isBlack ? 'c8' : 'c1';
         } else {
           parse_exec = /^[NBRQK]/.exec(mov);
@@ -2886,7 +2776,6 @@
           if (parse_exec) {
             //knight, bishop, rook, queen, non-castling king
             lc_piece = parse_exec[0].toLowerCase();
-
             to_bos = toBos(mov.slice(-2));
           }
         }
@@ -2941,18 +2830,15 @@
       var that, temp, bubbling_promoted_to, is_confirmed_legal, rtn;
 
       that = this;
-
       rtn = null;
 
       block: {
         bubbling_promoted_to = 0;
         is_confirmed_legal = false;
-
         temp = _uciWrapmoveHelper(mov);
 
         if (temp) {
           bubbling_promoted_to = temp[1]; //default ""
-
           rtn = temp[0];
           break block;
         }
@@ -2975,7 +2861,6 @@
 
         if (temp) {
           bubbling_promoted_to = temp[1]; //default ""
-
           rtn = temp[0];
           break block;
         }
@@ -2984,7 +2869,6 @@
 
         if (temp) {
           bubbling_promoted_to = temp[1]; //default ""
-
           rtn = temp[0];
           break block;
         }
@@ -2994,7 +2878,6 @@
         if (temp) {
           bubbling_promoted_to = temp[1]; //default ""
           is_confirmed_legal = true;
-
           rtn = temp[0];
           break block;
         }
@@ -3039,15 +2922,12 @@
         rtn;
 
       that = this;
-
       rtn = {};
       p = _unreferenceP(p);
 
       block: {
         rtn.canMove = false;
-
         p.isLegalMove = p.isLegalMove === true;
-
         wrapped_move = that.getWrappedMove(mov, p);
 
         if (wrapped_move === null) {
@@ -3078,7 +2958,6 @@
 
         rtn.initialCachedSquare = initial_cached_square;
         rtn.finalCachedSquare = final_cached_square;
-
         active_side = that[that.activeColor];
         non_active_side = that[that.nonActiveColor];
 
@@ -3096,13 +2975,11 @@
             if (final_cached_square.filePos === 6) {
               //short
               king_castled = _SHORT_CASTLE;
-
               rtn.putRookAtFileShift = -1;
               rtn.removeRookAtFileShift = 1;
             } else if (final_cached_square.filePos === 2) {
               //long
               king_castled = _LONG_CASTLE;
-
               rtn.putRookAtFileShift = 1;
               rtn.removeRookAtFileShift = -2;
             }
@@ -3149,7 +3026,6 @@
         } else {
           //knight, bishop, rook, queen, non-castling king
           is_ambiguous = false;
-
           extra_file_bos = '';
           extra_rank_bos = '';
 
@@ -3162,7 +3038,6 @@
 
               if (temp && temp.length > 1) {
                 is_ambiguous = true;
-
                 temp = temp.join(',');
 
                 if (_occurrences(temp, initial_cached_square.fileBos) > 1) {
@@ -3183,7 +3058,6 @@
             if (!extra_file_bos && !extra_rank_bos) {
               //none
               partial_san += temp + initial_cached_square.fileBos + temp2;
-
               with_overdisambiguated.push(partial_san);
               with_overdisambiguated.push(temp + initial_cached_square.rankBos + temp2);
             }
@@ -3191,7 +3065,6 @@
             if (extra_file_bos || extra_rank_bos) {
               //one or both
               partial_san += temp + extra_file_bos + extra_rank_bos + temp2;
-
               with_overdisambiguated.push(partial_san);
             }
 
@@ -3201,7 +3074,6 @@
             }
           } else {
             partial_san += temp + temp2;
-
             with_overdisambiguated.push(partial_san);
             with_overdisambiguated.push(temp + initial_cached_square.fileBos + temp2);
             with_overdisambiguated.push(temp + initial_cached_square.rankBos + temp2);
@@ -3240,7 +3112,6 @@
         rtn_move_obj;
 
       that = this;
-
       rtn_move_obj = null;
       p = _unreferenceP(p);
 
@@ -3271,7 +3142,6 @@
 
         active_side = that[that.activeColor];
         non_active_side = that[that.nonActiveColor];
-
         initial_cached_square = pgn_obj.initialCachedSquare;
         final_cached_square = pgn_obj.finalCachedSquare;
 
@@ -3314,10 +3184,8 @@
         }
 
         that.enPassantBos = pgn_obj.newEnPassantBos;
-
         that.setSquare(final_cached_square, pgn_obj.promotedVal || initial_cached_square.val);
         that.setSquare(initial_cached_square, _EMPTY_SQR);
-
         that.toggleActiveNonActive();
 
         that.halfMove++;
@@ -3396,7 +3264,6 @@
         }
 
         that.silentlyResetManualResult();
-
         that.refreshUi(p.isInanimated ? 0 : 1, p.playSounds); //autorefresh
       }
 
@@ -3408,7 +3275,6 @@
       var i, len, that, temp, p_cache, at_least_one_parsed, everything_parsed, rtn;
 
       that = this;
-
       rtn = false;
 
       p_cache = _unreferenceP(p, [['isUnreferenced', false]]);
@@ -3425,9 +3291,7 @@
         }
 
         everything_parsed = true;
-
         temp = that.isHidden;
-
         that.isHidden = true;
 
         for (i = 0, len = arr.length; i < len; i++) {
@@ -3461,7 +3325,6 @@
       var i, len, that, temp, temp2, used_keys, rtn;
 
       that = this;
-
       rtn = null;
       p = _unreferenceP(p, [['isLegalMove', true]]);
 
@@ -3483,7 +3346,6 @@
             }
 
             used_keys[temp2] = true;
-
             temp.push(temp2);
           }
         }
@@ -3569,7 +3431,6 @@
 
       val = toVal(qal);
       abs_val = toAbsVal(qal);
-
       temp = ['*', 'p', 'n', 'b', 'r', 'q', 'k'][abs_val]; //deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
 
       return val === abs_val ? temp.toUpperCase() : temp;
@@ -3730,7 +3591,6 @@
           for (j = 0; j < 2; j++) {
             //0...1
             current_side = j ? rtn.w : rtn.b;
-
             current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
           }
         }
@@ -3743,15 +3603,12 @@
       var del_board, del_board_name_cache, rtn;
 
       rtn = false;
-
       del_board = getBoard(woard);
 
       if (del_board !== null) {
         //if exists
         rtn = true;
-
         del_board_name_cache = del_board.boardName;
-
         del_board = null;
         _BOARDS[del_board_name_cache] = null;
 
@@ -3822,13 +3679,12 @@
         p.boardName = _isNonBlankStr(p.boardName)
           ? _formatName(p.boardName)
           : 'b_' + ((new Date().getTime() + '').slice(-10) + '' + Math.random().toString(36).slice(2, 7)).slice(-10);
-        board_name = p.boardName;
 
+        board_name = p.boardName;
         p.isRotated = p.isRotated === true;
         p.skipFenValidation = p.skipFenValidation === true;
         p.isHidden = p.isHidden === true;
         p.validOrBreak = p.validOrBreak === true;
-
         p.pgn = _pgnParserHelper(p.pgn);
 
         if (p.pgn) {
@@ -3849,11 +3705,8 @@
         }
 
         new_board = _nullboardHelper(board_name);
-
         board_created = true;
-
         new_board.isHidden = true;
-
         temp = fen_was_valid ? p.fen : _DEFAULT_FEN;
 
         new_board.updateHelper({
@@ -3901,15 +3754,11 @@
 
         p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : new_board.moveList.length - 1;
         new_board.setCurrentMove(p.moveIndex, true);
-
         new_board.isRotated = p.isRotated;
         new_board.setPromoteTo(p.promoteTo);
         new_board.setManualResult(p.manualResult);
-
         new_board.isHidden = p.isHidden;
-
         new_board.refreshUi(0, false); //autorefresh
-
         rtn = new_board;
 
         finished_block = true;
@@ -3930,9 +3779,7 @@
       args = _isArray(args) ? args : [];
       p = _unreferenceP(p);
       board_created = false;
-
       silent_mode_cache = _SILENT_MODE;
-
       fn_name = _isNonBlankStr(fn_name) ? _formatName(fn_name) : 'isLegalFen';
 
       if (fn_name === 'isLegalFen') {
@@ -4059,7 +3906,6 @@
         }
 
         board_created = true;
-
         board_keys = [];
 
         if (_isArray(props)) {
@@ -4086,7 +3932,6 @@
               if (current_key === _MUTABLE_KEYS[j]) {
                 invalid_key = false;
                 rtn_pre[current_key] = board[current_key];
-
                 break;
               }
             }

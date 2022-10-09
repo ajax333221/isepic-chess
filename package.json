@@ -1,6 +1,6 @@
 {
   "name": "isepic-chess",
-  "version": "8.4.7",
+  "version": "8.4.8",
   "title": "isepic-chess.js",
   "description": "Chess utility library written in JavaScript",
   "main": "isepic-chess.js",

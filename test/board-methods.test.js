@@ -2460,7 +2460,7 @@ describe('Board methods', () => {
     b_win_pgn = `1. Qb3+ Kc8 2. Ka7 a1=Q+ 3. Qa3 Kc7 4. Qa2 Qxa2#`; //0-1
     stalemate_pgn = `1. Qxa2 Ka8 2. Kb6+ Kb8 3. Qa6`; //½-½
     unfinished_pgn = `1. Ka5 Kc7 2. Qh5 Kd7 3. Kb5`; //unfinished
-    commented_pgn = `1. Qh1 Kc8 2. Kb6 Kb8 3. Ka6 Kc8 4. Kb6 Kb8 5. Ka6 {3-fold repetition} Kc8`; //comment between white and black move
+    commented_pgn = `1. Qh1 Kc8 2. Kb6 Kb8 3. Ka6 Kc8 4. Kb6 Kb8 5. Ka6 {3-fold repetition} 5...Kc8`; //comment between white and black move
 
     pgn_base = `[Event "Chess game"]
 [Site "?"]
@@ -2799,7 +2799,7 @@ _MOVES_`;
 
       pgn_to_compare = pgn_base
         .replace('_RESULT_', '*')
-        .replace('_MOVES_', '102. Rb2 {50 moves rule} Rxb2 *')
+        .replace('_MOVES_', '102. Rb2 {50 moves rule} 102...Rxb2 *')
         .replace('1k6/8/K7/3Q4/8/8/p7/8 w - - 0 1', '8/3k4/1r6/8/4P3/3K4/6R1/8 w - - 99 102');
 
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
