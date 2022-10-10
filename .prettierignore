@@ -1,5 +1,9 @@
 # Markdown docs
 docs/*.md
 
+# Minified js/css
+*.min.js
+*.min.css
+
 # Jest results
 coverage

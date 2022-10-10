@@ -1,1086 +1,1176 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Doco. Generator (Ic methods)</title>
-	</head>
-	<body>
-		<h1>ic-methods.md</h1>
-		<textarea id="result" style="width:100%; height:400px;">...</textarea>
-	</body>
-	<script src="../doco-gen.js"></script>
-	<script>
-		var ic, res;
-		
-		ic={
-			setSilentMode: {
-				index: 1,
-				name: "setSilentMode"
-			},
-			isLegalFen: {
-				index: 2,
-				name: "isLegalFen"
-			},
-			getBoard: {
-				index: 3,
-				name: "getBoard"
-			},
-			toVal: {
-				index: 4,
-				name: "toVal"
-			},
-			toAbsVal: {
-				index: 5,
-				name: "toAbsVal"
-			},
-			toBal: {
-				index: 6,
-				name: "toBal"
-			},
-			toAbsBal: {
-				index: 7,
-				name: "toAbsBal"
-			},
-			toClassName: {
-				index: 8,
-				name: "toClassName"
-			},
-			toBos: {
-				index: 9,
-				name: "toBos"
-			},
-			toPos: {
-				index: 10,
-				name: "toPos"
-			},
-			getSign: {
-				index: 11,
-				name: "getSign"
-			},
-			getRankPos: {
-				index: 12,
-				name: "getRankPos"
-			},
-			getFilePos: {
-				index: 13,
-				name: "getFilePos"
-			},
-			getRankBos: {
-				index: 14,
-				name: "getRankBos"
-			},
-			getFileBos: {
-				index: 15,
-				name: "getFileBos"
-			},
-			isInsideBoard: {
-				index: 16,
-				name: "isInsideBoard"
-			},
-			sameSquare: {
-				index: 17,
-				name: "sameSquare"
-			},
-			countPieces: {
-				index: 18,
-				name: "countPieces"
-			},
-			removeBoard: {
-				index: 19,
-				name: "removeBoard"
-			},
-			isEqualBoard: {
-				index: 20,
-				name: "isEqualBoard"
-			},
-			cloneBoard: {
-				index: 21,
-				name: "cloneBoard",
-				refreshUi: true
-			},
-			initBoard: {
-				index: 22,
-				name: "initBoard",
-				refreshUi: true
-			},
-			fenApply: {
-				index: 23,
-				name: "fenApply"
-			},
-			fenGet: {
-				index: 24,
-				name: "fenGet"
-			},
-			getBoardNames: {
-				index: 25,
-				name: "getBoardNames"
-			}
-		};
-		
-		//start: setSilentMode
-		ic.setSilentMode.params={
-			children: [{name: "muteConsole", type: "Boolean"}]
-		};
-		
-		ic.setSilentMode.returnVal={};
-		
-		ic.setSilentMode.description=[];
-		ic.setSilentMode.description.push("Turns on/off the **silent mode** to hide/show `console.log()` messages.");
-		ic.setSilentMode.description.push("The **slient mode** is initially turned on to prevent all console messages that could be emitted by the library.");
-		
-		ic.setSilentMode.examples=[];
-		ic.setSilentMode.examples.push("Ic.setSilentMode(true)");
-		ic.setSilentMode.examples.push("Ic.setSilentMode(false)");
-		//end: setSilentMode
-		
-		//start: isLegalFen
-		ic.isLegalFen.params={
-			children: [{name: "fen", type: "String"}]
-		};
-		
-		ic.isLegalFen.returnVal={
-			children: [{type: "Boolean"}]
-		};
-		
-		ic.isLegalFen.description=[];
-		ic.isLegalFen.description.push("Tests the validity of a **fen** string.");
-		ic.isLegalFen.description.push("No support for **Fischer random chess** (it will likely misclassify positions from this chess variant).");
-		
-		ic.isLegalFen.examples=[];
-		ic.isLegalFen.examples.push("Ic.isLegalFen(\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\") //true");
-		ic.isLegalFen.examples.push("Ic.isLegalFen(\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -\") //true");
-		ic.isLegalFen.examples.push("Ic.isLegalFen(\"0invalidfen0\") //false");
-		//end: isLegalFen
-		
-		//start: getBoard
-		ic.getBoard.params={
-			children: [p_board]
-		};
-		
-		ic.getBoard.returnVal=[
-			{
-				children: [
-					{
-						name: "board",
-						type: "Object",
-						isBold: true
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.getBoard.description=[];
-		ic.getBoard.description.push("Returns a :pushpin:**board**.");
-		
-		ic.getBoard.examples=[];
-		ic.getBoard.examples.push("Ic.getBoard(myboard) //Object{...}");
-		ic.getBoard.examples.push("Ic.getBoard(nonexistent) //null");
-		ic.getBoard.examples.push("Ic.getBoard(\"myboard\") //Object{...}");
-		ic.getBoard.examples.push("Ic.getBoard(\"nonexistent\") //null");
-		
-		ic.getBoard.links=PIN_BOARD;
-		//end: getBoard
-		
-		//start: toVal
-		ic.toVal.params={
-			children: [p_qal]
-		};
-		
-		ic.toVal.returnVal=[
-			{
-				children: [
-					{
-						name: "squareVal",
-						type: "Number",
-						isBold: true,
-						codeAfter: "-6 to 6"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "Number",
-						codeAfter: "0"
-					}
-				]
-			}
-		];
-		
-		ic.toVal.description=[];
-		ic.toVal.description.push("Converts the input to a **square val**.");
-		
-		ic.toVal.examples=[];
-		ic.toVal.examples.push("Ic.toVal(\"b\") //-3");
-		ic.toVal.examples.push("Ic.toVal(\"K\") //6");
-		ic.toVal.examples.push("Ic.toVal(\"*\") //0");
-		ic.toVal.examples.push("Ic.toVal(-5) //-5");
-		ic.toVal.examples.push("Ic.toVal(\"bq\") //-5");
-		ic.toVal.examples.push("Ic.toVal(\"err\") //0");
-		ic.toVal.examples.push("Ic.toVal(99) //6");
-		ic.toVal.examples.push("Ic.toVal(-99) //-6");
-		//end: toVal
-		
-		//start: toAbsVal
-		ic.toAbsVal.params={
-			children: [p_qal]
-		};
-		
-		ic.toAbsVal.returnVal=[
-			{
-				children: [
-					{
-						name: "squareAbsVal",
-						type: "Number",
-						isBold: true,
-						codeAfter: "0 to 6"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "Number",
-						codeAfter: "0"
-					}
-				]
-			}
-		];
-		
-		ic.toAbsVal.description=[];
-		ic.toAbsVal.description.push("Converts the input to a **square abs val**.");
-		
-		ic.toAbsVal.examples=[];
-		ic.toAbsVal.examples.push("Ic.toAbsVal(\"b\") //3");
-		ic.toAbsVal.examples.push("Ic.toAbsVal(\"K\") //6");
-		ic.toAbsVal.examples.push("Ic.toAbsVal(\"*\") //0");
-		ic.toAbsVal.examples.push("Ic.toAbsVal(-5) //5");
-		ic.toAbsVal.examples.push("Ic.toAbsVal(\"bq\") //5");
-		ic.toAbsVal.examples.push("Ic.toAbsVal(\"err\") //0");
-		ic.toAbsVal.examples.push("Ic.toAbsVal(99) //6");
-		ic.toAbsVal.examples.push("Ic.toAbsVal(-99) //6");
-		//end: toAbsVal
-		
-		//start: toBal
-		ic.toBal.params={
-			children: [p_qal]
-		};
-		
-		ic.toBal.returnVal=[
-			{
-				children: [
-					{
-						name: "squareBal",
-						type: "String",
-						isBold: true,
-						codeAfter: "\"k\", \"q\", \"r\", \"b\", \"n\", \"p\", \"*\", \"P\", \"N\", \"B\", \"R\", \"Q\", \"K\""
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "String",
-						codeAfter: "*"
-					}
-				]
-			}
-		];
-		
-		ic.toBal.description=[];
-		ic.toBal.description.push("Converts the input to a **square bal**.");
-		
-		ic.toBal.examples=[];
-		ic.toBal.examples.push("Ic.toBal(-3) //\"b\"");
-		ic.toBal.examples.push("Ic.toBal(6) //\"K\"");
-		ic.toBal.examples.push("Ic.toBal(0) //\"*\"");
-		ic.toBal.examples.push("Ic.toBal(\"q\") //\"q\"");
-		ic.toBal.examples.push("Ic.toBal(\"bq\") //\"q\"");
-		ic.toBal.examples.push("Ic.toBal(\"err\") //\"*\"");
-		ic.toBal.examples.push("Ic.toBal(99) //\"K\"");
-		ic.toBal.examples.push("Ic.toBal(-99) //\"k\"");
-		//end: toBal
-		
-		//start: toAbsBal
-		ic.toAbsBal.params={
-			children: [p_qal]
-		};
-		
-		ic.toAbsBal.returnVal=[
-			{
-				children: [
-					{
-						name: "squareAbsBal",
-						type: "String",
-						isBold: true,
-						codeAfter: "\"*\", \"P\", \"N\", \"B\", \"R\", \"Q\", \"K\""
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "String",
-						codeAfter: "*"
-					}
-				]
-			}
-		];
-		
-		ic.toAbsBal.description=[];
-		ic.toAbsBal.description.push("Converts the input to a **square abs bal**.");
-		
-		ic.toAbsBal.examples=[];
-		ic.toAbsBal.examples.push("Ic.toAbsBal(-3) //\"B\"");
-		ic.toAbsBal.examples.push("Ic.toAbsBal(6) //\"K\"");
-		ic.toAbsBal.examples.push("Ic.toAbsBal(0) //\"*\"");
-		ic.toAbsBal.examples.push("Ic.toAbsBal(\"q\") //\"Q\"");
-		ic.toAbsBal.examples.push("Ic.toAbsBal(\"bq\") //\"Q\"");
-		ic.toAbsBal.examples.push("Ic.toAbsBal(\"err\") //\"*\"");
-		ic.toAbsBal.examples.push("Ic.toAbsBal(99) //\"K\"");
-		ic.toAbsBal.examples.push("Ic.toAbsBal(-99) //\"K\"");
-		//end: toAbsBal
-		
-		//start: toClassName
-		ic.toClassName.params={
-			children: [p_qal]
-		};
-		
-		ic.toClassName.returnVal=[
-			{
-				children: [
-					{
-						name: "squareClassName",
-						type: "String",
-						isBold: true,
-						codeAfter: "\"bk\", \"bq\", \"br\", \"bb\", \"bn\", \"bp\", \"\", \"wp\", \"wn\", \"wb\", \"wr\", \"wq\", \"wk\""
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "String",
-						codeAfter: "\"\""
-					}
-				]
-			}
-		];
-		
-		ic.toClassName.description=[];
-		ic.toClassName.description.push("Converts the input to a **square class name**.");
-		
-		ic.toClassName.examples=[];
-		ic.toClassName.examples.push("Ic.toClassName(\"b\") //\"bb\"");
-		ic.toClassName.examples.push("Ic.toClassName(\"K\") //\"wk\"");
-		ic.toClassName.examples.push("Ic.toClassName(\"*\") //\"\"");
-		ic.toClassName.examples.push("Ic.toClassName(-5) //\"bq\"");
-		ic.toClassName.examples.push("Ic.toClassName(\"bq\") //\"bq\"");
-		ic.toClassName.examples.push("Ic.toClassName(\"err\") //\"\"");
-		ic.toClassName.examples.push("Ic.toClassName(99) //\"wk\"");
-		ic.toClassName.examples.push("Ic.toClassName(-99) //\"bk\"");
-		//end: toClassName
-		
-		//start: toBos
-		ic.toBos.params={
-			children: [p_qos]
-		};
-		
-		ic.toBos.returnVal=[
-			{
-				children: [
-					{
-						name: "squareBos",
-						type: "String",
-						isBold: true,
-						codeAfter: "\"a1\" to \"h8\""
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.toBos.description=[];
-		ic.toBos.description.push("Converts the input to a **square bos**.");
-		
-		ic.toBos.examples=[];
-		ic.toBos.examples.push("Ic.toBos([7, 0]) //\"a1\"");
-		ic.toBos.examples.push("Ic.toBos([0, 0]) //\"a8\"");
-		ic.toBos.examples.push("Ic.toBos([7, 7]) //\"h1\"");
-		ic.toBos.examples.push("Ic.toBos([0, 7]) //\"h8\"");
-		ic.toBos.examples.push("Ic.toBos(\"B2\") //\"b2\"");
-		//end: toBos
-		
-		//start: toPos
-		ic.toPos.params={
-			children: [p_qos]
-		};
-		
-		ic.toPos.returnVal=[
-			{
-				children: [
-					{
-						name: "squarePos",
-						type: "Array",
-						isBold: true,
-						codeAfter: "[0-7, 0-7]"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.toPos.description=[];
-		ic.toPos.description.push("Converts the input to a **square pos**.");
-		
-		ic.toPos.examples=[];
-		ic.toPos.examples.push("Ic.toPos(\"a1\") //[7, 0]");
-		ic.toPos.examples.push("Ic.toPos(\"a8\") //[0, 0]");
-		ic.toPos.examples.push("Ic.toPos(\"h1\") //[7, 7]");
-		ic.toPos.examples.push("Ic.toPos(\"h8\") //[0, 7]");
-		ic.toPos.examples.push("Ic.toPos([6, 1]) //[6, 1]");
-		//end: toPos
-		
-		//start: getSign
-		ic.getSign.params={
-			children: [{name: "zal", children: [{type: "Boolean"}, p_qal]}]
-		};
-		
-		ic.getSign.returnVal=[
-			{
-				children: [
-					{
-						name: "squareSign",
-						type: "Number",
-						isBold: true,
-						codeAfter: "-1 or 1"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "Number",
-						codeAfter: "-1"
-					}
-				]
-			}
-		];
-		
-		ic.getSign.description=[];
-		ic.getSign.description.push("Infers the **square sign** from a Boolean or a square **qal**.");
-		ic.getSign.description.push("Boolean value `true` returns a negative sign (`-1`) and `false` a positive sign (`1`), the Boolean is meant to be the answer to *\"is black the active color?\"*.");
-		ic.getSign.description.push("Any non-Boolean value will pass through `toVal()` and have its **square val** tested to a greater-than-zero comparison. White pieces have a positive sign (`1`) and empty squares/black pieces a negative sign (`-1`).");
-		
-		ic.getSign.examples=[];
-		ic.getSign.examples.push("Ic.getSign(\"q\") //-1");
-		ic.getSign.examples.push("Ic.getSign(\"Q\") //1");
-		ic.getSign.examples.push("Ic.getSign(-5) //-1");
-		ic.getSign.examples.push("Ic.getSign(5) //1");
-		ic.getSign.examples.push("Ic.getSign(true) //-1");
-		ic.getSign.examples.push("Ic.getSign(false) //1");
-		ic.getSign.examples.push("Ic.getSign(\"bq\") //-1");
-		ic.getSign.examples.push("Ic.getSign(\"wq\") //1");
-		ic.getSign.examples.push("Ic.getSign(\"err\") //-1");
-		//end: getSign
-		
-		//start: getRankPos
-		ic.getRankPos.params={
-			children: [p_qos]
-		};
-		
-		ic.getRankPos.returnVal=[
-			{
-				children: [
-					{
-						name: "squareRankPos",
-						type: "Number",
-						isBold: true,
-						codeAfter: "0-7"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.getRankPos.description=[];
-		ic.getRankPos.description.push("Converts the input to a **square rank pos**.");
-		
-		ic.getRankPos.examples=[];
-		ic.getRankPos.examples.push("Ic.getRankPos(\"a1\") //7");
-		ic.getRankPos.examples.push("Ic.getRankPos(\"a8\") //0");
-		ic.getRankPos.examples.push("Ic.getRankPos(\"h1\") //7");
-		ic.getRankPos.examples.push("Ic.getRankPos(\"h8\") //0");
-		ic.getRankPos.examples.push("Ic.getRankPos([3, 6]) //3");
-		ic.getRankPos.examples.push("Ic.getRankPos([6, 3]) //6");
-		//end: getRankPos
-		
-		//start: getFilePos
-		ic.getFilePos.params={
-			children: [p_qos]
-		};
-		
-		ic.getFilePos.returnVal=[
-			{
-				children: [
-					{
-						name: "squareFilePos",
-						type: "Number",
-						isBold: true,
-						codeAfter: "0-7"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.getFilePos.description=[];
-		ic.getFilePos.description.push("Converts the input to a **square file pos**.");
-		
-		ic.getFilePos.examples=[];
-		ic.getFilePos.examples.push("Ic.getFilePos(\"a1\") //0");
-		ic.getFilePos.examples.push("Ic.getFilePos(\"a8\") //0");
-		ic.getFilePos.examples.push("Ic.getFilePos(\"h1\") //7");
-		ic.getFilePos.examples.push("Ic.getFilePos(\"h8\") //7");
-		ic.getFilePos.examples.push("Ic.getFilePos([3, 6]) //6");
-		ic.getFilePos.examples.push("Ic.getFilePos([6, 3]) //3");
-		//end: getFilePos
-		
-		//start: getRankBos
-		ic.getRankBos.params={
-			children: [p_qos]
-		};
-		
-		ic.getRankBos.returnVal=[
-			{
-				children: [
-					{
-						name: "squareRankBos",
-						type: "String",
-						isBold: true,
-						codeAfter: "1-8"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.getRankBos.description=[];
-		ic.getRankBos.description.push("Converts the input to a **square rank bos**.");
-		
-		ic.getRankBos.examples=[];
-		ic.getRankBos.examples.push("Ic.getRankBos(\"a1\") //\"1\"");
-		ic.getRankBos.examples.push("Ic.getRankBos(\"a8\") //\"8\"");
-		ic.getRankBos.examples.push("Ic.getRankBos(\"h1\") //\"1\"");
-		ic.getRankBos.examples.push("Ic.getRankBos(\"h8\") //\"8\"");
-		ic.getRankBos.examples.push("Ic.getRankBos([3, 6]) //\"5\"");
-		ic.getRankBos.examples.push("Ic.getRankBos([6, 3]) //\"2\"");
-		//end: getRankBos
-		
-		//start: getFileBos
-		ic.getFileBos.params={
-			children: [p_qos]
-		};
-		
-		ic.getFileBos.returnVal=[
-			{
-				children: [
-					{
-						name: "squareFileBos",
-						type: "String",
-						isBold: true,
-						codeAfter: "a-h"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.getFileBos.description=[];
-		ic.getFileBos.description.push("Converts the input to a **square file bos**.");
-		
-		ic.getFileBos.examples=[];
-		ic.getFileBos.examples.push("Ic.getFileBos(\"a1\") //\"a\"");
-		ic.getFileBos.examples.push("Ic.getFileBos(\"a8\") //\"a\"");
-		ic.getFileBos.examples.push("Ic.getFileBos(\"h1\") //\"h\"");
-		ic.getFileBos.examples.push("Ic.getFileBos(\"h8\") //\"h\"");
-		ic.getFileBos.examples.push("Ic.getFileBos([3, 6]) //\"g\"");
-		ic.getFileBos.examples.push("Ic.getFileBos([6, 3]) //\"d\"");
-		//end: getFileBos
-		
-		//start: isInsideBoard
-		ic.isInsideBoard.params={
-			children: [p_qos]
-		};
-		
-		ic.isInsideBoard.returnVal={
-			children: [{type: "Boolean"}]
-		};
-		
-		ic.isInsideBoard.description=[];
-		ic.isInsideBoard.description.push("Test to see if a square is valid or not.");
-		
-		ic.isInsideBoard.examples=[];
-		ic.isInsideBoard.examples.push("Ic.isInsideBoard(\"a1\") //true");
-		ic.isInsideBoard.examples.push("Ic.isInsideBoard(\"a9\") //false");
-		ic.isInsideBoard.examples.push("Ic.isInsideBoard(\"i3\") //false");
-		ic.isInsideBoard.examples.push("Ic.isInsideBoard([7, 7]) //true");
-		ic.isInsideBoard.examples.push("Ic.isInsideBoard([8, 8]) //false");
-		//end: isInsideBoard
-		
-		//start: sameSquare
-		ic.sameSquare.params={
-			children: [
-				overwriteAndUnreference(p_qos, [["name", "qos1"]]),
-				overwriteAndUnreference(p_qos, [["name", "qos2"]])
-			]
-		};
-		
-		ic.sameSquare.returnVal=[
-			{
-				children: [{type: "Boolean"}]
-			},
-			{
-				children: [
-					{
-						type: "Boolean",
-						codeAfter: "false"
-					}
-				]
-			}
-		];
-		
-		ic.sameSquare.description=[];
-		ic.sameSquare.description.push("Test to see if two **square**s evaluate to the same **square** or not.");
-		
-		ic.sameSquare.examples=[];
-		ic.sameSquare.examples.push("Ic.sameSquare(\"a1\", \"a1\") //true");
-		ic.sameSquare.examples.push("Ic.sameSquare(\"d2\", [6, 3]) //true");
-		ic.sameSquare.examples.push("Ic.sameSquare([4, 5], [5, 4]) //false");
-		//end: sameSquare
-		
-		//start: countPieces
-		ic.countPieces.params={
-			children: [{name: "fen", type: "String"}]
-		};
-		
-		ic.countPieces.returnVal=[
-			{
-				children: [
-					{
-						type: "Object",
-						codeAfter: "{w: {...}, b: {...}}"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "Object",
-						codeAfter: "{w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}}"
-					}
-				]
-			}
-		];
-		
-		ic.countPieces.description=[];
-		ic.countPieces.description.push("Returns the total of each piece for white and black.");
-		ic.countPieces.description.push("The **fen** doesn't need to be valid (it can be any string and it will stop after a white space or the end of the string).");
-		
-		ic.countPieces.examples=[];
-		ic.countPieces.examples.push("Ic.countPieces(defaultFen) //{w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}, b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}}");
-		ic.countPieces.examples.push("Ic.countPieces(\"badFenGetsParsedAnyway up until first space\") //{w: {p: 1, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 2, b: 1, r: 1, q: 0, k: 0}}");
-		//end: countPieces
-		
-		//start: removeBoard
-		ic.removeBoard.params={
-			children: [p_board]
-		};
-		
-		ic.removeBoard.returnVal={
-			children: [{type: "Boolean"}]
-		};
-		
-		ic.removeBoard.description=[];
-		ic.removeBoard.description.push("Removes a **board** completely.");
-		
-		ic.removeBoard.examples=[];
-		ic.removeBoard.examples.push("Ic.removeBoard(myboard) //true");
-		ic.removeBoard.examples.push("Ic.removeBoard(nonexistent) //false");
-		ic.removeBoard.examples.push("Ic.removeBoard(\"myboard\") //true");
-		ic.removeBoard.examples.push("Ic.removeBoard(\"nonexistent\") //false");
-		//end: removeBoard
-		
-		//start: isEqualBoard
-		ic.isEqualBoard.params={
-			children: [
-				overwriteAndUnreference(p_board, [["name", "leftBoard"]]),
-				overwriteAndUnreference(p_board, [["name", "rightBoard"]])
-			]
-		};
-		
-		ic.isEqualBoard.returnVal=[
-			{
-				children: [{type: "Boolean"}]
-			},
-			{
-				children: [
-					{
-						type: "Boolean",
-						codeAfter: "false"
-					}
-				]
-			}
-		];
-		
-		ic.isEqualBoard.description=[];
-		ic.isEqualBoard.description.push("Tests for the equality of the "+urlLink(URL_BOARD_PROPS)+" <sup>(except for `board.boardName`)</sup> between two **board**s.");
-		
-		ic.isEqualBoard.examples=[];
-		ic.isEqualBoard.examples.push("Ic.isEqualBoard(\"board\", \"board_copy\") //true");
-		ic.isEqualBoard.examples.push("Ic.isEqualBoard(same_board, same_board) //true");
-		ic.isEqualBoard.examples.push("Ic.isEqualBoard(\"board\", \"other\") //false");
-		ic.isEqualBoard.examples.push("Ic.isEqualBoard(other_board, \"nonexistent\") //false");
-		
-		ic.isEqualBoard.errors=[];
-		ic.isEqualBoard.errors.push("the *left board* is not found.");
-		ic.isEqualBoard.errors.push("the *right board* is not found.");
-		//end: isEqualBoard
-		
-		//start: cloneBoard
-		ic.cloneBoard.params={
-			children: [
-				overwriteAndUnreference(p_board, [["name", "toBoard"]]),
-				overwriteAndUnreference(p_board, [["name", "fromBoard"]])
-			]
-		};
-		
-		ic.cloneBoard.returnVal=[
-			{
-				children: [
-					{
-						type: "Boolean",
-						codeAfter: "true"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "Boolean",
-						codeAfter: "false"
-					}
-				]
-			}
-		];
-		
-		ic.cloneBoard.description=[];
-		ic.cloneBoard.description.push("Clones the "+urlLink(URL_BOARD_PROPS)+" <sup>(except for `board.boardName`)</sup> of a **board** to another **board**.");
-		
-		ic.cloneBoard.examples=[];
-		ic.cloneBoard.examples.push("Ic.cloneBoard(to_board, from_board) //true");
-		ic.cloneBoard.examples.push("Ic.cloneBoard(to_board, from_nonexistent) //false");
-		ic.cloneBoard.examples.push("Ic.cloneBoard(\"to_nonexistent\", from_board) //false");
-		ic.cloneBoard.examples.push("Ic.cloneBoard(to_nonexistent, \"from_nonexistent\") //false");
-		
-		ic.cloneBoard.errors=[];
-		ic.cloneBoard.errors.push("the *to board* is not found.");
-		ic.cloneBoard.errors.push("the *from board* is not found.");
-		ic.cloneBoard.errors.push("attempting to clone a board with itself.");
-		//end: cloneBoard
-		
-		//start: initBoard
-		ic.initBoard.params={
-			children: [{
-				name: "p",
-				type: "Object",
-				icon: "eight_pointed_black_star",
-				children: [
-					{name: "boardName", type: "String", icon: "eight_spoked_asterisk"},
-					{name: "pgn", type: "String", icon: "eight_spoked_asterisk"},
-					{name: "uci", type: "String", icon: "eight_spoked_asterisk"},
-					{name: "fen", type: "String", icon: "eight_spoked_asterisk"},
-					{name: "moveIndex", type: "Number", icon: "eight_spoked_asterisk"},
-					{name: "isRotated", type: "Boolean", icon: "eight_spoked_asterisk"},
-					{name: "skipFenValidation", type: "Boolean", icon: "eight_spoked_asterisk"},
-					{name: "isHidden", type: "Boolean", icon: "eight_spoked_asterisk"},
-					overwriteAndUnreference(p_qal, [["name", "promoteTo"], ["icon", "eight_spoked_asterisk"]]),
-					{name: "manualResult", type: "String", icon: "eight_spoked_asterisk"},
-					{name: "validOrBreak", type: "Boolean", icon: "eight_spoked_asterisk"}
-				]
-			}]
-		};
-		
-		ic.initBoard.returnVal=[
-			{
-				children: [
-					{
-						name: "board",
-						type: "Object",
-						isBold: true
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.initBoard.description=[];
-		ic.initBoard.description.push("Initializes/overwrites a :pushpin:**board**.");
-		ic.initBoard.description.push("`isRotated = true` rotates the **board** to be displayed as black view.");
-		ic.initBoard.description.push("`skipFenValidation = true` skips the fen validation. This should only be used if the fen is known to pass the fen tests of `isepic-chess.js` or the fen was generated by `isepic-chess.js`.");
-		ic.initBoard.description.push("`isHidden = true` prevents visual display or anything DOM-related when **isepic-chess-ui.js** is present (the flag becomes irrelevant otherwise).");
-		ic.initBoard.description.push("`validOrBreak = true` (when loading a `pgn`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original pgn** is returned.");
-		ic.initBoard.description.push("`validOrBreak = true` (when loading a `uci`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original uci** is returned.");
-		ic.initBoard.description.push("`validOrBreak = true` (when loading a `fen` and not parsing a game `pgn` or `uci`) prevents the use of **default fen position**s when the **original fen** fails, ensuring that either `null` or a **board** with the **original fen** is returned.");
-		ic.initBoard.description.push("The Boolean options (`isRotated`, `skipFenValidation`, `isHidden` and `validOrBreak`) default to `false` when not set to a Boolean value of `true`.");
-		ic.initBoard.description.push("`moveIndex` can be specified to set a `board.currentMove` after a game is parsed, if not specified it will result in the last parsed move `(board.moveList.length-1)`. When not parsing a game (`pgn` or `uci`), this parameter becomes irrelevant because the **current move** index will always be `0` since no moves would have been played/parsed.");
-		ic.initBoard.description.push("`promoteTo` passes through `toAbsVal()`, any empty or invalid values will turn to `0` and default to `5` (queen), valid values out of bounds will stop at min of `2` (bishop) and max of `5` (queen).");
-		ic.initBoard.description.push("`manualResult` can be set to `\"*\", \"1-0\", \"0-1\" or \"1/2-1/2\"` to change the default **board property** of `board.manualResult` of `\"*\"`. When used at the same time of `pgn`, this will have higher precedence than the attempts to parse the game result from the `pgn`.");
-		ic.initBoard.description.push("If `boardName` is not a String (or is one but resolves to `\"\"` after removing spaces), a **random board name** will be generated and used.");
-		ic.initBoard.description.push("The **board name** will have any non-Alphanumeric values turned into underscores.");
-		ic.initBoard.description.push("When using a **board name** that is already in use, the **board** with that **board name** will be used instead of creating a new **board** (old references to that **board** will continue to work).");
-		ic.initBoard.description.push("`fen` can be mixed together with `pgn` and `uci` (`fen` will take precedence over the `pgn` **FEN tag**). The **default fen position** will be used if no **fen** is supplied.");
-		ic.initBoard.description.push("If both `pgn` and `uci` are supplied, the **pgn** will take precedence and the **uci** will be ignored.");
-		
-		ic.initBoard.examples=[];
-		ic.initBoard.examples.push("Ic.initBoard({boardName: \"main\"}) //Object{...}");
-		ic.initBoard.examples.push("Ic.initBoard({fen: \"8/k7/P7/K7/8/8/8/8 b - - 0 1\", isRotated: true, promoteTo: \"b\"}) //Object{...}");
-		ic.initBoard.examples.push("Ic.initBoard({pgn: \"0invalidpgn0\", validOrBreak: true}) //null");
-		ic.initBoard.examples.push("Ic.initBoard({uci: \"0invaliduci0\", validOrBreak: true}) //null");
-		ic.initBoard.examples.push("Ic.initBoard({fen: \"0invalidfen0\", validOrBreak: true}) //null");
-		
-		ic.initBoard.links=PIN_BOARD;
-		
-		ic.initBoard.errors=[];
-		ic.initBoard.errors.push("`validOrBreak` is `true` and the *pgn* fails the parsing.");
-		ic.initBoard.errors.push("`validOrBreak` is `true` and the *uci* fails the parsing.");
-		ic.initBoard.errors.push("`validOrBreak` is `true` and the *fen* fails the **basic fen test**.");
-		ic.initBoard.errors.push("`validOrBreak` is `true` and the *fen* fails the **refined fen test**.");
-		//end: initBoard
-		
-		//start: fenApply
-		ic.fenApply.params={
-			children: [
-				{name: "fen", type: "String"},
-				{name: "fnName", type: "String", icon: "eight_pointed_black_star"},
-				{name: "args", type: "Array", icon: "eight_pointed_black_star"},
-				{
-					name: "p",
-					type: "Object",
-					icon: "eight_pointed_black_star",
-					children: [
-						{name: "isRotated", type: "Boolean", icon: "eight_spoked_asterisk"},
-						overwriteAndUnreference(p_qal, [["name", "promoteTo"], ["icon", "eight_spoked_asterisk"]]),
-						{name: "skipFenValidation", type: "Boolean", icon: "eight_spoked_asterisk"}
-					]
-				}
-			]
-		};
-		
-		ic.fenApply.returnVal=[
-			{
-				children: [
-					{
-						name: "(mixed results)"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						name: "(mixed results)"
-					}
-				]
-			}
-		];
-		
-		ic.fenApply.description=[];
-		ic.fenApply.description.push("Calls one of the allowed **board methods** <sup>(listed below)</sup> on a **temporal board** and returns the result.");
-		ic.fenApply.description.push("The list of allowed `fnName` (String):<ul><li>`\"playMove\"`</li><li>`\"playMoves\"`</li><li>`\"playRandomMove\"`</li><li>`\"legalMoves\"`</li><li>`\"legalFenMoves\"`</li><li>`\"legalSanMoves\"`</li><li>`\"legalUciMoves\"`</li><li>`\"isLegalMove\"`</li><li>`\"isLegalFen\"`</li><li>`\"getCheckmateMoves\"`</li><li>`\"getDrawMoves\"`</li><li>`\"getSquare\"`</li><li>`\"attackersFromActive\"`</li><li>`\"attackersFromNonActive\"`</li><li>`\"ascii\"`</li><li>`\"boardHash\"`</li><li>`\"countLightDarkBishops\"`</li></ul>`\"isLegalFen\"` is not a real **board method** and any error in the creation of the **temporal board** in `Ic.initBoard()` will be supressed in this call.");
-		ic.fenApply.description.push("If **fnName** is not supplied, the default value is `\"isLegalFen\"` which returns the validity of **fen**.");
-		ic.fenApply.description.push("The **args** parameter is optional in the sense that measures were taken to prevent crashes, but the function to be applied will probably be expecting real arguments.");
-		ic.fenApply.description.push("The **p** options (`isRotated`, `promoteTo` and `skipFenValidation`) are passed to `Ic.initBoard()` when creating the **temporal board**.");
-		
-		ic.fenApply.examples=[];
-		ic.fenApply.examples.push("Ic.fenApply(\"r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4\", \"ascii\") //\"...\"");
-		ic.fenApply.examples.push("Ic.fenApply(\"r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4\") //true");
-		ic.fenApply.examples.push("Ic.fenApply(\"0invalidfen0\") //false");
-		ic.fenApply.examples.push("Ic.fenApply(\"8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1\", \"playMove\", [\"c2_a2\", {delimiter: \"_\"}]) //Object{...}");
-		ic.fenApply.examples.push("Ic.fenApply(\"8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1\", \"0invalidfnname0\", [\"a1\"]) //null");
-		
-		ic.fenApply.errors=[];
-		ic.fenApply.errors.push("(mixed reasons)");
-		//end: fenApply
-		
-		//start: fenGet
-		ic.fenGet.params={
-			children: [
-				{
-					name: "fen",
-					type: "String"
-				},
-				{
-					name: "props",
-					icon: "eight_pointed_black_star",
-					children: [
-						{name: "strList", type: "String", isBold: true},
-						{name: "arrList", type: "Array", isBold: true}
-					]
-				},
-				{
-					name: "p",
-					type: "Object",
-					icon: "eight_pointed_black_star",
-					children: [
-						{name: "skipFenValidation", type: "Boolean", icon: "eight_spoked_asterisk"}
-					]
-				}
-			]
-		};
-		
-		ic.fenGet.returnVal=[
-			{
-				children: [
-					{
-						type: "Object",
-						codeAfter: "{propA: valA, propB: valB, ..., propZ: valZ}"
-					}
-				]
-			},
-			{
-				children: [
-					{
-						type: "null"
-					}
-				]
-			}
-		];
-		
-		ic.fenGet.description=[];
-		ic.fenGet.description.push("Get "+urlLink(URL_BOARD_PROPS)+" <sup>(except for `board.boardName`)</sup> from a **fen**.");
-		ic.fenGet.description.push("If **props** is not supplied (or resolves to empty), then all the **board properties** <sup>(except for `board.boardName`)</sup> will be returned by default.");
-		ic.fenGet.description.push("The **board properties** are **case-sensitive**.");
-		ic.fenGet.description.push("When passing a **string list**, this must be **space-separated** <sup>(not comma-separated)</sup>.");
-		ic.fenGet.description.push("Duplicated **board properties** will not result in errors and only the first occurrence will be used.");
-		ic.fenGet.description.push("The **p** option `skipFenValidation` is passed to `Ic.initBoard()` when creating the **temporal board**.");
-		
-		ic.fenGet.examples=[];
-		ic.fenGet.examples.push("Ic.fenGet(\"6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54\", \"isStalemate inDraw\") //{isStalemate: true, inDraw: true}");
-		ic.fenGet.examples.push("Ic.fenGet(\"6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54\", [\"halfMove\", \"fullMove\"]) //{halfMove: 0, fullMove: 54}");
-		ic.fenGet.examples.push("Ic.fenGet(\"0invalidfen0\", \"isCheck\") //null");
-		ic.fenGet.examples.push("Ic.fenGet(\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\") //Object{...}");
-		ic.fenGet.examples.push("Ic.fenGet(\"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1\", \"fen 0invalidprop0\") //null");
-		
-		ic.fenGet.errors=[];
-		ic.fenGet.errors.push("`fen` is an **invalid fen**.");
-		ic.fenGet.errors.push("an **invalid property** was found in `props`.");
-		//end: fenGet
-		
-		//start: getBoardNames
-		ic.getBoardNames.params={};
-		
-		ic.getBoardNames.returnVal={
-			name: "boardNamesArray",
-			type: "Array",
-			isBold: true
-		};
-		
-		ic.getBoardNames.description=[];
-		ic.getBoardNames.description.push("Returns a **board names array**.");
-		ic.getBoardNames.description.push("The **board**s with `isHidden = true` are also included.");
-		
-		ic.getBoardNames.examples=[];
-		ic.getBoardNames.examples.push("Ic.getBoardNames() //[\"main\", \"other\", \"other_copy\", \"hidden_board\", \"resume_from_fen\"]");
-		ic.getBoardNames.examples.push("Ic.getBoardNames() //[]");
-		//end: getBoardNames
-		
-		res="";
-		
-		res+="<p align=\"center\">"+urlHrefLink(["« Return", "#book-documentation"])+"</p>";
-		
-		res+="\n\n";
-		
-		res+="<h1 align=\"center\">Ic methods</h1>";
-		
-		res+="\n\n";
-		
-		res+="Isepic Chess library `isepic-chess.js` has the following available methods:";
-		
-		res+="\n\n";
-		
-		res+="<ul>\n<li>Ic."+docoGenMethodList(ic).join("()</li>\n<li>Ic.")+"()</li>\n</ul>";
-		
-		res+="\n\n";
-		
-		res+="#### Table `Ic.<methods>(...)`:";
-		
-		res+="\n\n";
-		
-		res+="Function | Parameters | Return | UI refresh? | Description";
-		
-		res+="\n";
-		
-		res+="-------- | ---------- | ------ | ----------- | -----------";
-		
-		res+="\n";
-		
-		res+=docoGenMethodTable(ic).join("\n");
-		
-		res+="\n\n";
-		
-		res+="<p align=\"center\">"+urlHrefLink(["« Return", "#book-documentation"])+"</p>";
-		
-		res+="\n";
-		
-		document.getElementById("result").value=res;
-	</script>
+  <head>
+    <meta charset="utf-8" />
+    <title>Doco. Generator (Ic methods)</title>
+  </head>
+  <body>
+    <h1>ic-methods.md</h1>
+    <textarea id="result" style="width: 100%; height: 400px">...</textarea>
+  </body>
+  <script src="../doco-gen.js"></script>
+  <script>
+    var ic, res;
+
+    ic = {
+      setSilentMode: {
+        index: 1,
+        name: 'setSilentMode',
+      },
+      isLegalFen: {
+        index: 2,
+        name: 'isLegalFen',
+      },
+      getBoard: {
+        index: 3,
+        name: 'getBoard',
+      },
+      toVal: {
+        index: 4,
+        name: 'toVal',
+      },
+      toAbsVal: {
+        index: 5,
+        name: 'toAbsVal',
+      },
+      toBal: {
+        index: 6,
+        name: 'toBal',
+      },
+      toAbsBal: {
+        index: 7,
+        name: 'toAbsBal',
+      },
+      toClassName: {
+        index: 8,
+        name: 'toClassName',
+      },
+      toBos: {
+        index: 9,
+        name: 'toBos',
+      },
+      toPos: {
+        index: 10,
+        name: 'toPos',
+      },
+      getSign: {
+        index: 11,
+        name: 'getSign',
+      },
+      getRankPos: {
+        index: 12,
+        name: 'getRankPos',
+      },
+      getFilePos: {
+        index: 13,
+        name: 'getFilePos',
+      },
+      getRankBos: {
+        index: 14,
+        name: 'getRankBos',
+      },
+      getFileBos: {
+        index: 15,
+        name: 'getFileBos',
+      },
+      isInsideBoard: {
+        index: 16,
+        name: 'isInsideBoard',
+      },
+      sameSquare: {
+        index: 17,
+        name: 'sameSquare',
+      },
+      countPieces: {
+        index: 18,
+        name: 'countPieces',
+      },
+      removeBoard: {
+        index: 19,
+        name: 'removeBoard',
+      },
+      isEqualBoard: {
+        index: 20,
+        name: 'isEqualBoard',
+      },
+      cloneBoard: {
+        index: 21,
+        name: 'cloneBoard',
+        refreshUi: true,
+      },
+      initBoard: {
+        index: 22,
+        name: 'initBoard',
+        refreshUi: true,
+      },
+      fenApply: {
+        index: 23,
+        name: 'fenApply',
+      },
+      fenGet: {
+        index: 24,
+        name: 'fenGet',
+      },
+      getBoardNames: {
+        index: 25,
+        name: 'getBoardNames',
+      },
+    };
+
+    //start: setSilentMode
+    ic.setSilentMode.params = {
+      children: [{ name: 'muteConsole', type: 'Boolean' }],
+    };
+
+    ic.setSilentMode.returnVal = {};
+
+    ic.setSilentMode.description = [];
+    ic.setSilentMode.description.push('Turns on/off the **silent mode** to hide/show `console.log()` messages.');
+    ic.setSilentMode.description.push(
+      'The **slient mode** is initially turned on to prevent all console messages that could be emitted by the library.'
+    );
+
+    ic.setSilentMode.examples = [];
+    ic.setSilentMode.examples.push('Ic.setSilentMode(true)');
+    ic.setSilentMode.examples.push('Ic.setSilentMode(false)');
+    //end: setSilentMode
+
+    //start: isLegalFen
+    ic.isLegalFen.params = {
+      children: [{ name: 'fen', type: 'String' }],
+    };
+
+    ic.isLegalFen.returnVal = {
+      children: [{ type: 'Boolean' }],
+    };
+
+    ic.isLegalFen.description = [];
+    ic.isLegalFen.description.push('Tests the validity of a **fen** string.');
+    ic.isLegalFen.description.push(
+      'No support for **Fischer random chess** (it will likely misclassify positions from this chess variant).'
+    );
+
+    ic.isLegalFen.examples = [];
+    ic.isLegalFen.examples.push('Ic.isLegalFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //true');
+    ic.isLegalFen.examples.push('Ic.isLegalFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -") //true');
+    ic.isLegalFen.examples.push('Ic.isLegalFen("0invalidfen0") //false');
+    //end: isLegalFen
+
+    //start: getBoard
+    ic.getBoard.params = {
+      children: [p_board],
+    };
+
+    ic.getBoard.returnVal = [
+      {
+        children: [
+          {
+            name: 'board',
+            type: 'Object',
+            isBold: true,
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.getBoard.description = [];
+    ic.getBoard.description.push('Returns a :pushpin:**board**.');
+
+    ic.getBoard.examples = [];
+    ic.getBoard.examples.push('Ic.getBoard(myboard) //Object{...}');
+    ic.getBoard.examples.push('Ic.getBoard(nonexistent) //null');
+    ic.getBoard.examples.push('Ic.getBoard("myboard") //Object{...}');
+    ic.getBoard.examples.push('Ic.getBoard("nonexistent") //null');
+
+    ic.getBoard.links = PIN_BOARD;
+    //end: getBoard
+
+    //start: toVal
+    ic.toVal.params = {
+      children: [p_qal],
+    };
+
+    ic.toVal.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareVal',
+            type: 'Number',
+            isBold: true,
+            codeAfter: '-6 to 6',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'Number',
+            codeAfter: '0',
+          },
+        ],
+      },
+    ];
+
+    ic.toVal.description = [];
+    ic.toVal.description.push('Converts the input to a **square val**.');
+
+    ic.toVal.examples = [];
+    ic.toVal.examples.push('Ic.toVal("b") //-3');
+    ic.toVal.examples.push('Ic.toVal("K") //6');
+    ic.toVal.examples.push('Ic.toVal("*") //0');
+    ic.toVal.examples.push('Ic.toVal(-5) //-5');
+    ic.toVal.examples.push('Ic.toVal("bq") //-5');
+    ic.toVal.examples.push('Ic.toVal("err") //0');
+    ic.toVal.examples.push('Ic.toVal(99) //6');
+    ic.toVal.examples.push('Ic.toVal(-99) //-6');
+    //end: toVal
+
+    //start: toAbsVal
+    ic.toAbsVal.params = {
+      children: [p_qal],
+    };
+
+    ic.toAbsVal.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareAbsVal',
+            type: 'Number',
+            isBold: true,
+            codeAfter: '0 to 6',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'Number',
+            codeAfter: '0',
+          },
+        ],
+      },
+    ];
+
+    ic.toAbsVal.description = [];
+    ic.toAbsVal.description.push('Converts the input to a **square abs val**.');
+
+    ic.toAbsVal.examples = [];
+    ic.toAbsVal.examples.push('Ic.toAbsVal("b") //3');
+    ic.toAbsVal.examples.push('Ic.toAbsVal("K") //6');
+    ic.toAbsVal.examples.push('Ic.toAbsVal("*") //0');
+    ic.toAbsVal.examples.push('Ic.toAbsVal(-5) //5');
+    ic.toAbsVal.examples.push('Ic.toAbsVal("bq") //5');
+    ic.toAbsVal.examples.push('Ic.toAbsVal("err") //0');
+    ic.toAbsVal.examples.push('Ic.toAbsVal(99) //6');
+    ic.toAbsVal.examples.push('Ic.toAbsVal(-99) //6');
+    //end: toAbsVal
+
+    //start: toBal
+    ic.toBal.params = {
+      children: [p_qal],
+    };
+
+    ic.toBal.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareBal',
+            type: 'String',
+            isBold: true,
+            codeAfter: '"k", "q", "r", "b", "n", "p", "*", "P", "N", "B", "R", "Q", "K"',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'String',
+            codeAfter: '*',
+          },
+        ],
+      },
+    ];
+
+    ic.toBal.description = [];
+    ic.toBal.description.push('Converts the input to a **square bal**.');
+
+    ic.toBal.examples = [];
+    ic.toBal.examples.push('Ic.toBal(-3) //"b"');
+    ic.toBal.examples.push('Ic.toBal(6) //"K"');
+    ic.toBal.examples.push('Ic.toBal(0) //"*"');
+    ic.toBal.examples.push('Ic.toBal("q") //"q"');
+    ic.toBal.examples.push('Ic.toBal("bq") //"q"');
+    ic.toBal.examples.push('Ic.toBal("err") //"*"');
+    ic.toBal.examples.push('Ic.toBal(99) //"K"');
+    ic.toBal.examples.push('Ic.toBal(-99) //"k"');
+    //end: toBal
+
+    //start: toAbsBal
+    ic.toAbsBal.params = {
+      children: [p_qal],
+    };
+
+    ic.toAbsBal.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareAbsBal',
+            type: 'String',
+            isBold: true,
+            codeAfter: '"*", "P", "N", "B", "R", "Q", "K"',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'String',
+            codeAfter: '*',
+          },
+        ],
+      },
+    ];
+
+    ic.toAbsBal.description = [];
+    ic.toAbsBal.description.push('Converts the input to a **square abs bal**.');
+
+    ic.toAbsBal.examples = [];
+    ic.toAbsBal.examples.push('Ic.toAbsBal(-3) //"B"');
+    ic.toAbsBal.examples.push('Ic.toAbsBal(6) //"K"');
+    ic.toAbsBal.examples.push('Ic.toAbsBal(0) //"*"');
+    ic.toAbsBal.examples.push('Ic.toAbsBal("q") //"Q"');
+    ic.toAbsBal.examples.push('Ic.toAbsBal("bq") //"Q"');
+    ic.toAbsBal.examples.push('Ic.toAbsBal("err") //"*"');
+    ic.toAbsBal.examples.push('Ic.toAbsBal(99) //"K"');
+    ic.toAbsBal.examples.push('Ic.toAbsBal(-99) //"K"');
+    //end: toAbsBal
+
+    //start: toClassName
+    ic.toClassName.params = {
+      children: [p_qal],
+    };
+
+    ic.toClassName.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareClassName',
+            type: 'String',
+            isBold: true,
+            codeAfter: '"bk", "bq", "br", "bb", "bn", "bp", "", "wp", "wn", "wb", "wr", "wq", "wk"',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'String',
+            codeAfter: '""',
+          },
+        ],
+      },
+    ];
+
+    ic.toClassName.description = [];
+    ic.toClassName.description.push('Converts the input to a **square class name**.');
+
+    ic.toClassName.examples = [];
+    ic.toClassName.examples.push('Ic.toClassName("b") //"bb"');
+    ic.toClassName.examples.push('Ic.toClassName("K") //"wk"');
+    ic.toClassName.examples.push('Ic.toClassName("*") //""');
+    ic.toClassName.examples.push('Ic.toClassName(-5) //"bq"');
+    ic.toClassName.examples.push('Ic.toClassName("bq") //"bq"');
+    ic.toClassName.examples.push('Ic.toClassName("err") //""');
+    ic.toClassName.examples.push('Ic.toClassName(99) //"wk"');
+    ic.toClassName.examples.push('Ic.toClassName(-99) //"bk"');
+    //end: toClassName
+
+    //start: toBos
+    ic.toBos.params = {
+      children: [p_qos],
+    };
+
+    ic.toBos.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareBos',
+            type: 'String',
+            isBold: true,
+            codeAfter: '"a1" to "h8"',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.toBos.description = [];
+    ic.toBos.description.push('Converts the input to a **square bos**.');
+
+    ic.toBos.examples = [];
+    ic.toBos.examples.push('Ic.toBos([7, 0]) //"a1"');
+    ic.toBos.examples.push('Ic.toBos([0, 0]) //"a8"');
+    ic.toBos.examples.push('Ic.toBos([7, 7]) //"h1"');
+    ic.toBos.examples.push('Ic.toBos([0, 7]) //"h8"');
+    ic.toBos.examples.push('Ic.toBos("B2") //"b2"');
+    //end: toBos
+
+    //start: toPos
+    ic.toPos.params = {
+      children: [p_qos],
+    };
+
+    ic.toPos.returnVal = [
+      {
+        children: [
+          {
+            name: 'squarePos',
+            type: 'Array',
+            isBold: true,
+            codeAfter: '[0-7, 0-7]',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.toPos.description = [];
+    ic.toPos.description.push('Converts the input to a **square pos**.');
+
+    ic.toPos.examples = [];
+    ic.toPos.examples.push('Ic.toPos("a1") //[7, 0]');
+    ic.toPos.examples.push('Ic.toPos("a8") //[0, 0]');
+    ic.toPos.examples.push('Ic.toPos("h1") //[7, 7]');
+    ic.toPos.examples.push('Ic.toPos("h8") //[0, 7]');
+    ic.toPos.examples.push('Ic.toPos([6, 1]) //[6, 1]');
+    //end: toPos
+
+    //start: getSign
+    ic.getSign.params = {
+      children: [{ name: 'zal', children: [{ type: 'Boolean' }, p_qal] }],
+    };
+
+    ic.getSign.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareSign',
+            type: 'Number',
+            isBold: true,
+            codeAfter: '-1 or 1',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'Number',
+            codeAfter: '-1',
+          },
+        ],
+      },
+    ];
+
+    ic.getSign.description = [];
+    ic.getSign.description.push('Infers the **square sign** from a Boolean or a square **qal**.');
+    ic.getSign.description.push(
+      'Boolean value `true` returns a negative sign (`-1`) and `false` a positive sign (`1`), the Boolean is meant to be the answer to *"is black the active color?"*.'
+    );
+    ic.getSign.description.push(
+      'Any non-Boolean value will pass through `toVal()` and have its **square val** tested to a greater-than-zero comparison. White pieces have a positive sign (`1`) and empty squares/black pieces a negative sign (`-1`).'
+    );
+
+    ic.getSign.examples = [];
+    ic.getSign.examples.push('Ic.getSign("q") //-1');
+    ic.getSign.examples.push('Ic.getSign("Q") //1');
+    ic.getSign.examples.push('Ic.getSign(-5) //-1');
+    ic.getSign.examples.push('Ic.getSign(5) //1');
+    ic.getSign.examples.push('Ic.getSign(true) //-1');
+    ic.getSign.examples.push('Ic.getSign(false) //1');
+    ic.getSign.examples.push('Ic.getSign("bq") //-1');
+    ic.getSign.examples.push('Ic.getSign("wq") //1');
+    ic.getSign.examples.push('Ic.getSign("err") //-1');
+    //end: getSign
+
+    //start: getRankPos
+    ic.getRankPos.params = {
+      children: [p_qos],
+    };
+
+    ic.getRankPos.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareRankPos',
+            type: 'Number',
+            isBold: true,
+            codeAfter: '0-7',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.getRankPos.description = [];
+    ic.getRankPos.description.push('Converts the input to a **square rank pos**.');
+
+    ic.getRankPos.examples = [];
+    ic.getRankPos.examples.push('Ic.getRankPos("a1") //7');
+    ic.getRankPos.examples.push('Ic.getRankPos("a8") //0');
+    ic.getRankPos.examples.push('Ic.getRankPos("h1") //7');
+    ic.getRankPos.examples.push('Ic.getRankPos("h8") //0');
+    ic.getRankPos.examples.push('Ic.getRankPos([3, 6]) //3');
+    ic.getRankPos.examples.push('Ic.getRankPos([6, 3]) //6');
+    //end: getRankPos
+
+    //start: getFilePos
+    ic.getFilePos.params = {
+      children: [p_qos],
+    };
+
+    ic.getFilePos.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareFilePos',
+            type: 'Number',
+            isBold: true,
+            codeAfter: '0-7',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.getFilePos.description = [];
+    ic.getFilePos.description.push('Converts the input to a **square file pos**.');
+
+    ic.getFilePos.examples = [];
+    ic.getFilePos.examples.push('Ic.getFilePos("a1") //0');
+    ic.getFilePos.examples.push('Ic.getFilePos("a8") //0');
+    ic.getFilePos.examples.push('Ic.getFilePos("h1") //7');
+    ic.getFilePos.examples.push('Ic.getFilePos("h8") //7');
+    ic.getFilePos.examples.push('Ic.getFilePos([3, 6]) //6');
+    ic.getFilePos.examples.push('Ic.getFilePos([6, 3]) //3');
+    //end: getFilePos
+
+    //start: getRankBos
+    ic.getRankBos.params = {
+      children: [p_qos],
+    };
+
+    ic.getRankBos.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareRankBos',
+            type: 'String',
+            isBold: true,
+            codeAfter: '1-8',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.getRankBos.description = [];
+    ic.getRankBos.description.push('Converts the input to a **square rank bos**.');
+
+    ic.getRankBos.examples = [];
+    ic.getRankBos.examples.push('Ic.getRankBos("a1") //"1"');
+    ic.getRankBos.examples.push('Ic.getRankBos("a8") //"8"');
+    ic.getRankBos.examples.push('Ic.getRankBos("h1") //"1"');
+    ic.getRankBos.examples.push('Ic.getRankBos("h8") //"8"');
+    ic.getRankBos.examples.push('Ic.getRankBos([3, 6]) //"5"');
+    ic.getRankBos.examples.push('Ic.getRankBos([6, 3]) //"2"');
+    //end: getRankBos
+
+    //start: getFileBos
+    ic.getFileBos.params = {
+      children: [p_qos],
+    };
+
+    ic.getFileBos.returnVal = [
+      {
+        children: [
+          {
+            name: 'squareFileBos',
+            type: 'String',
+            isBold: true,
+            codeAfter: 'a-h',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.getFileBos.description = [];
+    ic.getFileBos.description.push('Converts the input to a **square file bos**.');
+
+    ic.getFileBos.examples = [];
+    ic.getFileBos.examples.push('Ic.getFileBos("a1") //"a"');
+    ic.getFileBos.examples.push('Ic.getFileBos("a8") //"a"');
+    ic.getFileBos.examples.push('Ic.getFileBos("h1") //"h"');
+    ic.getFileBos.examples.push('Ic.getFileBos("h8") //"h"');
+    ic.getFileBos.examples.push('Ic.getFileBos([3, 6]) //"g"');
+    ic.getFileBos.examples.push('Ic.getFileBos([6, 3]) //"d"');
+    //end: getFileBos
+
+    //start: isInsideBoard
+    ic.isInsideBoard.params = {
+      children: [p_qos],
+    };
+
+    ic.isInsideBoard.returnVal = {
+      children: [{ type: 'Boolean' }],
+    };
+
+    ic.isInsideBoard.description = [];
+    ic.isInsideBoard.description.push('Test to see if a square is valid or not.');
+
+    ic.isInsideBoard.examples = [];
+    ic.isInsideBoard.examples.push('Ic.isInsideBoard("a1") //true');
+    ic.isInsideBoard.examples.push('Ic.isInsideBoard("a9") //false');
+    ic.isInsideBoard.examples.push('Ic.isInsideBoard("i3") //false');
+    ic.isInsideBoard.examples.push('Ic.isInsideBoard([7, 7]) //true');
+    ic.isInsideBoard.examples.push('Ic.isInsideBoard([8, 8]) //false');
+    //end: isInsideBoard
+
+    //start: sameSquare
+    ic.sameSquare.params = {
+      children: [
+        overwriteAndUnreference(p_qos, [['name', 'qos1']]),
+        overwriteAndUnreference(p_qos, [['name', 'qos2']]),
+      ],
+    };
+
+    ic.sameSquare.returnVal = [
+      {
+        children: [{ type: 'Boolean' }],
+      },
+      {
+        children: [
+          {
+            type: 'Boolean',
+            codeAfter: 'false',
+          },
+        ],
+      },
+    ];
+
+    ic.sameSquare.description = [];
+    ic.sameSquare.description.push('Test to see if two **square**s evaluate to the same **square** or not.');
+
+    ic.sameSquare.examples = [];
+    ic.sameSquare.examples.push('Ic.sameSquare("a1", "a1") //true');
+    ic.sameSquare.examples.push('Ic.sameSquare("d2", [6, 3]) //true');
+    ic.sameSquare.examples.push('Ic.sameSquare([4, 5], [5, 4]) //false');
+    //end: sameSquare
+
+    //start: countPieces
+    ic.countPieces.params = {
+      children: [{ name: 'fen', type: 'String' }],
+    };
+
+    ic.countPieces.returnVal = [
+      {
+        children: [
+          {
+            type: 'Object',
+            codeAfter: '{w: {...}, b: {...}}',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'Object',
+            codeAfter: '{w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}}',
+          },
+        ],
+      },
+    ];
+
+    ic.countPieces.description = [];
+    ic.countPieces.description.push('Returns the total of each piece for white and black.');
+    ic.countPieces.description.push(
+      "The **fen** doesn't need to be valid (it can be any string and it will stop after a white space or the end of the string)."
+    );
+
+    ic.countPieces.examples = [];
+    ic.countPieces.examples.push(
+      'Ic.countPieces(defaultFen) //{w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}, b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}}'
+    );
+    ic.countPieces.examples.push(
+      'Ic.countPieces("badFenGetsParsedAnyway up until first space") //{w: {p: 1, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 2, b: 1, r: 1, q: 0, k: 0}}'
+    );
+    //end: countPieces
+
+    //start: removeBoard
+    ic.removeBoard.params = {
+      children: [p_board],
+    };
+
+    ic.removeBoard.returnVal = {
+      children: [{ type: 'Boolean' }],
+    };
+
+    ic.removeBoard.description = [];
+    ic.removeBoard.description.push('Removes a **board** completely.');
+
+    ic.removeBoard.examples = [];
+    ic.removeBoard.examples.push('Ic.removeBoard(myboard) //true');
+    ic.removeBoard.examples.push('Ic.removeBoard(nonexistent) //false');
+    ic.removeBoard.examples.push('Ic.removeBoard("myboard") //true');
+    ic.removeBoard.examples.push('Ic.removeBoard("nonexistent") //false');
+    //end: removeBoard
+
+    //start: isEqualBoard
+    ic.isEqualBoard.params = {
+      children: [
+        overwriteAndUnreference(p_board, [['name', 'leftBoard']]),
+        overwriteAndUnreference(p_board, [['name', 'rightBoard']]),
+      ],
+    };
+
+    ic.isEqualBoard.returnVal = [
+      {
+        children: [{ type: 'Boolean' }],
+      },
+      {
+        children: [
+          {
+            type: 'Boolean',
+            codeAfter: 'false',
+          },
+        ],
+      },
+    ];
+
+    ic.isEqualBoard.description = [];
+    ic.isEqualBoard.description.push(
+      'Tests for the equality of the ' +
+        urlLink(URL_BOARD_PROPS) +
+        ' <sup>(except for `board.boardName`)</sup> between two **board**s.'
+    );
+
+    ic.isEqualBoard.examples = [];
+    ic.isEqualBoard.examples.push('Ic.isEqualBoard("board", "board_copy") //true');
+    ic.isEqualBoard.examples.push('Ic.isEqualBoard(same_board, same_board) //true');
+    ic.isEqualBoard.examples.push('Ic.isEqualBoard("board", "other") //false');
+    ic.isEqualBoard.examples.push('Ic.isEqualBoard(other_board, "nonexistent") //false');
+
+    ic.isEqualBoard.errors = [];
+    ic.isEqualBoard.errors.push('the *left board* is not found.');
+    ic.isEqualBoard.errors.push('the *right board* is not found.');
+    //end: isEqualBoard
+
+    //start: cloneBoard
+    ic.cloneBoard.params = {
+      children: [
+        overwriteAndUnreference(p_board, [['name', 'toBoard']]),
+        overwriteAndUnreference(p_board, [['name', 'fromBoard']]),
+      ],
+    };
+
+    ic.cloneBoard.returnVal = [
+      {
+        children: [
+          {
+            type: 'Boolean',
+            codeAfter: 'true',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'Boolean',
+            codeAfter: 'false',
+          },
+        ],
+      },
+    ];
+
+    ic.cloneBoard.description = [];
+    ic.cloneBoard.description.push(
+      'Clones the ' +
+        urlLink(URL_BOARD_PROPS) +
+        ' <sup>(except for `board.boardName`)</sup> of a **board** to another **board**.'
+    );
+
+    ic.cloneBoard.examples = [];
+    ic.cloneBoard.examples.push('Ic.cloneBoard(to_board, from_board) //true');
+    ic.cloneBoard.examples.push('Ic.cloneBoard(to_board, from_nonexistent) //false');
+    ic.cloneBoard.examples.push('Ic.cloneBoard("to_nonexistent", from_board) //false');
+    ic.cloneBoard.examples.push('Ic.cloneBoard(to_nonexistent, "from_nonexistent") //false');
+
+    ic.cloneBoard.errors = [];
+    ic.cloneBoard.errors.push('the *to board* is not found.');
+    ic.cloneBoard.errors.push('the *from board* is not found.');
+    ic.cloneBoard.errors.push('attempting to clone a board with itself.');
+    //end: cloneBoard
+
+    //start: initBoard
+    ic.initBoard.params = {
+      children: [
+        {
+          name: 'p',
+          type: 'Object',
+          icon: 'eight_pointed_black_star',
+          children: [
+            { name: 'boardName', type: 'String', icon: 'eight_spoked_asterisk' },
+            { name: 'pgn', type: 'String', icon: 'eight_spoked_asterisk' },
+            { name: 'uci', type: 'String', icon: 'eight_spoked_asterisk' },
+            { name: 'fen', type: 'String', icon: 'eight_spoked_asterisk' },
+            { name: 'moveIndex', type: 'Number', icon: 'eight_spoked_asterisk' },
+            { name: 'isRotated', type: 'Boolean', icon: 'eight_spoked_asterisk' },
+            { name: 'skipFenValidation', type: 'Boolean', icon: 'eight_spoked_asterisk' },
+            { name: 'isHidden', type: 'Boolean', icon: 'eight_spoked_asterisk' },
+            overwriteAndUnreference(p_qal, [
+              ['name', 'promoteTo'],
+              ['icon', 'eight_spoked_asterisk'],
+            ]),
+            { name: 'manualResult', type: 'String', icon: 'eight_spoked_asterisk' },
+            { name: 'validOrBreak', type: 'Boolean', icon: 'eight_spoked_asterisk' },
+          ],
+        },
+      ],
+    };
+
+    ic.initBoard.returnVal = [
+      {
+        children: [
+          {
+            name: 'board',
+            type: 'Object',
+            isBold: true,
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.initBoard.description = [];
+    ic.initBoard.description.push('Initializes/overwrites a :pushpin:**board**.');
+    ic.initBoard.description.push('`isRotated = true` rotates the **board** to be displayed as black view.');
+    ic.initBoard.description.push(
+      '`skipFenValidation = true` skips the fen validation. This should only be used if the fen is known to pass the fen tests of `isepic-chess.js` or the fen was generated by `isepic-chess.js`.'
+    );
+    ic.initBoard.description.push(
+      '`isHidden = true` prevents visual display or anything DOM-related when **isepic-chess-ui.js** is present (the flag becomes irrelevant otherwise).'
+    );
+    ic.initBoard.description.push(
+      '`validOrBreak = true` (when loading a `pgn`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original pgn** is returned.'
+    );
+    ic.initBoard.description.push(
+      '`validOrBreak = true` (when loading a `uci`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original uci** is returned.'
+    );
+    ic.initBoard.description.push(
+      '`validOrBreak = true` (when loading a `fen` and not parsing a game `pgn` or `uci`) prevents the use of **default fen position**s when the **original fen** fails, ensuring that either `null` or a **board** with the **original fen** is returned.'
+    );
+    ic.initBoard.description.push(
+      'The Boolean options (`isRotated`, `skipFenValidation`, `isHidden` and `validOrBreak`) default to `false` when not set to a Boolean value of `true`.'
+    );
+    ic.initBoard.description.push(
+      '`moveIndex` can be specified to set a `board.currentMove` after a game is parsed, if not specified it will result in the last parsed move `(board.moveList.length-1)`. When not parsing a game (`pgn` or `uci`), this parameter becomes irrelevant because the **current move** index will always be `0` since no moves would have been played/parsed.'
+    );
+    ic.initBoard.description.push(
+      '`promoteTo` passes through `toAbsVal()`, any empty or invalid values will turn to `0` and default to `5` (queen), valid values out of bounds will stop at min of `2` (bishop) and max of `5` (queen).'
+    );
+    ic.initBoard.description.push(
+      '`manualResult` can be set to `"*", "1-0", "0-1" or "1/2-1/2"` to change the default **board property** of `board.manualResult` of `"*"`. When used at the same time of `pgn`, this will have higher precedence than the attempts to parse the game result from the `pgn`.'
+    );
+    ic.initBoard.description.push(
+      'If `boardName` is not a String (or is one but resolves to `""` after removing spaces), a **random board name** will be generated and used.'
+    );
+    ic.initBoard.description.push('The **board name** will have any non-Alphanumeric values turned into underscores.');
+    ic.initBoard.description.push(
+      'When using a **board name** that is already in use, the **board** with that **board name** will be used instead of creating a new **board** (old references to that **board** will continue to work).'
+    );
+    ic.initBoard.description.push(
+      '`fen` can be mixed together with `pgn` and `uci` (`fen` will take precedence over the `pgn` **FEN tag**). The **default fen position** will be used if no **fen** is supplied.'
+    );
+    ic.initBoard.description.push(
+      'If both `pgn` and `uci` are supplied, the **pgn** will take precedence and the **uci** will be ignored.'
+    );
+
+    ic.initBoard.examples = [];
+    ic.initBoard.examples.push('Ic.initBoard({boardName: "main"}) //Object{...}');
+    ic.initBoard.examples.push(
+      'Ic.initBoard({fen: "8/k7/P7/K7/8/8/8/8 b - - 0 1", isRotated: true, promoteTo: "b"}) //Object{...}'
+    );
+    ic.initBoard.examples.push('Ic.initBoard({pgn: "0invalidpgn0", validOrBreak: true}) //null');
+    ic.initBoard.examples.push('Ic.initBoard({uci: "0invaliduci0", validOrBreak: true}) //null');
+    ic.initBoard.examples.push('Ic.initBoard({fen: "0invalidfen0", validOrBreak: true}) //null');
+
+    ic.initBoard.links = PIN_BOARD;
+
+    ic.initBoard.errors = [];
+    ic.initBoard.errors.push('`validOrBreak` is `true` and the *pgn* fails the parsing.');
+    ic.initBoard.errors.push('`validOrBreak` is `true` and the *uci* fails the parsing.');
+    ic.initBoard.errors.push('`validOrBreak` is `true` and the *fen* fails the **basic fen test**.');
+    ic.initBoard.errors.push('`validOrBreak` is `true` and the *fen* fails the **refined fen test**.');
+    //end: initBoard
+
+    //start: fenApply
+    ic.fenApply.params = {
+      children: [
+        { name: 'fen', type: 'String' },
+        { name: 'fnName', type: 'String', icon: 'eight_pointed_black_star' },
+        { name: 'args', type: 'Array', icon: 'eight_pointed_black_star' },
+        {
+          name: 'p',
+          type: 'Object',
+          icon: 'eight_pointed_black_star',
+          children: [
+            { name: 'isRotated', type: 'Boolean', icon: 'eight_spoked_asterisk' },
+            overwriteAndUnreference(p_qal, [
+              ['name', 'promoteTo'],
+              ['icon', 'eight_spoked_asterisk'],
+            ]),
+            { name: 'skipFenValidation', type: 'Boolean', icon: 'eight_spoked_asterisk' },
+          ],
+        },
+      ],
+    };
+
+    ic.fenApply.returnVal = [
+      {
+        children: [
+          {
+            name: '(mixed results)',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            name: '(mixed results)',
+          },
+        ],
+      },
+    ];
+
+    ic.fenApply.description = [];
+    ic.fenApply.description.push(
+      'Calls one of the allowed **board methods** <sup>(listed below)</sup> on a **temporal board** and returns the result.'
+    );
+    ic.fenApply.description.push(
+      'The list of allowed `fnName` (String):<ul><li>`"playMove"`</li><li>`"playMoves"`</li><li>`"playRandomMove"`</li><li>`"legalMoves"`</li><li>`"legalFenMoves"`</li><li>`"legalSanMoves"`</li><li>`"legalUciMoves"`</li><li>`"isLegalMove"`</li><li>`"isLegalFen"`</li><li>`"getCheckmateMoves"`</li><li>`"getDrawMoves"`</li><li>`"getSquare"`</li><li>`"attackersFromActive"`</li><li>`"attackersFromNonActive"`</li><li>`"ascii"`</li><li>`"boardHash"`</li><li>`"countLightDarkBishops"`</li></ul>`"isLegalFen"` is not a real **board method** and any error in the creation of the **temporal board** in `Ic.initBoard()` will be supressed in this call.'
+    );
+    ic.fenApply.description.push(
+      'If **fnName** is not supplied, the default value is `"isLegalFen"` which returns the validity of **fen**.'
+    );
+    ic.fenApply.description.push(
+      'The **args** parameter is optional in the sense that measures were taken to prevent crashes, but the function to be applied will probably be expecting real arguments.'
+    );
+    ic.fenApply.description.push(
+      'The **p** options (`isRotated`, `promoteTo` and `skipFenValidation`) are passed to `Ic.initBoard()` when creating the **temporal board**.'
+    );
+
+    ic.fenApply.examples = [];
+    ic.fenApply.examples.push(
+      'Ic.fenApply("r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4", "ascii") //"..."'
+    );
+    ic.fenApply.examples.push(
+      'Ic.fenApply("r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4") //true'
+    );
+    ic.fenApply.examples.push('Ic.fenApply("0invalidfen0") //false');
+    ic.fenApply.examples.push(
+      'Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "playMove", ["c2_a2", {delimiter: "_"}]) //Object{...}'
+    );
+    ic.fenApply.examples.push('Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "0invalidfnname0", ["a1"]) //null');
+
+    ic.fenApply.errors = [];
+    ic.fenApply.errors.push('(mixed reasons)');
+    //end: fenApply
+
+    //start: fenGet
+    ic.fenGet.params = {
+      children: [
+        {
+          name: 'fen',
+          type: 'String',
+        },
+        {
+          name: 'props',
+          icon: 'eight_pointed_black_star',
+          children: [
+            { name: 'strList', type: 'String', isBold: true },
+            { name: 'arrList', type: 'Array', isBold: true },
+          ],
+        },
+        {
+          name: 'p',
+          type: 'Object',
+          icon: 'eight_pointed_black_star',
+          children: [{ name: 'skipFenValidation', type: 'Boolean', icon: 'eight_spoked_asterisk' }],
+        },
+      ],
+    };
+
+    ic.fenGet.returnVal = [
+      {
+        children: [
+          {
+            type: 'Object',
+            codeAfter: '{propA: valA, propB: valB, ..., propZ: valZ}',
+          },
+        ],
+      },
+      {
+        children: [
+          {
+            type: 'null',
+          },
+        ],
+      },
+    ];
+
+    ic.fenGet.description = [];
+    ic.fenGet.description.push(
+      'Get ' + urlLink(URL_BOARD_PROPS) + ' <sup>(except for `board.boardName`)</sup> from a **fen**.'
+    );
+    ic.fenGet.description.push(
+      'If **props** is not supplied (or resolves to empty), then all the **board properties** <sup>(except for `board.boardName`)</sup> will be returned by default.'
+    );
+    ic.fenGet.description.push('The **board properties** are **case-sensitive**.');
+    ic.fenGet.description.push(
+      'When passing a **string list**, this must be **space-separated** <sup>(not comma-separated)</sup>.'
+    );
+    ic.fenGet.description.push(
+      'Duplicated **board properties** will not result in errors and only the first occurrence will be used.'
+    );
+    ic.fenGet.description.push(
+      'The **p** option `skipFenValidation` is passed to `Ic.initBoard()` when creating the **temporal board**.'
+    );
+
+    ic.fenGet.examples = [];
+    ic.fenGet.examples.push(
+      'Ic.fenGet("6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54", "isStalemate inDraw") //{isStalemate: true, inDraw: true}'
+    );
+    ic.fenGet.examples.push(
+      'Ic.fenGet("6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54", ["halfMove", "fullMove"]) //{halfMove: 0, fullMove: 54}'
+    );
+    ic.fenGet.examples.push('Ic.fenGet("0invalidfen0", "isCheck") //null');
+    ic.fenGet.examples.push('Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //Object{...}');
+    ic.fenGet.examples.push(
+      'Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0") //null'
+    );
+
+    ic.fenGet.errors = [];
+    ic.fenGet.errors.push('`fen` is an **invalid fen**.');
+    ic.fenGet.errors.push('an **invalid property** was found in `props`.');
+    //end: fenGet
+
+    //start: getBoardNames
+    ic.getBoardNames.params = {};
+
+    ic.getBoardNames.returnVal = {
+      name: 'boardNamesArray',
+      type: 'Array',
+      isBold: true,
+    };
+
+    ic.getBoardNames.description = [];
+    ic.getBoardNames.description.push('Returns a **board names array**.');
+    ic.getBoardNames.description.push('The **board**s with `isHidden = true` are also included.');
+
+    ic.getBoardNames.examples = [];
+    ic.getBoardNames.examples.push(
+      'Ic.getBoardNames() //["main", "other", "other_copy", "hidden_board", "resume_from_fen"]'
+    );
+    ic.getBoardNames.examples.push('Ic.getBoardNames() //[]');
+    //end: getBoardNames
+
+    res = '';
+
+    res += '<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>';
+
+    res += '\n\n';
+
+    res += '<h1 align="center">Ic methods</h1>';
+
+    res += '\n\n';
+
+    res += 'Isepic Chess library `isepic-chess.js` has the following available methods:';
+
+    res += '\n\n';
+
+    res += '<ul>\n<li>Ic.' + docoGenMethodList(ic).join('()</li>\n<li>Ic.') + '()</li>\n</ul>';
+
+    res += '\n\n';
+
+    res += '#### Table `Ic.<methods>(...)`:';
+
+    res += '\n\n';
+
+    res += 'Function | Parameters | Return | UI refresh? | Description';
+
+    res += '\n';
+
+    res += '-------- | ---------- | ------ | ----------- | -----------';
+
+    res += '\n';
+
+    res += docoGenMethodTable(ic).join('\n');
+
+    res += '\n\n';
+
+    res += '<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>';
+
+    res += '\n';
+
+    document.getElementById('result').value = res;
+  </script>
 </html>
