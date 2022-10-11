@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.4.8';
+    var _VERSION = '8.4.9';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -2229,7 +2229,7 @@
           current_move = initial_full_move + Math.floor((i + black_starts - 1) / 2);
 
           text_game += i !== 1 ? ' ' : '';
-          text_game += move_list[i - 1].comment ? current_move + '...' : '';
+          text_game += move_list[i - 1].comment && black_starts === !!(i % 2) ? current_move + '...' : '';
           text_game += black_starts === !(i % 2) ? current_move + '. ' : '';
           text_game += move_list[i].san;
 

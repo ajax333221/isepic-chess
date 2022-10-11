@@ -2460,7 +2460,7 @@ describe('Board methods', () => {
     b_win_pgn = `1. Qb3+ Kc8 2. Ka7 a1=Q+ 3. Qa3 Kc7 4. Qa2 Qxa2#`; //0-1
     stalemate_pgn = `1. Qxa2 Ka8 2. Kb6+ Kb8 3. Qa6`; //½-½
     unfinished_pgn = `1. Ka5 Kc7 2. Qh5 Kd7 3. Kb5`; //unfinished
-    commented_pgn = `1. Qh1 Kc8 2. Kb6 Kb8 3. Ka6 Kc8 4. Kb6 Kb8 5. Ka6 {3-fold repetition} 5...Kc8`; //comment between white and black move
+    commented_pgn = `1. Qh1 Kc8 2. Kb6 Kb8 3. Ka6 Kc8 4. Kb6 Kb8 5. Ka6 {3-fold repetition} 5...Kc8 {3-fold repetition} 6. Ka7`; //comment between white and black move
 
     pgn_base = `[Event "Chess game"]
 [Site "?"]
@@ -2715,9 +2715,7 @@ _MOVES_`;
         validOrBreak: true,
       });
 
-      pgn_to_compare = pgn_base
-        .replace('_RESULT_', '1/2-1/2')
-        .replace('_MOVES_', commented_pgn + ' {3-fold repetition} 1/2-1/2');
+      pgn_to_compare = pgn_base.replace('_RESULT_', '*').replace('_MOVES_', commented_pgn + ' *');
 
       board_obj.navFirst();
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
@@ -2726,9 +2724,7 @@ _MOVES_`;
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 
       board_obj.setManualResult('1-0');
-      pgn_to_compare = pgn_base
-        .replace('_RESULT_', '1-0')
-        .replace('_MOVES_', commented_pgn + ' {3-fold repetition} 1-0');
+      pgn_to_compare = pgn_base.replace('_RESULT_', '1-0').replace('_MOVES_', commented_pgn + ' 1-0');
 
       board_obj.navFirst();
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
@@ -2737,9 +2733,7 @@ _MOVES_`;
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 
       board_obj.setManualResult('0-1');
-      pgn_to_compare = pgn_base
-        .replace('_RESULT_', '0-1')
-        .replace('_MOVES_', commented_pgn + ' {3-fold repetition} 0-1');
+      pgn_to_compare = pgn_base.replace('_RESULT_', '0-1').replace('_MOVES_', commented_pgn + ' 0-1');
 
       board_obj.navFirst();
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
@@ -2748,9 +2742,7 @@ _MOVES_`;
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 
       board_obj.setManualResult('1/2-1/2');
-      pgn_to_compare = pgn_base
-        .replace('_RESULT_', '1/2-1/2')
-        .replace('_MOVES_', commented_pgn + ' {3-fold repetition} 1/2-1/2');
+      pgn_to_compare = pgn_base.replace('_RESULT_', '1/2-1/2').replace('_MOVES_', commented_pgn + ' 1/2-1/2');
 
       board_obj.navFirst();
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
@@ -2759,9 +2751,7 @@ _MOVES_`;
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
 
       board_obj.setManualResult('*');
-      pgn_to_compare = pgn_base
-        .replace('_RESULT_', '1/2-1/2')
-        .replace('_MOVES_', commented_pgn + ' {3-fold repetition} 1/2-1/2');
+      pgn_to_compare = pgn_base.replace('_RESULT_', '*').replace('_MOVES_', commented_pgn + ' *');
 
       board_obj.navFirst();
       expect(board_obj.pgnExport()).toBe(pgn_to_compare);
