@@ -14,5 +14,6 @@ package-lock.json
 # Files and paths from GitHub repo.
 .gitignore
 .gitattributes
+.github/
 test/
 docs/
