@@ -15,7 +15,7 @@ describe('Misc.', () => {
           Ic.fenApply('rnb1kbnr/pp1p2pp/2p2p2/q3p3/4PN2/2NP4/PPP2PPP/R1BQKB1R w KQkq - 0 6', 'playMove', ['f4-e2'], {
             skipFenValidation: true,
           }).san
-        ).toBe('Me2');
+        ).toBe('Ne2');
       });
     });
 
