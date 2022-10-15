@@ -5,7 +5,8 @@
   "description": "Chess utility library written in JavaScript",
   "main": "isepic-chess.js",
   "scripts": {
-    "test": "jest --runInBand --coverage"
+    "test": "jest --runInBand --coverage",
+    "prettier": "npx prettier --write \"**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -20,9 +21,9 @@
   ],
   "author": "Ajax Isepic",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
-    "jest": "^26.2.2"
+    "jest": "^26.2.2",
+    "prettier": "^2.7.1"
   },
   "bugs": {
     "url": "https://github.com/ajax333221/isepic-chess/issues"
