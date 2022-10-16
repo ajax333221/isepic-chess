@@ -6,7 +6,7 @@
   "main": "isepic-chess.js",
   "scripts": {
     "test": "jest --runInBand --coverage",
-    "prettier": "npx prettier --write \"**/*.js\""
+    "prettier": "npx prettier --write \"**/*.{js,css,html,json,md}\""
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,7 @@
   ],
   "author": "Ajax Isepic",
   "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "jest": "^26.2.2",
     "prettier": "^2.7.1"
