@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.4.9';
+    var _VERSION = '8.5.0';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -688,39 +688,87 @@
       return rtn;
     }
 
-    function _cloneBoardObjs(to_board, from_board) {
-      var i, j, k, len, len2, len3, temp, current_key, current_sub_from, sub_keys, sub_sub_keys, to_prop, from_prop;
+    function _cloneBoardToObj(to_obj = {}, from_woard) {
+      var i,
+        j,
+        k,
+        len,
+        len2,
+        len3,
+        current_key,
+        to_prop,
+        from_prop,
+        sub_current_key,
+        sub_from_prop,
+        sub_to_prop,
+        sub_sub_current_key,
+        sub_sub_from_prop,
+        //sub_sub_to_prop,
+        sub_keys,
+        sub_sub_keys,
+        from_board;
 
-      if (to_board !== from_board) {
-        to_board.moveList = [];
-        to_board.legalUci = [];
-        to_board.legalUciTree = {};
-        to_board.legalRevTree = {};
+      block: {
+        from_board = getBoard(from_woard);
+
+        if (from_board === null) {
+          _consoleLog("Error[_cloneBoardToObj]: from_woard doesn't exist");
+          break block;
+        }
+
+        if (to_obj === from_board) {
+          _consoleLog('Error[_cloneBoardToObj]: trying to self clone');
+          break block;
+        }
+
+        to_obj.moveList = [];
+        to_obj.legalUci = [];
+        to_obj.legalUciTree = {};
+        to_obj.legalRevTree = {};
 
         for (i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
           //0<len
           current_key = _MUTABLE_KEYS[i];
-          to_prop = to_board[current_key];
+          to_prop = to_obj[current_key];
           from_prop = from_board[current_key];
+
+          if (!to_prop && (current_key === 'w' || current_key === 'b' || current_key === 'squares')) {
+            to_obj[current_key] = {};
+            to_prop = to_obj[current_key];
+          }
 
           //primitive data type
           if (!_isObject(from_prop) && !_isArray(from_prop)) {
-            to_board[current_key] = from_board[current_key]; //can't use to_prop, it's not a reference here
+            to_obj[current_key] = from_prop; //can't use to_prop, it's not a reference here
             continue;
           }
 
           if (current_key === 'legalUci') {
-            to_board.legalUci = from_board.legalUci.slice(0);
+            to_obj.legalUci = from_board.legalUci.slice(0);
             continue;
           }
 
           if (current_key === 'w' || current_key === 'b') {
+            //["w" | "b"] object of (12 static + 3 mutables = 15) Note: materialDiff is array
+
             //object or array data type
-            to_prop.materialDiff = from_prop.materialDiff.slice(0);
+            to_prop.materialDiff = from_prop.materialDiff.slice(0); //mutables
 
             //primitive data type
-            to_prop.kingBos = from_prop.kingBos;
-            to_prop.castling = from_prop.castling;
+            to_prop.isBlack = from_prop.isBlack; //static
+            to_prop.sign = from_prop.sign; //static
+            to_prop.firstRankPos = from_prop.firstRankPos; //static
+            to_prop.secondRankPos = from_prop.secondRankPos; //static
+            to_prop.lastRankPos = from_prop.lastRankPos; //static
+            to_prop.singlePawnRankShift = from_prop.singlePawnRankShift; //static
+            to_prop.pawn = from_prop.pawn; //static
+            to_prop.knight = from_prop.knight; //static
+            to_prop.bishop = from_prop.bishop; //static
+            to_prop.rook = from_prop.rook; //static
+            to_prop.queen = from_prop.queen; //static
+            to_prop.king = from_prop.king; //static
+            to_prop.kingBos = from_prop.kingBos; //mutables
+            to_prop.castling = from_prop.castling; //mutables
             continue;
           }
 
@@ -728,18 +776,25 @@
 
           for (j = 0, len2 = sub_keys.length; j < len2; j++) {
             //0<len2
-            current_sub_from = from_prop[sub_keys[j]];
+            sub_current_key = sub_keys[j];
+            sub_to_prop = to_prop[sub_current_key];
+            sub_from_prop = from_prop[sub_current_key];
+
+            if (!sub_to_prop && current_key === 'squares') {
+              to_prop[sub_current_key] = {};
+              sub_to_prop = to_prop[sub_current_key];
+            }
 
             //primitive data type
-            if (!_isObject(current_sub_from) && !_isArray(current_sub_from)) {
-              _consoleLog('Error[_cloneBoardObjs]: unexpected primitive data type');
+            if (!_isObject(sub_from_prop) && !_isArray(sub_from_prop)) {
+              _consoleLog('Error[_cloneBoardToObj]: unexpected primitive data type');
               continue;
             }
 
             if (current_key === 'legalUciTree') {
               //["legalUciTree"] object of (0-64), array of (0-N)
 
-              to_prop[sub_keys[j]] = current_sub_from.slice(0);
+              to_prop[sub_current_key] = sub_from_prop.slice(0); //can't use sub_to_prop, it's not a reference here
               continue;
             }
 
@@ -747,53 +802,63 @@
               //["squares"] object of (64), object of (6 static + 13 mutables = 19) Note: pos is array
 
               //object or array data type
-              //(none)
+              sub_to_prop.pos = sub_from_prop.pos.slice(0); //static
 
               //primitive data type
-              to_prop[sub_keys[j]].bal = current_sub_from.bal;
-              to_prop[sub_keys[j]].absBal = current_sub_from.absBal;
-              to_prop[sub_keys[j]].val = current_sub_from.val;
-              to_prop[sub_keys[j]].absVal = current_sub_from.absVal;
-              to_prop[sub_keys[j]].className = current_sub_from.className;
-              to_prop[sub_keys[j]].sign = current_sub_from.sign;
-              to_prop[sub_keys[j]].isEmptySquare = current_sub_from.isEmptySquare;
-              to_prop[sub_keys[j]].isPawn = current_sub_from.isPawn;
-              to_prop[sub_keys[j]].isKnight = current_sub_from.isKnight;
-              to_prop[sub_keys[j]].isBishop = current_sub_from.isBishop;
-              to_prop[sub_keys[j]].isRook = current_sub_from.isRook;
-              to_prop[sub_keys[j]].isQueen = current_sub_from.isQueen;
-              to_prop[sub_keys[j]].isKing = current_sub_from.isKing;
+              sub_to_prop.bos = sub_from_prop.bos; //static
+              sub_to_prop.rankPos = sub_from_prop.rankPos; //static
+              sub_to_prop.filePos = sub_from_prop.filePos; //static
+              sub_to_prop.rankBos = sub_from_prop.rankBos; //static
+              sub_to_prop.fileBos = sub_from_prop.fileBos; //static
+              sub_to_prop.bal = sub_from_prop.bal; //mutables
+              sub_to_prop.absBal = sub_from_prop.absBal; //mutables
+              sub_to_prop.val = sub_from_prop.val; //mutables
+              sub_to_prop.absVal = sub_from_prop.absVal; //mutables
+              sub_to_prop.className = sub_from_prop.className; //mutables
+              sub_to_prop.sign = sub_from_prop.sign; //mutables
+              sub_to_prop.isEmptySquare = sub_from_prop.isEmptySquare; //mutables
+              sub_to_prop.isPawn = sub_from_prop.isPawn; //mutables
+              sub_to_prop.isKnight = sub_from_prop.isKnight; //mutables
+              sub_to_prop.isBishop = sub_from_prop.isBishop; //mutables
+              sub_to_prop.isRook = sub_from_prop.isRook; //mutables
+              sub_to_prop.isQueen = sub_from_prop.isQueen; //mutables
+              sub_to_prop.isKing = sub_from_prop.isKing; //mutables
               continue;
             }
 
-            sub_sub_keys = Object.keys(current_sub_from);
+            sub_sub_keys = Object.keys(sub_from_prop);
 
             if (current_key === 'moveList' || current_key === 'legalRevTree') {
-              to_prop[sub_keys[j]] = {};
+              to_prop[sub_current_key] = {};
+              sub_to_prop = to_prop[sub_current_key];
               /*NO put a "continue" in here*/
             }
 
             for (k = 0, len3 = sub_sub_keys.length; k < len3; k++) {
               //0<len3
-              temp = current_sub_from[sub_sub_keys[k]];
+              sub_sub_current_key = sub_sub_keys[k];
+              //sub_sub_to_prop = sub_to_prop[sub_sub_current_key];
+              sub_sub_from_prop = sub_from_prop[sub_sub_current_key];
 
               if (current_key === 'legalRevTree') {
-                to_prop[sub_keys[j]][sub_sub_keys[k]] = temp.slice(0);
+                sub_to_prop[sub_sub_current_key] = sub_sub_from_prop.slice(0); //can't use sub_sub_to_prop, it's not a reference here
                 continue;
               }
 
               //object or array data type
-              if (_isObject(temp) || _isArray(temp)) {
-                _consoleLog('Error[_cloneBoardObjs]: unexpected type in key "' + sub_sub_keys[k] + '"');
+              if (_isObject(sub_sub_from_prop) || _isArray(sub_sub_from_prop)) {
+                _consoleLog('Error[_cloneBoardToObj]: unexpected type in key "' + sub_sub_current_key + '"');
                 continue;
               }
 
               //primitive data type
-              to_prop[sub_keys[j]][sub_sub_keys[k]] = temp;
+              sub_to_prop[sub_sub_current_key] = sub_sub_from_prop; //can't use sub_sub_to_prop, it's not a reference here
             }
           }
         }
       }
+
+      return to_obj;
     }
 
     function _basicFenTest(fen) {
@@ -2392,7 +2457,7 @@
 
         hash_cache = that.boardHash();
 
-        _cloneBoardObjs(that, from_board);
+        _cloneBoardToObj(that, from_board);
 
         if (that.boardHash() !== hash_cache) {
           rtn_changed = true;
@@ -2424,7 +2489,7 @@
 
         hash_cache = to_board.boardHash();
 
-        _cloneBoardObjs(to_board, that);
+        _cloneBoardToObj(to_board, that);
 
         if (to_board.boardHash() !== hash_cache) {
           rtn_changed = true;
@@ -3905,6 +3970,7 @@
           break block;
         }
 
+        board = _cloneBoardToObj({ boardName: 'fake_board_fenGet' }, board);
         board_created = true;
         board_keys = [];
 
@@ -4003,7 +4069,7 @@
         castlingChars: _castlingChars,
         unreferenceP: _unreferenceP,
         cleanSan: _cleanSan,
-        cloneBoardObjs: _cloneBoardObjs,
+        cloneBoardToObj: _cloneBoardToObj,
         basicFenTest: _basicFenTest,
         perft: _perft,
       },

@@ -494,61 +494,80 @@ describe('Ic utility methods', () => {
     expect(Ic.utilityMisc.cleanSan('a3 [()<>[]]')).toBe('a3');
   });
 
-  describe('Ic.utilityMisc.cloneBoardObjs()', () => {
+  describe('Ic.utilityMisc.cloneBoardToObj()', () => {
     var board_name, other_board_name, board_obj, board_other;
 
     board_name = 'board_clone_board_objs';
     other_board_name = 'board_clone_board_objs_other';
 
-    board_obj = Ic.initBoard({
-      boardName: board_name,
-      fen: 'r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2',
-      skipFenValidation: true,
+    test('to_board vs from_board', () => {
+      board_obj = Ic.initBoard({
+        boardName: board_name,
+        fen: 'r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2',
+        skipFenValidation: true,
+      });
+
+      board_other = Ic.initBoard({
+        boardName: other_board_name,
+        fen: 'r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2',
+        skipFenValidation: true,
+      });
+
+      board_obj.playMove('c3-e4');
+
+      board_other.playMoves(['g2-g3', 'h7-h6', 'f1-g2', 'h6-h5', 'g2-e4']);
+
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
+
+      expect(board_other.moveList[1].san).toBe('Ne4');
+      expect(!!board_other.moveList[2]).toBe(false);
+      expect(board_other.getSquare('e4').val).toBe(2);
+      expect(board_other.isEqualBoard(board_obj)).toBe(true);
+
+      board_other.playMoves(['g7-g5', 'e4-g5', 'e7-e5', 'e2-e4', 'd8-g5', 'd2-d3', 'g5-c1']);
+
+      expect(board_other.w.materialDiff).toEqual([1]);
+      expect(board_other.b.materialDiff).toEqual([-2, -3]);
+
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
+
+      //if we go back to push them one by one and forget to start with a [],
+      //then shorter arrays won't overwrite larger arrays properly
+      expect(board_other.w.materialDiff).toEqual([]);
+      expect(board_other.b.materialDiff).toEqual([]);
+
+      board_obj.w.materialDiff.push(5);
+      board_obj.b.materialDiff.push(-5);
+
+      //missing materialDiff.slice(0) binds the two references
+      expect(board_other.w.materialDiff).toEqual([]);
+      expect(board_other.b.materialDiff).toEqual([]);
+      expect(board_other.w.materialDiff).not.toEqual([5]);
+      expect(board_other.b.materialDiff).not.toEqual([-5]);
+
+      board_obj.w.materialDiff.pop();
+      board_obj.b.materialDiff.pop();
     });
 
-    board_other = Ic.initBoard({
-      boardName: other_board_name,
-      fen: 'r1bqkbnr/pppppppp/2n5/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2',
-      skipFenValidation: true,
+    test('to_emtpy_obj vs from_board', () => {
+      var obj, output;
+
+      board_obj = Ic.initBoard({
+        boardName: board_name,
+      });
+
+      obj = {};
+
+      Ic.utilityMisc.cloneBoardToObj(obj, board_obj);
+
+      expect(Object.keys(obj.w).length).toEqual(Object.keys(board_obj.w).length);
+      expect(Object.keys(obj.b).length).toEqual(Object.keys(board_obj.b).length);
+      expect(Object.keys(obj.squares.a1).length).toEqual(Object.keys(board_obj.squares.a1).length);
+
+      output =
+        '{"moveList":[{"colorMoved":"b","colorToPlay":"w","fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","san":"","uci":"","fromBos":"","toBos":"","enPassantBos":"","piece":"","captured":"","promotion":"","comment":"","moveResult":"","canDraw":false,"isEnPassantCapture":false}],"legalUci":["a2a3","a2a4","b2b3","b2b4","c2c3","c2c4","d2d3","d2d4","e2e3","e2e4","f2f3","f2f4","g2g3","g2g4","h2h3","h2h4","b1c3","b1a3","g1h3","g1f3"],"legalUciTree":{"a2":["a2a3","a2a4"],"b2":["b2b3","b2b4"],"c2":["c2c3","c2c4"],"d2":["d2d3","d2d4"],"e2":["e2e3","e2e4"],"f2":["f2f3","f2f4"],"g2":["g2g3","g2g4"],"h2":["h2h3","h2h4"],"b1":["b1c3","b1a3"],"g1":["g1h3","g1f3"]},"legalRevTree":{"a3":{"p":["a2"],"n":["b1"]},"a4":{"p":["a2"]},"b3":{"p":["b2"]},"b4":{"p":["b2"]},"c3":{"p":["c2"],"n":["b1"]},"c4":{"p":["c2"]},"d3":{"p":["d2"]},"d4":{"p":["d2"]},"e3":{"p":["e2"]},"e4":{"p":["e2"]},"f3":{"p":["f2"],"n":["g1"]},"f4":{"p":["f2"]},"g3":{"p":["g2"]},"g4":{"p":["g2"]},"h3":{"p":["h2"],"n":["g1"]},"h4":{"p":["h2"]}},"w":{"materialDiff":[],"isBlack":false,"sign":1,"firstRankPos":7,"secondRankPos":6,"lastRankPos":0,"singlePawnRankShift":-1,"pawn":1,"knight":2,"bishop":3,"rook":4,"queen":5,"king":6,"kingBos":"e1","castling":3},"b":{"materialDiff":[],"isBlack":true,"sign":-1,"firstRankPos":0,"secondRankPos":1,"lastRankPos":7,"singlePawnRankShift":1,"pawn":-1,"knight":-2,"bishop":-3,"rook":-4,"queen":-5,"king":-6,"kingBos":"e8","castling":3},"activeColor":"w","nonActiveColor":"b","fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","enPassantBos":"","halfMove":0,"fullMove":1,"currentMove":0,"isRotated":false,"checks":0,"isCheck":false,"isCheckmate":false,"isStalemate":false,"isThreefold":false,"isInsufficientMaterial":false,"isFiftyMove":false,"inDraw":false,"promoteTo":5,"manualResult":"*","isHidden":false,"squares":{"a8":{"pos":[0,0],"bos":"a8","rankPos":0,"filePos":0,"rankBos":"8","fileBos":"a","bal":"r","absBal":"R","val":-4,"absVal":4,"className":"br","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":true,"isQueen":false,"isKing":false},"b8":{"pos":[0,1],"bos":"b8","rankPos":0,"filePos":1,"rankBos":"8","fileBos":"b","bal":"n","absBal":"N","val":-2,"absVal":2,"className":"bn","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":true,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c8":{"pos":[0,2],"bos":"c8","rankPos":0,"filePos":2,"rankBos":"8","fileBos":"c","bal":"b","absBal":"B","val":-3,"absVal":3,"className":"bb","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":true,"isRook":false,"isQueen":false,"isKing":false},"d8":{"pos":[0,3],"bos":"d8","rankPos":0,"filePos":3,"rankBos":"8","fileBos":"d","bal":"q","absBal":"Q","val":-5,"absVal":5,"className":"bq","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":true,"isKing":false},"e8":{"pos":[0,4],"bos":"e8","rankPos":0,"filePos":4,"rankBos":"8","fileBos":"e","bal":"k","absBal":"K","val":-6,"absVal":6,"className":"bk","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":true},"f8":{"pos":[0,5],"bos":"f8","rankPos":0,"filePos":5,"rankBos":"8","fileBos":"f","bal":"b","absBal":"B","val":-3,"absVal":3,"className":"bb","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":true,"isRook":false,"isQueen":false,"isKing":false},"g8":{"pos":[0,6],"bos":"g8","rankPos":0,"filePos":6,"rankBos":"8","fileBos":"g","bal":"n","absBal":"N","val":-2,"absVal":2,"className":"bn","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":true,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h8":{"pos":[0,7],"bos":"h8","rankPos":0,"filePos":7,"rankBos":"8","fileBos":"h","bal":"r","absBal":"R","val":-4,"absVal":4,"className":"br","sign":-1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":true,"isQueen":false,"isKing":false},"a7":{"pos":[1,0],"bos":"a7","rankPos":1,"filePos":0,"rankBos":"7","fileBos":"a","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"b7":{"pos":[1,1],"bos":"b7","rankPos":1,"filePos":1,"rankBos":"7","fileBos":"b","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c7":{"pos":[1,2],"bos":"c7","rankPos":1,"filePos":2,"rankBos":"7","fileBos":"c","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"d7":{"pos":[1,3],"bos":"d7","rankPos":1,"filePos":3,"rankBos":"7","fileBos":"d","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"e7":{"pos":[1,4],"bos":"e7","rankPos":1,"filePos":4,"rankBos":"7","fileBos":"e","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"f7":{"pos":[1,5],"bos":"f7","rankPos":1,"filePos":5,"rankBos":"7","fileBos":"f","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"g7":{"pos":[1,6],"bos":"g7","rankPos":1,"filePos":6,"rankBos":"7","fileBos":"g","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h7":{"pos":[1,7],"bos":"h7","rankPos":1,"filePos":7,"rankBos":"7","fileBos":"h","bal":"p","absBal":"P","val":-1,"absVal":1,"className":"bp","sign":-1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"a6":{"pos":[2,0],"bos":"a6","rankPos":2,"filePos":0,"rankBos":"6","fileBos":"a","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"b6":{"pos":[2,1],"bos":"b6","rankPos":2,"filePos":1,"rankBos":"6","fileBos":"b","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c6":{"pos":[2,2],"bos":"c6","rankPos":2,"filePos":2,"rankBos":"6","fileBos":"c","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"d6":{"pos":[2,3],"bos":"d6","rankPos":2,"filePos":3,"rankBos":"6","fileBos":"d","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"e6":{"pos":[2,4],"bos":"e6","rankPos":2,"filePos":4,"rankBos":"6","fileBos":"e","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"f6":{"pos":[2,5],"bos":"f6","rankPos":2,"filePos":5,"rankBos":"6","fileBos":"f","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"g6":{"pos":[2,6],"bos":"g6","rankPos":2,"filePos":6,"rankBos":"6","fileBos":"g","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h6":{"pos":[2,7],"bos":"h6","rankPos":2,"filePos":7,"rankBos":"6","fileBos":"h","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"a5":{"pos":[3,0],"bos":"a5","rankPos":3,"filePos":0,"rankBos":"5","fileBos":"a","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"b5":{"pos":[3,1],"bos":"b5","rankPos":3,"filePos":1,"rankBos":"5","fileBos":"b","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c5":{"pos":[3,2],"bos":"c5","rankPos":3,"filePos":2,"rankBos":"5","fileBos":"c","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"d5":{"pos":[3,3],"bos":"d5","rankPos":3,"filePos":3,"rankBos":"5","fileBos":"d","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"e5":{"pos":[3,4],"bos":"e5","rankPos":3,"filePos":4,"rankBos":"5","fileBos":"e","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"f5":{"pos":[3,5],"bos":"f5","rankPos":3,"filePos":5,"rankBos":"5","fileBos":"f","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"g5":{"pos":[3,6],"bos":"g5","rankPos":3,"filePos":6,"rankBos":"5","fileBos":"g","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h5":{"pos":[3,7],"bos":"h5","rankPos":3,"filePos":7,"rankBos":"5","fileBos":"h","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"a4":{"pos":[4,0],"bos":"a4","rankPos":4,"filePos":0,"rankBos":"4","fileBos":"a","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"b4":{"pos":[4,1],"bos":"b4","rankPos":4,"filePos":1,"rankBos":"4","fileBos":"b","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c4":{"pos":[4,2],"bos":"c4","rankPos":4,"filePos":2,"rankBos":"4","fileBos":"c","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"d4":{"pos":[4,3],"bos":"d4","rankPos":4,"filePos":3,"rankBos":"4","fileBos":"d","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"e4":{"pos":[4,4],"bos":"e4","rankPos":4,"filePos":4,"rankBos":"4","fileBos":"e","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"f4":{"pos":[4,5],"bos":"f4","rankPos":4,"filePos":5,"rankBos":"4","fileBos":"f","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"g4":{"pos":[4,6],"bos":"g4","rankPos":4,"filePos":6,"rankBos":"4","fileBos":"g","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h4":{"pos":[4,7],"bos":"h4","rankPos":4,"filePos":7,"rankBos":"4","fileBos":"h","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"a3":{"pos":[5,0],"bos":"a3","rankPos":5,"filePos":0,"rankBos":"3","fileBos":"a","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"b3":{"pos":[5,1],"bos":"b3","rankPos":5,"filePos":1,"rankBos":"3","fileBos":"b","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c3":{"pos":[5,2],"bos":"c3","rankPos":5,"filePos":2,"rankBos":"3","fileBos":"c","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"d3":{"pos":[5,3],"bos":"d3","rankPos":5,"filePos":3,"rankBos":"3","fileBos":"d","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"e3":{"pos":[5,4],"bos":"e3","rankPos":5,"filePos":4,"rankBos":"3","fileBos":"e","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"f3":{"pos":[5,5],"bos":"f3","rankPos":5,"filePos":5,"rankBos":"3","fileBos":"f","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"g3":{"pos":[5,6],"bos":"g3","rankPos":5,"filePos":6,"rankBos":"3","fileBos":"g","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h3":{"pos":[5,7],"bos":"h3","rankPos":5,"filePos":7,"rankBos":"3","fileBos":"h","bal":"*","absBal":"*","val":0,"absVal":0,"className":"","sign":-1,"isEmptySquare":true,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"a2":{"pos":[6,0],"bos":"a2","rankPos":6,"filePos":0,"rankBos":"2","fileBos":"a","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"b2":{"pos":[6,1],"bos":"b2","rankPos":6,"filePos":1,"rankBos":"2","fileBos":"b","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c2":{"pos":[6,2],"bos":"c2","rankPos":6,"filePos":2,"rankBos":"2","fileBos":"c","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"d2":{"pos":[6,3],"bos":"d2","rankPos":6,"filePos":3,"rankBos":"2","fileBos":"d","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"e2":{"pos":[6,4],"bos":"e2","rankPos":6,"filePos":4,"rankBos":"2","fileBos":"e","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"f2":{"pos":[6,5],"bos":"f2","rankPos":6,"filePos":5,"rankBos":"2","fileBos":"f","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"g2":{"pos":[6,6],"bos":"g2","rankPos":6,"filePos":6,"rankBos":"2","fileBos":"g","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h2":{"pos":[6,7],"bos":"h2","rankPos":6,"filePos":7,"rankBos":"2","fileBos":"h","bal":"P","absBal":"P","val":1,"absVal":1,"className":"wp","sign":1,"isEmptySquare":false,"isPawn":true,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"a1":{"pos":[7,0],"bos":"a1","rankPos":7,"filePos":0,"rankBos":"1","fileBos":"a","bal":"R","absBal":"R","val":4,"absVal":4,"className":"wr","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":true,"isQueen":false,"isKing":false},"b1":{"pos":[7,1],"bos":"b1","rankPos":7,"filePos":1,"rankBos":"1","fileBos":"b","bal":"N","absBal":"N","val":2,"absVal":2,"className":"wn","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":true,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"c1":{"pos":[7,2],"bos":"c1","rankPos":7,"filePos":2,"rankBos":"1","fileBos":"c","bal":"B","absBal":"B","val":3,"absVal":3,"className":"wb","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":true,"isRook":false,"isQueen":false,"isKing":false},"d1":{"pos":[7,3],"bos":"d1","rankPos":7,"filePos":3,"rankBos":"1","fileBos":"d","bal":"Q","absBal":"Q","val":5,"absVal":5,"className":"wq","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":true,"isKing":false},"e1":{"pos":[7,4],"bos":"e1","rankPos":7,"filePos":4,"rankBos":"1","fileBos":"e","bal":"K","absBal":"K","val":6,"absVal":6,"className":"wk","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":false,"isQueen":false,"isKing":true},"f1":{"pos":[7,5],"bos":"f1","rankPos":7,"filePos":5,"rankBos":"1","fileBos":"f","bal":"B","absBal":"B","val":3,"absVal":3,"className":"wb","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":true,"isRook":false,"isQueen":false,"isKing":false},"g1":{"pos":[7,6],"bos":"g1","rankPos":7,"filePos":6,"rankBos":"1","fileBos":"g","bal":"N","absBal":"N","val":2,"absVal":2,"className":"wn","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":true,"isBishop":false,"isRook":false,"isQueen":false,"isKing":false},"h1":{"pos":[7,7],"bos":"h1","rankPos":7,"filePos":7,"rankBos":"1","fileBos":"h","bal":"R","absBal":"R","val":4,"absVal":4,"className":"wr","sign":1,"isEmptySquare":false,"isPawn":false,"isKnight":false,"isBishop":false,"isRook":true,"isQueen":false,"isKing":false}}}';
+      expect(JSON.stringify(obj)).toEqual(output);
     });
-
-    board_obj.playMove('c3-e4');
-
-    board_other.playMoves(['g2-g3', 'h7-h6', 'f1-g2', 'h6-h5', 'g2-e4']);
-
-    Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-
-    expect(board_other.moveList[1].san).toBe('Ne4');
-    expect(!!board_other.moveList[2]).toBe(false);
-    expect(board_other.getSquare('e4').val).toBe(2);
-
-    Ic.utilityMisc.cloneBoardObjs(board_other, board_other);
-
-    expect(board_other.isEqualBoard(board_obj)).toBe(true);
-
-    board_other.playMoves(['g7-g5', 'e4-g5', 'e7-e5', 'e2-e4', 'd8-g5', 'd2-d3', 'g5-c1']);
-
-    expect(board_other.w.materialDiff).toEqual([1]);
-    expect(board_other.b.materialDiff).toEqual([-2, -3]);
-
-    Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-
-    //if we go back to push them one by one and forget to start with a [],
-    //then shorter arrays won't overwrite larger arrays properly
-    expect(board_other.w.materialDiff).toEqual([]);
-    expect(board_other.b.materialDiff).toEqual([]);
-
-    board_obj.w.materialDiff.push(5);
-    board_obj.b.materialDiff.push(-5);
-
-    //missing materialDiff.slice(0) binds the two references
-    expect(board_other.w.materialDiff).toEqual([]);
-    expect(board_other.b.materialDiff).toEqual([]);
-    expect(board_other.w.materialDiff).not.toEqual([5]);
-    expect(board_other.b.materialDiff).not.toEqual([-5]);
-
-    board_obj.w.materialDiff.pop();
-    board_obj.b.materialDiff.pop();
   });
 
   describe('Ic.utilityMisc.basicFenTest()', () => {

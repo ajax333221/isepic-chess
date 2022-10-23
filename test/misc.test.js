@@ -444,43 +444,43 @@ describe('Misc.', () => {
         expect(board_obj.b.castling).toBe(3);
 
         //w losing long-castle right by rook-move
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('a1-d1');
         expect(board_other.w.castling).toBe(1);
         expect(board_other.b.castling).toBe(3);
 
         //w losing short-castle right by rook-move
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('h1-f1');
         expect(board_other.w.castling).toBe(2);
         expect(board_other.b.castling).toBe(3);
 
         //w losing both castling rights by king-move
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('e1-d1');
         expect(board_other.w.castling).toBe(0);
         expect(board_other.b.castling).toBe(3);
 
         //w losing both castling rights by long-castle
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('e1-c1');
         expect(board_other.w.castling).toBe(0);
         expect(board_other.b.castling).toBe(3);
 
         //w losing both castling rights by short-castle
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('e1-g1');
         expect(board_other.w.castling).toBe(0);
         expect(board_other.b.castling).toBe(3);
 
         //w making b lose long-castle right by rook-capture
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('a2-a8');
         expect(board_other.w.castling).toBe(3);
         expect(board_other.b.castling).toBe(1);
 
         //w making b lose short-castle right by rook-capture
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('h2-h8');
         expect(board_other.w.castling).toBe(3);
         expect(board_other.b.castling).toBe(2);
@@ -490,43 +490,43 @@ describe('Misc.', () => {
         expect(board_obj.b.castling).toBe(3);
 
         //b losing long-castle right by rook-move
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('a8-d8');
         expect(board_other.w.castling).toBe(3);
         expect(board_other.b.castling).toBe(1);
 
         //b losing short-castle right by rook-move
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('h8-f8');
         expect(board_other.w.castling).toBe(3);
         expect(board_other.b.castling).toBe(2);
 
         //b losing both castling rights by king-move
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('e8-d8');
         expect(board_other.w.castling).toBe(3);
         expect(board_other.b.castling).toBe(0);
 
         //b losing both castling rights by long-castle
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('e8-c8');
         expect(board_other.w.castling).toBe(3);
         expect(board_other.b.castling).toBe(0);
 
         //b losing both castling rights by short-castle
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('e8-g8');
         expect(board_other.w.castling).toBe(3);
         expect(board_other.b.castling).toBe(0);
 
         //b making w lose long-castle right by rook-capture
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('e5-a1');
         expect(board_other.w.castling).toBe(1);
         expect(board_other.b.castling).toBe(3);
 
         //b making w lose short-castle right by rook-capture
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+        Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
         board_other.playMove('d5-h1');
         expect(board_other.w.castling).toBe(2);
         expect(board_other.b.castling).toBe(3);
@@ -548,21 +548,21 @@ describe('Misc.', () => {
         skipFenValidation: true,
       });
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMoves(['e3-b3', 'e6-b3']);
 
       //stalemate (white turn)
       expect(board_other.moveList[board_other.moveList.length - 1].moveResult).toBe('1/2-1/2');
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMoves(['e3-d4', 'e6-b6', 'd4-b6']);
 
       //stalemate (black turn)
       expect(board_other.moveList[board_other.moveList.length - 1].moveResult).toBe('1/2-1/2');
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMoves(['e3-b6', 'e6-h3', 'b6-b8']);
 
@@ -570,7 +570,7 @@ describe('Misc.', () => {
       expect(board_other.moveList[board_other.moveList.length - 1].san).toBe('Qb8#');
       expect(board_other.moveList[board_other.moveList.length - 1].moveResult).toBe('1-0');
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMoves(['e3-f4', 'e6-b3', 'f4-h6', 'b3-b1']);
 
@@ -578,14 +578,14 @@ describe('Misc.', () => {
       expect(board_other.moveList[board_other.moveList.length - 1].san).toBe('Qb1#');
       expect(board_other.moveList[board_other.moveList.length - 1].moveResult).toBe('0-1');
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMove('e3-e4');
 
       //check (white performs check)
       expect(board_other.moveList[board_other.moveList.length - 1].san).toBe('Qe4+');
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMoves(['e3-h6', 'e6-e5']);
 
@@ -734,7 +734,7 @@ describe('Misc.', () => {
 
       expect(temp.isPawn).toBe(true);
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       temp2 = board_other.getSquare('b2', { isUnreferenced: false });
 
@@ -768,39 +768,6 @@ describe('Misc.', () => {
 
         expect(Ic.toPos(temp)).toEqual([0, 0]);
         expect(Ic.toPos(temp)).not.toEqual([99, 99]);
-      });
-    });
-
-    describe('Ic.utilityMisc.cloneBoardObjs()', () => {
-      test('cloning unmutable squares.x.pos', () => {
-        var temp, temp2, board_obj, board_other;
-
-        board_obj = Ic.initBoard({
-          boardName: board_name,
-          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-          skipFenValidation: true,
-        });
-
-        board_other = Ic.initBoard({
-          boardName: other_board_name,
-          fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-          skipFenValidation: true,
-        });
-
-        temp = board_obj.getSquare('e4', { isUnreferenced: false });
-        temp2 = board_other.getSquare('e4', { isUnreferenced: false });
-
-        expect(temp.pos).toEqual(temp2.pos);
-        expect(temp.pos === temp2.pos).toBe(false);
-
-        temp.pos = [0, 0];
-
-        expect(board_obj.getSquare('e4', { isUnreferenced: false }).pos).toEqual([0, 0]);
-
-        Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
-
-        expect(temp2.pos).not.toEqual([0, 0]);
-        expect(temp.pos === temp2.pos).toBe(false);
       });
     });
 
@@ -1033,7 +1000,7 @@ describe('Misc.', () => {
         skipFenValidation: true,
       });
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       //incorrect white castling moves
       expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(
@@ -1076,14 +1043,14 @@ describe('Misc.', () => {
       //allowing to long castle with d1 attacked
       expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual([].sort());
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMove('f6-f7');
 
       //allowing to castle with king at check (black)
       expect(board_other.legalMoves(board_other[board_other.activeColor].kingBos).sort()).toEqual(['d8', 'f8'].sort());
 
-      Ic.utilityMisc.cloneBoardObjs(board_other, board_obj);
+      Ic.utilityMisc.cloneBoardToObj(board_other, board_obj);
 
       board_other.playMoves(['b4-b5', 'c4-a3', 'b5-b6', 'a3-c2']);
 

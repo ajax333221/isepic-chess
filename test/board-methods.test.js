@@ -1623,8 +1623,8 @@ describe('Board methods', () => {
   test('b.cloneBoardFrom() and b.cloneBoardTo()', () => {
     var board_a_name, board_b_name, board_a, board_b;
 
-    //b.cloneBoardFrom() covered with Ic.utilityMisc.cloneBoardObjs()
-    //b.cloneBoardTo() covered with Ic.utilityMisc.cloneBoardObjs()
+    //b.cloneBoardFrom() covered with Ic.utilityMisc.cloneBoardToObj()
+    //b.cloneBoardTo() covered with Ic.utilityMisc.cloneBoardToObj()
 
     board_a_name = 'board_a';
     board_b_name = 'board_b';
