@@ -169,6 +169,6 @@ https://ajax333221.github.io/isepic-chess-ui/
 
 ## :page_facing_up: Copyright and license
 
-Copyright © 2022 Ajax Isepic (ajax333221)
+Copyright © 2023 Ajax Isepic (ajax333221)
 
 Licensed under MIT License: http://opensource.org/licenses/mit-license.php

@@ -1,4 +1,4 @@
-/** Copyright (c) 2022 Ajax Isepic (ajax333221) Licensed MIT */
+/** Copyright (c) 2023 Ajax Isepic (ajax333221) Licensed MIT */
 
 /* jshint undef:true, unused:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, eqeqeq:true, esversion:9 */
 
@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.5.0';
+    var _VERSION = '8.5.1';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -1725,31 +1725,36 @@
           //0...1
           current_side = i ? that.b : that.w;
 
-          if (current_side.castling) {
-            temp = {
-              completeActiveColor: i ? 'black' : 'white',
-              originalKingBos: i ? 'e8' : 'e1',
-              originalLongRookBos: i ? 'a8' : 'a1',
-              originalShortRookBos: i ? 'h8' : 'h1',
-            };
+          if (!current_side.castling) {
+            continue;
+          }
 
-            if (that.getSquare(temp.originalKingBos).val !== current_side.king) {
-              rtn_msg = 'Error [11] ' + temp.completeActiveColor + ' castling rights without king in original square';
-            } else if (
-              current_side.castling !== _LONG_CASTLE &&
-              that.getSquare(temp.originalShortRookBos).val !== current_side.rook
-            ) {
-              rtn_msg = 'Error [12] ' + temp.completeActiveColor + ' short castling rights with missing H-file rook';
-            } else if (
-              current_side.castling !== _SHORT_CASTLE &&
-              that.getSquare(temp.originalLongRookBos).val !== current_side.rook
-            ) {
-              rtn_msg = 'Error [13] ' + temp.completeActiveColor + ' long castling rights with missing A-file rook';
-            }
+          temp = {
+            completeActiveColor: i ? 'black' : 'white',
+            originalKingBos: i ? 'e8' : 'e1',
+            originalLongRookBos: i ? 'a8' : 'a1',
+            originalShortRookBos: i ? 'h8' : 'h1',
+          };
 
-            if (rtn_msg) {
-              break block;
-            }
+          if (that.getSquare(temp.originalKingBos).val !== current_side.king) {
+            rtn_msg = 'Error [11] ' + temp.completeActiveColor + ' castling rights without king in original square';
+            break block;
+          }
+
+          if (
+            current_side.castling !== _LONG_CASTLE &&
+            that.getSquare(temp.originalShortRookBos).val !== current_side.rook
+          ) {
+            rtn_msg = 'Error [12] ' + temp.completeActiveColor + ' short castling rights with missing H-file rook';
+            break block;
+          }
+
+          if (
+            current_side.castling !== _SHORT_CASTLE &&
+            that.getSquare(temp.originalLongRookBos).val !== current_side.rook
+          ) {
+            rtn_msg = 'Error [13] ' + temp.completeActiveColor + ' long castling rights with missing A-file rook';
+            break block;
           }
         }
       }
