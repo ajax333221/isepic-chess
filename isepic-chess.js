@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.5.1';
+    var _VERSION = '8.5.2';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -709,6 +709,11 @@
         from_board;
 
       block: {
+        if (!_isObject(to_obj)) {
+          _consoleLog('Error[_cloneBoardToObj]: to_obj must be Object type');
+          break block;
+        }
+
         from_board = getBoard(from_woard);
 
         if (from_board === null) {
@@ -2442,32 +2447,17 @@
     }
 
     function _cloneBoardFrom(from_woard) {
-      var that, hash_cache, from_board, rtn_changed;
+      var that, hash_cache, rtn_changed;
 
       that = this;
+      hash_cache = that.boardHash();
       rtn_changed = false;
 
-      block: {
-        from_board = getBoard(from_woard);
+      _cloneBoardToObj(that, from_woard);
 
-        if (from_board === null) {
-          _consoleLog("Error[_cloneBoardFrom]: from_woard doesn't exist");
-          break block;
-        }
-
-        if (that === from_board) {
-          _consoleLog('Error[_cloneBoardFrom]: trying to self clone');
-          break block;
-        }
-
-        hash_cache = that.boardHash();
-
-        _cloneBoardToObj(that, from_board);
-
-        if (that.boardHash() !== hash_cache) {
-          rtn_changed = true;
-          that.refreshUi(0, false); //autorefresh
-        }
+      if (that.boardHash() !== hash_cache) {
+        rtn_changed = true;
+        that.refreshUi(0, false); //autorefresh
       }
 
       return rtn_changed;
@@ -2484,11 +2474,6 @@
 
         if (to_board === null) {
           _consoleLog("Error[_cloneBoardTo]: to_woard doesn't exist");
-          break block;
-        }
-
-        if (that === to_board) {
-          _consoleLog('Error[_cloneBoardTo]: trying to self clone');
           break block;
         }
 
@@ -3955,15 +3940,17 @@
 
     //p = {skipFenValidation}
     function fenGet(fen, props, p) {
-      var i, j, len, len2, board, board_created, board_keys, current_key, invalid_key, rtn_pre, rtn;
+      var i, j, len, len2, board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre, rtn;
 
       rtn = null;
       p = _unreferenceP(p);
       board_created = false;
 
       block: {
+        board_name = 'board_fenGet';
+
         board = initBoard({
-          boardName: 'board_fenGet',
+          boardName: board_name,
           fen: fen,
           skipFenValidation: p.skipFenValidation,
           isHidden: true,
@@ -3975,7 +3962,7 @@
           break block;
         }
 
-        board = _cloneBoardToObj({ boardName: 'fake_board_fenGet' }, board);
+        board = _cloneBoardToObj({ boardName: board_name + '_copy' }, board);
         board_created = true;
         board_keys = [];
 
@@ -4018,7 +4005,7 @@
       }
 
       if (board_created) {
-        removeBoard(board);
+        removeBoard(board_name); //this removes the temporal board (the copy of the temporal board doesn't need removal)
       }
 
       return rtn;
