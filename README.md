@@ -157,6 +157,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 - Powerful FEN one-liner operations <sup>(`Ic.fenApply()` and `Ic.fenGet()`)</sup>
 - Advanced FEN validation
 - SAN parsing
+- Puzzle mode (:construction: work in progress :construction:)
 
 ## :book: Documentation
 

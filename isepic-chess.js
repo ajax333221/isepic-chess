@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.5.2';
+    var _VERSION = '8.6.0';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -45,6 +45,7 @@
       'moveList',
       'currentMove',
       'isRotated',
+      'isPuzzleMode',
       'checks',
       'isCheck',
       'isCheckmate',
@@ -471,6 +472,7 @@
       target.moveList = null;
       target.currentMove = null;
       target.isRotated = null;
+      target.isPuzzleMode = null;
       target.checks = null;
       target.isCheck = null;
       target.isCheckmate = null;
@@ -970,6 +972,10 @@
           break block;
         }
 
+        if (board.isPuzzleMode) {
+          break block;
+        }
+
         count = 0;
 
         for (i = 0, len = board.legalUci.length; i < len; i++) {
@@ -1223,13 +1229,17 @@
       return rtn_changed;
     }
 
-    function _setCurrentMove(num, is_goto) {
+    function _setCurrentMove(num, is_goto, is_puzzle_move) {
       var len, that, temp, diff, rtn_changed;
 
       that = this;
       rtn_changed = false;
 
       block: {
+        if (that.isPuzzleMode && !is_puzzle_move) {
+          break block;
+        }
+
         len = that.moveList.length;
 
         if (len < 2) {
@@ -1312,6 +1322,10 @@
       p = _unreferenceP(p);
 
       block: {
+        if (that.isPuzzleMode) {
+          break block;
+        }
+
         p.skipFenValidation = p.skipFenValidation === true;
         p.keepOptions = p.keepOptions === true;
         hash_cache = that.boardHash();
@@ -2495,21 +2509,28 @@
 
       that = this;
       rtn_changed = false;
-      hash_cache = that.boardHash();
 
-      that.updateHelper({
-        currentMove: 0,
-        fen: _DEFAULT_FEN,
-        skipFenValidation: true,
-        resetOptions: !keep_options,
-        resetMoveList: true,
-      }); /*NO remove skipFenValidation*/
+      block: {
+        if (that.isPuzzleMode) {
+          break block;
+        }
 
-      that.silentlyResetManualResult();
+        hash_cache = that.boardHash();
 
-      if (that.boardHash() !== hash_cache) {
-        rtn_changed = true;
-        that.refreshUi(0, false); //autorefresh
+        that.updateHelper({
+          currentMove: 0,
+          fen: _DEFAULT_FEN,
+          skipFenValidation: true,
+          resetOptions: !keep_options,
+          resetMoveList: true,
+        }); /*NO remove skipFenValidation*/
+
+        that.silentlyResetManualResult();
+
+        if (that.boardHash() !== hash_cache) {
+          rtn_changed = true;
+          that.refreshUi(0, false); //autorefresh
+        }
       }
 
       return rtn_changed;
@@ -2541,6 +2562,10 @@
       rtn = [];
 
       block: {
+        if (that.isPuzzleMode) {
+          break block;
+        }
+
         if (that.moveList.length < 2) {
           break block;
         }
@@ -3163,6 +3188,11 @@
         active_side,
         non_active_side,
         current_side,
+        is_promotion,
+        mov_uci,
+        wrapped_move,
+        max_current_move_possible,
+        on_solve_out_of_bounds,
         autogen_comment,
         rtn_move_obj;
 
@@ -3175,6 +3205,50 @@
         p.isInanimated = p.isInanimated === true;
         p.playSounds = p.playSounds === true;
         p.isUnreferenced = p.isUnreferenced === true;
+
+        if (that.isPuzzleMode) {
+          max_current_move_possible = that.moveList.length - 1;
+
+          if (that.currentMove < max_current_move_possible) {
+            wrapped_move = that.getWrappedMove(mov, p);
+
+            if (
+              wrapped_move !== null &&
+              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that.isLegalMove(mov, p))
+            ) {
+              is_promotion = !!that.moveList[that.currentMove + 1].promotion;
+              mov_uci =
+                wrapped_move.fromBos +
+                '' +
+                wrapped_move.toBos +
+                '' +
+                (is_promotion ? toBal(wrapped_move.promotion).toLowerCase() : '');
+
+              if (mov_uci === that.moveList[that.currentMove + 1].uci) {
+                on_solve_out_of_bounds = that.currentMove + 2 > max_current_move_possible;
+
+                if (p.isMockMove) {
+                  rtn_move_obj = on_solve_out_of_bounds
+                    ? that.moveList[max_current_move_possible]
+                    : that.moveList[that.currentMove + 2];
+                } else {
+                  if (p.isInanimated && on_solve_out_of_bounds) {
+                    that.setCurrentMove(max_current_move_possible, true, true);
+                  } else {
+                    that.setCurrentMove(2, false, true);
+                  }
+                  rtn_move_obj = that.moveList[that.currentMove];
+                }
+
+                if (p.isUnreferenced) {
+                  rtn_move_obj = _unreferencedMoveHelper(rtn_move_obj);
+                }
+              }
+            }
+          }
+
+          break block;
+        }
 
         if (p.isMockMove) {
           if (that.moveList) {
@@ -3713,7 +3787,7 @@
       return rtn;
     }
 
-    //p = {boardName, fen, pgn, uci, moveIndex, isRotated, skipFenValidation, isHidden, promoteTo, manualResult, validOrBreak}
+    //p = {boardName, fen, pgn, uci, moveIndex, isRotated, isPuzzleMode, skipFenValidation, isHidden, promoteTo, manualResult, validOrBreak}
     function initBoard(p) {
       var temp,
         board_created,
@@ -3737,6 +3811,7 @@
 
         board_name = p.boardName;
         p.isRotated = p.isRotated === true;
+        p.isPuzzleMode = p.isPuzzleMode === true;
         p.skipFenValidation = p.skipFenValidation === true;
         p.isHidden = p.isHidden === true;
         p.validOrBreak = p.validOrBreak === true;
@@ -3808,8 +3883,9 @@
         }
 
         p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : new_board.moveList.length - 1;
-        new_board.setCurrentMove(p.moveIndex, true);
+        new_board.setCurrentMove(p.moveIndex, true); /*NO move below isPuzzleMode*/
         new_board.isRotated = p.isRotated;
+        new_board.isPuzzleMode = p.isPuzzleMode;
         new_board.setPromoteTo(p.promoteTo);
         new_board.setManualResult(p.manualResult);
         new_board.isHidden = p.isHidden;
