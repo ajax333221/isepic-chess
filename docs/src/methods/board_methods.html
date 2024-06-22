@@ -1031,9 +1031,9 @@
     board.setSquare.links = PIN_SQUARE;
 
     board.setSquare.examples = [];
-    board.setSquare.examples.push('board.setSquare("e4", 0) //true');
-    board.setSquare.examples.push('board.setSquare("a1", "Q", {rankShift: -7, fileShift: 7}) //true');
-    board.setSquare.examples.push('board.setSquare("0invalidsquare0", "wr") //false');
+    board.setSquare.examples.push('board.setSquare("e4", 0) //Object{...}');
+    board.setSquare.examples.push('board.setSquare("a1", "Q", {rankShift: -7, fileShift: 7}) //Object{...}');
+    board.setSquare.examples.push('board.setSquare("0invalidsquare0", "wr") //null');
     //end: setSquare
 
     //start: attackersFromActive
