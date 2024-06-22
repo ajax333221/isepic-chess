@@ -104,16 +104,16 @@ var fen_arr = [
   'r2qkbnr/ppp4p/2np1p2/4p3/3PP3/P2B1N2/1PP2PpP/RNBQ1RK1 b kq - 1 11',
 ];
 
-/* transform each FEN into arrays with their legal UCI moves for the g2 square */
+/* transform each FEN into arrays with their legal SAN moves for the g2 square */
 var mapped = fen_arr.map((fen) => Ic.fenApply(fen, 'legalSanMoves', ['g2']));
 
 console.log(mapped);
 // [
-//  ["g2g3", "g2g4"],
-//  ["g2f1", "g2f3", "g2e4", "g2d5", "g2c6"],
-//  ["g2h3", "g2h1", "g2f1"],
+//  ["g3", "g4"],
+//  ["Bf1", "Bf3", "Be4", "Bd5", "Bxc6"],
+//  ["Bh3", "Bh1", "Bf1"],
 //  [],
-//  ["g2f1n", "g2f1b", "g2f1r", "g2f1q"]
+//  ["gxf1=N", "gxf1=B", "gxf1=R+", "gxf1=Q+"]
 // ]
 
 /* get only the positions where the white king is not in its original square */
