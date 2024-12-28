@@ -1,4 +1,4 @@
-/** Copyright (c) 2023 Ajax Isepic (ajax333221) Licensed MIT */
+/** Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
 
 /* jshint undef:true, unused:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, eqeqeq:true, esversion:9 */
 
@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.6.0';
+    var _VERSION = '8.7.0';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -2505,35 +2505,14 @@
     }
 
     function _reset(keep_options) {
-      var that, hash_cache, rtn_changed;
+      var that;
 
       that = this;
-      rtn_changed = false;
 
-      block: {
-        if (that.isPuzzleMode) {
-          break block;
-        }
-
-        hash_cache = that.boardHash();
-
-        that.updateHelper({
-          currentMove: 0,
-          fen: _DEFAULT_FEN,
-          skipFenValidation: true,
-          resetOptions: !keep_options,
-          resetMoveList: true,
-        }); /*NO remove skipFenValidation*/
-
-        that.silentlyResetManualResult();
-
-        if (that.boardHash() !== hash_cache) {
-          rtn_changed = true;
-          that.refreshUi(0, false); //autorefresh
-        }
-      }
-
-      return rtn_changed;
+      return that.loadFen(_DEFAULT_FEN, {
+        skipFenValidation: true,
+        keepOptions: keep_options,
+      });
     }
 
     function _undoMove() {
@@ -3428,9 +3407,9 @@
           if (that.playMove(arr[i], p, sliced_fen_history) === null) {
             everything_parsed = false;
             break;
-          } else {
-            at_least_one_parsed = true;
           }
+
+          at_least_one_parsed = true;
         }
 
         that.isHidden = temp;
@@ -3502,6 +3481,33 @@
     }
 
     //---------------- ic
+
+    class getChainableBoard {
+      constructor(woard) {
+        var board;
+
+        board = getBoard(woard);
+
+        this.board =
+          board === null
+            ? initBoard({
+                ...(typeof woard === 'string' && { boardName: woard }),
+              })
+            : board;
+
+        this.stack = [];
+
+        for (const key in this.board) {
+          if (typeof this.board[key] === 'function') {
+            this[key] = (...args) => {
+              const result = this.board[key].apply(this.board, args);
+              this.stack.push(result);
+              return this;
+            };
+          }
+        }
+      }
+    }
 
     function setSilentMode(val) {
       _SILENT_MODE = !!val;
@@ -4091,57 +4097,61 @@
       return Object.keys(_BOARDS);
     }
 
-    return {
-      version: _VERSION,
-      setSilentMode: setSilentMode,
-      isLegalFen: isLegalFen,
-      getBoard: getBoard,
-      toVal: toVal,
-      toAbsVal: toAbsVal,
-      toBal: toBal,
-      toAbsBal: toAbsBal,
-      toClassName: toClassName,
-      toBos: toBos,
-      toPos: toPos,
-      getSign: getSign,
-      getRankPos: getRankPos,
-      getFilePos: getFilePos,
-      getRankBos: getRankBos,
-      getFileBos: getFileBos,
-      isInsideBoard: isInsideBoard,
-      sameSquare: sameSquare,
-      countPieces: countPieces,
-      removeBoard: removeBoard,
-      isEqualBoard: isEqualBoard,
-      cloneBoard: cloneBoard,
-      initBoard: initBoard,
-      fenApply: fenApply,
-      fenGet: fenGet,
-      getBoardNames: getBoardNames,
-      utilityMisc: {
-        consoleLog: _consoleLog,
-        isObject: _isObject,
-        isArray: _isArray,
-        isSquare: _isSquare,
-        isBoard: _isBoard,
-        isMove: _isMove,
-        trimSpaces: _trimSpaces,
-        formatName: _formatName,
-        strContains: _strContains,
-        occurrences: _occurrences,
-        toInt: _toInt,
-        isIntOrStrInt: _isIntOrStrInt,
-        isNonEmptyStr: _isNonEmptyStr,
-        isNonBlankStr: _isNonBlankStr,
-        hashCode: _hashCode,
-        castlingChars: _castlingChars,
-        unreferenceP: _unreferenceP,
-        cleanSan: _cleanSan,
-        cloneBoardToObj: _cloneBoardToObj,
-        basicFenTest: _basicFenTest,
-        perft: _perft,
-      },
+    function Ic(woard) {
+      return new getChainableBoard(woard);
+    }
+
+    Ic.version = _VERSION;
+    Ic.setSilentMode = setSilentMode;
+    Ic.isLegalFen = isLegalFen;
+    Ic.getBoard = getBoard;
+    Ic.toVal = toVal;
+    Ic.toAbsVal = toAbsVal;
+    Ic.toBal = toBal;
+    Ic.toAbsBal = toAbsBal;
+    Ic.toClassName = toClassName;
+    Ic.toBos = toBos;
+    Ic.toPos = toPos;
+    Ic.getSign = getSign;
+    Ic.getRankPos = getRankPos;
+    Ic.getFilePos = getFilePos;
+    Ic.getRankBos = getRankBos;
+    Ic.getFileBos = getFileBos;
+    Ic.isInsideBoard = isInsideBoard;
+    Ic.sameSquare = sameSquare;
+    Ic.countPieces = countPieces;
+    Ic.removeBoard = removeBoard;
+    Ic.isEqualBoard = isEqualBoard;
+    Ic.cloneBoard = cloneBoard;
+    Ic.initBoard = initBoard;
+    Ic.fenApply = fenApply;
+    Ic.fenGet = fenGet;
+    Ic.getBoardNames = getBoardNames;
+    Ic.utilityMisc = {
+      consoleLog: _consoleLog,
+      isObject: _isObject,
+      isArray: _isArray,
+      isSquare: _isSquare,
+      isBoard: _isBoard,
+      isMove: _isMove,
+      trimSpaces: _trimSpaces,
+      formatName: _formatName,
+      strContains: _strContains,
+      occurrences: _occurrences,
+      toInt: _toInt,
+      isIntOrStrInt: _isIntOrStrInt,
+      isNonEmptyStr: _isNonEmptyStr,
+      isNonBlankStr: _isNonBlankStr,
+      hashCode: _hashCode,
+      castlingChars: _castlingChars,
+      unreferenceP: _unreferenceP,
+      cleanSan: _cleanSan,
+      cloneBoardToObj: _cloneBoardToObj,
+      basicFenTest: _basicFenTest,
+      perft: _perft,
     };
+
+    return Ic;
   })(windw);
 
   //Browser

@@ -16,6 +16,7 @@
 <li><a href="#9">Playing a move</a></li>
 <li><a href="#10">Playing multiple moves</a></li>
 <li><a href="#11">Playing a random move</a></li>
+<li><a href="#12">Method chaining</a></li>
 </ul>
 
 <h3 id="1">→ Creating a board</h3>
@@ -23,6 +24,12 @@
 
 ```js
 Ic.initBoard();
+```
+
+<strong>Method B:</strong>
+
+```js
+Ic();
 ```
 
 <hr>
@@ -37,6 +44,12 @@ var board = Ic.initBoard();
 <strong>Method B:</strong>
 
 ```js
+var board = Ic().board;
+```
+
+<strong>Method C:</strong>
+
+```js
 Ic.initBoard({
   boardName: "board_name"
 });
@@ -44,18 +57,30 @@ Ic.initBoard({
 var board = Ic.getBoard("board_name");
 ```
 
+<strong>Method D:</strong>
+
+```js
+Ic("board_name");
+
+var board = Ic.getBoard("board_name");
+```
+
 <hr>
 
 <h3 id="3">→ Loading a FEN position</h3>
-<strong>Loading into a board (Object):</strong>
+<strong>Method A:</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.loadFen("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3");
+Ic.initBoard().loadFen("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3");
 ```
 
-<strong>Initializing/overwriting a board (Object):</strong>
+<strong>Method B:</strong>
+
+```js
+Ic().loadFen("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3");
+```
+
+<strong>Method C:</strong>
 
 ```js
 Ic.initBoard({
@@ -116,7 +141,7 @@ Rg6+) 31... Rg6 (31...Rxh4+ $1 32.gxh4 Rg6 $1) 32. Bc1 (32.Ng2 $1) 32... Rxh4+
 $1 33. gxh4 Qf4+ 34. Kh3 Bg2+ $1 35. Nxg2 Qf3+ 36. Kh2 Qxg2# { Anderssen won
 the match by this mate (+4, =2, -3).} 0-1`;
 
-var board = Ic.initBoard({
+Ic.initBoard({
   pgn: example_pgn
 });
 ```
@@ -254,20 +279,22 @@ if(temp !== null){ ... }
 <strong>Affecting the board:</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.playMove("e4");
+Ic.initBoard().playMove("e4");
 ```
 
 <strong>Without affecting the board (mock move):</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.playMove("e4", {isMockMove: true});
+Ic.initBoard().playMove("e4", {isMockMove: true});
 ```
 
 <small><strong>Note:</strong> useful when interested in a future move (Object) but without actually making the move.</small>
+
+<strong>On a "chainable board" object:</strong>
+
+```js
+Ic().playMove("e4");
+```
 
 <strong>From a FEN position:</strong>
 
@@ -283,9 +310,13 @@ Ic.fenApply(fen, "playMove", ["e4"]);
 <strong>Playing moves into a board (Object):</strong>
 
 ```js
-var board = Ic.initBoard();
+Ic.initBoard().playMoves(["e4", "e7-e5", "Nf3", "f8c5"]); //you can mix move-types
+```
 
-board.playMoves(["e4", "e7-e5", "Nf3", "f8c5"]); //you can mix move-types
+<strong>On a "chainable board" object:</strong>
+
+```js
+Ic().playMove("e4").playMove("e7-e5").playMoves(["Nf3", "f8c5"]);
 ```
 
 <strong>From a FEN position:</strong>
@@ -304,17 +335,19 @@ Ic.fenApply(fen, "playMoves", [["e4", "e7-e5", "Nf3", "f8c5"]]); //notice the do
 <strong>Playing a random move into a board (Object):</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.playRandomMove();
+Ic.initBoard().playRandomMove();
 ```
 
 <strong>Playing a random move into a board (Object), but enforcing a promotion piece:</strong>
 
 ```js
-var board = Ic.initBoard();
+Ic.initBoard().playRandomMove({promoteTo: "q"});
+```
 
-board.playRandomMove({promoteTo: "q"});
+<strong>On a "chainable board" object:</strong>
+
+```js
+Ic().playRandomMove();
 ```
 
 <strong>From a FEN position:</strong>
@@ -325,5 +358,42 @@ var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 Ic.fenApply(fen, "playRandomMove");
 Ic.fenApply(fen, "playRandomMove", [{promoteTo: "q"}]);
 ```
+
+<hr>
+
+<h3 id="12">→ Method chaining</h3>
+<strong>Creating a "chainable board" object:</strong>
+
+```js
+var methodChaining = Ic(boardObj); //or boardName (String)
+
+methodChaining.playRandomMove().playRandomMove().playRandomMove();
+
+console.log(methodChaining);
+// chainable board (Object)
+// |
+// |---stack (Array)
+// |
+// |---board (Object)
+// |   |
+// |   |---<board properties>
+// |   |
+// |   \---<board methods>
+// |
+// \---<chainable board methods>
+//     |
+//     |---applies the corresponding board method call and appends the result to the stack
+//     |
+//     \---returns itself as chainable board (Object)
+
+console.log(methodChaining.stack);
+// [...]
+
+console.log(methodChaining.board);
+// board (Object)
+```
+
+<small><strong>Note:</strong> if the selector identifies an existing board, that board will be used. Otherwise, a new board will be created with the board name (if provided).</small>
+<br><small><strong>Note:</strong> each time the `Ic(...)` function is called, a new stack will be initialized. However, reusing a reference to the chainable board will append results to the existing stack.</small>
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>

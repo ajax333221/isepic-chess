@@ -135,6 +135,35 @@ console.log(filtered);
 //  "r2qkb1r/pbp1p1p1/1pnp1n1p/5p2/4P2P/5NP1/PPPPKPB1/RNBQR3 w kq - 0 8",
 //  "r2qkbnr/ppp4p/2np1p2/4p3/3PP3/P2B1N2/1PP2PpP/RNBQ1RK1 b kq - 1 11"
 // ]
+
+var methodChaining = Ic('otherBoard')
+  .playMoves(['f3', 'e5', 'g4'])
+  .getCheckmateMoves()
+  .undoMove()
+  .playMoves(['e4', 'Qh4'])
+  .uciExport()
+  .legalUciMoves('g2');
+
+console.log(methodChaining.stack);
+// [
+//  true,
+//  ["d8h4"],
+//  {
+//   "colorMoved": "w",
+//   "colorToPlay": "b",
+//   "fen": "rnbqkbnr/pppp1ppp/8/4p3/6P1/5P2/PPPPP2P/RNBQKBNR b KQkq - 0 2",
+//   "san": "g4",
+//   "uci": "g2g4",
+//   "piece": "p",
+//   ...
+//  },
+//  true,
+//  "f2f3 e7e5 e2e4 d8h4"
+//  ["g2g3"]
+// ]
+
+console.log(methodChaining.board.legalUci);
+// ["g2g3", "e1e2"]
 ```
 
 ## :eye: Demo <sup>(from [isepic-chess-ui](https://github.com/ajax333221/isepic-chess-ui))</sup>
@@ -154,6 +183,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 - Multiple boards at once
 - Number of attackers / defenders on a square
 - Navigable move history and helper methods (first, last, previous, undo move, reset, etc.)
+- Chainable board methods
 - Powerful FEN one-liner operations <sup>(`Ic.fenApply()` and `Ic.fenGet()`)</sup>
 - Advanced FEN validation
 - SAN parsing
@@ -170,6 +200,6 @@ https://ajax333221.github.io/isepic-chess-ui/
 
 ## :page_facing_up: Copyright and license
 
-Copyright © 2023 Ajax Isepic (ajax333221)
+Copyright © 2025 Ajax Isepic (ajax333221)
 
 Licensed under MIT License: http://opensource.org/licenses/mit-license.php
