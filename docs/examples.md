@@ -353,7 +353,7 @@ Ic.fenApply(fen, "playRandomMove", [{promoteTo: "q"}]);
 <strong>Creating a "chainable board" object:</strong>
 
 ```js
-var methodChaining = Ic("board_name");
+var methodChaining = Ic(boardObj); //or boardName (String)
 
 methodChaining.playRandomMove().playRandomMove().playRandomMove();
 
