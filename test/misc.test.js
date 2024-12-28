@@ -884,7 +884,7 @@ describe('Misc.', () => {
         skipFenValidation: true,
       });
 
-      stack_obj = Ic(board_name).playMove('exd4').playMove('Qxd4');
+      stack_obj = Ic(board_name).playMove('exd4').playMove('Qxd4'); //boardName (String)
 
       expect(stack_obj.board === board_obj).toBe(true);
       expect(stack_obj.stack.length).toBe(2);
@@ -893,7 +893,7 @@ describe('Misc.', () => {
       other_res = Ic(board_other).toggleIsRotated().board.ascii();
       expect(other_res.indexOf('h  g  f  e  d  c  b  a')).not.toBe(-1);
 
-      stack_obj = Ic(board_name).playMove('Bb4+');
+      stack_obj = Ic(board_obj).playMove('Bb4+'); //board (Object)
 
       expect(stack_obj.stack.length).toBe(1);
       expect(stack_obj.stack[stack_obj.stack.length - 1].san).toBe('Bb4+');

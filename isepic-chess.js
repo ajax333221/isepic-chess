@@ -1,4 +1,4 @@
-/** Copyright (c) 2023 Ajax Isepic (ajax333221) Licensed MIT */
+/** Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
 
 /* jshint undef:true, unused:true, jquery:false, curly:true, latedef:nofunc, bitwise:false, eqeqeq:true, esversion:9 */
 
