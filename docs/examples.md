@@ -16,6 +16,7 @@
 <li><a href="#9">Playing a move</a></li>
 <li><a href="#10">Playing multiple moves</a></li>
 <li><a href="#11">Playing a random move</a></li>
+<li><a href="#12">Method chaining</a></li>
 </ul>
 
 <h3 id="1">→ Creating a board</h3>
@@ -23,6 +24,12 @@
 
 ```js
 Ic.initBoard();
+```
+
+<strong>Method B:</strong>
+
+```js
+Ic();
 ```
 
 <hr>
@@ -37,9 +44,23 @@ var board = Ic.initBoard();
 <strong>Method B:</strong>
 
 ```js
+var board = Ic().board;
+```
+
+<strong>Method C:</strong>
+
+```js
 Ic.initBoard({
   boardName: "board_name"
 });
+
+var board = Ic.getBoard("board_name");
+```
+
+<strong>Method D:</strong>
+
+```js
+Ic("board_name");
 
 var board = Ic.getBoard("board_name");
 ```
@@ -325,5 +346,42 @@ var fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 Ic.fenApply(fen, "playRandomMove");
 Ic.fenApply(fen, "playRandomMove", [{promoteTo: "q"}]);
 ```
+
+<hr>
+
+<h3 id="12">→ Method chaining</h3>
+<strong>Creating a "chainable board" object:</strong>
+
+```js
+var methodChaining = Ic("board_name");
+
+methodChaining.playRandomMove().playRandomMove().playRandomMove();
+
+console.log(methodChaining);
+// chainable board (Object)
+// |
+// |---stack (Array)
+// |
+// |---board (Object)
+// |   |
+// |   |---<board properties>
+// |   |
+// |   \---<board methods>
+// |
+// \---<chainable board methods>
+//     |
+//     |---applies the corresponding board method call and appends the result to the stack
+//     |
+//     \---returns itself as chainable board (Object)
+
+console.log(methodChaining.stack);
+// [...]
+
+console.log(methodChaining.board);
+// board (Object)
+```
+
+<small><strong>Note:</strong> this will either find a board and apply the methods to it or create a new board (with a possible board name if provided).</small>
+<br><small><strong>Note:</strong> a new stack will be created each time the Ic(...) is called (even if the selector found an existing board), but the results will append to the same stack if the reference to a chainable board is reused instead.</small>
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
