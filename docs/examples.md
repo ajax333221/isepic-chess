@@ -382,6 +382,6 @@ console.log(methodChaining.board);
 ```
 
 <small><strong>Note:</strong> if the selector identifies an existing board, that board will be used. Otherwise, a new board will be created with the board name (if provided).</small>
-<br><small><strong>Note:</strong> each time the Ic(...) function is called, a new stack will be initialized. However, reusing a reference to the chainable board will append results to the existing stack.</small>
+<br><small><strong>Note:</strong> each time the `Ic(...)` function is called, a new stack will be initialized. However, reusing a reference to the chainable board will append results to the existing stack.</small>
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
