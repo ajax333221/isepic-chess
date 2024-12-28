@@ -869,6 +869,37 @@ describe('Misc.', () => {
     });
   });
 
+  describe('Chainable methods', () => {
+    var board_name, other_board_name;
+
+    board_name = 'board_chainable_methods';
+    other_board_name = 'board_chainable_methods_other';
+
+    test('Two simultaneous boards with progress', () => {
+      var board_obj, board_other, stack_obj, other_res;
+
+      board_obj = Ic.initBoard({
+        boardName: board_name,
+        fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 3',
+        skipFenValidation: true,
+      });
+
+      stack_obj = Ic(board_name).playMove('exd4').playMove('Qxd4');
+
+      expect(stack_obj.board === board_obj).toBe(true);
+      expect(stack_obj.stack.length).toBe(2);
+      expect(stack_obj.stack[stack_obj.stack.length - 1].san).toBe('Qxd4');
+
+      other_res = Ic(board_other).toggleIsRotated().board.ascii();
+      expect(other_res.indexOf('h  g  f  e  d  c  b  a')).not.toBe(-1);
+
+      stack_obj = Ic(board_name).playMove('Bb4+');
+
+      expect(stack_obj.stack.length).toBe(1);
+      expect(stack_obj.stack[stack_obj.stack.length - 1].san).toBe('Bb4+');
+    });
+  });
+
   describe('Old tests', () => {
     var board_name, other_board_name;
 
