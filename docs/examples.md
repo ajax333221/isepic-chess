@@ -296,6 +296,12 @@ board.playMove("e4", {isMockMove: true});
 
 <small><strong>Note:</strong> useful when interested in a future move (Object) but without actually making the move.</small>
 
+<strong>On a "chainable board" object:</strong>
+
+```js
+Ic().playMove("e4");
+```
+
 <strong>From a FEN position:</strong>
 
 ```js
@@ -324,6 +330,12 @@ Ic.fenApply(fen, "playMoves", [["e4", "e7-e5", "Nf3", "f8c5"]]); //notice the do
 ```
 
 <small><strong>Note:</strong> playing multiple moves into a temporal board that will instantly get deleted is very unusual and will have only one specific narrow goal (the returned Boolean to test if all the moves can be successfully played to the FEN or not), but I chose to include this example out of consistency.</small>
+
+<strong>On a "chainable board" object:</strong>
+
+```js
+Ic().playMove("e4").playMove("e7-e5").playMoves(["Nf3", "f8c5"]);
+```
 
 <hr>
 
