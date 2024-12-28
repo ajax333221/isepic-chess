@@ -71,9 +71,7 @@ var board = Ic.getBoard("board_name");
 <strong>Method A:</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.loadFen("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3");
+Ic.initBoard().loadFen("r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3");
 ```
 
 <strong>Method B:</strong>
@@ -143,7 +141,7 @@ Rg6+) 31... Rg6 (31...Rxh4+ $1 32.gxh4 Rg6 $1) 32. Bc1 (32.Ng2 $1) 32... Rxh4+
 $1 33. gxh4 Qf4+ 34. Kh3 Bg2+ $1 35. Nxg2 Qf3+ 36. Kh2 Qxg2# { Anderssen won
 the match by this mate (+4, =2, -3).} 0-1`;
 
-var board = Ic.initBoard({
+Ic.initBoard({
   pgn: example_pgn
 });
 ```
@@ -281,17 +279,13 @@ if(temp !== null){ ... }
 <strong>Affecting the board:</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.playMove("e4");
+Ic.initBoard().playMove("e4");
 ```
 
 <strong>Without affecting the board (mock move):</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.playMove("e4", {isMockMove: true});
+Ic.initBoard().playMove("e4", {isMockMove: true});
 ```
 
 <small><strong>Note:</strong> useful when interested in a future move (Object) but without actually making the move.</small>
@@ -316,9 +310,13 @@ Ic.fenApply(fen, "playMove", ["e4"]);
 <strong>Playing moves into a board (Object):</strong>
 
 ```js
-var board = Ic.initBoard();
+Ic.initBoard().playMoves(["e4", "e7-e5", "Nf3", "f8c5"]); //you can mix move-types
+```
 
-board.playMoves(["e4", "e7-e5", "Nf3", "f8c5"]); //you can mix move-types
+<strong>On a "chainable board" object:</strong>
+
+```js
+Ic().playMove("e4").playMove("e7-e5").playMoves(["Nf3", "f8c5"]);
 ```
 
 <strong>From a FEN position:</strong>
@@ -331,29 +329,19 @@ Ic.fenApply(fen, "playMoves", [["e4", "e7-e5", "Nf3", "f8c5"]]); //notice the do
 
 <small><strong>Note:</strong> playing multiple moves into a temporal board that will instantly get deleted is very unusual and will have only one specific narrow goal (the returned Boolean to test if all the moves can be successfully played to the FEN or not), but I chose to include this example out of consistency.</small>
 
-<strong>On a "chainable board" object:</strong>
-
-```js
-Ic().playMove("e4").playMove("e7-e5").playMoves(["Nf3", "f8c5"]);
-```
-
 <hr>
 
 <h3 id="11">→ Playing a random move</h3>
 <strong>Playing a random move into a board (Object):</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.playRandomMove();
+Ic.initBoard().playRandomMove();
 ```
 
 <strong>Playing a random move into a board (Object), but enforcing a promotion piece:</strong>
 
 ```js
-var board = Ic.initBoard();
-
-board.playRandomMove({promoteTo: "q"});
+Ic.initBoard().playRandomMove({promoteTo: "q"});
 ```
 
 <strong>On a "chainable board" object:</strong>
