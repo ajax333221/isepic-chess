@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.6.0';
+    var _VERSION = '8.6.1';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -2505,35 +2505,14 @@
     }
 
     function _reset(keep_options) {
-      var that, hash_cache, rtn_changed;
+      var that;
 
       that = this;
-      rtn_changed = false;
 
-      block: {
-        if (that.isPuzzleMode) {
-          break block;
-        }
-
-        hash_cache = that.boardHash();
-
-        that.updateHelper({
-          currentMove: 0,
-          fen: _DEFAULT_FEN,
-          skipFenValidation: true,
-          resetOptions: !keep_options,
-          resetMoveList: true,
-        }); /*NO remove skipFenValidation*/
-
-        that.silentlyResetManualResult();
-
-        if (that.boardHash() !== hash_cache) {
-          rtn_changed = true;
-          that.refreshUi(0, false); //autorefresh
-        }
-      }
-
-      return rtn_changed;
+      return that.loadFen(_DEFAULT_FEN, {
+        skipFenValidation: true,
+        keepOptions: keep_options,
+      });
     }
 
     function _undoMove() {
@@ -3428,9 +3407,9 @@
           if (that.playMove(arr[i], p, sliced_fen_history) === null) {
             everything_parsed = false;
             break;
-          } else {
-            at_least_one_parsed = true;
           }
+
+          at_least_one_parsed = true;
         }
 
         that.isHidden = temp;
