@@ -356,6 +356,12 @@ var board = Ic.initBoard();
 board.playRandomMove({promoteTo: "q"});
 ```
 
+<strong>On a "chainable board" object:</strong>
+
+```js
+Ic().playRandomMove();
+```
+
 <strong>From a FEN position:</strong>
 
 ```js
