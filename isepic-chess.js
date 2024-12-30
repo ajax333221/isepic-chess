@@ -6,7 +6,7 @@
 
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.7.0';
+    var _VERSION = '8.7.1';
 
     var _SILENT_MODE = true;
     var _BOARDS = {};
@@ -32,6 +32,12 @@
     var _RESULT_B_WINS = '0-1';
     var _RESULT_DRAW = '1/2-1/2';
     var _DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
+    var _ALERT_LIGHT = 'light';
+    var _ALERT_DARK = 'dark';
+    var _ALERT_SUCCESS = 'success';
+    var _ALERT_WARNING = 'warning';
+    var _ALERT_ERROR = 'error';
 
     var _MUTABLE_KEYS = [
       'w',
@@ -528,14 +534,38 @@
 
     //---------------- utilities
 
-    function _consoleLog(msg) {
+    function _consoleLog(msg, alert_type) {
       var rtn;
 
       rtn = false;
 
       if (!_SILENT_MODE) {
         rtn = true;
-        console.log(msg);
+
+        switch (alert_type) {
+          case _ALERT_LIGHT:
+            console.log(msg);
+            break;
+          case _ALERT_DARK:
+            console.log(msg);
+            break;
+          case _ALERT_SUCCESS:
+            console.log(msg);
+            break;
+          case _ALERT_WARNING:
+            console.warn(msg);
+            break;
+          case _ALERT_ERROR:
+            console.error(msg);
+            break;
+          default:
+            console.log(msg);
+            alert_type = _ALERT_LIGHT;
+        }
+
+        if (_WIN && _WIN.IcUi && _WIN.IcUi.pushAlert) {
+          _WIN.IcUi.pushAlert.apply(null, [msg, alert_type]);
+        }
       }
 
       return rtn;
@@ -642,7 +672,7 @@
         for (i = 0, len = changes.length; i < len; i++) {
           //0<len
           if (!_isArray(changes[i]) || changes[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
-            _consoleLog('Error[_unreferenceP]: unexpected format');
+            _consoleLog('[_unreferenceP]: unexpected format', _ALERT_ERROR);
             continue;
           }
 
@@ -712,19 +742,19 @@
 
       block: {
         if (!_isObject(to_obj)) {
-          _consoleLog('Error[_cloneBoardToObj]: to_obj must be Object type');
+          _consoleLog('[_cloneBoardToObj]: to_obj must be Object type', _ALERT_ERROR);
           break block;
         }
 
         from_board = getBoard(from_woard);
 
         if (from_board === null) {
-          _consoleLog("Error[_cloneBoardToObj]: from_woard doesn't exist");
+          _consoleLog("[_cloneBoardToObj]: from_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
 
         if (to_obj === from_board) {
-          _consoleLog('Error[_cloneBoardToObj]: trying to self clone');
+          _consoleLog('[_cloneBoardToObj]: trying to self clone', _ALERT_ERROR);
           break block;
         }
 
@@ -794,7 +824,7 @@
 
             //primitive data type
             if (!_isObject(sub_from_prop) && !_isArray(sub_from_prop)) {
-              _consoleLog('Error[_cloneBoardToObj]: unexpected primitive data type');
+              _consoleLog('[_cloneBoardToObj]: unexpected primitive data type', _ALERT_ERROR);
               continue;
             }
 
@@ -854,7 +884,7 @@
 
               //object or array data type
               if (_isObject(sub_sub_from_prop) || _isArray(sub_sub_from_prop)) {
-                _consoleLog('Error[_cloneBoardToObj]: unexpected type in key "' + sub_sub_current_key + '"');
+                _consoleLog('[_cloneBoardToObj]: unexpected type in key "' + sub_sub_current_key + '"', _ALERT_ERROR);
                 continue;
               }
 
@@ -1339,7 +1369,7 @@
         });
 
         if (!temp) {
-          _consoleLog('Error[_loadFen]: bad FEN');
+          _consoleLog('[_loadFen]: bad FEN', _ALERT_ERROR);
           break block;
         }
 
@@ -2450,7 +2480,7 @@
         to_board = getBoard(to_woard);
 
         if (to_board === null) {
-          _consoleLog("Error[_isEqualBoard]: to_woard doesn't exist");
+          _consoleLog("[_isEqualBoard]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
 
@@ -2487,7 +2517,7 @@
         to_board = getBoard(to_woard);
 
         if (to_board === null) {
-          _consoleLog("Error[_cloneBoardTo]: to_woard doesn't exist");
+          _consoleLog("[_cloneBoardTo]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
 
@@ -2623,7 +2653,7 @@
 
       block: {
         if (!_isObject(obj)) {
-          _consoleLog('Error[_updateHelper]: wrong input type');
+          _consoleLog('[_updateHelper]: wrong input type', _ALERT_ERROR);
           break block;
         }
 
@@ -2631,7 +2661,7 @@
           fen_was_valid = obj.skipFenValidation || isLegalFen(obj.fen);
 
           if (!fen_was_valid) {
-            _consoleLog('Error[_updateHelper]: bad FEN');
+            _consoleLog('[_updateHelper]: bad FEN', _ALERT_ERROR);
             break block;
           }
         }
@@ -3764,7 +3794,7 @@
         left_board = getBoard(left_woard);
 
         if (left_board === null) {
-          _consoleLog("Error[isEqualBoard]: left_woard doesn't exist");
+          _consoleLog("[isEqualBoard]: left_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
 
@@ -3783,7 +3813,7 @@
         to_board = getBoard(to_woard);
 
         if (to_board === null) {
-          _consoleLog("Error[cloneBoard]: to_woard doesn't exist");
+          _consoleLog("[cloneBoard]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
 
@@ -3836,7 +3866,7 @@
         fen_was_valid = p.skipFenValidation || !_basicFenTest(p.fen);
 
         if (p.validOrBreak && !fen_was_valid) {
-          _consoleLog('Error[initBoard]: "' + board_name + '" bad FEN');
+          _consoleLog('[initBoard]: "' + board_name + '" bad FEN', _ALERT_ERROR);
           break block;
         }
 
@@ -3855,7 +3885,7 @@
         postfen_was_valid = p.skipFenValidation || !new_board.refinedFenTest();
 
         if (p.validOrBreak && !postfen_was_valid) {
-          _consoleLog('Error[initBoard]: "' + board_name + '" bad postFEN');
+          _consoleLog('[initBoard]: "' + board_name + '" bad postFEN', _ALERT_ERROR);
           break block;
         }
 
@@ -3872,7 +3902,7 @@
           everything_parsed = new_board.playMoves(p.pgn.sanMoves); /*NO p.validOrBreak short-circuit*/
 
           if (p.validOrBreak && !everything_parsed) {
-            _consoleLog('Error[initBoard]: "' + board_name + '" bad PGN');
+            _consoleLog('[initBoard]: "' + board_name + '" bad PGN', _ALERT_ERROR);
             break block;
           } else {
             if (p.pgn.result !== _RESULT_ONGOING) {
@@ -3883,7 +3913,7 @@
           everything_parsed = new_board.playMoves(p.uci); /*NO p.validOrBreak short-circuit*/
 
           if (p.validOrBreak && !everything_parsed) {
-            _consoleLog('Error[initBoard]: "' + board_name + '" bad UCI');
+            _consoleLog('[initBoard]: "' + board_name + '" bad UCI', _ALERT_ERROR);
             break block;
           }
         }
@@ -4010,7 +4040,7 @@
               };
           break;
         default:
-          _consoleLog('Error[fenApply]: invalid function name "' + fn_name + '"');
+          _consoleLog('[fenApply]: invalid function name "' + fn_name + '"', _ALERT_ERROR);
       }
 
       if (board_created) {
@@ -4040,7 +4070,7 @@
         });
 
         if (board === null) {
-          _consoleLog('Error[fenGet]: invalid FEN');
+          _consoleLog('[fenGet]: invalid FEN', _ALERT_ERROR);
           break block;
         }
 
@@ -4077,7 +4107,7 @@
             }
 
             if (invalid_key) {
-              _consoleLog('Error[fenGet]: invalid property name "' + current_key + '"');
+              _consoleLog('[fenGet]: invalid property name "' + current_key + '"', _ALERT_ERROR);
               break block;
             }
           }
