@@ -1,6 +1,6 @@
-(function(windw, expts, defin) {
-  var Ic = function(_WIN) {
-    var _VERSION = "8.7.2";
+(function (windw, expts, defin) {
+  var Ic = (function (_WIN) {
+    var _VERSION = '8.7.2';
     var _SILENT_MODE = true;
     var _BOARDS = {};
     var _EMPTY_SQR = 0;
@@ -20,52 +20,52 @@
     var _DIRECTION_TOP_LEFT = 8;
     var _SHORT_CASTLE = 1;
     var _LONG_CASTLE = 2;
-    var _RESULT_ONGOING = "*";
-    var _RESULT_W_WINS = "1-0";
-    var _RESULT_B_WINS = "0-1";
-    var _RESULT_DRAW = "1/2-1/2";
-    var _DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    var _ALERT_LIGHT = "light";
-    var _ALERT_DARK = "dark";
-    var _ALERT_SUCCESS = "success";
-    var _ALERT_WARNING = "warning";
-    var _ALERT_ERROR = "error";
+    var _RESULT_ONGOING = '*';
+    var _RESULT_W_WINS = '1-0';
+    var _RESULT_B_WINS = '0-1';
+    var _RESULT_DRAW = '1/2-1/2';
+    var _DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    var _ALERT_LIGHT = 'light';
+    var _ALERT_DARK = 'dark';
+    var _ALERT_SUCCESS = 'success';
+    var _ALERT_WARNING = 'warning';
+    var _ALERT_ERROR = 'error';
     var _MUTABLE_KEYS = [
-      "w",
-      "b",
-      "activeColor",
-      "nonActiveColor",
-      "fen",
-      "enPassantBos",
-      "halfMove",
-      "fullMove",
-      "moveList",
-      "currentMove",
-      "isRotated",
-      "isPuzzleMode",
-      "checks",
-      "isCheck",
-      "isCheckmate",
-      "isStalemate",
-      "isThreefold",
-      "isInsufficientMaterial",
-      "isFiftyMove",
-      "inDraw",
-      "promoteTo",
-      "manualResult",
-      "isHidden",
-      "legalUci",
-      "legalUciTree",
-      "legalRevTree",
-      "squares"
+      'w',
+      'b',
+      'activeColor',
+      'nonActiveColor',
+      'fen',
+      'enPassantBos',
+      'halfMove',
+      'fullMove',
+      'moveList',
+      'currentMove',
+      'isRotated',
+      'isPuzzleMode',
+      'checks',
+      'isCheck',
+      'isCheckmate',
+      'isStalemate',
+      'isThreefold',
+      'isInsufficientMaterial',
+      'isFiftyMove',
+      'inDraw',
+      'promoteTo',
+      'manualResult',
+      'isHidden',
+      'legalUci',
+      'legalUciTree',
+      'legalRevTree',
+      'squares',
     ];
     function _promoteValHelper(qal) {
       return _toInt(toAbsVal(qal) || _QUEEN, _KNIGHT, _QUEEN);
     }
     function _pgnResultHelper(str) {
       var rtn;
-      rtn = "";
-      str = String(str).replace(/\s/g, "").replace(/o/gi, "0").replace(/½/g, "1/2");
+      rtn = '';
+      str = String(str).replace(/\s/g, '').replace(/o/gi, '0').replace(/½/g, '1/2');
       if (str === _RESULT_ONGOING || str === _RESULT_W_WINS || str === _RESULT_B_WINS || str === _RESULT_DRAW) {
         rtn = str;
       }
@@ -85,12 +85,12 @@
         str = _trimSpaces(str);
         if (/^[pnbrqk]$/i.test(str)) {
           temp = str.toLowerCase();
-          rtn = ("pnbrqk".indexOf(temp) + 1) * getSign(str === temp);
+          rtn = ('pnbrqk'.indexOf(temp) + 1) * getSign(str === temp);
           break block;
         }
         pc_exec = /^([wb])([pnbrqk])$/.exec(str.toLowerCase());
         if (pc_exec) {
-          rtn = ("pnbrqk".indexOf(pc_exec[2]) + 1) * getSign(pc_exec[1] === "b");
+          rtn = ('pnbrqk'.indexOf(pc_exec[2]) + 1) * getSign(pc_exec[1] === 'b');
           break block;
         }
       }
@@ -128,18 +128,18 @@
         last_index = -1;
         rgxp = /\[\s*(\w+)\s+\"([^\"]*)\"\s*\]/g;
         str = str.replace(/“|”/g, '"');
-        while (mtch = rgxp.exec(str)) {
+        while ((mtch = rgxp.exec(str))) {
           last_index = rgxp.lastIndex;
           meta_tags[_trimSpaces(mtch[1])] = _trimSpaces(mtch[2]);
         }
         if (last_index === -1) {
           last_index = 0;
         }
-        g = " " + _cleanSan(str.slice(last_index));
+        g = ' ' + _cleanSan(str.slice(last_index));
         move_list = [];
         last_index = -1;
         rgxp = /\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*([^\s]+)/g;
-        while (mtch = rgxp.exec(g)) {
+        while ((mtch = rgxp.exec(g))) {
           last_index = rgxp.lastIndex;
           temp = mtch[0];
           move_list.push(mtch[2]);
@@ -163,7 +163,7 @@
         rtn = {
           tags: meta_tags,
           sanMoves: move_list,
-          result: game_result
+          result: game_result,
         };
       }
       return rtn;
@@ -175,11 +175,13 @@
         if (!_isNonBlankStr(str)) {
           break block;
         }
-        str = _trimSpaces(str).replace(/[^a-h1-8 nrq]/gi, "").toLowerCase();
+        str = _trimSpaces(str)
+          .replace(/[^a-h1-8 nrq]/gi, '')
+          .toLowerCase();
         if (!str) {
           break block;
         }
-        rtn = str.split(" ");
+        rtn = str.split(' ');
       }
       return rtn;
     }
@@ -198,7 +200,7 @@
         if (temp[0] === null || temp[1] === null) {
           break block;
         }
-        possible_promote = mov.charAt(4) || "";
+        possible_promote = mov.charAt(4) || '';
         rtn = [temp, possible_promote];
       }
       return rtn;
@@ -208,7 +210,7 @@
       rtn = null;
       p = _unreferenceP(p);
       block: {
-        p.delimiter = _isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : "-";
+        p.delimiter = _isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : '-';
         if (!_isNonBlankStr(mov)) {
           break block;
         }
@@ -246,7 +248,7 @@
         if (!_isMove(mov)) {
           break block;
         }
-        possible_promote = mov.promotion || "";
+        possible_promote = mov.promotion || '';
         rtn = [[mov.fromBos, mov.toBos], possible_promote];
       }
       return rtn;
@@ -327,7 +329,7 @@
           navNext: _navNext,
           navLast: _navLast,
           navLinkMove: _navLinkMove,
-          refreshUi: _refreshUi
+          refreshUi: _refreshUi,
         };
         target = _BOARDS[board_name];
       }
@@ -348,7 +350,7 @@
         //mutable
         kingBos: null,
         castling: null,
-        materialDiff: null
+        materialDiff: null,
       };
       target.b = {
         //static
@@ -367,7 +369,7 @@
         //mutable
         kingBos: null,
         castling: null,
-        materialDiff: null
+        materialDiff: null,
       };
       target.activeColor = null;
       target.nonActiveColor = null;
@@ -455,25 +457,29 @@
       return rtn;
     }
     function _isObject(obj) {
-      return typeof obj === "object" && obj !== null && !_isArray(obj);
+      return typeof obj === 'object' && obj !== null && !_isArray(obj);
     }
     function _isArray(arr) {
-      return Object.prototype.toString.call(arr) === "[object Array]";
+      return Object.prototype.toString.call(arr) === '[object Array]';
     }
     function _isSquare(obj) {
-      return _isObject(obj) && typeof obj.bos === "string";
+      return _isObject(obj) && typeof obj.bos === 'string';
     }
     function _isBoard(obj) {
-      return _isObject(obj) && typeof obj.boardName === "string";
+      return _isObject(obj) && typeof obj.boardName === 'string';
     }
     function _isMove(obj) {
-      return _isObject(obj) && typeof obj.fromBos === "string" && typeof obj.toBos === "string";
+      return _isObject(obj) && typeof obj.fromBos === 'string' && typeof obj.toBos === 'string';
     }
     function _trimSpaces(str) {
-      return String(str).replace(/^\s+|\s+$/g, "").replace(/\s\s+/g, " ");
+      return String(str)
+        .replace(/^\s+|\s+$/g, '')
+        .replace(/\s\s+/g, ' ');
     }
     function _formatName(str) {
-      return _trimSpaces(str).replace(/[^a-z0-9]/gi, "_").replace(/__+/g, "_");
+      return _trimSpaces(str)
+        .replace(/[^a-z0-9]/gi, '_')
+        .replace(/__+/g, '_');
     }
     function _strContains(str, str_to_find) {
       return String(str).indexOf(str_to_find) !== -1;
@@ -482,7 +488,7 @@
       var rtn;
       rtn = 0;
       if (_isNonEmptyStr(str) && _isNonEmptyStr(str_rgxp)) {
-        rtn = (str.match(RegExp(str_rgxp, "g")) || []).length;
+        rtn = (str.match(RegExp(str_rgxp, 'g')) || []).length;
       }
       return rtn;
     }
@@ -499,15 +505,15 @@
       return String(_toInt(num)) === String(num);
     }
     function _isNonEmptyStr(val) {
-      return !!(typeof val === "string" && val);
+      return !!(typeof val === 'string' && val);
     }
     function _isNonBlankStr(val) {
-      return !!(typeof val === "string" && _trimSpaces(val));
+      return !!(typeof val === 'string' && _trimSpaces(val));
     }
     function _hashCode(val) {
       var i, len, hash;
       hash = 0;
-      val = _isNonEmptyStr(val) ? val : "";
+      val = _isNonEmptyStr(val) ? val : '';
       for (i = 0, len = val.length; i < len; i++) {
         hash = (hash << 5) - hash + val.charCodeAt(i);
         hash |= 0;
@@ -515,7 +521,7 @@
       return hash;
     }
     function _castlingChars(num) {
-      return ["", "k", "q", "kq"][_toInt(num, 0, 3)];
+      return ['', 'k', 'q', 'kq'][_toInt(num, 0, 3)];
     }
     function _unreferenceP(p, changes) {
       var i, len, rtn;
@@ -523,7 +529,7 @@
       if (_isArray(changes)) {
         for (i = 0, len = changes.length; i < len; i++) {
           if (!_isArray(changes[i]) || changes[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
-            _consoleLog("[_unreferenceP]: unexpected format", _ALERT_ERROR);
+            _consoleLog('[_unreferenceP]: unexpected format', _ALERT_ERROR);
             continue;
           }
           rtn[_trimSpaces(changes[i][0])] = changes[i][1];
@@ -532,33 +538,55 @@
       return rtn;
     }
     function _cleanSan(rtn) {
-      rtn = _isNonBlankStr(rtn) ? rtn : "";
+      rtn = _isNonBlankStr(rtn) ? rtn : '';
       if (rtn) {
-        while (rtn !== (rtn = rtn.replace(/\{[^{}]*\}/g, "\n"))) ;
-        while (rtn !== (rtn = rtn.replace(/\([^()]*\)/g, "\n"))) ;
-        while (rtn !== (rtn = rtn.replace(/\<[^<>]*\>/g, "\n"))) ;
-        rtn = rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, "\n");
-        rtn = rtn.replace(/;+[^\n]*(\n|$)/g, "\n");
-        rtn = rtn.replace(/^%.*\n?/gm, "").replace(/^\n+|\n+$/g, "").replace(/\n/g, " ");
-        rtn = rtn.replace(/\$\d+/g, " ");
-        rtn = rtn.replace(/[^a-h0-9nrqkxo /½=-]/gi, "");
-        rtn = rtn.replace(/\s*\-+\s*/g, "-");
-        rtn = rtn.replace(/0-0-0/g, "w").replace(/0-0/g, "v");
-        rtn = rtn.replace(/o-o-o/gi, "w").replace(/o-o/gi, "v");
-        rtn = rtn.replace(/o/gi, "0").replace(/½/g, "1/2");
-        rtn = rtn.replace(/1\-0/g, " i ").replace(/0\-1/g, " j ").replace(/1\/2\-1\/2/g, " z ");
-        rtn = rtn.replace(/\-/g, " ");
-        rtn = rtn.replace(/w/g, "O-O-O").replace(/v/g, "O-O");
+        while (rtn !== (rtn = rtn.replace(/\{[^{}]*\}/g, '\n')));
+        while (rtn !== (rtn = rtn.replace(/\([^()]*\)/g, '\n')));
+        while (rtn !== (rtn = rtn.replace(/\<[^<>]*\>/g, '\n')));
+        rtn = rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, '\n');
+        rtn = rtn.replace(/;+[^\n]*(\n|$)/g, '\n');
+        rtn = rtn
+          .replace(/^%.*\n?/gm, '')
+          .replace(/^\n+|\n+$/g, '')
+          .replace(/\n/g, ' ');
+        rtn = rtn.replace(/\$\d+/g, ' ');
+        rtn = rtn.replace(/[^a-h0-9nrqkxo /½=-]/gi, '');
+        rtn = rtn.replace(/\s*\-+\s*/g, '-');
+        rtn = rtn.replace(/0-0-0/g, 'w').replace(/0-0/g, 'v');
+        rtn = rtn.replace(/o-o-o/gi, 'w').replace(/o-o/gi, 'v');
+        rtn = rtn.replace(/o/gi, '0').replace(/½/g, '1/2');
+        rtn = rtn
+          .replace(/1\-0/g, ' i ')
+          .replace(/0\-1/g, ' j ')
+          .replace(/1\/2\-1\/2/g, ' z ');
+        rtn = rtn.replace(/\-/g, ' ');
+        rtn = rtn.replace(/w/g, 'O-O-O').replace(/v/g, 'O-O');
         rtn = rtn.replace(/i/g, _RESULT_W_WINS).replace(/j/g, _RESULT_B_WINS).replace(/z/g, _RESULT_DRAW);
         rtn = _trimSpaces(rtn);
       }
       return rtn;
     }
     function _cloneBoardToObj(to_obj = {}, from_woard) {
-      var i, j, k, len, len2, len3, current_key, to_prop, from_prop, sub_current_key, sub_from_prop, sub_to_prop, sub_sub_current_key, sub_sub_from_prop, sub_keys, sub_sub_keys, from_board;
+      var i,
+        j,
+        k,
+        len,
+        len2,
+        len3,
+        current_key,
+        to_prop,
+        from_prop,
+        sub_current_key,
+        sub_from_prop,
+        sub_to_prop,
+        sub_sub_current_key,
+        sub_sub_from_prop,
+        sub_keys,
+        sub_sub_keys,
+        from_board;
       block: {
         if (!_isObject(to_obj)) {
-          _consoleLog("[_cloneBoardToObj]: to_obj must be Object type", _ALERT_ERROR);
+          _consoleLog('[_cloneBoardToObj]: to_obj must be Object type', _ALERT_ERROR);
           break block;
         }
         from_board = getBoard(from_woard);
@@ -567,7 +595,7 @@
           break block;
         }
         if (to_obj === from_board) {
-          _consoleLog("[_cloneBoardToObj]: trying to self clone", _ALERT_ERROR);
+          _consoleLog('[_cloneBoardToObj]: trying to self clone', _ALERT_ERROR);
           break block;
         }
         to_obj.moveList = [];
@@ -578,7 +606,7 @@
           current_key = _MUTABLE_KEYS[i];
           to_prop = to_obj[current_key];
           from_prop = from_board[current_key];
-          if (!to_prop && (current_key === "w" || current_key === "b" || current_key === "squares")) {
+          if (!to_prop && (current_key === 'w' || current_key === 'b' || current_key === 'squares')) {
             to_obj[current_key] = {};
             to_prop = to_obj[current_key];
           }
@@ -586,11 +614,11 @@
             to_obj[current_key] = from_prop;
             continue;
           }
-          if (current_key === "legalUci") {
+          if (current_key === 'legalUci') {
             to_obj.legalUci = from_board.legalUci.slice(0);
             continue;
           }
-          if (current_key === "w" || current_key === "b") {
+          if (current_key === 'w' || current_key === 'b') {
             to_prop.materialDiff = from_prop.materialDiff.slice(0);
             to_prop.isBlack = from_prop.isBlack;
             to_prop.sign = from_prop.sign;
@@ -613,19 +641,19 @@
             sub_current_key = sub_keys[j];
             sub_to_prop = to_prop[sub_current_key];
             sub_from_prop = from_prop[sub_current_key];
-            if (!sub_to_prop && current_key === "squares") {
+            if (!sub_to_prop && current_key === 'squares') {
               to_prop[sub_current_key] = {};
               sub_to_prop = to_prop[sub_current_key];
             }
             if (!_isObject(sub_from_prop) && !_isArray(sub_from_prop)) {
-              _consoleLog("[_cloneBoardToObj]: unexpected primitive data type", _ALERT_ERROR);
+              _consoleLog('[_cloneBoardToObj]: unexpected primitive data type', _ALERT_ERROR);
               continue;
             }
-            if (current_key === "legalUciTree") {
+            if (current_key === 'legalUciTree') {
               to_prop[sub_current_key] = sub_from_prop.slice(0);
               continue;
             }
-            if (current_key === "squares") {
+            if (current_key === 'squares') {
               sub_to_prop.pos = sub_from_prop.pos.slice(0);
               sub_to_prop.bos = sub_from_prop.bos;
               sub_to_prop.rankPos = sub_from_prop.rankPos;
@@ -648,14 +676,14 @@
               continue;
             }
             sub_sub_keys = Object.keys(sub_from_prop);
-            if (current_key === "moveList" || current_key === "legalRevTree") {
+            if (current_key === 'moveList' || current_key === 'legalRevTree') {
               to_prop[sub_current_key] = {};
               sub_to_prop = to_prop[sub_current_key];
             }
             for (k = 0, len3 = sub_sub_keys.length; k < len3; k++) {
               sub_sub_current_key = sub_sub_keys[k];
               sub_sub_from_prop = sub_from_prop[sub_sub_current_key];
-              if (current_key === "legalRevTree") {
+              if (current_key === 'legalRevTree') {
                 sub_to_prop[sub_sub_current_key] = sub_sub_from_prop.slice(0);
                 continue;
               }
@@ -671,31 +699,41 @@
       return to_obj;
     }
     function _basicFenTest(fen) {
-      var i, j, len, temp, optional_clocks, last_is_num, current_is_num, fen_board, fen_board_arr, total_files_in_current_rank, rtn_msg;
-      rtn_msg = "";
+      var i,
+        j,
+        len,
+        temp,
+        optional_clocks,
+        last_is_num,
+        current_is_num,
+        fen_board,
+        fen_board_arr,
+        total_files_in_current_rank,
+        rtn_msg;
+      rtn_msg = '';
       block: {
         fen = String(fen);
         if (fen.length < 20) {
-          rtn_msg = "Error [0] fen is too short";
+          rtn_msg = 'Error [0] fen is too short';
           break block;
         }
         fen = _trimSpaces(fen);
         optional_clocks = fen.replace(
           /^([rnbqkRNBQK1-8]+\/)([rnbqkpRNBQKP1-8]+\/){6}([rnbqkRNBQK1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])($|\s)/,
-          ""
+          ''
         );
         if (fen.length === optional_clocks.length) {
-          rtn_msg = "Error [1] invalid fen structure";
+          rtn_msg = 'Error [1] invalid fen structure';
           break block;
         }
         if (optional_clocks.length) {
           if (!/^(0|[1-9][0-9]*)\s([1-9][0-9]*)$/.test(optional_clocks)) {
-            rtn_msg = "Error [2] invalid half/full move";
+            rtn_msg = 'Error [2] invalid half/full move';
             break block;
           }
         }
-        fen_board = fen.split(" ")[0];
-        fen_board_arr = fen_board.split("/");
+        fen_board = fen.split(' ')[0];
+        fen_board_arr = fen_board.split('/');
         for (i = 0; i < 8; i++) {
           total_files_in_current_rank = 0;
           last_is_num = false;
@@ -703,25 +741,25 @@
             temp = fen_board_arr[i].charAt(j) * 1;
             current_is_num = !!temp;
             if (last_is_num && current_is_num) {
-              rtn_msg = "Error [3] two consecutive numeric values";
+              rtn_msg = 'Error [3] two consecutive numeric values';
               break block;
             }
             last_is_num = current_is_num;
             total_files_in_current_rank += temp || 1;
           }
           if (total_files_in_current_rank !== 8) {
-            rtn_msg = "Error [4] rank without exactly 8 columns";
+            rtn_msg = 'Error [4] rank without exactly 8 columns';
             break block;
           }
         }
-        temp = fen_board.indexOf("K");
-        if (temp === -1 || fen_board.lastIndexOf("K") !== temp) {
-          rtn_msg = "Error [5] board without exactly one white king";
+        temp = fen_board.indexOf('K');
+        if (temp === -1 || fen_board.lastIndexOf('K') !== temp) {
+          rtn_msg = 'Error [5] board without exactly one white king';
           break block;
         }
-        temp = fen_board.indexOf("k");
-        if (temp === -1 || fen_board.lastIndexOf("k") !== temp) {
-          rtn_msg = "Error [6] board without exactly one black king";
+        temp = fen_board.indexOf('k');
+        if (temp === -1 || fen_board.lastIndexOf('k') !== temp) {
+          rtn_msg = 'Error [6] board without exactly one black king';
           break block;
         }
       }
@@ -804,7 +842,7 @@
     function _setSquare(qos, new_qal, p) {
       var that, current_side, new_val, new_abs_val, rtn;
       that = this;
-      rtn = that.getSquare(qos, _unreferenceP(p, [["isUnreferenced", false]]));
+      rtn = that.getSquare(qos, _unreferenceP(p, [['isUnreferenced', false]]));
       block: {
         if (rtn === null) {
           break block;
@@ -868,11 +906,11 @@
       var that, temp, rtn_changed;
       that = this;
       rtn_changed = false;
-      temp = typeof new_active === "boolean" ? new_active : !that[that.activeColor].isBlack;
-      if ((temp ? "b" : "w") !== that.activeColor || (!temp ? "b" : "w") !== that.nonActiveColor) {
+      temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
+      if ((temp ? 'b' : 'w') !== that.activeColor || (!temp ? 'b' : 'w') !== that.nonActiveColor) {
         rtn_changed = true;
-        that.activeColor = temp ? "b" : "w";
-        that.nonActiveColor = !temp ? "b" : "w";
+        that.activeColor = temp ? 'b' : 'w';
+        that.nonActiveColor = !temp ? 'b' : 'w';
       }
       return rtn_changed;
     }
@@ -880,7 +918,7 @@
       var that, temp, rtn_changed;
       that = this;
       rtn_changed = false;
-      temp = typeof new_is_rotated === "boolean" ? new_is_rotated : !that.isRotated;
+      temp = typeof new_is_rotated === 'boolean' ? new_is_rotated : !that.isRotated;
       if (temp !== that.isRotated) {
         rtn_changed = true;
         that.isRotated = temp;
@@ -940,7 +978,7 @@
         if (len < 2) {
           break block;
         }
-        if (typeof is_goto !== "boolean") {
+        if (typeof is_goto !== 'boolean') {
           num = _toInt(num, 0, len - 1);
           diff = num - that.currentMove;
           is_goto = Math.abs(diff) !== 1;
@@ -954,7 +992,7 @@
         that.updateHelper({
           currentMove: temp,
           fen: that.moveList[temp].fen,
-          skipFenValidation: true
+          skipFenValidation: true,
         });
         that.refreshUi(is_goto ? 0 : num, true);
         rtn_changed = true;
@@ -1003,10 +1041,10 @@
           fen,
           skipFenValidation: p.skipFenValidation,
           resetOptions: !p.keepOptions,
-          resetMoveList: true
+          resetMoveList: true,
         });
         if (!temp) {
-          _consoleLog("[_loadFen]: bad FEN", _ALERT_ERROR);
+          _consoleLog('[_loadFen]: bad FEN', _ALERT_ERROR);
           break block;
         }
         that.silentlyResetManualResult();
@@ -1026,8 +1064,8 @@
         }
       }
       fen = _trimSpaces(fen);
-      fen_parts = fen.split(" ");
-      fen_board_arr = fen_parts[0].split("/");
+      fen_parts = fen.split(' ');
+      fen_board_arr = fen_parts[0].split('/');
       for (i = 0; i < 8; i++) {
         current_file = 0;
         for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
@@ -1039,37 +1077,56 @@
           current_file += skip_files || 1;
         }
       }
-      that.w.castling = (_strContains(fen_parts[2], "K") ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], "Q") ? _LONG_CASTLE : 0);
-      that.b.castling = (_strContains(fen_parts[2], "k") ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], "q") ? _LONG_CASTLE : 0);
-      that.enPassantBos = fen_parts[3].replace("-", "");
-      that.toggleActiveNonActive(fen_parts[1] === "b");
+      that.w.castling =
+        (_strContains(fen_parts[2], 'K') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'Q') ? _LONG_CASTLE : 0);
+      that.b.castling =
+        (_strContains(fen_parts[2], 'k') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'q') ? _LONG_CASTLE : 0);
+      that.enPassantBos = fen_parts[3].replace('-', '');
+      that.toggleActiveNonActive(fen_parts[1] === 'b');
       that.halfMove = fen_parts[4] * 1 || 0;
       that.fullMove = fen_parts[5] * 1 || 1;
     }
     function _getClocklessFenHelper() {
       var i, j, that, fen_board, current_square, consecutive_empty_squares, rtn;
       that = this;
-      fen_board = "";
+      fen_board = '';
       for (i = 0; i < 8; i++) {
         consecutive_empty_squares = 0;
         for (j = 0; j < 8; j++) {
           current_square = that.getSquare([i, j]);
           if (!current_square.isEmptySquare) {
-            fen_board += (consecutive_empty_squares || "") + current_square.bal;
+            fen_board += (consecutive_empty_squares || '') + current_square.bal;
             consecutive_empty_squares = -1;
           }
           consecutive_empty_squares++;
         }
-        fen_board += (consecutive_empty_squares || "") + (i !== 7 ? "/" : "");
+        fen_board += (consecutive_empty_squares || '') + (i !== 7 ? '/' : '');
       }
       rtn = fen_board;
-      rtn += " " + that.activeColor;
-      rtn += " " + (_castlingChars(that.w.castling).toUpperCase() + "" + _castlingChars(that.b.castling) || "-");
-      rtn += " " + (that.enPassantBos || "-");
+      rtn += ' ' + that.activeColor;
+      rtn += ' ' + (_castlingChars(that.w.castling).toUpperCase() + '' + _castlingChars(that.b.castling) || '-');
+      rtn += ' ' + (that.enPassantBos || '-');
       return rtn;
     }
     function _updateFenAndMisc(sliced_fen_history) {
-      var i, j, k, m, len, that, temp, temp2, current_diff, from_bos, to_bos, can_en_passant, total_pieces, clockless_fen, times_found, bishop_count, at_least_one_light, at_least_one_dark;
+      var i,
+        j,
+        k,
+        m,
+        len,
+        that,
+        temp,
+        temp2,
+        current_diff,
+        from_bos,
+        to_bos,
+        can_en_passant,
+        total_pieces,
+        clockless_fen,
+        times_found,
+        bishop_count,
+        at_least_one_light,
+        at_least_one_dark;
       that = this;
       that.checks = that.attackersFromNonActive(null);
       that.isCheck = !!that.checks;
@@ -1111,37 +1168,46 @@
       that.isStalemate = !that.isCheck && !that.legalUci.length;
       if (that.enPassantBos) {
         can_en_passant = false;
-        if (that.legalRevTree[that.enPassantBos] && that.legalRevTree[that.enPassantBos]["p"]) {
+        if (that.legalRevTree[that.enPassantBos] && that.legalRevTree[that.enPassantBos]['p']) {
           can_en_passant = true;
         }
         if (!can_en_passant) {
-          that.enPassantBos = "";
+          that.enPassantBos = '';
         }
       }
       clockless_fen = that.getClocklessFenHelper();
-      that.fen = clockless_fen + " " + that.halfMove + " " + that.fullMove;
+      that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
       that.isThreefold = false;
-      if (sliced_fen_history || that.moveList && that.currentMove > 7 && that.halfMove > 7) {
+      if (sliced_fen_history || (that.moveList && that.currentMove > 7 && that.halfMove > 7)) {
         times_found = 1;
         temp = sliced_fen_history || that.fenHistoryExport();
         i = sliced_fen_history ? sliced_fen_history.length - 1 : that.currentMove - 1;
         for (; i >= 0; i--) {
-          temp2 = temp[i].split(" ");
-          if (temp2.slice(0, 4).join(" ") === clockless_fen) {
+          temp2 = temp[i].split(' ');
+          if (temp2.slice(0, 4).join(' ') === clockless_fen) {
             times_found++;
             if (times_found > 2) {
               that.isThreefold = true;
               break;
             }
           }
-          if (temp2[4] === "0") {
+          if (temp2[4] === '0') {
             break;
           }
         }
       }
       total_pieces = countPieces(clockless_fen);
       that.isInsufficientMaterial = false;
-      if (!(total_pieces.w.p + total_pieces.b.p + total_pieces.w.r + total_pieces.b.r + total_pieces.w.q + total_pieces.b.q)) {
+      if (
+        !(
+          total_pieces.w.p +
+          total_pieces.b.p +
+          total_pieces.w.r +
+          total_pieces.b.r +
+          total_pieces.w.q +
+          total_pieces.b.q
+        )
+      ) {
         if (total_pieces.w.n + total_pieces.b.n) {
           that.isInsufficientMaterial = total_pieces.w.n + total_pieces.b.n + total_pieces.w.b + total_pieces.b.b === 1;
         } else if (total_pieces.w.b + total_pieces.b.b) {
@@ -1154,7 +1220,8 @@
         }
       }
       that.isFiftyMove = that.halfMove >= 100;
-      that.inDraw = !that.isCheckmate && (that.isStalemate || that.isThreefold || that.isInsufficientMaterial || that.isFiftyMove);
+      that.inDraw =
+        !that.isCheckmate && (that.isStalemate || that.isThreefold || that.isInsufficientMaterial || that.isFiftyMove);
       that.w.materialDiff = [];
       that.b.materialDiff = [];
       for (i = _PAWN; i <= _KING; i++) {
@@ -1170,34 +1237,59 @@
       }
     }
     function _refinedFenTest() {
-      var i, j, k, that, temp, en_passant_square, behind_ep_val, infront_ep_is_empty, bishop_count, total_pieces, fen_board, total_pawns_in_current_file, min_captured, active_side, non_active_side, current_side, current_other_side, current_bishop_count, current_promoted_count, rtn_msg;
+      var i,
+        j,
+        k,
+        that,
+        temp,
+        en_passant_square,
+        behind_ep_val,
+        infront_ep_is_empty,
+        bishop_count,
+        total_pieces,
+        fen_board,
+        total_pawns_in_current_file,
+        min_captured,
+        active_side,
+        non_active_side,
+        current_side,
+        current_other_side,
+        current_bishop_count,
+        current_promoted_count,
+        rtn_msg;
       that = this;
-      rtn_msg = "";
+      rtn_msg = '';
       block: {
         active_side = that[that.activeColor];
         non_active_side = that[that.nonActiveColor];
         if (that.halfMove - active_side.isBlack + 1 >= that.fullMove * 2) {
-          rtn_msg = "Error [0] exceeding half moves ratio";
+          rtn_msg = 'Error [0] exceeding half moves ratio';
           break block;
         }
         if (that.checks > 2) {
-          rtn_msg = "Error [1] king is checked more times than possible";
+          rtn_msg = 'Error [1] king is checked more times than possible';
           break block;
         }
         if (that.attackersFromActive(null, true)) {
-          rtn_msg = "Error [2] non-active king in check";
+          rtn_msg = 'Error [2] non-active king in check';
           break block;
         }
         if (that.enPassantBos) {
           en_passant_square = that.getSquare(that.enPassantBos);
           infront_ep_is_empty = that.getSquare(en_passant_square, {
-            rankShift: active_side.singlePawnRankShift
+            rankShift: active_side.singlePawnRankShift,
           }).isEmptySquare;
           behind_ep_val = that.getSquare(en_passant_square, {
-            rankShift: non_active_side.singlePawnRankShift
+            rankShift: non_active_side.singlePawnRankShift,
           }).val;
-          if (that.halfMove || !en_passant_square.isEmptySquare || en_passant_square.rankPos !== (active_side.isBlack ? 5 : 2) || !infront_ep_is_empty || behind_ep_val !== non_active_side.pawn) {
-            rtn_msg = "Error [3] bad en-passant";
+          if (
+            that.halfMove ||
+            !en_passant_square.isEmptySquare ||
+            en_passant_square.rankPos !== (active_side.isBlack ? 5 : 2) ||
+            !infront_ep_is_empty ||
+            behind_ep_val !== non_active_side.pawn
+          ) {
+            rtn_msg = 'Error [3] bad en-passant';
             break block;
           }
         }
@@ -1208,21 +1300,32 @@
           current_other_side = i ? total_pieces.w : total_pieces.b;
           current_bishop_count = i ? bishop_count.b : bishop_count.w;
           if (current_side.p > 8) {
-            rtn_msg = "Error [" + (i + 4) + "] more than 8 pawns";
+            rtn_msg = 'Error [' + (i + 4) + '] more than 8 pawns';
             break block;
           }
-          current_promoted_count = Math.max(current_side.n - 2, 0) + Math.max(current_bishop_count.lightSquaredBishops - 1, 0) + Math.max(current_bishop_count.darkSquaredBishops - 1, 0) + Math.max(current_side.r - 2, 0) + Math.max(current_side.q - 1, 0);
-          temp = current_other_side.p + current_other_side.n + current_other_side.b + current_other_side.r + current_other_side.q + current_other_side.k;
+          current_promoted_count =
+            Math.max(current_side.n - 2, 0) +
+            Math.max(current_bishop_count.lightSquaredBishops - 1, 0) +
+            Math.max(current_bishop_count.darkSquaredBishops - 1, 0) +
+            Math.max(current_side.r - 2, 0) +
+            Math.max(current_side.q - 1, 0);
+          temp =
+            current_other_side.p +
+            current_other_side.n +
+            current_other_side.b +
+            current_other_side.r +
+            current_other_side.q +
+            current_other_side.k;
           if (temp === 16 && current_promoted_count) {
-            rtn_msg = "Error [" + (i + 6) + "] promoted pieces without capturing any piece";
+            rtn_msg = 'Error [' + (i + 6) + '] promoted pieces without capturing any piece';
             break block;
           }
           if (current_promoted_count > 8 - current_side.p) {
-            rtn_msg = "Error [" + (i + 8) + "] promoted pieces exceed the number of missing pawns";
+            rtn_msg = 'Error [' + (i + 8) + '] promoted pieces exceed the number of missing pawns';
             break block;
           }
         }
-        fen_board = that.fen.split(" ")[0];
+        fen_board = that.fen.split(' ')[0];
         for (i = 0; i < 2; i++) {
           current_side = i ? that.b : that.w;
           min_captured = 0;
@@ -1236,8 +1339,8 @@
               min_captured += temp[total_pawns_in_current_file - 2];
             }
           }
-          if (min_captured > 15 - _occurrences(fen_board, i ? "P|N|B|R|Q" : "p|n|b|r|q")) {
-            rtn_msg = "Error [10] not enough captured pieces to support the total doubled pawns";
+          if (min_captured > 15 - _occurrences(fen_board, i ? 'P|N|B|R|Q' : 'p|n|b|r|q')) {
+            rtn_msg = 'Error [10] not enough captured pieces to support the total doubled pawns';
             break block;
           }
         }
@@ -1247,21 +1350,27 @@
             continue;
           }
           temp = {
-            completeActiveColor: i ? "black" : "white",
-            originalKingBos: i ? "e8" : "e1",
-            originalLongRookBos: i ? "a8" : "a1",
-            originalShortRookBos: i ? "h8" : "h1"
+            completeActiveColor: i ? 'black' : 'white',
+            originalKingBos: i ? 'e8' : 'e1',
+            originalLongRookBos: i ? 'a8' : 'a1',
+            originalShortRookBos: i ? 'h8' : 'h1',
           };
           if (that.getSquare(temp.originalKingBos).val !== current_side.king) {
-            rtn_msg = "Error [11] " + temp.completeActiveColor + " castling rights without king in original square";
+            rtn_msg = 'Error [11] ' + temp.completeActiveColor + ' castling rights without king in original square';
             break block;
           }
-          if (current_side.castling !== _LONG_CASTLE && that.getSquare(temp.originalShortRookBos).val !== current_side.rook) {
-            rtn_msg = "Error [12] " + temp.completeActiveColor + " short castling rights with missing H-file rook";
+          if (
+            current_side.castling !== _LONG_CASTLE &&
+            that.getSquare(temp.originalShortRookBos).val !== current_side.rook
+          ) {
+            rtn_msg = 'Error [12] ' + temp.completeActiveColor + ' short castling rights with missing H-file rook';
             break block;
           }
-          if (current_side.castling !== _SHORT_CASTLE && that.getSquare(temp.originalLongRookBos).val !== current_side.rook) {
-            rtn_msg = "Error [13] " + temp.completeActiveColor + " long castling rights with missing A-file rook";
+          if (
+            current_side.castling !== _SHORT_CASTLE &&
+            that.getSquare(temp.originalLongRookBos).val !== current_side.rook
+          ) {
+            rtn_msg = 'Error [13] ' + temp.completeActiveColor + ' long castling rights with missing A-file rook';
             break block;
           }
         }
@@ -1273,7 +1382,7 @@
       that = this;
       rtn = {
         candidateMoves: [],
-        isAttacked: false
+        isAttacked: false,
       };
       active_side = that[that.activeColor];
       piece_direction = _toInt(piece_direction, 1, 8);
@@ -1283,7 +1392,7 @@
       for (i = 0; i < max_shifts; i++) {
         current_square = that.getSquare(initial_qos, {
           rankShift: rank_change * (i + 1),
-          fileShift: file_change * (i + 1)
+          fileShift: file_change * (i + 1),
         });
         if (current_square === null) {
           break;
@@ -1336,19 +1445,35 @@
       return rtn;
     }
     function _legalMovesHelper(target_qos) {
-      var i, j, len, len2, that, temp, temp2, current_cached_square, target_cached_square, current_diagonal_square, pseudo_legal_arr, is_promotion, en_passant_capturable_cached_square, piece_directions, active_side, non_active_side, rtn;
+      var i,
+        j,
+        len,
+        len2,
+        that,
+        temp,
+        temp2,
+        current_cached_square,
+        target_cached_square,
+        current_diagonal_square,
+        pseudo_legal_arr,
+        is_promotion,
+        en_passant_capturable_cached_square,
+        piece_directions,
+        active_side,
+        non_active_side,
+        rtn;
       that = this;
       function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture) {
         return that.testCollision(1, qos, piece_direction, as_knight, max_shifts, allow_capture).candidateMoves;
       }
       rtn = {
         uciMoves: [],
-        piece: "",
-        isPromotion: false
+        piece: '',
+        isPromotion: false,
       };
       block: {
         target_cached_square = that.getSquare(target_qos, {
-          isUnreferenced: true
+          isUnreferenced: true,
         });
         if (target_cached_square === null) {
           break block;
@@ -1375,22 +1500,27 @@
                 castleToSkip: i ? _SHORT_CASTLE : _LONG_CASTLE,
                 direction: i ? _DIRECTION_LEFT : _DIRECTION_RIGHT,
                 consecutiveEmpty: i ? 3 : 2,
-                singleFileShift: i ? -1 : 1
+                singleFileShift: i ? -1 : 1,
               };
               if (active_side.castling === temp2.castleToSkip) {
                 continue;
               }
-              if (_candidateMoves(target_cached_square, temp2.direction, false, temp2.consecutiveEmpty, false).length !== temp2.consecutiveEmpty) {
+              if (
+                _candidateMoves(target_cached_square, temp2.direction, false, temp2.consecutiveEmpty, false).length !==
+                temp2.consecutiveEmpty
+              ) {
                 continue;
               }
-              if (that.attackersFromNonActive(
-                that.getSquare(target_cached_square, { fileShift: temp2.singleFileShift }),
-                true
-              )) {
+              if (
+                that.attackersFromNonActive(
+                  that.getSquare(target_cached_square, { fileShift: temp2.singleFileShift }),
+                  true
+                )
+              ) {
                 continue;
               }
               temp = that.getSquare(target_cached_square, {
-                fileShift: temp2.singleFileShift * 2
+                fileShift: temp2.singleFileShift * 2,
               });
               pseudo_legal_arr.push([temp]);
             }
@@ -1410,19 +1540,24 @@
           for (i = 0; i < 2; i++) {
             current_diagonal_square = that.getSquare(target_cached_square, {
               rankShift: active_side.singlePawnRankShift,
-              fileShift: i ? -1 : 1
+              fileShift: i ? -1 : 1,
             });
             if (current_diagonal_square === null) {
               continue;
             }
             temp = sameSquare(current_diagonal_square, that.enPassantBos);
-            if (temp || current_diagonal_square.sign !== active_side.sign && !current_diagonal_square.isEmptySquare && !current_diagonal_square.isKing) {
+            if (
+              temp ||
+              (current_diagonal_square.sign !== active_side.sign &&
+                !current_diagonal_square.isEmptySquare &&
+                !current_diagonal_square.isKing)
+            ) {
               pseudo_legal_arr.push([current_diagonal_square]);
             }
             if (temp) {
               en_passant_capturable_cached_square = that.getSquare(current_diagonal_square, {
                 rankShift: non_active_side.singlePawnRankShift,
-                isUnreferenced: true
+                isUnreferenced: true,
               });
             }
           }
@@ -1450,7 +1585,7 @@
         for (i = 0, len = pseudo_legal_arr.length; i < len; i++) {
           for (j = 0, len2 = pseudo_legal_arr[i].length; j < len2; j++) {
             current_cached_square = that.getSquare(pseudo_legal_arr[i][j], {
-              isUnreferenced: true
+              isUnreferenced: true,
             });
             that.setSquare(current_cached_square, target_cached_square.val);
             that.setSquare(target_cached_square, _EMPTY_SQR);
@@ -1486,21 +1621,21 @@
           break block;
         }
         legal_uci_in_bos = legal_uci_in_bos.slice(0);
-        p.returnType = _isNonEmptyStr(p.returnType) ? p.returnType : "toSquare";
-        p.squareType = _isNonEmptyStr(p.squareType) ? p.squareType : "bos";
-        p.delimiter = _isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : "-";
-        if (p.returnType === "uci") {
+        p.returnType = _isNonEmptyStr(p.returnType) ? p.returnType : 'toSquare';
+        p.squareType = _isNonEmptyStr(p.squareType) ? p.squareType : 'bos';
+        p.delimiter = _isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : '-';
+        if (p.returnType === 'uci') {
           rtn = legal_uci_in_bos;
           break block;
         }
         temp = [];
         used_keys = {};
-        is_fen_or_san = p.returnType === "fen" || p.returnType === "san";
+        is_fen_or_san = p.returnType === 'fen' || p.returnType === 'san';
         for (i = 0, len = legal_uci_in_bos.length; i < len; i++) {
           temp2 = legal_uci_in_bos[i];
           if (is_fen_or_san) {
             temp3 = that.playMove(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
-            if (p.returnType === "fen") {
+            if (p.returnType === 'fen') {
               temp.push(temp3.fen);
             } else {
               temp.push(temp3.san);
@@ -1513,23 +1648,23 @@
             continue;
           }
           used_keys[to_bos] = true;
-          if (p.returnType === "joined") {
+          if (p.returnType === 'joined') {
             temp.push(from_bos + p.delimiter + to_bos);
-          } else if (p.returnType === "fromToSquares") {
-            if (p.squareType === "square") {
+          } else if (p.returnType === 'fromToSquares') {
+            if (p.squareType === 'square') {
               temp.push([
                 that.getSquare(from_bos, { isUnreferenced: true }),
-                that.getSquare(to_bos, { isUnreferenced: true })
+                that.getSquare(to_bos, { isUnreferenced: true }),
               ]);
-            } else if (p.squareType === "pos") {
+            } else if (p.squareType === 'pos') {
               temp.push([toPos(from_bos), toPos(to_bos)]);
             } else {
               temp.push([from_bos, to_bos]);
             }
           } else {
-            if (p.squareType === "square") {
+            if (p.squareType === 'square') {
               temp.push(that.getSquare(to_bos, { isUnreferenced: true }));
-            } else if (p.squareType === "pos") {
+            } else if (p.squareType === 'pos') {
               temp.push(toPos(to_bos));
             } else {
               temp.push(to_bos);
@@ -1546,17 +1681,17 @@
     function _legalFenMoves(target_qos) {
       var that;
       that = this;
-      return that.legalMoves(target_qos, { returnType: "fen" });
+      return that.legalMoves(target_qos, { returnType: 'fen' });
     }
     function _legalSanMoves(target_qos) {
       var that;
       that = this;
-      return that.legalMoves(target_qos, { returnType: "san" });
+      return that.legalMoves(target_qos, { returnType: 'san' });
     }
     function _legalUciMoves(target_qos) {
       var that;
       that = this;
-      return that.legalMoves(target_qos, { returnType: "uci" });
+      return that.legalMoves(target_qos, { returnType: 'uci' });
     }
     function _isLegalMove(mov, p) {
       var that, wrapped_move, legal_uci_in_bos, rtn;
@@ -1575,7 +1710,7 @@
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
         }
-        rtn = _strContains(legal_uci_in_bos.join(","), wrapped_move.fromBos + "" + wrapped_move.toBos);
+        rtn = _strContains(legal_uci_in_bos.join(','), wrapped_move.fromBos + '' + wrapped_move.toBos);
       }
       return rtn;
     }
@@ -1619,25 +1754,41 @@
       return rtn;
     }
     function _pgnExport() {
-      var i, len, that, header, ordered_tags, result_tag_ow, move_list, black_starts, initial_fen, initial_full_move, current_move, text_game, rtn;
+      var i,
+        len,
+        that,
+        header,
+        ordered_tags,
+        result_tag_ow,
+        move_list,
+        black_starts,
+        initial_fen,
+        initial_full_move,
+        current_move,
+        text_game,
+        rtn;
       that = this;
-      rtn = "";
+      rtn = '';
       header = _unreferenceP(header);
       move_list = that.moveList;
       initial_fen = move_list[0].fen;
-      black_starts = move_list[0].colorToPlay === "b";
-      initial_full_move = that.fullMove - Math.floor((that.currentMove + black_starts - 1) / 2) + Number(black_starts === !(that.currentMove % 2)) - 1;
+      black_starts = move_list[0].colorToPlay === 'b';
+      initial_full_move =
+        that.fullMove -
+        Math.floor((that.currentMove + black_starts - 1) / 2) +
+        Number(black_starts === !(that.currentMove % 2)) -
+        1;
       result_tag_ow = _RESULT_ONGOING;
-      text_game = "";
+      text_game = '';
       for (i = 0, len = move_list.length; i < len; i++) {
         if (i) {
           current_move = initial_full_move + Math.floor((i + black_starts - 1) / 2);
-          text_game += i !== 1 ? " " : "";
-          text_game += move_list[i - 1].comment && black_starts === !!(i % 2) ? current_move + "..." : "";
-          text_game += black_starts === !(i % 2) ? current_move + ". " : "";
+          text_game += i !== 1 ? ' ' : '';
+          text_game += move_list[i - 1].comment && black_starts === !!(i % 2) ? current_move + '...' : '';
+          text_game += black_starts === !(i % 2) ? current_move + '. ' : '';
           text_game += move_list[i].san;
           if (move_list[i].comment) {
-            text_game += " " + move_list[i].comment;
+            text_game += ' ' + move_list[i].comment;
           }
         }
         if (move_list[i].moveResult) {
@@ -1654,68 +1805,68 @@
       }
       if (text_game) {
         if (black_starts) {
-          text_game = initial_full_move + "..." + text_game;
+          text_game = initial_full_move + '...' + text_game;
         }
-        text_game += " " + result_tag_ow;
+        text_game += ' ' + result_tag_ow;
       } else {
         text_game += result_tag_ow;
       }
       text_game = text_game || _RESULT_ONGOING;
       ordered_tags = [
-        ["Event", header.Event || "Chess game"],
-        ["Site", header.Site || "?"],
-        ["Date", header.Date || "????.??.??"],
-        ["Round", header.Round || "?"],
-        ["White", header.White || "?"],
-        ["Black", header.Black || "?"],
-        ["Result", result_tag_ow]
+        ['Event', header.Event || 'Chess game'],
+        ['Site', header.Site || '?'],
+        ['Date', header.Date || '????.??.??'],
+        ['Round', header.Round || '?'],
+        ['White', header.White || '?'],
+        ['Black', header.Black || '?'],
+        ['Result', result_tag_ow],
       ];
       if (initial_fen !== _DEFAULT_FEN) {
-        ordered_tags.push(["SetUp", "1"]);
-        ordered_tags.push(["FEN", initial_fen]);
+        ordered_tags.push(['SetUp', '1']);
+        ordered_tags.push(['FEN', initial_fen]);
       }
       for (i = 0, len = ordered_tags.length; i < len; i++) {
-        rtn += "[" + ordered_tags[i][0] + ' "' + ordered_tags[i][1] + '"]\n';
+        rtn += '[' + ordered_tags[i][0] + ' "' + ordered_tags[i][1] + '"]\n';
       }
-      rtn += "\n" + text_game;
+      rtn += '\n' + text_game;
       return rtn;
     }
     function _uciExport() {
       var i, len, that, uci_arr, rtn;
       that = this;
-      rtn = "";
+      rtn = '';
       uci_arr = [];
       for (i = 1, len = that.moveList.length; i < len; i++) {
         uci_arr.push(that.moveList[i].uci);
       }
       if (uci_arr.length) {
-        rtn = uci_arr.join(" ");
+        rtn = uci_arr.join(' ');
       }
       return rtn;
     }
     function _ascii(is_rotated) {
       var i, j, that, bottom_label, current_square, rtn;
       that = this;
-      is_rotated = typeof is_rotated === "boolean" ? is_rotated : that.isRotated;
-      rtn = "   +------------------------+\n";
-      bottom_label = "";
+      is_rotated = typeof is_rotated === 'boolean' ? is_rotated : that.isRotated;
+      rtn = '   +------------------------+\n';
+      bottom_label = '';
       for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
           current_square = that.getSquare(is_rotated ? [7 - i, 7 - j] : [i, j]);
-          rtn += j ? "" : " " + current_square.rankBos + " |";
-          rtn += " " + current_square.bal.replace("*", ".") + " ";
-          rtn += j === 7 ? "|\n" : "";
-          bottom_label += i === j ? "  " + current_square.fileBos : "";
+          rtn += j ? '' : ' ' + current_square.rankBos + ' |';
+          rtn += ' ' + current_square.bal.replace('*', '.') + ' ';
+          rtn += j === 7 ? '|\n' : '';
+          bottom_label += i === j ? '  ' + current_square.fileBos : '';
         }
       }
-      rtn += "   +------------------------+\n";
-      rtn += "   " + bottom_label + "\n";
+      rtn += '   +------------------------+\n';
+      rtn += '   ' + bottom_label + '\n';
       return rtn;
     }
     function _boardHash() {
       var i, len, that, temp;
       that = this;
-      temp = "";
+      temp = '';
       for (i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
         temp += JSON.stringify(that[_MUTABLE_KEYS[i]]);
       }
@@ -1771,7 +1922,7 @@
       that = this;
       return that.loadFen(_DEFAULT_FEN, {
         skipFenValidation: true,
-        keepOptions: keep_options
+        keepOptions: keep_options,
       });
     }
     function _undoMove() {
@@ -1827,7 +1978,7 @@
       that = this;
       rtn = {
         w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
-        b: { lightSquaredBishops: 0, darkSquaredBishops: 0 }
+        b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
       };
       for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
@@ -1850,13 +2001,13 @@
       rtn = false;
       block: {
         if (!_isObject(obj)) {
-          _consoleLog("[_updateHelper]: wrong input type", _ALERT_ERROR);
+          _consoleLog('[_updateHelper]: wrong input type', _ALERT_ERROR);
           break block;
         }
         if (obj.fen) {
           fen_was_valid = obj.skipFenValidation || isLegalFen(obj.fen);
           if (!fen_was_valid) {
-            _consoleLog("[_updateHelper]: bad FEN", _ALERT_ERROR);
+            _consoleLog('[_updateHelper]: bad FEN', _ALERT_ERROR);
             break block;
           }
         }
@@ -1866,7 +2017,7 @@
         }
         that.updateFenAndMisc(obj.slicedFenHistory);
         if (obj.resetMoveList) {
-          temp = "";
+          temp = '';
           if (that.isCheckmate) {
             temp = that[that.activeColor].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
           } else if (that.isStalemate) {
@@ -1877,19 +2028,19 @@
               colorMoved: that.nonActiveColor,
               colorToPlay: that.activeColor,
               fen: that.fen,
-              san: "",
-              uci: "",
-              fromBos: "",
-              toBos: "",
+              san: '',
+              uci: '',
+              fromBos: '',
+              toBos: '',
               enPassantBos: that.enPassantBos,
-              piece: "",
-              captured: "",
-              promotion: "",
-              comment: "",
+              piece: '',
+              captured: '',
+              promotion: '',
+              comment: '',
               moveResult: temp,
               canDraw: that.inDraw,
-              isEnPassantCapture: false
-            }
+              isEnPassantCapture: false,
+            },
           ];
         }
         if (obj.resetOptions) {
@@ -1900,17 +2051,30 @@
       return rtn;
     }
     function _fenWrapmoveHelper(mov) {
-      var i, j, that, obj, from_squares, to_squares, current_bos, old_square, new_square, parsed_promote, is_long_castle, king_rank, silent_mode_cache, rtn;
+      var i,
+        j,
+        that,
+        obj,
+        from_squares,
+        to_squares,
+        current_bos,
+        old_square,
+        new_square,
+        parsed_promote,
+        is_long_castle,
+        king_rank,
+        silent_mode_cache,
+        rtn;
       that = this;
       rtn = null;
       block: {
-        parsed_promote = "";
+        parsed_promote = '';
         if (!_isNonBlankStr(mov)) {
           break block;
         }
         silent_mode_cache = _SILENT_MODE;
         setSilentMode(true);
-        obj = fenGet(mov, "squares activeColor");
+        obj = fenGet(mov, 'squares activeColor');
         setSilentMode(silent_mode_cache);
         if (!obj || that.activeColor === obj.activeColor) {
           break block;
@@ -1926,21 +2090,21 @@
               continue;
             }
             if (new_square.val === 0) {
-              if (old_square.val > 0 === (that.activeColor === "w")) {
+              if (old_square.val > 0 === (that.activeColor === 'w')) {
                 from_squares.push(current_bos);
               }
             } else {
-              if (new_square.val > 0 === (that.activeColor === "w")) {
+              if (new_square.val > 0 === (that.activeColor === 'w')) {
                 to_squares.push(current_bos);
               }
             }
           }
         }
         if (from_squares.length === 2 && to_squares.length === 2) {
-          is_long_castle = _strContains(from_squares.join(""), "a");
-          king_rank = that.activeColor === "w" ? 1 : 8;
-          to_squares = [(is_long_castle ? "c" : "g") + king_rank];
-          from_squares = ["e" + king_rank];
+          is_long_castle = _strContains(from_squares.join(''), 'a');
+          king_rank = that.activeColor === 'w' ? 1 : 8;
+          to_squares = [(is_long_castle ? 'c' : 'g') + king_rank];
+          from_squares = ['e' + king_rank];
         }
         if (from_squares.length !== 1 || to_squares.length !== 1) {
           break block;
@@ -1966,28 +2130,28 @@
       rtn = null;
       block: {
         validated_move = null;
-        parsed_promote = "";
-        mov = (" " + mov).replace(/^\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*/, "");
+        parsed_promote = '';
+        mov = (' ' + mov).replace(/^\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*/, '');
         if (!_isNonBlankStr(mov)) {
           break block;
         }
-        lc_piece = "";
-        to_bos = "";
+        lc_piece = '';
+        to_bos = '';
         mov = _cleanSan(mov);
         if (/^[a-h]/.exec(mov)) {
-          lc_piece = "p";
+          lc_piece = 'p';
           parse_exec = /([^=]+)=(.?).*$/.exec(mov);
           if (parse_exec) {
             mov = parse_exec[1];
             parsed_promote = parse_exec[2];
           }
           to_bos = toBos(mov.slice(-2));
-        } else if (mov === "O-O") {
-          lc_piece = "k";
-          to_bos = that[that.activeColor].isBlack ? "g8" : "g1";
-        } else if (mov === "O-O-O") {
-          lc_piece = "k";
-          to_bos = that[that.activeColor].isBlack ? "c8" : "c1";
+        } else if (mov === 'O-O') {
+          lc_piece = 'k';
+          to_bos = that[that.activeColor].isBlack ? 'g8' : 'g1';
+        } else if (mov === 'O-O-O') {
+          lc_piece = 'k';
+          to_bos = that[that.activeColor].isBlack ? 'c8' : 'c1';
         } else {
           parse_exec = /^[NBRQK]/.exec(mov);
           if (parse_exec) {
@@ -2075,13 +2239,33 @@
           fromBos: rtn[0],
           toBos: rtn[1],
           promotion: _promoteValHelper(temp),
-          isConfirmedLegalMove: is_confirmed_legal
+          isConfirmedLegalMove: is_confirmed_legal,
         };
       }
       return rtn;
     }
     function _draftMove(mov, p) {
-      var that, temp, temp2, initial_cached_square, final_cached_square, new_en_passant_bos, pawn_moved, is_en_passant_capture, promoted_val, lc_captured, wrapped_move, bubbling_promoted_to, king_castled, partial_san, with_overdisambiguated, extra_file_bos, extra_rank_bos, active_side, non_active_side, is_ambiguous, rtn;
+      var that,
+        temp,
+        temp2,
+        initial_cached_square,
+        final_cached_square,
+        new_en_passant_bos,
+        pawn_moved,
+        is_en_passant_capture,
+        promoted_val,
+        lc_captured,
+        wrapped_move,
+        bubbling_promoted_to,
+        king_castled,
+        partial_san,
+        with_overdisambiguated,
+        extra_file_bos,
+        extra_rank_bos,
+        active_side,
+        non_active_side,
+        is_ambiguous,
+        rtn;
       that = this;
       rtn = {};
       p = _unreferenceP(p);
@@ -2095,18 +2279,16 @@
         if (wrapped_move.isConfirmedLegalMove) {
           p.isLegalMove = true;
         }
-        if (!p.isLegalMove && !that.isLegalMove(wrapped_move.fromBos + "" + wrapped_move.toBos)) {
+        if (!p.isLegalMove && !that.isLegalMove(wrapped_move.fromBos + '' + wrapped_move.toBos)) {
           break block;
         }
         rtn.canMove = true;
-        bubbling_promoted_to = _promoteValHelper(
-          toAbsVal(p.promoteTo) || wrapped_move.promotion
-        );
+        bubbling_promoted_to = _promoteValHelper(toAbsVal(p.promoteTo) || wrapped_move.promotion);
         initial_cached_square = that.getSquare(wrapped_move.fromBos, {
-          isUnreferenced: true
+          isUnreferenced: true,
         });
         final_cached_square = that.getSquare(wrapped_move.toBos, {
-          isUnreferenced: true
+          isUnreferenced: true,
         });
         rtn.initialCachedSquare = initial_cached_square;
         rtn.finalCachedSquare = final_cached_square;
@@ -2114,8 +2296,8 @@
         non_active_side = that[that.nonActiveColor];
         pawn_moved = false;
         is_en_passant_capture = false;
-        new_en_passant_bos = "";
-        lc_captured = (final_cached_square.bal.replace("*", "") || "").toLowerCase();
+        new_en_passant_bos = '';
+        lc_captured = (final_cached_square.bal.replace('*', '') || '').toLowerCase();
         promoted_val = 0;
         king_castled = 0;
         if (initial_cached_square.isKing) {
@@ -2135,41 +2317,41 @@
           pawn_moved = true;
           if (Math.abs(initial_cached_square.rankPos - final_cached_square.rankPos) > 1) {
             new_en_passant_bos = that.getSquare(final_cached_square, {
-              rankShift: non_active_side.singlePawnRankShift
+              rankShift: non_active_side.singlePawnRankShift,
             }).bos;
           } else if (sameSquare(final_cached_square, that.enPassantBos)) {
-            lc_captured = "p";
+            lc_captured = 'p';
             is_en_passant_capture = true;
             rtn.enPassantCaptureAtRankShift = non_active_side.singlePawnRankShift;
           } else if (final_cached_square.rankPos === active_side.lastRankPos) {
             promoted_val = bubbling_promoted_to * active_side.sign;
           }
         }
-        partial_san = "";
+        partial_san = '';
         with_overdisambiguated = [];
         if (king_castled) {
-          partial_san += king_castled === _LONG_CASTLE ? "O-O-O" : "O-O";
+          partial_san += king_castled === _LONG_CASTLE ? 'O-O-O' : 'O-O';
           with_overdisambiguated.push(partial_san);
         } else if (pawn_moved) {
           if (initial_cached_square.fileBos !== final_cached_square.fileBos) {
-            partial_san += initial_cached_square.fileBos + "x";
+            partial_san += initial_cached_square.fileBos + 'x';
           }
           partial_san += final_cached_square.bos;
           with_overdisambiguated.push(partial_san);
           if (promoted_val) {
-            partial_san += "=" + toAbsBal(promoted_val);
+            partial_san += '=' + toAbsBal(promoted_val);
           }
         } else {
           is_ambiguous = false;
-          extra_file_bos = "";
-          extra_rank_bos = "";
+          extra_file_bos = '';
+          extra_rank_bos = '';
           if (!initial_cached_square.isKing) {
             temp = that.legalRevTree[final_cached_square.bos];
             if (temp) {
               temp = temp[initial_cached_square.bal.toLowerCase()];
               if (temp && temp.length > 1) {
                 is_ambiguous = true;
-                temp = temp.join(",");
+                temp = temp.join(',');
                 if (_occurrences(temp, initial_cached_square.fileBos) > 1) {
                   extra_rank_bos = initial_cached_square.rankBos;
                 }
@@ -2180,7 +2362,7 @@
             }
           }
           temp = initial_cached_square.absBal;
-          temp2 = (final_cached_square.isEmptySquare ? "" : "x") + final_cached_square.bos;
+          temp2 = (final_cached_square.isEmptySquare ? '' : 'x') + final_cached_square.bos;
           if (is_ambiguous) {
             if (!extra_file_bos && !extra_rank_bos) {
               partial_san += temp + initial_cached_square.fileBos + temp2;
@@ -2213,7 +2395,26 @@
       return rtn;
     }
     function _playMove(mov, p, sliced_fen_history) {
-      var i, that, temp, temp2, temp3, initial_cached_square, final_cached_square, pgn_obj, complete_san, move_res, active_side, non_active_side, current_side, is_promotion, mov_uci, wrapped_move, max_current_move_possible, on_solve_out_of_bounds, autogen_comment, rtn_move_obj;
+      var i,
+        that,
+        temp,
+        temp2,
+        temp3,
+        initial_cached_square,
+        final_cached_square,
+        pgn_obj,
+        complete_san,
+        move_res,
+        active_side,
+        non_active_side,
+        current_side,
+        is_promotion,
+        mov_uci,
+        wrapped_move,
+        max_current_move_possible,
+        on_solve_out_of_bounds,
+        autogen_comment,
+        rtn_move_obj;
       that = this;
       rtn_move_obj = null;
       p = _unreferenceP(p);
@@ -2226,13 +2427,22 @@
           max_current_move_possible = that.moveList.length - 1;
           if (that.currentMove < max_current_move_possible) {
             wrapped_move = that.getWrappedMove(mov, p);
-            if (wrapped_move !== null && (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that.isLegalMove(mov, p))) {
+            if (
+              wrapped_move !== null &&
+              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that.isLegalMove(mov, p))
+            ) {
               is_promotion = !!that.moveList[that.currentMove + 1].promotion;
-              mov_uci = wrapped_move.fromBos + "" + wrapped_move.toBos + (is_promotion ? toBal(wrapped_move.promotion).toLowerCase() : "");
+              mov_uci =
+                wrapped_move.fromBos +
+                '' +
+                wrapped_move.toBos +
+                (is_promotion ? toBal(wrapped_move.promotion).toLowerCase() : '');
               if (mov_uci === that.moveList[that.currentMove + 1].uci) {
                 on_solve_out_of_bounds = that.currentMove + 2 > max_current_move_possible;
                 if (p.isMockMove) {
-                  rtn_move_obj = on_solve_out_of_bounds ? that.moveList[max_current_move_possible] : that.moveList[that.currentMove + 2];
+                  rtn_move_obj = on_solve_out_of_bounds
+                    ? that.moveList[max_current_move_possible]
+                    : that.moveList[that.currentMove + 2];
                 } else {
                   if (p.isInanimated && on_solve_out_of_bounds) {
                     that.setCurrentMove(max_current_move_possible, true, true);
@@ -2253,9 +2463,9 @@
           if (that.moveList) {
             sliced_fen_history = that.fenHistoryExport().slice(0, that.currentMove + 1);
           }
-          rtn_move_obj = fenApply(that.fen, "playMove", [mov, p, sliced_fen_history], {
+          rtn_move_obj = fenApply(that.fen, 'playMove', [mov, p, sliced_fen_history], {
             promoteTo: that.promoteTo,
-            skipFenValidation: true
+            skipFenValidation: true,
           });
           break block;
         }
@@ -2272,27 +2482,27 @@
         }
         if (pgn_obj.putRookAtFileShift) {
           that.setSquare(final_cached_square, active_side.rook, {
-            fileShift: pgn_obj.putRookAtFileShift
+            fileShift: pgn_obj.putRookAtFileShift,
           });
         }
         if (pgn_obj.removeRookAtFileShift) {
           that.setSquare(final_cached_square, _EMPTY_SQR, {
-            fileShift: pgn_obj.removeRookAtFileShift
+            fileShift: pgn_obj.removeRookAtFileShift,
           });
         }
         if (pgn_obj.enPassantCaptureAtRankShift) {
           that.setSquare(final_cached_square, _EMPTY_SQR, {
-            rankShift: pgn_obj.enPassantCaptureAtRankShift
+            rankShift: pgn_obj.enPassantCaptureAtRankShift,
           });
         }
         for (i = 0; i < 2; i++) {
           current_side = i ? active_side : non_active_side;
           temp = i ? initial_cached_square : final_cached_square;
           if (current_side.castling && temp.isRook) {
-            temp2 = current_side.isBlack ? "8" : "1";
-            if (current_side.castling !== _LONG_CASTLE && sameSquare(temp, that.getSquare("h" + temp2))) {
+            temp2 = current_side.isBlack ? '8' : '1';
+            if (current_side.castling !== _LONG_CASTLE && sameSquare(temp, that.getSquare('h' + temp2))) {
               current_side.castling -= _SHORT_CASTLE;
-            } else if (current_side.castling !== _SHORT_CASTLE && sameSquare(temp, that.getSquare("a" + temp2))) {
+            } else if (current_side.castling !== _SHORT_CASTLE && sameSquare(temp, that.getSquare('a' + temp2))) {
               current_side.castling -= _LONG_CASTLE;
             }
           }
@@ -2310,33 +2520,33 @@
         }
         that.updateHelper({
           currentMove: that.currentMove + 1,
-          slicedFenHistory: sliced_fen_history
+          slicedFenHistory: sliced_fen_history,
         });
         complete_san = pgn_obj.partialSan;
-        move_res = "";
+        move_res = '';
         if (that.isCheckmate) {
-          complete_san += "#";
+          complete_san += '#';
           move_res = non_active_side.isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
         } else if (that.isStalemate) {
           move_res = _RESULT_DRAW;
         } else if (that.isCheck) {
-          complete_san += "+";
+          complete_san += '+';
         }
-        autogen_comment = "";
+        autogen_comment = '';
         if (that.inDraw) {
           if (that.isStalemate) {
-            autogen_comment = "{Stalemate}";
+            autogen_comment = '{Stalemate}';
           } else if (that.isThreefold) {
-            autogen_comment = "{3-fold repetition}";
+            autogen_comment = '{3-fold repetition}';
           } else if (that.isInsufficientMaterial) {
-            autogen_comment = "{Insufficient material}";
+            autogen_comment = '{Insufficient material}';
           } else if (that.isFiftyMove) {
-            autogen_comment = "{50 moves rule}";
+            autogen_comment = '{50 moves rule}';
           }
         }
-        temp = (initial_cached_square.bal.replace("*", "") || "").toLowerCase();
-        temp2 = (toBal(pgn_obj.promotedVal).replace("*", "") || "").toLowerCase();
-        temp3 = initial_cached_square.bos + "" + final_cached_square.bos + temp2;
+        temp = (initial_cached_square.bal.replace('*', '') || '').toLowerCase();
+        temp2 = (toBal(pgn_obj.promotedVal).replace('*', '') || '').toLowerCase();
+        temp3 = initial_cached_square.bos + '' + final_cached_square.bos + temp2;
         if (that.currentMove !== that.moveList.length) {
           that.moveList = that.moveList.slice(0, that.currentMove);
         }
@@ -2355,7 +2565,7 @@
           comment: autogen_comment,
           moveResult: move_res,
           canDraw: that.inDraw,
-          isEnPassantCapture: pgn_obj.isEnPassantCapture
+          isEnPassantCapture: pgn_obj.isEnPassantCapture,
         });
         rtn_move_obj = that.moveList[that.moveList.length - 1];
         if (p.isUnreferenced) {
@@ -2370,11 +2580,11 @@
       var i, len, that, temp, p_cache, at_least_one_parsed, everything_parsed, rtn;
       that = this;
       rtn = false;
-      p_cache = _unreferenceP(p, [["isUnreferenced", false]]);
+      p_cache = _unreferenceP(p, [['isUnreferenced', false]]);
       p = _unreferenceP(p, [
-        ["isInanimated", true],
-        ["playSounds", false],
-        ["isUnreferenced", false]
+        ['isInanimated', true],
+        ['playSounds', false],
+        ['isUnreferenced', false],
       ]);
       at_least_one_parsed = false;
       block: {
@@ -2406,7 +2616,7 @@
       var i, len, that, temp, temp2, used_keys, rtn;
       that = this;
       rtn = null;
-      p = _unreferenceP(p, [["isLegalMove", true]]);
+      p = _unreferenceP(p, [['isLegalMove', true]]);
       block: {
         temp = that.legalUci.slice(0);
         if (toVal(p.promoteTo)) {
@@ -2441,12 +2651,15 @@
       constructor(woard) {
         var board;
         board = getBoard(woard);
-        this.board = board === null ? initBoard({
-          ...typeof woard === "string" && { boardName: woard }
-        }) : board;
+        this.board =
+          board === null
+            ? initBoard({
+                ...(typeof woard === 'string' && { boardName: woard }),
+              })
+            : board;
         this.stack = [];
         for (const key in this.board) {
-          if (typeof this.board[key] === "function") {
+          if (typeof this.board[key] === 'function') {
             this[key] = (...args) => {
               const result = this.board[key].apply(this.board, args);
               this.stack.push(result);
@@ -2460,7 +2673,7 @@
       _SILENT_MODE = !!val;
     }
     function isLegalFen(fen) {
-      return fenApply(fen, "isLegalFen");
+      return fenApply(fen, 'isLegalFen');
     }
     function getBoard(woard) {
       var rtn;
@@ -2483,9 +2696,9 @@
     function toVal(qal) {
       var rtn;
       rtn = 0;
-      if (typeof qal === "string") {
+      if (typeof qal === 'string') {
         rtn = _strToValHelper(qal);
-      } else if (typeof qal === "number") {
+      } else if (typeof qal === 'number') {
         rtn = _toInt(qal, -_KING, _KING);
       } else if (_isSquare(qal)) {
         rtn = _toInt(qal.val, -_KING, _KING);
@@ -2499,7 +2712,7 @@
       var temp, val, abs_val;
       val = toVal(qal);
       abs_val = toAbsVal(qal);
-      temp = ["*", "p", "n", "b", "r", "q", "k"][abs_val];
+      temp = ['*', 'p', 'n', 'b', 'r', 'q', 'k'][abs_val];
       return val === abs_val ? temp.toUpperCase() : temp;
     }
     function toAbsBal(qal) {
@@ -2509,7 +2722,7 @@
       var piece_bal, piece_lc_bal;
       piece_bal = toBal(qal);
       piece_lc_bal = piece_bal.toLowerCase();
-      return piece_bal !== "*" ? (piece_bal === piece_lc_bal ? "b" : "w") + piece_lc_bal : "";
+      return piece_bal !== '*' ? (piece_bal === piece_lc_bal ? 'b' : 'w') + piece_lc_bal : '';
     }
     function toBos(qos) {
       var rtn;
@@ -2517,9 +2730,9 @@
       if (_isArray(qos)) {
         qos = _arrToPosHelper(qos);
         if (qos !== null) {
-          rtn = "abcdefgh".charAt(qos[1]) + "" + (8 - qos[0]);
+          rtn = 'abcdefgh'.charAt(qos[1]) + '' + (8 - qos[0]);
         }
-      } else if (typeof qos === "string") {
+      } else if (typeof qos === 'string') {
         rtn = _strToBosHelper(qos);
       } else if (_isSquare(qos)) {
         rtn = _strToBosHelper(qos.bos);
@@ -2529,10 +2742,10 @@
     function toPos(qos) {
       var rtn;
       rtn = null;
-      if (typeof qos === "string") {
+      if (typeof qos === 'string') {
         qos = _strToBosHelper(qos);
         if (qos !== null) {
-          rtn = [8 - qos.charAt(1) * 1, "abcdefgh".indexOf(qos.charAt(0))];
+          rtn = [8 - qos.charAt(1) * 1, 'abcdefgh'.indexOf(qos.charAt(0))];
         }
       } else if (_isArray(qos)) {
         rtn = _arrToPosHelper(qos);
@@ -2542,7 +2755,7 @@
       return rtn;
     }
     function getSign(zal) {
-      return (typeof zal === "boolean" ? !zal : toVal(zal) > 0) ? 1 : -1;
+      return (typeof zal === 'boolean' ? !zal : toVal(zal) > 0) ? 1 : -1;
     }
     function getRankPos(qos) {
       var pos, rtn;
@@ -2583,7 +2796,7 @@
     function isInsideBoard(qos) {
       var rtn;
       rtn = false;
-      if (typeof qos === "string") {
+      if (typeof qos === 'string') {
         rtn = _strToBosHelper(qos) !== null;
       } else if (_isArray(qos)) {
         rtn = _arrToPosHelper(qos) !== null;
@@ -2606,10 +2819,10 @@
       var i, j, fen_board, current_side, rtn;
       rtn = {
         w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
-        b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 }
+        b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
       };
       if (_isNonBlankStr(fen)) {
-        fen_board = _trimSpaces(fen).split(" ")[0];
+        fen_board = _trimSpaces(fen).split(' ')[0];
         for (i = _PAWN; i <= _KING; i++) {
           for (j = 0; j < 2; j++) {
             current_side = j ? rtn.w : rtn.b;
@@ -2659,13 +2872,28 @@
       return rtn;
     }
     function initBoard(p) {
-      var temp, board_created, board_name, fen_was_valid, postfen_was_valid, new_board, everything_parsed, finished_block, rtn;
+      var temp,
+        board_created,
+        board_name,
+        fen_was_valid,
+        postfen_was_valid,
+        new_board,
+        everything_parsed,
+        finished_block,
+        rtn;
       rtn = null;
       p = _unreferenceP(p);
       board_created = false;
       finished_block = false;
       block: {
-        p.boardName = _isNonBlankStr(p.boardName) ? _formatName(p.boardName) : "b_" + (((/* @__PURE__ */ new Date()).getTime() + "").slice(-10) + "" + Math.random().toString(36).slice(2, 7)).slice(-10);
+        p.boardName = _isNonBlankStr(p.boardName)
+          ? _formatName(p.boardName)
+          : 'b_' +
+            (
+              (/* @__PURE__ */ new Date().getTime() + '').slice(-10) +
+              '' +
+              Math.random().toString(36).slice(2, 7)
+            ).slice(-10);
         board_name = p.boardName;
         p.isRotated = p.isRotated === true;
         p.isPuzzleMode = p.isPuzzleMode === true;
@@ -2694,7 +2922,7 @@
           currentMove: 0,
           fen: temp,
           skipFenValidation: true,
-          resetMoveList: true
+          resetMoveList: true,
         });
         postfen_was_valid = p.skipFenValidation || !new_board.refinedFenTest();
         if (p.validOrBreak && !postfen_was_valid) {
@@ -2706,7 +2934,7 @@
             currentMove: 0,
             fen: _DEFAULT_FEN,
             skipFenValidation: true,
-            resetMoveList: true
+            resetMoveList: true,
           });
         }
         if (p.pgn) {
@@ -2749,84 +2977,92 @@
       p = _unreferenceP(p);
       board_created = false;
       silent_mode_cache = _SILENT_MODE;
-      fn_name = _isNonBlankStr(fn_name) ? _formatName(fn_name) : "isLegalFen";
-      if (fn_name === "isLegalFen") {
+      fn_name = _isNonBlankStr(fn_name) ? _formatName(fn_name) : 'isLegalFen';
+      if (fn_name === 'isLegalFen') {
         setSilentMode(true);
       }
       board = initBoard({
-        boardName: "board_fenApply_" + fn_name,
+        boardName: 'board_fenApply_' + fn_name,
         fen,
         isRotated: p.isRotated,
         promoteTo: p.promoteTo,
         skipFenValidation: p.skipFenValidation,
         isHidden: true,
-        validOrBreak: true
+        validOrBreak: true,
       });
-      if (fn_name === "isLegalFen") {
+      if (fn_name === 'isLegalFen') {
         setSilentMode(silent_mode_cache);
       }
       board_created = board !== null;
       switch (fn_name) {
-        case "playMove":
-          rtn = board_created ? _playMove.apply(board, [
-            args[0],
-            _unreferenceP(args[1], [
-              ["isMockMove", false],
-              ["isUnreferenced", true]
-            ]),
-            args[2]
-          ]) : null;
+        case 'playMove':
+          rtn = board_created
+            ? _playMove.apply(board, [
+                args[0],
+                _unreferenceP(args[1], [
+                  ['isMockMove', false],
+                  ['isUnreferenced', true],
+                ]),
+                args[2],
+              ])
+            : null;
           break;
-        case "playMoves":
+        case 'playMoves':
           rtn = board_created ? _playMoves.apply(board, args) : false;
           break;
-        case "playRandomMove":
-          rtn = board_created ? _playRandomMove.apply(board, [_unreferenceP(args[0], [["isUnreferenced", true]]), args[1]]) : null;
+        case 'playRandomMove':
+          rtn = board_created
+            ? _playRandomMove.apply(board, [_unreferenceP(args[0], [['isUnreferenced', true]]), args[1]])
+            : null;
           break;
-        case "legalMoves":
+        case 'legalMoves':
           rtn = board_created ? _legalMoves.apply(board, args) : [];
           break;
-        case "legalFenMoves":
+        case 'legalFenMoves':
           rtn = board_created ? _legalFenMoves.apply(board, args) : [];
           break;
-        case "legalSanMoves":
+        case 'legalSanMoves':
           rtn = board_created ? _legalSanMoves.apply(board, args) : [];
           break;
-        case "legalUciMoves":
+        case 'legalUciMoves':
           rtn = board_created ? _legalUciMoves.apply(board, args) : [];
           break;
-        case "isLegalMove":
+        case 'isLegalMove':
           rtn = board_created ? _isLegalMove.apply(board, args) : false;
           break;
-        case "isLegalFen":
+        case 'isLegalFen':
           rtn = board_created;
           break;
-        case "getCheckmateMoves":
+        case 'getCheckmateMoves':
           rtn = board_created ? _getCheckmateMoves.apply(board, args) : [];
           break;
-        case "getDrawMoves":
+        case 'getDrawMoves':
           rtn = board_created ? _getDrawMoves.apply(board, args) : [];
           break;
-        case "getSquare":
-          rtn = board_created ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [["isUnreferenced", true]])]) : null;
+        case 'getSquare':
+          rtn = board_created
+            ? _getSquare.apply(board, [args[0], _unreferenceP(args[1], [['isUnreferenced', true]])])
+            : null;
           break;
-        case "attackersFromActive":
+        case 'attackersFromActive':
           rtn = board_created ? _attackersFromActive.apply(board, args) : 0;
           break;
-        case "attackersFromNonActive":
+        case 'attackersFromNonActive':
           rtn = board_created ? _attackersFromNonActive.apply(board, args) : 0;
           break;
-        case "ascii":
-          rtn = board_created ? _ascii.apply(board, args) : "";
+        case 'ascii':
+          rtn = board_created ? _ascii.apply(board, args) : '';
           break;
-        case "boardHash":
-          rtn = board_created ? _boardHash.apply(board, args) : "";
+        case 'boardHash':
+          rtn = board_created ? _boardHash.apply(board, args) : '';
           break;
-        case "countLightDarkBishops":
-          rtn = board_created ? _countLightDarkBishops.apply(board, args) : {
-            w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
-            b: { lightSquaredBishops: 0, darkSquaredBishops: 0 }
-          };
+        case 'countLightDarkBishops':
+          rtn = board_created
+            ? _countLightDarkBishops.apply(board, args)
+            : {
+                w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
+                b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
+              };
           break;
         default:
           _consoleLog('[fenApply]: invalid function name "' + fn_name + '"', _ALERT_ERROR);
@@ -2842,25 +3078,25 @@
       p = _unreferenceP(p);
       board_created = false;
       block: {
-        board_name = "board_fenGet";
+        board_name = 'board_fenGet';
         board = initBoard({
           boardName: board_name,
           fen,
           skipFenValidation: p.skipFenValidation,
           isHidden: true,
-          validOrBreak: true
+          validOrBreak: true,
         });
         if (board === null) {
-          _consoleLog("[fenGet]: invalid FEN", _ALERT_ERROR);
+          _consoleLog('[fenGet]: invalid FEN', _ALERT_ERROR);
           break block;
         }
-        board = _cloneBoardToObj({ boardName: board_name + "_copy" }, board);
+        board = _cloneBoardToObj({ boardName: board_name + '_copy' }, board);
         board_created = true;
         board_keys = [];
         if (_isArray(props)) {
           board_keys = props;
         } else if (_isNonBlankStr(props)) {
-          board_keys = _trimSpaces(props).split(" ");
+          board_keys = _trimSpaces(props).split(' ');
         }
         if (!board_keys.length) {
           board_keys = _MUTABLE_KEYS.slice(0);
@@ -2943,27 +3179,27 @@
       cleanSan: _cleanSan,
       cloneBoardToObj: _cloneBoardToObj,
       basicFenTest: _basicFenTest,
-      perft: _perft
+      perft: _perft,
     };
     return Ic2;
-  }(windw);
+  })(windw);
   if (windw !== null && windw !== void 0) {
-    if (!windw["Ic"]) {
-      windw["Ic"] = Ic;
+    if (!windw['Ic']) {
+      windw['Ic'] = Ic;
     }
   }
   if (expts !== null && expts !== void 0) {
-    if (!expts["Ic"]) {
-      expts["Ic"] = Ic;
+    if (!expts['Ic']) {
+      expts['Ic'] = Ic;
     }
   }
-  if (typeof defin === "function" && defin.amd) {
-    defin(function() {
+  if (typeof defin === 'function' && defin.amd) {
+    defin(function () {
       return Ic;
     });
   }
 })(
-  typeof window !== "undefined" ? window : null,
-  typeof exports !== "undefined" ? exports : null,
-  typeof define !== "undefined" ? define : null
+  typeof window !== 'undefined' ? window : null,
+  typeof exports !== 'undefined' ? exports : null,
+  typeof define !== 'undefined' ? define : null
 );
