@@ -4,7 +4,7 @@
 
 /* globals exports, define */
 
-declare var define: any;
+declare var exports: any, define: any;
 
 import * as Ts from './isepic-chess.types';
 
