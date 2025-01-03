@@ -8,5 +8,8 @@ node_modules/
 # Jest test coverage
 coverage/
 
+# Typescript build
+build/
+
 # Not really needed for our 0 dependencies
 package-lock.json

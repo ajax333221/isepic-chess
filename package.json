@@ -23,7 +23,9 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "jest": "^26.2.2",
+    "@types/jest": "^29.5.14",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
     "prettier": "^2.7.1"
   },
   "bugs": {

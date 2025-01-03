@@ -4,42 +4,46 @@
 
 /* globals exports, define */
 
-(function (windw, expts, defin) {
-  var Ic = (function (_WIN) {
-    var _VERSION = '8.7.1';
+declare var define: any;
 
-    var _SILENT_MODE = true;
-    var _BOARDS = {};
-    var _EMPTY_SQR = 0;
-    var _PAWN = 1;
-    var _KNIGHT = 2;
-    var _BISHOP = 3;
-    var _ROOK = 4;
-    var _QUEEN = 5;
-    var _KING = 6;
-    var _DIRECTION_TOP = 1;
-    var _DIRECTION_TOP_RIGHT = 2;
-    var _DIRECTION_RIGHT = 3;
-    var _DIRECTION_BOTTOM_RIGHT = 4;
-    var _DIRECTION_BOTTOM = 5;
-    var _DIRECTION_BOTTOM_LEFT = 6;
-    var _DIRECTION_LEFT = 7;
-    var _DIRECTION_TOP_LEFT = 8;
-    var _SHORT_CASTLE = 1;
-    var _LONG_CASTLE = 2;
-    var _RESULT_ONGOING = '*';
-    var _RESULT_W_WINS = '1-0';
-    var _RESULT_B_WINS = '0-1';
-    var _RESULT_DRAW = '1/2-1/2';
-    var _DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+import * as Ts from './isepic-chess.types';
 
-    var _ALERT_LIGHT = 'light';
-    var _ALERT_DARK = 'dark';
-    var _ALERT_SUCCESS = 'success';
-    var _ALERT_WARNING = 'warning';
-    var _ALERT_ERROR = 'error';
+(function (windw?, expts?, defin?) {
+  var Ic = (function (_WIN?: any) {
+    var _VERSION: string = '8.7.1';
 
-    var _MUTABLE_KEYS = [
+    var _SILENT_MODE: boolean = true;
+    var _BOARDS: Ts.Boards = {};
+    var _EMPTY_SQR: Ts.EmptyVal = 0;
+    var _PAWN: Ts.WpVal = 1;
+    var _KNIGHT: Ts.WnVal = 2;
+    var _BISHOP: Ts.WbVal = 3;
+    var _ROOK: Ts.WrVal = 4;
+    var _QUEEN: Ts.WqVal = 5;
+    var _KING: Ts.WkVal = 6;
+    var _DIRECTION_TOP: Ts.DirectionTop = 1;
+    var _DIRECTION_TOP_RIGHT: Ts.DirectionTopRight = 2;
+    var _DIRECTION_RIGHT: Ts.DirectionRight = 3;
+    var _DIRECTION_BOTTOM_RIGHT: Ts.DirectionBottomRight = 4;
+    var _DIRECTION_BOTTOM: Ts.DirectionBottom = 5;
+    var _DIRECTION_BOTTOM_LEFT: Ts.DirectionBottomLeft = 6;
+    var _DIRECTION_LEFT: Ts.DirectionLeft = 7;
+    var _DIRECTION_TOP_LEFT: Ts.DirectionTopLeft = 8;
+    var _SHORT_CASTLE: Ts.ShortCastle = 1;
+    var _LONG_CASTLE: Ts.LongCastle = 2;
+    var _RESULT_ONGOING: Ts.OngoingResult = '*';
+    var _RESULT_W_WINS: Ts.WhiteWinsResult = '1-0';
+    var _RESULT_B_WINS: Ts.BlackWinsResult = '0-1';
+    var _RESULT_DRAW: Ts.DrawResult = '1/2-1/2';
+    var _DEFAULT_FEN: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+
+    var _ALERT_LIGHT: Ts.AlertLight = 'light';
+    var _ALERT_DARK: Ts.AlertDark = 'dark';
+    var _ALERT_SUCCESS: Ts.AlertSuccess = 'success';
+    var _ALERT_WARNING: Ts.AlertWarning = 'warning';
+    var _ALERT_ERROR: Ts.AlertError = 'error';
+
+    var _MUTABLE_KEYS: string[] = [
       'w',
       'b',
       'activeColor',
@@ -71,11 +75,11 @@
 
     //---------------- helpers
 
-    function _promoteValHelper(qal) {
+    function _promoteValHelper(qal?) {
       return _toInt(toAbsVal(qal) || _QUEEN, _KNIGHT, _QUEEN);
     }
 
-    function _pgnResultHelper(str) {
+    function _pgnResultHelper(str?) {
       var rtn;
 
       rtn = '';
@@ -88,7 +92,7 @@
       return rtn;
     }
 
-    function _strToValHelper(str) {
+    function _strToValHelper(str?) {
       var temp, pc_exec, rtn;
 
       rtn = 0;
@@ -122,7 +126,7 @@
       return rtn;
     }
 
-    function _strToBosHelper(str) {
+    function _strToBosHelper(str?) {
       var rtn;
 
       rtn = null;
@@ -135,7 +139,7 @@
       return rtn;
     }
 
-    function _arrToPosHelper(arr) {
+    function _arrToPosHelper(arr?) {
       var rank_pos, file_pos, rtn;
 
       rtn = null;
@@ -152,7 +156,7 @@
       return rtn;
     }
 
-    function _pgnParserHelper(str) {
+    function _pgnParserHelper(str?) {
       var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index, rtn;
 
       rtn = null;
@@ -219,7 +223,7 @@
       return rtn;
     }
 
-    function _uciParserHelper(str) {
+    function _uciParserHelper(str?) {
       var rtn;
 
       rtn = null;
@@ -243,7 +247,7 @@
       return rtn;
     }
 
-    function _uciWrapmoveHelper(mov) {
+    function _uciWrapmoveHelper(mov?) {
       var temp, possible_promote, rtn;
 
       rtn = null;
@@ -273,7 +277,7 @@
     }
 
     //p = {delimiter}
-    function _joinedWrapmoveHelper(mov, p) {
+    function _joinedWrapmoveHelper(mov?, p?) {
       var temp, rtn;
 
       rtn = null;
@@ -305,7 +309,7 @@
       return rtn;
     }
 
-    function _fromToWrapmoveHelper(mov) {
+    function _fromToWrapmoveHelper(mov?) {
       var rtn;
 
       rtn = null;
@@ -325,7 +329,7 @@
       return rtn;
     }
 
-    function _moveWrapmoveHelper(mov) {
+    function _moveWrapmoveHelper(mov?) {
       var possible_promote, rtn;
 
       rtn = null;
@@ -342,7 +346,7 @@
       return rtn;
     }
 
-    function _unreferencedMoveHelper(obj) {
+    function _unreferencedMoveHelper(obj?) {
       var rtn;
 
       rtn = {};
@@ -365,7 +369,7 @@
       return rtn;
     }
 
-    function _nullboardHelper(board_name) {
+    function _nullboardHelper(board_name?) {
       var i, j, temp, current_pos, current_bos, target;
 
       target = getBoard(board_name);
@@ -534,7 +538,7 @@
 
     //---------------- utilities
 
-    function _consoleLog(msg, alert_type) {
+    function _consoleLog(msg?, alert_type?) {
       var rtn;
 
       rtn = false;
@@ -563,7 +567,7 @@
             alert_type = _ALERT_LIGHT;
         }
 
-        if (_WIN && _WIN.IcUi && _WIN.IcUi.pushAlert) {
+        if (_WIN?.IcUi?.pushAlert) {
           _WIN.IcUi.pushAlert.apply(null, [msg, alert_type]);
         }
       }
@@ -571,43 +575,43 @@
       return rtn;
     }
 
-    function _isObject(obj) {
+    function _isObject(obj?) {
       return typeof obj === 'object' && obj !== null && !_isArray(obj);
     }
 
-    function _isArray(arr) {
+    function _isArray(arr?) {
       return Object.prototype.toString.call(arr) === '[object Array]';
     }
 
-    function _isSquare(obj) {
+    function _isSquare(obj?) {
       return _isObject(obj) && typeof obj.bos === 'string';
     }
 
-    function _isBoard(obj) {
+    function _isBoard(obj?) {
       return _isObject(obj) && typeof obj.boardName === 'string';
     }
 
-    function _isMove(obj) {
+    function _isMove(obj?) {
       return _isObject(obj) && typeof obj.fromBos === 'string' && typeof obj.toBos === 'string';
     }
 
-    function _trimSpaces(str) {
+    function _trimSpaces(str?) {
       return String(str)
         .replace(/^\s+|\s+$/g, '')
         .replace(/\s\s+/g, ' ');
     }
 
-    function _formatName(str) {
+    function _formatName(str?) {
       return _trimSpaces(str)
         .replace(/[^a-z0-9]/gi, '_')
         .replace(/__+/g, '_');
     }
 
-    function _strContains(str, str_to_find) {
+    function _strContains(str?, str_to_find?) {
       return String(str).indexOf(str_to_find) !== -1;
     }
 
-    function _occurrences(str, str_rgxp) {
+    function _occurrences(str?, str_rgxp?) {
       var rtn;
 
       rtn = 0;
@@ -619,7 +623,7 @@
       return rtn;
     }
 
-    function _toInt(num, min_val, max_val) {
+    function _toInt(num?, min_val?, max_val?) {
       num = num * 1 || 0;
       num = num < 0 ? Math.ceil(num) : Math.floor(num);
       min_val *= 1;
@@ -632,19 +636,19 @@
       return Math.min(Math.max(num, min_val), max_val);
     }
 
-    function _isIntOrStrInt(num) {
+    function _isIntOrStrInt(num?) {
       return String(_toInt(num)) === String(num);
     }
 
-    function _isNonEmptyStr(val) {
+    function _isNonEmptyStr(val?) {
       return !!(typeof val === 'string' && val);
     }
 
-    function _isNonBlankStr(val) {
+    function _isNonBlankStr(val?) {
       return !!(typeof val === 'string' && _trimSpaces(val));
     }
 
-    function _hashCode(val) {
+    function _hashCode(val?) {
       var i, len, hash;
 
       hash = 0;
@@ -659,11 +663,11 @@
       return hash;
     }
 
-    function _castlingChars(num) {
+    function _castlingChars(num?) {
       return ['', 'k', 'q', 'kq'][_toInt(num, 0, 3)];
     }
 
-    function _unreferenceP(p, changes) {
+    function _unreferenceP(p?, changes?) {
       var i, len, rtn;
 
       rtn = _isObject(p) ? { ...p } : {};
@@ -683,7 +687,7 @@
       return rtn;
     }
 
-    function _cleanSan(rtn) {
+    function _cleanSan(rtn?) {
       rtn = _isNonBlankStr(rtn) ? rtn : '';
 
       if (rtn) {
@@ -720,7 +724,7 @@
       return rtn;
     }
 
-    function _cloneBoardToObj(to_obj = {}, from_woard) {
+    function _cloneBoardToObj(to_obj: Ts.Board = {}, from_woard?: string | Ts.Board) {
       var i,
         j,
         k,
@@ -898,7 +902,7 @@
       return to_obj;
     }
 
-    function _basicFenTest(fen) {
+    function _basicFenTest(fen?) {
       var i,
         j,
         len,
@@ -986,7 +990,7 @@
       return rtn_msg;
     }
 
-    function _perft(woard, depth, specific_uci) {
+    function _perft(woard?: string | Ts.Board, depth?, specific_uci?) {
       var i, len, board, count, rtn;
 
       rtn = 1;
@@ -1032,12 +1036,12 @@
     //---------------- board
 
     //p = {rankShift, fileShift, isUnreferenced}
-    function _getSquare(qos, p) {
+    function _getSquare(qos?, p?) {
       var that, temp_pos, pre_validated_pos, rtn;
 
       that = this;
 
-      function _squareHelper(my_square, is_unreferenced) {
+      function _squareHelper(my_square?, is_unreferenced?) {
         //uses: that
         var temp, rtn_square;
 
@@ -1089,7 +1093,7 @@
     }
 
     //p = {rankShift, fileShift}
-    function _setSquare(qos, new_qal, p) {
+    function _setSquare(qos?, new_qal?, p?) {
       var that, current_side, new_val, new_abs_val, rtn;
 
       that = this;
@@ -1131,7 +1135,7 @@
       return rtn;
     }
 
-    function _attackersFromActive(target_qos, early_break) {
+    function _attackersFromActive(target_qos?, early_break?) {
       var that, rtn_total_attackers;
 
       that = this;
@@ -1142,12 +1146,12 @@
       return rtn_total_attackers;
     }
 
-    function _attackersFromNonActive(target_qos, early_break) {
+    function _attackersFromNonActive(target_qos?, early_break?) {
       var i, j, that, as_knight, active_side, rtn_total_attackers;
 
       that = this;
 
-      function _isAttacked(qos, piece_direction, as_knight) {
+      function _isAttacked(qos?, piece_direction?, as_knight?) {
         //uses: that
         return that.testCollision(2, qos, piece_direction, as_knight, null, null).isAttacked;
       }
@@ -1175,7 +1179,7 @@
       return rtn_total_attackers;
     }
 
-    function _toggleActiveNonActive(new_active) {
+    function _toggleActiveNonActive(new_active?) {
       var that, temp, rtn_changed;
 
       that = this;
@@ -1191,7 +1195,7 @@
       return rtn_changed;
     }
 
-    function _toggleIsRotated(new_is_rotated) {
+    function _toggleIsRotated(new_is_rotated?) {
       var that, temp, rtn_changed;
 
       that = this;
@@ -1207,7 +1211,7 @@
       return rtn_changed;
     }
 
-    function _setPromoteTo(qal) {
+    function _setPromoteTo(qal?) {
       var that, temp, rtn_changed;
 
       that = this;
@@ -1243,7 +1247,7 @@
       that.isHidden = temp;
     }
 
-    function _setManualResult(str) {
+    function _setManualResult(str?) {
       var that, temp, rtn_changed;
 
       that = this;
@@ -1259,7 +1263,7 @@
       return rtn_changed;
     }
 
-    function _setCurrentMove(num, is_goto, is_puzzle_move) {
+    function _setCurrentMove(num?, is_goto?, is_puzzle_move?) {
       var len, that, temp, diff, rtn_changed;
 
       that = this;
@@ -1335,7 +1339,7 @@
       return that.setCurrentMove(that.moveList.length - 1); //autorefresh (sometimes)
     }
 
-    function _navLinkMove(move_index) {
+    function _navLinkMove(move_index?) {
       var that;
 
       that = this;
@@ -1344,7 +1348,7 @@
     }
 
     //p = {skipFenValidation, keepOptions}
-    function _loadFen(fen, p) {
+    function _loadFen(fen?, p?) {
       var that, temp, hash_cache, rtn_changed;
 
       that = this;
@@ -1384,7 +1388,7 @@
       return rtn_changed;
     }
 
-    function _loadValidatedFen(fen) {
+    function _loadValidatedFen(fen?) {
       var i, j, len, that, fen_parts, current_file, current_char, fen_board_arr, skip_files;
 
       that = this;
@@ -1464,7 +1468,7 @@
       return rtn;
     }
 
-    function _updateFenAndMisc(sliced_fen_history) {
+    function _updateFenAndMisc(sliced_fen_history?) {
       var i,
         j,
         k,
@@ -1811,7 +1815,7 @@
       return rtn_msg;
     }
 
-    function _testCollision(op, initial_qos, piece_direction, as_knight, max_shifts, allow_capture) {
+    function _testCollision(op?, initial_qos?, piece_direction?, as_knight?, max_shifts?, allow_capture?) {
       var i, that, current_square, rank_change, file_change, active_side, rtn;
 
       that = this;
@@ -1892,7 +1896,7 @@
       return rtn;
     }
 
-    function _legalMovesHelper(target_qos) {
+    function _legalMovesHelper(target_qos?) {
       var i,
         j,
         len,
@@ -1913,7 +1917,7 @@
 
       that = this;
 
-      function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture) {
+      function _candidateMoves(qos?, piece_direction?, as_knight?, max_shifts?, allow_capture?) {
         //uses: that
         return that.testCollision(1, qos, piece_direction, as_knight, max_shifts, allow_capture).candidateMoves;
       }
@@ -2102,7 +2106,7 @@
     }
 
     //p = {returnType, squareType, delimiter}
-    function _legalMoves(target_qos, p) {
+    function _legalMoves(target_qos?, p?) {
       var i, len, that, temp, temp2, temp3, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, rtn;
 
       that = this;
@@ -2193,7 +2197,7 @@
       return rtn;
     }
 
-    function _legalFenMoves(target_qos) {
+    function _legalFenMoves(target_qos?) {
       var that;
 
       that = this;
@@ -2201,7 +2205,7 @@
       return that.legalMoves(target_qos, { returnType: 'fen' });
     }
 
-    function _legalSanMoves(target_qos) {
+    function _legalSanMoves(target_qos?) {
       var that;
 
       that = this;
@@ -2209,7 +2213,7 @@
       return that.legalMoves(target_qos, { returnType: 'san' });
     }
 
-    function _legalUciMoves(target_qos) {
+    function _legalUciMoves(target_qos?) {
       var that;
 
       that = this;
@@ -2218,7 +2222,7 @@
     }
 
     //p = {delimiter}
-    function _isLegalMove(mov, p) {
+    function _isLegalMove(mov?, p?) {
       var that, wrapped_move, legal_uci_in_bos, rtn;
 
       that = this;
@@ -2251,7 +2255,7 @@
       return rtn;
     }
 
-    function _getCheckmateMoves(early_break) {
+    function _getCheckmateMoves(early_break?) {
       var i, len, that, temp, rtn;
 
       that = this;
@@ -2273,7 +2277,7 @@
       return rtn;
     }
 
-    function _getDrawMoves(early_break) {
+    function _getDrawMoves(early_break?) {
       var i, len, that, temp, rtn;
 
       that = this;
@@ -2336,7 +2340,7 @@
       initial_full_move =
         that.fullMove -
         Math.floor((that.currentMove + black_starts - 1) / 2) +
-        (black_starts === !(that.currentMove % 2)) -
+        Number(black_starts === !(that.currentMove % 2)) -
         1;
 
       result_tag_ow = _RESULT_ONGOING;
@@ -2428,7 +2432,7 @@
       return rtn;
     }
 
-    function _ascii(is_rotated) {
+    function _ascii(is_rotated?) {
       var i, j, that, bottom_label, current_square, rtn;
 
       that = this;
@@ -2470,7 +2474,7 @@
       return _hashCode(temp);
     }
 
-    function _isEqualBoard(to_woard) {
+    function _isEqualBoard(to_woard?: string | Ts.Board) {
       var that, to_board, rtn;
 
       that = this;
@@ -2490,7 +2494,7 @@
       return rtn;
     }
 
-    function _cloneBoardFrom(from_woard) {
+    function _cloneBoardFrom(from_woard?: string | Ts.Board) {
       var that, hash_cache, rtn_changed;
 
       that = this;
@@ -2507,7 +2511,7 @@
       return rtn_changed;
     }
 
-    function _cloneBoardTo(to_woard) {
+    function _cloneBoardTo(to_woard?: string | Ts.Board) {
       var that, hash_cache, to_board, rtn_changed;
 
       that = this;
@@ -2534,7 +2538,7 @@
       return rtn_changed;
     }
 
-    function _reset(keep_options) {
+    function _reset(keep_options?) {
       var that;
 
       that = this;
@@ -2564,7 +2568,7 @@
       return rtn;
     }
 
-    function _undoMoves(decrease_by) {
+    function _undoMoves(decrease_by?) {
       var i, that, temp, hash_cache, rtn;
 
       that = this;
@@ -2645,7 +2649,7 @@
       return rtn;
     }
 
-    function _updateHelper(obj) {
+    function _updateHelper(obj?) {
       var that, temp, fen_was_valid, rtn;
 
       that = this;
@@ -2714,7 +2718,7 @@
       return rtn;
     }
 
-    function _fenWrapmoveHelper(mov) {
+    function _fenWrapmoveHelper(mov?) {
       var i,
         j,
         that,
@@ -2821,7 +2825,7 @@
       return rtn;
     }
 
-    function _sanWrapmoveHelper(mov) {
+    function _sanWrapmoveHelper(mov?) {
       var i, j, len, len2, that, temp, to_bos, validated_move, parsed_promote, lc_piece, parse_exec, pgn_obj, rtn;
 
       that = this;
@@ -2915,7 +2919,7 @@
     }
 
     //p = {delimiter}
-    function _getWrappedMove(mov, p) {
+    function _getWrappedMove(mov?, p?) {
       var that, temp, bubbling_promoted_to, is_confirmed_legal, rtn;
 
       that = this;
@@ -2987,7 +2991,7 @@
     }
 
     //p = {promoteTo, delimiter, isLegalMove}
-    function _draftMove(mov, p) {
+    function _draftMove(mov?, p?) {
       var that,
         temp,
         temp2,
@@ -3183,7 +3187,7 @@
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds, isUnreferenced}
-    function _playMove(mov, p, sliced_fen_history) {
+    function _playMove(mov?, p?, sliced_fen_history?) {
       var i,
         that,
         temp,
@@ -3409,7 +3413,7 @@
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
-    function _playMoves(arr, p, sliced_fen_history) {
+    function _playMoves(arr?, p?, sliced_fen_history?) {
       var i, len, that, temp, p_cache, at_least_one_parsed, everything_parsed, rtn;
 
       that = this;
@@ -3459,7 +3463,7 @@
     }
 
     //p = {isMockMove, promoteTo, isInanimated, playSounds, isUnreferenced}
-    function _playRandomMove(p, sliced_fen_history) {
+    function _playRandomMove(p?, sliced_fen_history?) {
       var i, len, that, temp, temp2, used_keys, rtn;
 
       that = this;
@@ -3500,12 +3504,12 @@
 
     //---------------- board (using IcUi)
 
-    function _refreshUi(animation_type, play_sounds) {
+    function _refreshUi(animation_type?, play_sounds?) {
       var that;
 
       that = this;
 
-      if (_WIN && _WIN.IcUi && _WIN.IcUi.refreshUi) {
+      if (_WIN?.IcUi?.refreshUi) {
         _WIN.IcUi.refreshUi.apply(that, [animation_type, play_sounds]);
       }
     }
@@ -3513,7 +3517,10 @@
     //---------------- ic
 
     class getChainableBoard {
-      constructor(woard) {
+      public board: Ts.Board;
+      public stack: any[];
+
+      constructor(woard?: string | Ts.Board) {
         var board;
 
         board = getBoard(woard);
@@ -3539,15 +3546,15 @@
       }
     }
 
-    function setSilentMode(val) {
+    function setSilentMode(val?) {
       _SILENT_MODE = !!val;
     }
 
-    function isLegalFen(fen) {
+    function isLegalFen(fen?) {
       return fenApply(fen, 'isLegalFen');
     }
 
-    function getBoard(woard) {
+    function getBoard(woard?: string | Ts.Board) {
       var rtn;
 
       rtn = null;
@@ -3571,7 +3578,7 @@
       return rtn;
     }
 
-    function toVal(qal) {
+    function toVal(qal?) {
       var rtn;
 
       rtn = 0;
@@ -3587,11 +3594,11 @@
       return rtn;
     }
 
-    function toAbsVal(qal) {
+    function toAbsVal(qal?) {
       return Math.abs(toVal(qal));
     }
 
-    function toBal(qal) {
+    function toBal(qal?) {
       var temp, val, abs_val;
 
       val = toVal(qal);
@@ -3601,11 +3608,11 @@
       return val === abs_val ? temp.toUpperCase() : temp;
     }
 
-    function toAbsBal(qal) {
+    function toAbsBal(qal?) {
       return toBal(toAbsVal(qal));
     }
 
-    function toClassName(qal) {
+    function toClassName(qal?) {
       var piece_bal, piece_lc_bal;
 
       piece_bal = toBal(qal);
@@ -3614,7 +3621,7 @@
       return piece_bal !== '*' ? (piece_bal === piece_lc_bal ? 'b' : 'w') + piece_lc_bal : '';
     }
 
-    function toBos(qos) {
+    function toBos(qos?) {
       var rtn;
 
       rtn = null;
@@ -3634,7 +3641,7 @@
       return rtn;
     }
 
-    function toPos(qos) {
+    function toPos(qos?) {
       var rtn;
 
       rtn = null;
@@ -3654,11 +3661,11 @@
       return rtn;
     }
 
-    function getSign(zal) {
+    function getSign(zal?) {
       return (typeof zal === 'boolean' ? !zal : toVal(zal) > 0) ? 1 : -1;
     }
 
-    function getRankPos(qos) {
+    function getRankPos(qos?) {
       var pos, rtn;
 
       rtn = null;
@@ -3671,7 +3678,7 @@
       return rtn;
     }
 
-    function getFilePos(qos) {
+    function getFilePos(qos?) {
       var pos, rtn;
 
       rtn = null;
@@ -3684,7 +3691,7 @@
       return rtn;
     }
 
-    function getRankBos(qos) {
+    function getRankBos(qos?) {
       var bos, rtn;
 
       rtn = null;
@@ -3697,7 +3704,7 @@
       return rtn;
     }
 
-    function getFileBos(qos) {
+    function getFileBos(qos?) {
       var bos, rtn;
 
       rtn = null;
@@ -3710,7 +3717,7 @@
       return rtn;
     }
 
-    function isInsideBoard(qos) {
+    function isInsideBoard(qos?) {
       var rtn;
 
       rtn = false;
@@ -3726,7 +3733,7 @@
       return rtn;
     }
 
-    function sameSquare(qos1, qos2) {
+    function sameSquare(qos1?, qos2?) {
       var rtn;
 
       rtn = false;
@@ -3740,7 +3747,7 @@
       return rtn;
     }
 
-    function countPieces(fen) {
+    function countPieces(fen?) {
       var i, j, fen_board, current_side, rtn;
 
       rtn = {
@@ -3764,7 +3771,7 @@
       return rtn;
     }
 
-    function removeBoard(woard) {
+    function removeBoard(woard?: string | Ts.Board) {
       var del_board, del_board_name_cache, rtn;
 
       rtn = false;
@@ -3785,7 +3792,7 @@
       return rtn;
     }
 
-    function isEqualBoard(left_woard, right_woard) {
+    function isEqualBoard(left_woard?: string | Ts.Board, right_woard?: string | Ts.Board) {
       var left_board, rtn;
 
       rtn = false;
@@ -3804,7 +3811,7 @@
       return rtn;
     }
 
-    function cloneBoard(to_woard, from_woard) {
+    function cloneBoard(to_woard?: string | Ts.Board, from_woard?: string | Ts.Board) {
       var to_board, rtn;
 
       rtn = false;
@@ -3824,7 +3831,7 @@
     }
 
     //p = {boardName, fen, pgn, uci, moveIndex, isRotated, isPuzzleMode, skipFenValidation, isHidden, promoteTo, manualResult, validOrBreak}
-    function initBoard(p) {
+    function initBoard(p?) {
       var temp,
         board_created,
         board_name,
@@ -3939,7 +3946,7 @@
     }
 
     //p = {isRotated, promoteTo, skipFenValidation}
-    function fenApply(fen, fn_name, args, p) {
+    function fenApply(fen?, fn_name?, args?, p?) {
       var board, board_created, silent_mode_cache, rtn;
 
       rtn = null;
@@ -4051,7 +4058,7 @@
     }
 
     //p = {skipFenValidation}
-    function fenGet(fen, props, p) {
+    function fenGet(fen?, props?, p?) {
       var i, j, len, len2, board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre, rtn;
 
       rtn = null;
@@ -4127,7 +4134,7 @@
       return Object.keys(_BOARDS);
     }
 
-    function Ic(woard) {
+    function Ic(woard?: string | Ts.Board) {
       return new getChainableBoard(woard);
     }
 
@@ -4185,16 +4192,16 @@
   })(windw);
 
   //Browser
-  if (windw !== null) {
-    if (!windw.Ic) {
-      windw.Ic = Ic;
+  if (windw !== null && windw !== undefined) {
+    if (!windw['Ic']) {
+      windw['Ic'] = Ic;
     }
   }
 
   //Node.js or any CommonJS
-  if (expts !== null) {
-    if (!expts.Ic) {
-      expts.Ic = Ic;
+  if (expts !== null && expts !== undefined) {
+    if (!expts['Ic']) {
+      expts['Ic'] = Ic;
     }
   }
 
