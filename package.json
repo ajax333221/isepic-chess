@@ -1,10 +1,11 @@
 {
   "name": "isepic-chess",
-  "version": "8.7.1",
+  "version": "8.7.2",
   "title": "isepic-chess.js",
   "description": "Chess utility library written in JavaScript",
   "main": "isepic-chess.js",
   "scripts": {
+    "build": "esbuild isepic-chess.ts --outfile=./isepic-chess.js && esbuild isepic-chess.ts --outfile=./isepic-chess.min.js --minify",
     "test": "jest --runInBand --coverage",
     "prettier": "npx prettier --write \"**/*.{js,css,html,json,md}\""
   },
@@ -24,6 +25,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "esbuild": "^0.24.2",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "prettier": "^2.7.1"

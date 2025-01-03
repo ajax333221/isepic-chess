@@ -8,6 +8,10 @@ node_modules/
 # Jest test coverage
 coverage/
 
+# Minified js/css
+*.min.js
+*.min.css
+
 # Typescript build
 build/
 
