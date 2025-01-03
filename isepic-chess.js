@@ -1,3 +1,4 @@
+/*! Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
     var _VERSION = '8.7.2';
