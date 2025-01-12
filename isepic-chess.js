@@ -60,6 +60,7 @@
       'legalRevTree',
       'squares',
     ];
+    //!---------------- helpers
     function _promoteValHelper(qal) {
       return _toInt(toAbsVal(qal) || _QUEEN, _KNIGHT, _QUEEN);
     }
@@ -426,6 +427,7 @@
       }
       return target;
     }
+    //!---------------- utilities
     function _consoleLog(msg, alert_type) {
       var rtn;
       rtn = false;
@@ -498,6 +500,7 @@
       num = num < 0 ? Math.ceil(num) : Math.floor(num);
       min_val *= 1;
       max_val *= 1;
+      /*! NO remove default 0, (-0 || 0) = 0*/
       min_val = (Number.isNaN(min_val) ? -Infinity : min_val) || 0;
       max_val = (Number.isNaN(max_val) ? Infinity : max_val) || 0;
       return Math.min(Math.max(num, min_val), max_val);
@@ -542,15 +545,18 @@
       rtn = _isNonBlankStr(rtn) ? rtn : '';
       if (rtn) {
         while (rtn !== (rtn = rtn.replace(/\{[^{}]*\}/g, '\n')));
+        /*! TODO: keep comment*/
         while (rtn !== (rtn = rtn.replace(/\([^()]*\)/g, '\n')));
         while (rtn !== (rtn = rtn.replace(/\<[^<>]*\>/g, '\n')));
         rtn = rtn.replace(/(\t)|(\r?\n)|(\r\n?)/g, '\n');
         rtn = rtn.replace(/;+[^\n]*(\n|$)/g, '\n');
+        /*! TODO: keep comment*/
         rtn = rtn
           .replace(/^%.*\n?/gm, '')
           .replace(/^\n+|\n+$/g, '')
           .replace(/\n/g, ' ');
         rtn = rtn.replace(/\$\d+/g, ' ');
+        /*! TODO: keep NAG*/
         rtn = rtn.replace(/[^a-h0-9nrqkxo /½=-]/gi, '');
         rtn = rtn.replace(/\s*\-+\s*/g, '-');
         rtn = rtn.replace(/0-0-0/g, 'w').replace(/0-0/g, 'v');
@@ -680,6 +686,7 @@
             if (current_key === 'moveList' || current_key === 'legalRevTree') {
               to_prop[sub_current_key] = {};
               sub_to_prop = to_prop[sub_current_key];
+              /*! NO put a "continue" in here*/
             }
             for (k = 0, len3 = sub_sub_keys.length; k < len3; k++) {
               sub_sub_current_key = sub_sub_keys[k];
@@ -797,6 +804,7 @@
       }
       return rtn;
     }
+    //!---------------- board
     function _getSquare(qos, p) {
       var that, temp_pos, pre_validated_pos, rtn;
       that = this;
@@ -995,6 +1003,7 @@
           fen: that.moveList[temp].fen,
           skipFenValidation: true,
         });
+        /*! NO remove skipFenValidation*/
         that.refreshUi(is_goto ? 0 : num, true);
         rtn_changed = true;
       }
@@ -1131,6 +1140,7 @@
       that = this;
       that.checks = that.attackersFromNonActive(null);
       that.isCheck = !!that.checks;
+      /*! NO move below legalMovesHelper()*/
       that.legalUci = [];
       that.legalUciTree = {};
       that.legalRevTree = {};
@@ -1711,6 +1721,7 @@
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
         }
+        /*! NO use overcomplicated legalRevTree*/
         rtn = _strContains(legal_uci_in_bos.join(','), wrapped_move.fromBos + '' + wrapped_move.toBos);
       }
       return rtn;
@@ -1755,6 +1766,7 @@
       return rtn;
     }
     function _pgnExport() {
+      /*! TODO p options: remove comments, max line len, tag white-list*/
       var i,
         len,
         that,
@@ -1771,6 +1783,7 @@
       that = this;
       rtn = '';
       header = _unreferenceP(header);
+      /*! TODO header from _pgnParserHelper()*/
       move_list = that.moveList;
       initial_fen = move_list[0].fen;
       black_starts = move_list[0].colorToPlay === 'b';
@@ -2173,6 +2186,7 @@
         }
         outer: for (i = 0, len = temp.length; i < len; i++) {
           pgn_obj = that.draftMove([temp[i], to_bos], { isLegalMove: true });
+          /*! NO pass unnecessary promoteTo*/
           if (!pgn_obj.canMove) {
             continue;
           }
@@ -2236,6 +2250,7 @@
       }
       if (rtn) {
         temp = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN;
+        /*! NO remove toAbsVal()*/
         rtn = {
           fromBos: rtn[0],
           toBos: rtn[1],
@@ -2285,6 +2300,7 @@
         }
         rtn.canMove = true;
         bubbling_promoted_to = _promoteValHelper(toAbsVal(p.promoteTo) || wrapped_move.promotion);
+        /*! NO remove toAbsVal()*/
         initial_cached_square = that.getSquare(wrapped_move.fromBos, {
           isUnreferenced: true,
         });
@@ -2639,6 +2655,7 @@
       }
       return rtn;
     }
+    //!---------------- board (using IcUi)
     function _refreshUi(animation_type, play_sounds) {
       var that;
       that = this;
@@ -2646,6 +2663,7 @@
         _WIN.IcUi.refreshUi.apply(that, [animation_type, play_sounds]);
       }
     }
+    //!---------------- ic
     class getChainableBoard {
       board;
       stack;
@@ -2843,6 +2861,7 @@
         del_board = null;
         _BOARDS[del_board_name_cache] = null;
         delete _BOARDS[del_board_name_cache];
+        /*! TODO ui problem: autorefresh when removing loaded board. EDIT: can't easily select a non-hidden board*/
       }
       return rtn;
     }
@@ -2925,6 +2944,7 @@
           skipFenValidation: true,
           resetMoveList: true,
         });
+        /*! NO remove skipFenValidation*/
         postfen_was_valid = p.skipFenValidation || !new_board.refinedFenTest();
         if (p.validOrBreak && !postfen_was_valid) {
           _consoleLog('[initBoard]: "' + board_name + '" bad postFEN', _ALERT_ERROR);
@@ -2937,9 +2957,11 @@
             skipFenValidation: true,
             resetMoveList: true,
           });
+          /*! NO remove skipFenValidation*/
         }
         if (p.pgn) {
           everything_parsed = new_board.playMoves(p.pgn.sanMoves);
+          /*! NO p.validOrBreak short-circuit*/
           if (p.validOrBreak && !everything_parsed) {
             _consoleLog('[initBoard]: "' + board_name + '" bad PGN', _ALERT_ERROR);
             break block;
@@ -2950,6 +2972,7 @@
           }
         } else if (p.uci) {
           everything_parsed = new_board.playMoves(p.uci);
+          /*! NO p.validOrBreak short-circuit*/
           if (p.validOrBreak && !everything_parsed) {
             _consoleLog('[initBoard]: "' + board_name + '" bad UCI', _ALERT_ERROR);
             break block;
@@ -2957,6 +2980,7 @@
         }
         p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : new_board.moveList.length - 1;
         new_board.setCurrentMove(p.moveIndex, true);
+        /*! NO move below isPuzzleMode*/
         new_board.isRotated = p.isRotated;
         new_board.isPuzzleMode = p.isPuzzleMode;
         new_board.setPromoteTo(p.promoteTo);
