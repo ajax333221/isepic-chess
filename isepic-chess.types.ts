@@ -84,9 +84,9 @@ export interface Square {
   isKing: null | boolean;
 }
 
-export type SquareMap = {
+export type SquareMap = Partial<{
   [key in SquareBos]: null | Square;
-};
+}>;
 
 export type WhiteEnpassantRankBos = '3';
 export type BlackEnpassantRankBos = '6';
@@ -113,7 +113,9 @@ export type BothCastlingRights = 3;
 export type CastlingRights = NoCastlingRights | ShortCastle | LongCastle | BothCastlingRights;
 
 export type TrueOnly = true;
-export type FalseOnly = true;
+export type FalseOnly = false;
+
+export type StringLenOne = string & { length: 1 };
 
 export type NumberZero = 0;
 export type NumberOne = 1;
@@ -221,7 +223,7 @@ export type LegalRevTree = Partial<{
   [key in SquareBos]: RevTreeChild;
 }>;
 
-export interface Move {
+interface _Move {
   colorMoved: null | WhiteColor | BlackColor;
   colorToPlay: null | WhiteColor | BlackColor;
   fen: null | string;
@@ -238,6 +240,8 @@ export interface Move {
   canDraw: null | boolean;
   isEnPassantCapture: null | boolean;
 }
+
+export type Move = Partial<_Move>;
 
 interface _Board {
   boardName: string;
@@ -318,7 +322,7 @@ interface _Board {
   legalUci: null | string[];
   legalUciTree: null | LegalUciTree;
   legalRevTree: null | LegalRevTree;
-  squares: null | SquareMap;
+  squares: SquareMap;
 }
 
 export type Board = Partial<_Board>;
@@ -353,3 +357,18 @@ export type AlertWarning = 'warning';
 export type AlertError = 'error';
 
 export type Alert = AlertLight | AlertDark | AlertSuccess | AlertWarning | AlertError;
+
+export type TestCollisionOpCandidateMoves = 1;
+export type TestCollisionOpIsAttacked = 2;
+
+export type TestCollisionOp = TestCollisionOpCandidateMoves | TestCollisionOpIsAttacked;
+
+export type Qal = number | SquareBal | SquareAbsBal | SquareVal | SquareAbsVal | SquareClassName | Square;
+
+export type Qos = SquareBos | SquarePos | Square;
+
+export type MoveFromTo = [Qos, Qos];
+
+export type Mov = string | MoveFromTo | Move;
+
+export type Wrapmove = [MoveFromTo, '' | StringLenOne];

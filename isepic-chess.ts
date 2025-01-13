@@ -11,12 +11,18 @@ import * as Ts from './isepic-chess.types';
     var _SILENT_MODE: boolean = true;
     var _BOARDS: Ts.Boards = {};
     var _EMPTY_SQR: Ts.EmptyVal = 0;
-    var _PAWN: Ts.WpVal = 1;
-    var _KNIGHT: Ts.WnVal = 2;
-    var _BISHOP: Ts.WbVal = 3;
-    var _ROOK: Ts.WrVal = 4;
-    var _QUEEN: Ts.WqVal = 5;
-    var _KING: Ts.WkVal = 6;
+    var _PAWN_W: Ts.WpVal = 1;
+    var _KNIGHT_W: Ts.WnVal = 2;
+    var _BISHOP_W: Ts.WbVal = 3;
+    var _ROOK_W: Ts.WrVal = 4;
+    var _QUEEN_W: Ts.WqVal = 5;
+    var _KING_W: Ts.WkVal = 6;
+    var _PAWN_B: Ts.BpVal = -1;
+    var _KNIGHT_B: Ts.BnVal = -2;
+    var _BISHOP_B: Ts.BbVal = -3;
+    var _ROOK_B: Ts.BrVal = -4;
+    var _QUEEN_B: Ts.BqVal = -5;
+    var _KING_B: Ts.BkVal = -6;
     var _DIRECTION_TOP: Ts.DirectionTop = 1;
     var _DIRECTION_TOP_RIGHT: Ts.DirectionTopRight = 2;
     var _DIRECTION_RIGHT: Ts.DirectionRight = 3;
@@ -38,6 +44,9 @@ import * as Ts from './isepic-chess.types';
     var _ALERT_SUCCESS: Ts.AlertSuccess = 'success';
     var _ALERT_WARNING: Ts.AlertWarning = 'warning';
     var _ALERT_ERROR: Ts.AlertError = 'error';
+
+    var _TEST_COLLISION_OP_CANDIDATE_MOVES: Ts.TestCollisionOpCandidateMoves = 1;
+    var _TEST_COLLISION_OP_IS_ATTACKED: Ts.TestCollisionOpIsAttacked = 2;
 
     var _MUTABLE_KEYS: string[] = [
       'w',
@@ -71,14 +80,15 @@ import * as Ts from './isepic-chess.types';
 
     //!---------------- helpers
 
-    function _promoteValHelper(qal?) {
-      return _toInt(toAbsVal(qal) || _QUEEN, _KNIGHT, _QUEEN);
+    function _promoteValHelper(qal: Ts.Qal): number {
+      // @ts-ignore
+      let rtn: Ts.PromotePiecesVal = _toInt(toAbsVal(qal) || _QUEEN_W, _KNIGHT_W, _QUEEN_W);
+      return rtn;
     }
 
-    function _pgnResultHelper(str?) {
-      var rtn;
+    function _pgnResultHelper(str: string) {
+      let rtn: '' | Ts.ManualResult = '';
 
-      rtn = '';
       str = String(str).replace(/\s/g, '').replace(/o/gi, '0').replace(/½/g, '1/2');
 
       if (str === _RESULT_ONGOING || str === _RESULT_W_WINS || str === _RESULT_B_WINS || str === _RESULT_DRAW) {
@@ -88,33 +98,41 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _strToValHelper(str?) {
-      var temp, pc_exec, rtn;
-
-      rtn = 0;
+    function _strToValHelper(str: string) {
+      let rtn: 0 | Ts.SquareVal = 0;
 
       block: {
         if (!str) {
           break block;
         }
 
-        if (!Number.isNaN(str * 1) && _isIntOrStrInt(str)) {
-          rtn = _toInt(str, -_KING, _KING);
+        if (!Number.isNaN(Number(str)) && _isIntOrStrInt(str)) {
+          // @ts-ignore
+          let temp: Ts.SquareVal = _toInt(str, -_KING_W, _KING_W);
+
+          rtn = temp;
           break block;
         }
 
         str = _trimSpaces(str);
 
         if (/^[pnbrqk]$/i.test(str)) {
-          temp = str.toLowerCase();
-          rtn = ('pnbrqk'.indexOf(temp) + 1) * getSign(str === temp);
+          let temp = str.toLowerCase();
+
+          // @ts-ignore
+          let temp2: Ts.SquareVal = ('pnbrqk'.indexOf(temp) + 1) * getSign(str === temp);
+
+          rtn = temp2;
           break block;
         }
 
-        pc_exec = /^([wb])([pnbrqk])$/.exec(str.toLowerCase());
+        let pc_exec = /^([wb])([pnbrqk])$/.exec(str.toLowerCase());
 
         if (pc_exec) {
-          rtn = ('pnbrqk'.indexOf(pc_exec[2]) + 1) * getSign(pc_exec[1] === 'b');
+          // @ts-ignore
+          let temp: Ts.SquareVal = ('pnbrqk'.indexOf(pc_exec[2]) + 1) * getSign(pc_exec[1] === 'b');
+
+          rtn = temp;
           break block;
         }
       }
@@ -122,29 +140,28 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _strToBosHelper(str?) {
-      var rtn;
+    function _strToBosHelper(str: string) {
+      let rtn: null | Ts.SquareBos = null;
 
-      rtn = null;
       str = _trimSpaces(str);
 
       if (str && /^[a-h][1-8]$/i.test(str)) {
+        // @ts-ignore
         rtn = str.toLowerCase();
       }
 
       return rtn;
     }
 
-    function _arrToPosHelper(arr?) {
-      var rank_pos, file_pos, rtn;
-
-      rtn = null;
+    function _arrToPosHelper(arr: any[]) {
+      let rtn: null | Ts.SquarePos = null;
 
       if (_isArray(arr) && arr.length === 2) {
-        rank_pos = _toInt(arr[0]);
-        file_pos = _toInt(arr[1]);
+        let rank_pos = _toInt(arr[0]);
+        let file_pos = _toInt(arr[1]);
 
         if (rank_pos <= 7 && rank_pos >= 0 && file_pos <= 7 && file_pos >= 0) {
+          // @ts-ignore
           rtn = [rank_pos, file_pos];
         }
       }
@@ -152,10 +169,10 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _pgnParserHelper(str?) {
-      var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index, rtn;
+    function _pgnParserHelper(str: string) {
+      let rtn: null | object = null;
 
-      rtn = null;
+      var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index;
 
       block: {
         if (!_isNonBlankStr(str)) {
@@ -219,10 +236,8 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _uciParserHelper(str?) {
-      var rtn;
-
-      rtn = null;
+    function _uciParserHelper(str: string) {
+      let rtn: null | string[] = null;
 
       block: {
         if (!_isNonBlankStr(str)) {
@@ -243,40 +258,42 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _uciWrapmoveHelper(mov?) {
-      var temp, possible_promote, rtn;
-
-      rtn = null;
+    function _uciWrapmoveHelper(mov: Ts.Mov) {
+      let rtn: null | Ts.Wrapmove = null;
 
       block: {
         if (!_isNonBlankStr(mov)) {
           break block;
         }
 
-        mov = _trimSpaces(mov);
+        let temp = _trimSpaces(String(mov));
 
-        if (mov.length !== 4 && mov.length !== 5) {
+        if (temp.length !== 4 && temp.length !== 5) {
           break block;
         }
 
-        temp = [_strToBosHelper(mov.slice(0, 2)), _strToBosHelper(mov.slice(2, 4))];
+        let temp2 = [_strToBosHelper(temp.slice(0, 2)), _strToBosHelper(temp.slice(2, 4))];
 
-        if (temp[0] === null || temp[1] === null) {
+        if (temp2[0] === null || temp2[1] === null) {
           break block;
         }
 
-        possible_promote = mov.charAt(4) || '';
-        rtn = [temp, possible_promote];
+        // @ts-ignore
+        let fromTo: Ts.MoveFromTo = temp2;
+
+        // @ts-ignore
+        let possible_promote: '' | Ts.StringLenOne = temp.charAt(4) || '';
+
+        rtn = [fromTo, possible_promote];
       }
 
       return rtn;
     }
 
     //p = {delimiter}
-    function _joinedWrapmoveHelper(mov?, p?) {
-      var temp, rtn;
+    function _joinedWrapmoveHelper(mov: Ts.Mov, p?) {
+      let rtn: null | Ts.MoveFromTo = null;
 
-      rtn = null;
       p = _unreferenceP(p);
 
       block: {
@@ -286,32 +303,38 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        mov = _trimSpaces(mov);
+        let temp = _trimSpaces(String(mov));
 
-        if (mov.length !== 5 || mov.charAt(2) !== p.delimiter) {
+        if (temp.length !== 5 || temp.charAt(2) !== p.delimiter) {
           break block;
         }
 
-        temp = mov.split(p.delimiter);
-        temp = [_strToBosHelper(temp[0]), _strToBosHelper(temp[1])];
+        let temp2 = temp.split(p.delimiter);
+        let temp3 = [_strToBosHelper(temp2[0]), _strToBosHelper(temp2[1])];
 
-        if (temp[0] === null || temp[1] === null) {
+        if (temp3[0] === null || temp3[1] === null) {
           break block;
         }
 
-        rtn = temp;
+        // @ts-ignore
+        let fromTo: Ts.MoveFromTo = temp3;
+
+        rtn = fromTo;
       }
 
       return rtn;
     }
 
-    function _fromToWrapmoveHelper(mov?) {
-      var rtn;
-
-      rtn = null;
+    function _fromToWrapmoveHelper(mov: Ts.Mov) {
+      let rtn: null | Ts.MoveFromTo = null;
 
       block: {
-        if (!_isArray(mov) || mov.length !== 2) {
+        if (!_isArray(mov)) {
+          break block;
+        }
+
+        // @ts-ignore
+        if (mov.length !== 2) {
           break block;
         }
 
@@ -319,33 +342,34 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
+        // @ts-ignore
         rtn = [toBos(mov[0]), toBos(mov[1])];
       }
 
       return rtn;
     }
 
-    function _moveWrapmoveHelper(mov?) {
-      var possible_promote, rtn;
-
-      rtn = null;
+    function _moveWrapmoveHelper(mov: Ts.Mov) {
+      let rtn: null | Ts.Wrapmove = null;
 
       block: {
         if (!_isMove(mov)) {
           break block;
         }
 
-        possible_promote = mov.promotion || '';
+        // @ts-ignore
+        let possible_promote: '' | Ts.StringLenOne = mov.promotion || '';
+
+        // @ts-ignore
         rtn = [[mov.fromBos, mov.toBos], possible_promote];
       }
 
       return rtn;
     }
 
-    function _unreferencedMoveHelper(obj?) {
-      var rtn;
+    function _unreferencedMoveHelper(obj: Ts.Move) {
+      let rtn: Ts.Move = {};
 
-      rtn = {};
       rtn.colorMoved = obj.colorMoved;
       rtn.colorToPlay = obj.colorToPlay;
       rtn.fen = obj.fen;
@@ -365,12 +389,12 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _nullboardHelper(board_name?) {
-      var i, j, temp, current_pos, current_bos, target;
+    function _nullboardHelper(board_name: string) {
+      let rtn: null | Ts.Board = getBoard(board_name);
 
-      target = getBoard(board_name);
+      var i, j, temp, current_pos, current_bos;
 
-      if (target === null) {
+      if (rtn === null) {
         _BOARDS[board_name] = {
           boardName: board_name,
           getSquare: _getSquare,
@@ -426,10 +450,10 @@ import * as Ts from './isepic-chess.types';
           refreshUi: _refreshUi,
         };
 
-        target = _BOARDS[board_name];
+        rtn = _BOARDS[board_name];
       }
 
-      target.w = {
+      rtn.w = {
         //static
         isBlack: false,
         sign: 1,
@@ -437,19 +461,19 @@ import * as Ts from './isepic-chess.types';
         secondRankPos: 6,
         lastRankPos: 0,
         singlePawnRankShift: -1,
-        pawn: _PAWN,
-        knight: _KNIGHT,
-        bishop: _BISHOP,
-        rook: _ROOK,
-        queen: _QUEEN,
-        king: _KING,
+        pawn: _PAWN_W,
+        knight: _KNIGHT_W,
+        bishop: _BISHOP_W,
+        rook: _ROOK_W,
+        queen: _QUEEN_W,
+        king: _KING_W,
         //mutable
         kingBos: null,
         castling: null,
         materialDiff: null,
       };
 
-      target.b = {
+      rtn.b = {
         //static
         isBlack: true,
         sign: -1,
@@ -457,43 +481,43 @@ import * as Ts from './isepic-chess.types';
         secondRankPos: 1,
         lastRankPos: 7,
         singlePawnRankShift: 1,
-        pawn: -_PAWN,
-        knight: -_KNIGHT,
-        bishop: -_BISHOP,
-        rook: -_ROOK,
-        queen: -_QUEEN,
-        king: -_KING,
+        pawn: _PAWN_B,
+        knight: _KNIGHT_B,
+        bishop: _BISHOP_B,
+        rook: _ROOK_B,
+        queen: _QUEEN_B,
+        king: _KING_B,
         //mutable
         kingBos: null,
         castling: null,
         materialDiff: null,
       };
 
-      target.activeColor = null;
-      target.nonActiveColor = null;
-      target.fen = null;
-      target.enPassantBos = null;
-      target.halfMove = null;
-      target.fullMove = null;
-      target.moveList = null;
-      target.currentMove = null;
-      target.isRotated = null;
-      target.isPuzzleMode = null;
-      target.checks = null;
-      target.isCheck = null;
-      target.isCheckmate = null;
-      target.isStalemate = null;
-      target.isThreefold = null;
-      target.isInsufficientMaterial = null;
-      target.isFiftyMove = null;
-      target.inDraw = null;
-      target.promoteTo = null;
-      target.manualResult = null;
-      target.isHidden = null;
-      target.legalUci = null;
-      target.legalUciTree = null;
-      target.legalRevTree = null;
-      target.squares = {};
+      rtn.activeColor = null;
+      rtn.nonActiveColor = null;
+      rtn.fen = null;
+      rtn.enPassantBos = null;
+      rtn.halfMove = null;
+      rtn.fullMove = null;
+      rtn.moveList = null;
+      rtn.currentMove = null;
+      rtn.isRotated = null;
+      rtn.isPuzzleMode = null;
+      rtn.checks = null;
+      rtn.isCheck = null;
+      rtn.isCheckmate = null;
+      rtn.isStalemate = null;
+      rtn.isThreefold = null;
+      rtn.isInsufficientMaterial = null;
+      rtn.isFiftyMove = null;
+      rtn.inDraw = null;
+      rtn.promoteTo = null;
+      rtn.manualResult = null;
+      rtn.isHidden = null;
+      rtn.legalUci = null;
+      rtn.legalUciTree = null;
+      rtn.legalRevTree = null;
+      rtn.squares = {};
 
       for (i = 0; i < 8; i++) {
         //0...7
@@ -501,8 +525,8 @@ import * as Ts from './isepic-chess.types';
           //0...7
           current_pos = [i, j];
           current_bos = toBos(current_pos);
-          target.squares[current_bos] = {};
-          temp = target.squares[current_bos];
+          rtn.squares[current_bos] = {};
+          temp = rtn.squares[current_bos];
 
           //static
           temp.pos = current_pos;
@@ -529,15 +553,13 @@ import * as Ts from './isepic-chess.types';
         }
       }
 
-      return target;
+      return rtn;
     }
 
     //!---------------- utilities
 
-    function _consoleLog(msg?, alert_type?) {
-      var rtn;
-
-      rtn = false;
+    function _consoleLog(msg: string, alert_type?: Ts.Alert) {
+      var rtn: boolean = false;
 
       if (!_SILENT_MODE) {
         rtn = true;
@@ -591,7 +613,7 @@ import * as Ts from './isepic-chess.types';
       return _isObject(obj) && typeof obj.fromBos === 'string' && typeof obj.toBos === 'string';
     }
 
-    function _trimSpaces(str?) {
+    function _trimSpaces(str: string) {
       return String(str)
         .replace(/^\s+|\s+$/g, '')
         .replace(/\s\s+/g, ' ');
@@ -720,7 +742,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _cloneBoardToObj(to_obj: Ts.Board = {}, from_woard?: string | Ts.Board) {
+    function _cloneBoardToObj(to_obj: Ts.Board = {}, from_woard: string | Ts.Board) {
       var i,
         j,
         k,
@@ -898,7 +920,7 @@ import * as Ts from './isepic-chess.types';
       return to_obj;
     }
 
-    function _basicFenTest(fen?) {
+    function _basicFenTest(fen: string): string {
       var i,
         j,
         len,
@@ -986,7 +1008,7 @@ import * as Ts from './isepic-chess.types';
       return rtn_msg;
     }
 
-    function _perft(woard?: string | Ts.Board, depth?, specific_uci?) {
+    function _perft(woard: string | Ts.Board, depth?, specific_uci?) {
       var i, len, board, count, rtn;
 
       rtn = 1;
@@ -1032,7 +1054,7 @@ import * as Ts from './isepic-chess.types';
     //!---------------- board
 
     //p = {rankShift, fileShift, isUnreferenced}
-    function _getSquare(qos?, p?) {
+    function _getSquare(qos: Ts.Qos, p?) {
       var that, temp_pos, pre_validated_pos, rtn;
 
       that = this;
@@ -1081,6 +1103,7 @@ import * as Ts from './isepic-chess.types';
         pre_validated_pos = [temp_pos[0] + _toInt(p.rankShift), temp_pos[1] + _toInt(p.fileShift)];
 
         if (isInsideBoard(pre_validated_pos)) {
+          // @ts-ignore
           rtn = _squareHelper(that.squares[toBos(pre_validated_pos)], p.isUnreferenced);
         }
       }
@@ -1089,7 +1112,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {rankShift, fileShift}
-    function _setSquare(qos?, new_qal?, p?) {
+    function _setSquare(qos: Ts.Qos, new_qal: Ts.Qal, p?) {
       var that, current_side, new_val, new_abs_val, rtn;
 
       that = this;
@@ -1115,12 +1138,12 @@ import * as Ts from './isepic-chess.types';
         rtn.className = toClassName(new_val);
         rtn.sign = getSign(new_val);
         rtn.isEmptySquare = new_abs_val === _EMPTY_SQR;
-        rtn.isPawn = new_abs_val === _PAWN;
-        rtn.isKnight = new_abs_val === _KNIGHT;
-        rtn.isBishop = new_abs_val === _BISHOP;
-        rtn.isRook = new_abs_val === _ROOK;
-        rtn.isQueen = new_abs_val === _QUEEN;
-        rtn.isKing = new_abs_val === _KING;
+        rtn.isPawn = new_abs_val === _PAWN_W;
+        rtn.isKnight = new_abs_val === _KNIGHT_W;
+        rtn.isBishop = new_abs_val === _BISHOP_W;
+        rtn.isRook = new_abs_val === _ROOK_W;
+        rtn.isQueen = new_abs_val === _QUEEN_W;
+        rtn.isKing = new_abs_val === _KING_W;
 
         if (rtn.isKing) {
           current_side = rtn.sign < 0 ? that.b : that.w;
@@ -1131,7 +1154,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _attackersFromActive(target_qos?, early_break?) {
+    function _attackersFromActive(target_qos: Ts.Qos, early_break?) {
       var that, rtn_total_attackers;
 
       that = this;
@@ -1142,14 +1165,15 @@ import * as Ts from './isepic-chess.types';
       return rtn_total_attackers;
     }
 
-    function _attackersFromNonActive(target_qos?, early_break?) {
+    function _attackersFromNonActive(target_qos: Ts.Qos, early_break?) {
       var i, j, that, as_knight, active_side, rtn_total_attackers;
 
       that = this;
 
-      function _isAttacked(qos?, piece_direction?, as_knight?) {
+      function _isAttacked(qos: Ts.Qos, piece_direction?, as_knight?) {
         //uses: that
-        return that.testCollision(2, qos, piece_direction, as_knight, null, null).isAttacked;
+        return that.testCollision(_TEST_COLLISION_OP_IS_ATTACKED, qos, piece_direction, as_knight, null, null)
+          .isAttacked;
       }
 
       rtn_total_attackers = 0;
@@ -1207,7 +1231,7 @@ import * as Ts from './isepic-chess.types';
       return rtn_changed;
     }
 
-    function _setPromoteTo(qal?) {
+    function _setPromoteTo(qal: Ts.Qal) {
       var that, temp, rtn_changed;
 
       that = this;
@@ -1229,7 +1253,7 @@ import * as Ts from './isepic-chess.types';
       that = this;
       that.isHidden = true; //prevents ui refresh from setPromoteTo()
       that.isRotated = false;
-      that.setPromoteTo(_QUEEN);
+      that.setPromoteTo(_QUEEN_W);
       that.isHidden = false;
     }
 
@@ -1511,7 +1535,7 @@ import * as Ts from './isepic-chess.types';
             temp2 = temp.uciMoves[k];
 
             if (temp.isPromotion) {
-              for (m = _KNIGHT; m <= _QUEEN; m++) {
+              for (m = _KNIGHT_W; m <= _QUEEN_W; m++) {
                 //2...5
                 that.legalUci.push(temp2 + toBal(m).toLowerCase());
                 that.legalUciTree[from_bos].push(temp2 + toBal(m).toLowerCase());
@@ -1615,7 +1639,7 @@ import * as Ts from './isepic-chess.types';
       that.w.materialDiff = [];
       that.b.materialDiff = [];
 
-      for (i = _PAWN; i <= _KING; i++) {
+      for (i = _PAWN_W; i <= _KING_W; i++) {
         //1...6
         temp = toBal(-i);
         current_diff = total_pieces.w[temp] - total_pieces.b[temp];
@@ -1811,7 +1835,14 @@ import * as Ts from './isepic-chess.types';
       return rtn_msg;
     }
 
-    function _testCollision(op?, initial_qos?, piece_direction?, as_knight?, max_shifts?, allow_capture?) {
+    function _testCollision(
+      op: Ts.TestCollisionOp,
+      initial_qos: Ts.Qos,
+      piece_direction?,
+      as_knight?,
+      max_shifts?,
+      allow_capture?
+    ) {
       var i, that, current_square, rank_change, file_change, active_side, rtn;
 
       that = this;
@@ -1892,7 +1923,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _legalMovesHelper(target_qos?) {
+    function _legalMovesHelper(target_qos: Ts.Qos) {
       var i,
         j,
         len,
@@ -1913,9 +1944,16 @@ import * as Ts from './isepic-chess.types';
 
       that = this;
 
-      function _candidateMoves(qos?, piece_direction?, as_knight?, max_shifts?, allow_capture?) {
+      function _candidateMoves(qos: Ts.Qos, piece_direction?, as_knight?, max_shifts?, allow_capture?) {
         //uses: that
-        return that.testCollision(1, qos, piece_direction, as_knight, max_shifts, allow_capture).candidateMoves;
+        return that.testCollision(
+          _TEST_COLLISION_OP_CANDIDATE_MOVES,
+          qos,
+          piece_direction,
+          as_knight,
+          max_shifts,
+          allow_capture
+        ).candidateMoves;
       }
 
       rtn = {
@@ -2102,7 +2140,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {returnType, squareType, delimiter}
-    function _legalMoves(target_qos?, p?) {
+    function _legalMoves(target_qos: Ts.Qos, p?) {
       var i, len, that, temp, temp2, temp3, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, rtn;
 
       that = this;
@@ -2110,7 +2148,7 @@ import * as Ts from './isepic-chess.types';
       p = _unreferenceP(p);
 
       block: {
-        legal_uci_in_bos = that.legalUciTree[toBos(target_qos)];
+        legal_uci_in_bos = that.legalUciTree[toBos(target_qos) || ''];
 
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
@@ -2193,7 +2231,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _legalFenMoves(target_qos?) {
+    function _legalFenMoves(target_qos: Ts.Qos) {
       var that;
 
       that = this;
@@ -2201,7 +2239,7 @@ import * as Ts from './isepic-chess.types';
       return that.legalMoves(target_qos, { returnType: 'fen' });
     }
 
-    function _legalSanMoves(target_qos?) {
+    function _legalSanMoves(target_qos: Ts.Qos) {
       var that;
 
       that = this;
@@ -2209,7 +2247,7 @@ import * as Ts from './isepic-chess.types';
       return that.legalMoves(target_qos, { returnType: 'san' });
     }
 
-    function _legalUciMoves(target_qos?) {
+    function _legalUciMoves(target_qos: Ts.Qos) {
       var that;
 
       that = this;
@@ -2470,7 +2508,7 @@ import * as Ts from './isepic-chess.types';
       return _hashCode(temp);
     }
 
-    function _isEqualBoard(to_woard?: string | Ts.Board) {
+    function _isEqualBoard(to_woard: string | Ts.Board) {
       var that, to_board, rtn;
 
       that = this;
@@ -2490,7 +2528,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _cloneBoardFrom(from_woard?: string | Ts.Board) {
+    function _cloneBoardFrom(from_woard: string | Ts.Board) {
       var that, hash_cache, rtn_changed;
 
       that = this;
@@ -2507,7 +2545,7 @@ import * as Ts from './isepic-chess.types';
       return rtn_changed;
     }
 
-    function _cloneBoardTo(to_woard?: string | Ts.Board) {
+    function _cloneBoardTo(to_woard: string | Ts.Board) {
       var that, hash_cache, to_board, rtn_changed;
 
       that = this;
@@ -2973,7 +3011,7 @@ import * as Ts from './isepic-chess.types';
       }
 
       if (rtn) {
-        temp = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN; /*! NO remove toAbsVal()*/
+        temp = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN_W; /*! NO remove toAbsVal()*/
 
         rtn = {
           fromBos: rtn[0],
@@ -3516,7 +3554,7 @@ import * as Ts from './isepic-chess.types';
       public board: Ts.Board;
       public stack: any[];
 
-      constructor(woard?: string | Ts.Board) {
+      constructor(woard: string | Ts.Board) {
         var board;
 
         board = getBoard(woard);
@@ -3550,13 +3588,12 @@ import * as Ts from './isepic-chess.types';
       return fenApply(fen, 'isLegalFen');
     }
 
-    function getBoard(woard?: string | Ts.Board) {
-      var rtn;
-
-      rtn = null;
+    function getBoard(woard: string | Ts.Board) {
+      let rtn: null | Ts.Board = null;
 
       block: {
         if (_isBoard(woard)) {
+          // @ts-ignore
           rtn = woard;
           break block;
         }
@@ -3565,6 +3602,7 @@ import * as Ts from './isepic-chess.types';
           woard = _formatName(woard);
 
           if (woard && _BOARDS[woard]) {
+            // @ts-ignore
             rtn = _BOARDS[woard];
             break block;
           }
@@ -3574,7 +3612,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function toVal(qal?) {
+    function toVal(qal: Ts.Qal) {
       var rtn;
 
       rtn = 0;
@@ -3582,19 +3620,19 @@ import * as Ts from './isepic-chess.types';
       if (typeof qal === 'string') {
         rtn = _strToValHelper(qal);
       } else if (typeof qal === 'number') {
-        rtn = _toInt(qal, -_KING, _KING);
+        rtn = _toInt(qal, -_KING_W, _KING_W);
       } else if (_isSquare(qal)) {
-        rtn = _toInt(qal.val, -_KING, _KING);
+        rtn = _toInt(qal.val, -_KING_W, _KING_W);
       }
 
       return rtn;
     }
 
-    function toAbsVal(qal?) {
+    function toAbsVal(qal: Ts.Qal) {
       return Math.abs(toVal(qal));
     }
 
-    function toBal(qal?) {
+    function toBal(qal: Ts.Qal) {
       var temp, val, abs_val;
 
       val = toVal(qal);
@@ -3604,11 +3642,11 @@ import * as Ts from './isepic-chess.types';
       return val === abs_val ? temp.toUpperCase() : temp;
     }
 
-    function toAbsBal(qal?) {
+    function toAbsBal(qal: Ts.Qal) {
       return toBal(toAbsVal(qal));
     }
 
-    function toClassName(qal?) {
+    function toClassName(qal: Ts.Qal) {
       var piece_bal, piece_lc_bal;
 
       piece_bal = toBal(qal);
@@ -3617,40 +3655,40 @@ import * as Ts from './isepic-chess.types';
       return piece_bal !== '*' ? (piece_bal === piece_lc_bal ? 'b' : 'w') + piece_lc_bal : '';
     }
 
-    function toBos(qos?) {
-      var rtn;
-
-      rtn = null;
+    function toBos(qos: Ts.Qos) {
+      let rtn: null | Ts.SquareBos = null;
 
       if (_isArray(qos)) {
-        qos = _arrToPosHelper(qos);
+        // @ts-ignore
+        let temp = _arrToPosHelper(qos);
 
-        if (qos !== null) {
-          rtn = 'abcdefgh'.charAt(qos[1]) + '' + (8 - qos[0]);
+        if (temp !== null) {
+          rtn = 'abcdefgh'.charAt(temp[1]) + '' + (8 - temp[0]);
         }
       } else if (typeof qos === 'string') {
         rtn = _strToBosHelper(qos);
       } else if (_isSquare(qos)) {
+        // @ts-ignore
         rtn = _strToBosHelper(qos.bos);
       }
 
       return rtn;
     }
 
-    function toPos(qos?) {
-      var rtn;
-
-      rtn = null;
+    function toPos(qos: Ts.Qos) {
+      let rtn: null | Ts.SquarePos = null;
 
       if (typeof qos === 'string') {
-        qos = _strToBosHelper(qos);
-
-        if (qos !== null) {
-          rtn = [8 - qos.charAt(1) * 1, 'abcdefgh'.indexOf(qos.charAt(0))];
+        let temp = _strToBosHelper(qos);
+        if (temp !== null) {
+          // @ts-ignore
+          rtn = [8 - temp.charAt(1) * 1, 'abcdefgh'.indexOf(temp.charAt(0))];
         }
       } else if (_isArray(qos)) {
+        // @ts-ignore
         rtn = _arrToPosHelper(qos);
       } else if (_isSquare(qos)) {
+        // @ts-ignore
         rtn = _arrToPosHelper(qos.pos);
       }
 
@@ -3661,7 +3699,7 @@ import * as Ts from './isepic-chess.types';
       return (typeof zal === 'boolean' ? !zal : toVal(zal) > 0) ? 1 : -1;
     }
 
-    function getRankPos(qos?) {
+    function getRankPos(qos: Ts.Qos) {
       var pos, rtn;
 
       rtn = null;
@@ -3674,7 +3712,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function getFilePos(qos?) {
+    function getFilePos(qos: Ts.Qos) {
       var pos, rtn;
 
       rtn = null;
@@ -3687,7 +3725,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function getRankBos(qos?) {
+    function getRankBos(qos: Ts.Qos) {
       var bos, rtn;
 
       rtn = null;
@@ -3700,7 +3738,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function getFileBos(qos?) {
+    function getFileBos(qos: Ts.Qos) {
       var bos, rtn;
 
       rtn = null;
@@ -3713,7 +3751,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function isInsideBoard(qos?) {
+    function isInsideBoard(qos: Ts.Qos) {
       var rtn;
 
       rtn = false;
@@ -3721,6 +3759,7 @@ import * as Ts from './isepic-chess.types';
       if (typeof qos === 'string') {
         rtn = _strToBosHelper(qos) !== null;
       } else if (_isArray(qos)) {
+        // @ts-ignore
         rtn = _arrToPosHelper(qos) !== null;
       } else {
         rtn = _isSquare(qos);
@@ -3754,7 +3793,7 @@ import * as Ts from './isepic-chess.types';
       if (_isNonBlankStr(fen)) {
         fen_board = _trimSpaces(fen).split(' ')[0];
 
-        for (i = _PAWN; i <= _KING; i++) {
+        for (i = _PAWN_W; i <= _KING_W; i++) {
           //1...6
           for (j = 0; j < 2; j++) {
             //0...1
@@ -3767,7 +3806,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function removeBoard(woard?: string | Ts.Board) {
+    function removeBoard(woard: string | Ts.Board) {
       var del_board, del_board_name_cache, rtn;
 
       rtn = false;
@@ -3788,7 +3827,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function isEqualBoard(left_woard?: string | Ts.Board, right_woard?: string | Ts.Board) {
+    function isEqualBoard(left_woard: string | Ts.Board, right_woard: string | Ts.Board) {
       var left_board, rtn;
 
       rtn = false;
@@ -3807,7 +3846,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function cloneBoard(to_woard?: string | Ts.Board, from_woard?: string | Ts.Board) {
+    function cloneBoard(to_woard: string | Ts.Board, from_woard: string | Ts.Board) {
       var to_board, rtn;
 
       rtn = false;
@@ -4130,7 +4169,7 @@ import * as Ts from './isepic-chess.types';
       return Object.keys(_BOARDS);
     }
 
-    function Ic(woard?: string | Ts.Board) {
+    function Ic(woard: string | Ts.Board) {
       return new getChainableBoard(woard);
     }
 

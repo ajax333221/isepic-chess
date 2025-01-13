@@ -5,12 +5,18 @@
     var _SILENT_MODE = true;
     var _BOARDS = {};
     var _EMPTY_SQR = 0;
-    var _PAWN = 1;
-    var _KNIGHT = 2;
-    var _BISHOP = 3;
-    var _ROOK = 4;
-    var _QUEEN = 5;
-    var _KING = 6;
+    var _PAWN_W = 1;
+    var _KNIGHT_W = 2;
+    var _BISHOP_W = 3;
+    var _ROOK_W = 4;
+    var _QUEEN_W = 5;
+    var _KING_W = 6;
+    var _PAWN_B = -1;
+    var _KNIGHT_B = -2;
+    var _BISHOP_B = -3;
+    var _ROOK_B = -4;
+    var _QUEEN_B = -5;
+    var _KING_B = -6;
     var _DIRECTION_TOP = 1;
     var _DIRECTION_TOP_RIGHT = 2;
     var _DIRECTION_RIGHT = 3;
@@ -31,6 +37,8 @@
     var _ALERT_SUCCESS = 'success';
     var _ALERT_WARNING = 'warning';
     var _ALERT_ERROR = 'error';
+    var _TEST_COLLISION_OP_CANDIDATE_MOVES = 1;
+    var _TEST_COLLISION_OP_IS_ATTACKED = 2;
     var _MUTABLE_KEYS = [
       'w',
       'b',
@@ -62,11 +70,11 @@
     ];
     //!---------------- helpers
     function _promoteValHelper(qal) {
-      return _toInt(toAbsVal(qal) || _QUEEN, _KNIGHT, _QUEEN);
+      let rtn = _toInt(toAbsVal(qal) || _QUEEN_W, _KNIGHT_W, _QUEEN_W);
+      return rtn;
     }
     function _pgnResultHelper(str) {
-      var rtn;
-      rtn = '';
+      let rtn = '';
       str = String(str).replace(/\s/g, '').replace(/o/gi, '0').replace(/½/g, '1/2');
       if (str === _RESULT_ONGOING || str === _RESULT_W_WINS || str === _RESULT_B_WINS || str === _RESULT_DRAW) {
         rtn = str;
@@ -74,33 +82,34 @@
       return rtn;
     }
     function _strToValHelper(str) {
-      var temp, pc_exec, rtn;
-      rtn = 0;
+      let rtn = 0;
       block: {
         if (!str) {
           break block;
         }
-        if (!Number.isNaN(str * 1) && _isIntOrStrInt(str)) {
-          rtn = _toInt(str, -_KING, _KING);
+        if (!Number.isNaN(Number(str)) && _isIntOrStrInt(str)) {
+          let temp = _toInt(str, -_KING_W, _KING_W);
+          rtn = temp;
           break block;
         }
         str = _trimSpaces(str);
         if (/^[pnbrqk]$/i.test(str)) {
-          temp = str.toLowerCase();
-          rtn = ('pnbrqk'.indexOf(temp) + 1) * getSign(str === temp);
+          let temp = str.toLowerCase();
+          let temp2 = ('pnbrqk'.indexOf(temp) + 1) * getSign(str === temp);
+          rtn = temp2;
           break block;
         }
-        pc_exec = /^([wb])([pnbrqk])$/.exec(str.toLowerCase());
+        let pc_exec = /^([wb])([pnbrqk])$/.exec(str.toLowerCase());
         if (pc_exec) {
-          rtn = ('pnbrqk'.indexOf(pc_exec[2]) + 1) * getSign(pc_exec[1] === 'b');
+          let temp = ('pnbrqk'.indexOf(pc_exec[2]) + 1) * getSign(pc_exec[1] === 'b');
+          rtn = temp;
           break block;
         }
       }
       return rtn;
     }
     function _strToBosHelper(str) {
-      var rtn;
-      rtn = null;
+      let rtn = null;
       str = _trimSpaces(str);
       if (str && /^[a-h][1-8]$/i.test(str)) {
         rtn = str.toLowerCase();
@@ -108,11 +117,10 @@
       return rtn;
     }
     function _arrToPosHelper(arr) {
-      var rank_pos, file_pos, rtn;
-      rtn = null;
+      let rtn = null;
       if (_isArray(arr) && arr.length === 2) {
-        rank_pos = _toInt(arr[0]);
-        file_pos = _toInt(arr[1]);
+        let rank_pos = _toInt(arr[0]);
+        let file_pos = _toInt(arr[1]);
         if (rank_pos <= 7 && rank_pos >= 0 && file_pos <= 7 && file_pos >= 0) {
           rtn = [rank_pos, file_pos];
         }
@@ -120,8 +128,8 @@
       return rtn;
     }
     function _pgnParserHelper(str) {
-      var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index, rtn;
-      rtn = null;
+      let rtn = null;
+      var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index;
       block: {
         if (!_isNonBlankStr(str)) {
           break block;
@@ -171,8 +179,7 @@
       return rtn;
     }
     function _uciParserHelper(str) {
-      var rtn;
-      rtn = null;
+      let rtn = null;
       block: {
         if (!_isNonBlankStr(str)) {
           break block;
@@ -188,52 +195,54 @@
       return rtn;
     }
     function _uciWrapmoveHelper(mov) {
-      var temp, possible_promote, rtn;
-      rtn = null;
+      let rtn = null;
       block: {
         if (!_isNonBlankStr(mov)) {
           break block;
         }
-        mov = _trimSpaces(mov);
-        if (mov.length !== 4 && mov.length !== 5) {
+        let temp = _trimSpaces(String(mov));
+        if (temp.length !== 4 && temp.length !== 5) {
           break block;
         }
-        temp = [_strToBosHelper(mov.slice(0, 2)), _strToBosHelper(mov.slice(2, 4))];
-        if (temp[0] === null || temp[1] === null) {
+        let temp2 = [_strToBosHelper(temp.slice(0, 2)), _strToBosHelper(temp.slice(2, 4))];
+        if (temp2[0] === null || temp2[1] === null) {
           break block;
         }
-        possible_promote = mov.charAt(4) || '';
-        rtn = [temp, possible_promote];
+        let fromTo = temp2;
+        let possible_promote = temp.charAt(4) || '';
+        rtn = [fromTo, possible_promote];
       }
       return rtn;
     }
     function _joinedWrapmoveHelper(mov, p) {
-      var temp, rtn;
-      rtn = null;
+      let rtn = null;
       p = _unreferenceP(p);
       block: {
         p.delimiter = _isNonEmptyStr(p.delimiter) ? p.delimiter.charAt(0) : '-';
         if (!_isNonBlankStr(mov)) {
           break block;
         }
-        mov = _trimSpaces(mov);
-        if (mov.length !== 5 || mov.charAt(2) !== p.delimiter) {
+        let temp = _trimSpaces(String(mov));
+        if (temp.length !== 5 || temp.charAt(2) !== p.delimiter) {
           break block;
         }
-        temp = mov.split(p.delimiter);
-        temp = [_strToBosHelper(temp[0]), _strToBosHelper(temp[1])];
-        if (temp[0] === null || temp[1] === null) {
+        let temp2 = temp.split(p.delimiter);
+        let temp3 = [_strToBosHelper(temp2[0]), _strToBosHelper(temp2[1])];
+        if (temp3[0] === null || temp3[1] === null) {
           break block;
         }
-        rtn = temp;
+        let fromTo = temp3;
+        rtn = fromTo;
       }
       return rtn;
     }
     function _fromToWrapmoveHelper(mov) {
-      var rtn;
-      rtn = null;
+      let rtn = null;
       block: {
-        if (!_isArray(mov) || mov.length !== 2) {
+        if (!_isArray(mov)) {
+          break block;
+        }
+        if (mov.length !== 2) {
           break block;
         }
         if (!isInsideBoard(mov[0]) || !isInsideBoard(mov[1])) {
@@ -244,20 +253,18 @@
       return rtn;
     }
     function _moveWrapmoveHelper(mov) {
-      var possible_promote, rtn;
-      rtn = null;
+      let rtn = null;
       block: {
         if (!_isMove(mov)) {
           break block;
         }
-        possible_promote = mov.promotion || '';
+        let possible_promote = mov.promotion || '';
         rtn = [[mov.fromBos, mov.toBos], possible_promote];
       }
       return rtn;
     }
     function _unreferencedMoveHelper(obj) {
-      var rtn;
-      rtn = {};
+      let rtn = {};
       rtn.colorMoved = obj.colorMoved;
       rtn.colorToPlay = obj.colorToPlay;
       rtn.fen = obj.fen;
@@ -276,9 +283,9 @@
       return rtn;
     }
     function _nullboardHelper(board_name) {
-      var i, j, temp, current_pos, current_bos, target;
-      target = getBoard(board_name);
-      if (target === null) {
+      let rtn = getBoard(board_name);
+      var i, j, temp, current_pos, current_bos;
+      if (rtn === null) {
         _BOARDS[board_name] = {
           boardName: board_name,
           getSquare: _getSquare,
@@ -333,9 +340,9 @@
           navLinkMove: _navLinkMove,
           refreshUi: _refreshUi,
         };
-        target = _BOARDS[board_name];
+        rtn = _BOARDS[board_name];
       }
-      target.w = {
+      rtn.w = {
         //static
         isBlack: false,
         sign: 1,
@@ -343,18 +350,18 @@
         secondRankPos: 6,
         lastRankPos: 0,
         singlePawnRankShift: -1,
-        pawn: _PAWN,
-        knight: _KNIGHT,
-        bishop: _BISHOP,
-        rook: _ROOK,
-        queen: _QUEEN,
-        king: _KING,
+        pawn: _PAWN_W,
+        knight: _KNIGHT_W,
+        bishop: _BISHOP_W,
+        rook: _ROOK_W,
+        queen: _QUEEN_W,
+        king: _KING_W,
         //mutable
         kingBos: null,
         castling: null,
         materialDiff: null,
       };
-      target.b = {
+      rtn.b = {
         //static
         isBlack: true,
         sign: -1,
@@ -362,48 +369,48 @@
         secondRankPos: 1,
         lastRankPos: 7,
         singlePawnRankShift: 1,
-        pawn: -_PAWN,
-        knight: -_KNIGHT,
-        bishop: -_BISHOP,
-        rook: -_ROOK,
-        queen: -_QUEEN,
-        king: -_KING,
+        pawn: _PAWN_B,
+        knight: _KNIGHT_B,
+        bishop: _BISHOP_B,
+        rook: _ROOK_B,
+        queen: _QUEEN_B,
+        king: _KING_B,
         //mutable
         kingBos: null,
         castling: null,
         materialDiff: null,
       };
-      target.activeColor = null;
-      target.nonActiveColor = null;
-      target.fen = null;
-      target.enPassantBos = null;
-      target.halfMove = null;
-      target.fullMove = null;
-      target.moveList = null;
-      target.currentMove = null;
-      target.isRotated = null;
-      target.isPuzzleMode = null;
-      target.checks = null;
-      target.isCheck = null;
-      target.isCheckmate = null;
-      target.isStalemate = null;
-      target.isThreefold = null;
-      target.isInsufficientMaterial = null;
-      target.isFiftyMove = null;
-      target.inDraw = null;
-      target.promoteTo = null;
-      target.manualResult = null;
-      target.isHidden = null;
-      target.legalUci = null;
-      target.legalUciTree = null;
-      target.legalRevTree = null;
-      target.squares = {};
+      rtn.activeColor = null;
+      rtn.nonActiveColor = null;
+      rtn.fen = null;
+      rtn.enPassantBos = null;
+      rtn.halfMove = null;
+      rtn.fullMove = null;
+      rtn.moveList = null;
+      rtn.currentMove = null;
+      rtn.isRotated = null;
+      rtn.isPuzzleMode = null;
+      rtn.checks = null;
+      rtn.isCheck = null;
+      rtn.isCheckmate = null;
+      rtn.isStalemate = null;
+      rtn.isThreefold = null;
+      rtn.isInsufficientMaterial = null;
+      rtn.isFiftyMove = null;
+      rtn.inDraw = null;
+      rtn.promoteTo = null;
+      rtn.manualResult = null;
+      rtn.isHidden = null;
+      rtn.legalUci = null;
+      rtn.legalUciTree = null;
+      rtn.legalRevTree = null;
+      rtn.squares = {};
       for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
           current_pos = [i, j];
           current_bos = toBos(current_pos);
-          target.squares[current_bos] = {};
-          temp = target.squares[current_bos];
+          rtn.squares[current_bos] = {};
+          temp = rtn.squares[current_bos];
           temp.pos = current_pos;
           temp.bos = current_bos;
           temp.rankPos = getRankPos(current_pos);
@@ -425,12 +432,11 @@
           temp.isKing = null;
         }
       }
-      return target;
+      return rtn;
     }
     //!---------------- utilities
     function _consoleLog(msg, alert_type) {
-      var rtn;
-      rtn = false;
+      var rtn = false;
       if (!_SILENT_MODE) {
         rtn = true;
         switch (alert_type) {
@@ -868,12 +874,12 @@
         rtn.className = toClassName(new_val);
         rtn.sign = getSign(new_val);
         rtn.isEmptySquare = new_abs_val === _EMPTY_SQR;
-        rtn.isPawn = new_abs_val === _PAWN;
-        rtn.isKnight = new_abs_val === _KNIGHT;
-        rtn.isBishop = new_abs_val === _BISHOP;
-        rtn.isRook = new_abs_val === _ROOK;
-        rtn.isQueen = new_abs_val === _QUEEN;
-        rtn.isKing = new_abs_val === _KING;
+        rtn.isPawn = new_abs_val === _PAWN_W;
+        rtn.isKnight = new_abs_val === _KNIGHT_W;
+        rtn.isBishop = new_abs_val === _BISHOP_W;
+        rtn.isRook = new_abs_val === _ROOK_W;
+        rtn.isQueen = new_abs_val === _QUEEN_W;
+        rtn.isKing = new_abs_val === _KING_W;
         if (rtn.isKing) {
           current_side = rtn.sign < 0 ? that.b : that.w;
           current_side.kingBos = toBos(qos);
@@ -893,7 +899,8 @@
       var i, j, that, as_knight, active_side, rtn_total_attackers;
       that = this;
       function _isAttacked(qos, piece_direction, as_knight2) {
-        return that.testCollision(2, qos, piece_direction, as_knight2, null, null).isAttacked;
+        return that.testCollision(_TEST_COLLISION_OP_IS_ATTACKED, qos, piece_direction, as_knight2, null, null)
+          .isAttacked;
       }
       rtn_total_attackers = 0;
       active_side = that[that.activeColor];
@@ -952,7 +959,7 @@
       that = this;
       that.isHidden = true;
       that.isRotated = false;
-      that.setPromoteTo(_QUEEN);
+      that.setPromoteTo(_QUEEN_W);
       that.isHidden = false;
     }
     function _silentlyResetManualResult() {
@@ -1156,7 +1163,7 @@
           for (k = 0; k < len; k++) {
             temp2 = temp.uciMoves[k];
             if (temp.isPromotion) {
-              for (m = _KNIGHT; m <= _QUEEN; m++) {
+              for (m = _KNIGHT_W; m <= _QUEEN_W; m++) {
                 that.legalUci.push(temp2 + toBal(m).toLowerCase());
                 that.legalUciTree[from_bos].push(temp2 + toBal(m).toLowerCase());
               }
@@ -1235,7 +1242,7 @@
         !that.isCheckmate && (that.isStalemate || that.isThreefold || that.isInsufficientMaterial || that.isFiftyMove);
       that.w.materialDiff = [];
       that.b.materialDiff = [];
-      for (i = _PAWN; i <= _KING; i++) {
+      for (i = _PAWN_W; i <= _KING_W; i++) {
         temp = toBal(-i);
         current_diff = total_pieces.w[temp] - total_pieces.b[temp];
         for (j = 0, len = Math.abs(current_diff); j < len; j++) {
@@ -1475,7 +1482,14 @@
         rtn;
       that = this;
       function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture) {
-        return that.testCollision(1, qos, piece_direction, as_knight, max_shifts, allow_capture).candidateMoves;
+        return that.testCollision(
+          _TEST_COLLISION_OP_CANDIDATE_MOVES,
+          qos,
+          piece_direction,
+          as_knight,
+          max_shifts,
+          allow_capture
+        ).candidateMoves;
       }
       rtn = {
         uciMoves: [],
@@ -1627,7 +1641,7 @@
       rtn = [];
       p = _unreferenceP(p);
       block: {
-        legal_uci_in_bos = that.legalUciTree[toBos(target_qos)];
+        legal_uci_in_bos = that.legalUciTree[toBos(target_qos) || ''];
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
         }
@@ -2249,7 +2263,7 @@
         }
       }
       if (rtn) {
-        temp = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN;
+        temp = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN_W;
         /*! NO remove toAbsVal()*/
         rtn = {
           fromBos: rtn[0],
@@ -2695,8 +2709,7 @@
       return fenApply(fen, 'isLegalFen');
     }
     function getBoard(woard) {
-      var rtn;
-      rtn = null;
+      let rtn = null;
       block: {
         if (_isBoard(woard)) {
           rtn = woard;
@@ -2718,9 +2731,9 @@
       if (typeof qal === 'string') {
         rtn = _strToValHelper(qal);
       } else if (typeof qal === 'number') {
-        rtn = _toInt(qal, -_KING, _KING);
+        rtn = _toInt(qal, -_KING_W, _KING_W);
       } else if (_isSquare(qal)) {
-        rtn = _toInt(qal.val, -_KING, _KING);
+        rtn = _toInt(qal.val, -_KING_W, _KING_W);
       }
       return rtn;
     }
@@ -2744,12 +2757,11 @@
       return piece_bal !== '*' ? (piece_bal === piece_lc_bal ? 'b' : 'w') + piece_lc_bal : '';
     }
     function toBos(qos) {
-      var rtn;
-      rtn = null;
+      let rtn = null;
       if (_isArray(qos)) {
-        qos = _arrToPosHelper(qos);
-        if (qos !== null) {
-          rtn = 'abcdefgh'.charAt(qos[1]) + '' + (8 - qos[0]);
+        let temp = _arrToPosHelper(qos);
+        if (temp !== null) {
+          rtn = 'abcdefgh'.charAt(temp[1]) + '' + (8 - temp[0]);
         }
       } else if (typeof qos === 'string') {
         rtn = _strToBosHelper(qos);
@@ -2759,12 +2771,11 @@
       return rtn;
     }
     function toPos(qos) {
-      var rtn;
-      rtn = null;
+      let rtn = null;
       if (typeof qos === 'string') {
-        qos = _strToBosHelper(qos);
-        if (qos !== null) {
-          rtn = [8 - qos.charAt(1) * 1, 'abcdefgh'.indexOf(qos.charAt(0))];
+        let temp = _strToBosHelper(qos);
+        if (temp !== null) {
+          rtn = [8 - temp.charAt(1) * 1, 'abcdefgh'.indexOf(temp.charAt(0))];
         }
       } else if (_isArray(qos)) {
         rtn = _arrToPosHelper(qos);
@@ -2842,7 +2853,7 @@
       };
       if (_isNonBlankStr(fen)) {
         fen_board = _trimSpaces(fen).split(' ')[0];
-        for (i = _PAWN; i <= _KING; i++) {
+        for (i = _PAWN_W; i <= _KING_W; i++) {
           for (j = 0; j < 2; j++) {
             current_side = j ? rtn.w : rtn.b;
             current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
