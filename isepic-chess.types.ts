@@ -9,6 +9,9 @@ export type SquareFileBos = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h';
 export type SquarePos = [SquareRankPos, SquareFilePos];
 export type SquareBos = `${SquareFileBos}${SquareRankBos}`;
 
+export type PreValidatedSquarePos = [number, number];
+export type PreValidatedSquareBos = string;
+
 export type EmptyBal = '*';
 export type WpBal = 'P';
 export type BpBal = 'p';
@@ -32,6 +35,8 @@ export type LowercasePieceBal = BPiecesBal;
 export type SquareAbsBal = EmptyBal | WPiecesBal;
 export type SquareBal = SquareAbsBal | BPiecesBal;
 
+export type PreValidatedSquareBal = string;
+
 export type EmptyVal = 0;
 export type WpVal = 1;
 export type BpVal = -1;
@@ -54,13 +59,15 @@ export type PromotePiecesVal = WnVal | WbVal | WrVal | WqVal;
 export type SquareAbsVal = EmptyVal | WPiecesVal;
 export type SquareVal = SquareAbsVal | BPiecesVal;
 
+export type PreValidatedSquareVal = number;
+
 export type WhiteSign = 1;
 export type BlackSign = -1;
 export type Sign = WhiteSign | BlackSign;
 
 export type WhiteColor = 'w';
 export type BlackColor = 'b';
-export type SquareClassName = '' | `${WhiteColor}${BPiecesBal}` | `${BlackColor}${BPiecesBal}`;
+export type SquareClassName = '' | `${WhiteColor}${LowercasePieceBal}` | `${BlackColor}${LowercasePieceBal}`;
 
 export interface Square {
   pos: null | SquarePos;
@@ -371,8 +378,12 @@ export type TestCollisionOpIsAttacked = 2;
 export type TestCollisionOp = TestCollisionOpCandidateMoves | TestCollisionOpIsAttacked;
 
 export type Qal = SquareBal | SquareAbsBal | SquareVal | SquareAbsVal | SquareClassName | Square;
-
 export type Qos = SquareBos | SquarePos | Square;
+export type Zal = Qal | boolean;
+
+export type PreValidatedQal = null | Qal | PreValidatedSquareVal | PreValidatedSquareBal;
+export type PreValidatedQos = null | Qos | PreValidatedSquarePos | PreValidatedSquareBos;
+export type PreValidatedZal = Zal | PreValidatedQal;
 
 export type MoveFromTo = [Qos, Qos];
 

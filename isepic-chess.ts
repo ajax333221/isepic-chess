@@ -1057,38 +1057,36 @@ import * as Ts from './isepic-chess.types';
 
     //p = {rankShift, fileShift, isUnreferenced}
     function _getSquare(qos: Ts.Qos, p?) {
-      var that, temp_pos, pre_validated_pos, rtn;
+      let that: Ts.Board = this;
 
-      that = this;
+      var rtn;
 
-      function _squareHelper(my_square?, is_unreferenced?) {
+      function _squareHelper(my_square: Ts.Square, is_unreferenced: boolean): Ts.Square {
         //uses: that
-        var temp, rtn_square;
-
-        rtn_square = my_square;
+        let rtn_square: Ts.Square = my_square;
 
         if (is_unreferenced) {
-          temp = {};
-
-          temp.pos = toPos(my_square.pos); //unreference
-          temp.bos = my_square.bos;
-          temp.rankPos = getRankPos(my_square.pos);
-          temp.filePos = getFilePos(my_square.pos);
-          temp.rankBos = getRankBos(my_square.pos);
-          temp.fileBos = getFileBos(my_square.pos);
-          temp.bal = my_square.bal;
-          temp.absBal = my_square.absBal;
-          temp.val = my_square.val;
-          temp.absVal = my_square.absVal;
-          temp.className = my_square.className;
-          temp.sign = my_square.sign;
-          temp.isEmptySquare = my_square.isEmptySquare;
-          temp.isPawn = my_square.isPawn;
-          temp.isKnight = my_square.isKnight;
-          temp.isBishop = my_square.isBishop;
-          temp.isRook = my_square.isRook;
-          temp.isQueen = my_square.isQueen;
-          temp.isKing = my_square.isKing;
+          let temp: Ts.Square = {
+            pos: toPos(my_square.pos), //unreference
+            bos: my_square.bos,
+            rankPos: getRankPos(my_square.pos),
+            filePos: getFilePos(my_square.pos),
+            rankBos: getRankBos(my_square.pos),
+            fileBos: getFileBos(my_square.pos),
+            bal: my_square.bal,
+            absBal: my_square.absBal,
+            val: my_square.val,
+            absVal: my_square.absVal,
+            className: my_square.className,
+            sign: my_square.sign,
+            isEmptySquare: my_square.isEmptySquare,
+            isPawn: my_square.isPawn,
+            isKnight: my_square.isKnight,
+            isBishop: my_square.isBishop,
+            isRook: my_square.isRook,
+            isQueen: my_square.isQueen,
+            isKing: my_square.isKing,
+          };
 
           rtn_square = temp;
         }
@@ -1098,15 +1096,20 @@ import * as Ts from './isepic-chess.types';
 
       rtn = null;
       p = _unreferenceP(p);
-      temp_pos = toPos(qos);
+      let temp_pos = toPos(qos);
       p.isUnreferenced = p.isUnreferenced === true;
 
       if (temp_pos !== null) {
-        pre_validated_pos = [temp_pos[0] + _toInt(p.rankShift), temp_pos[1] + _toInt(p.fileShift)];
+        let pre_validated_pos: Ts.PreValidatedSquarePos = [
+          temp_pos[0] + _toInt(p.rankShift),
+          temp_pos[1] + _toInt(p.fileShift),
+        ];
 
         if (isInsideBoard(pre_validated_pos)) {
           // @ts-ignore
-          rtn = _squareHelper(that.squares[toBos(pre_validated_pos)], p.isUnreferenced);
+          let validated_pos: Ts.SquarePos = pre_validated_pos;
+
+          rtn = _squareHelper(that!.squares![toBos(validated_pos) || ''], p.isUnreferenced);
         }
       }
 
@@ -1114,24 +1117,23 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {rankShift, fileShift}
-    function _setSquare(qos: Ts.Qos, new_qal: Ts.Qal, p?) {
-      var that, current_side, new_val, new_abs_val, rtn;
+    function _setSquare(qos: Ts.Qos, new_qal: Ts.Qal, p?): null | Ts.Square {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = that.getSquare(qos, _unreferenceP(p, [['isUnreferenced', false]]));
+      let rtn: null | Ts.Square = that?.getSquare?.(qos, _unreferenceP(p, [['isUnreferenced', false]])) || null;
 
       block: {
         if (rtn === null) {
           break block;
         }
 
-        new_val = toVal(new_qal);
+        let new_val = toVal(new_qal);
 
         if (rtn.val === new_val) {
           break block;
         }
 
-        new_abs_val = toAbsVal(new_val);
+        let new_abs_val = toAbsVal(new_val);
 
         rtn.bal = toBal(new_val);
         rtn.absBal = toAbsBal(new_val);
@@ -1148,8 +1150,8 @@ import * as Ts from './isepic-chess.types';
         rtn.isKing = new_abs_val === _KING_W;
 
         if (rtn.isKing) {
-          current_side = rtn.sign < 0 ? that.b : that.w;
-          current_side.kingBos = toBos(qos);
+          let current_side = rtn.sign < 0 ? that.b : that.w;
+          current_side!.kingBos = toBos(qos);
         }
       }
 
@@ -3616,100 +3618,113 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function toVal(qal: Ts.Qal): Ts.SquareVal {
-      let rtn: Ts.SquareVal = 0;
+    function toVal(pvqal: Ts.PreValidatedQal): 0 | Ts.SquareVal {
+      let rtn: 0 | Ts.SquareVal = 0;
 
-      if (typeof qal === 'string') {
-        rtn = _strToValHelper(qal);
-      } else if (typeof qal === 'number') {
+      if (typeof pvqal === 'string') {
+        rtn = _strToValHelper(pvqal);
+      } else if (typeof pvqal === 'number') {
         // @ts-ignore
-        rtn = _toInt(qal, _KING_B, _KING_W);
-      } else if (_isSquare(qal)) {
+        rtn = _toInt(pvqal, _KING_B, _KING_W);
+      } else if (_isSquare(pvqal)) {
         // @ts-ignore
-        rtn = _toInt(qal.val, _KING_B, _KING_W);
+        let validated_val: Ts.SquareVal = _toInt(pvqal.val, _KING_B, _KING_W);
+        rtn = validated_val;
       }
 
       return rtn;
     }
 
-    function toAbsVal(qal: Ts.Qal): Ts.SquareAbsVal {
+    function toAbsVal(pvqal: Ts.PreValidatedQal): Ts.SquareAbsVal {
       // @ts-ignore
-      let rtn: Ts.SquareAbsVal = Math.abs(toVal(qal));
+      let rtn: Ts.SquareAbsVal = Math.abs(toVal(pvqal));
       return rtn;
     }
 
-    function toBal(qal: Ts.Qal) {
-      var temp, val, abs_val;
+    function toBal(pvqal: Ts.PreValidatedQal): Ts.SquareBal {
+      let val: Ts.SquareVal = toVal(pvqal);
 
-      val = toVal(qal);
-      abs_val = toAbsVal(qal);
-      temp = ['*', 'p', 'n', 'b', 'r', 'q', 'k'][abs_val]; //deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
+      let abs_val: Ts.SquareAbsVal = toAbsVal(pvqal);
 
-      return val === abs_val ? temp.toUpperCase() : temp;
+      // @ts-ignore
+      let abs_bal: Ts.SquareAbsBal = ['*', 'P', 'N', 'B', 'R', 'Q', 'K'][abs_val]; //deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
+
+      // @ts-ignore
+      let rtn: Ts.SquareBal = val === abs_val ? abs_bal : abs_bal.toLowerCase();
+
+      return rtn;
     }
 
-    function toAbsBal(qal: Ts.Qal) {
-      return toBal(toAbsVal(qal));
+    function toAbsBal(pvqal: Ts.PreValidatedQal): Ts.SquareAbsBal {
+      // @ts-ignore
+      let validated_abs_bal: Ts.SquareAbsBal = toBal(toAbsVal(pvqal));
+      return validated_abs_bal;
     }
 
-    function toClassName(qal: Ts.Qal) {
-      var piece_bal, piece_lc_bal;
+    function toClassName(pvqal: Ts.PreValidatedQal): Ts.SquareClassName {
+      let piece_bal: Ts.SquareBal = toBal(pvqal);
 
-      piece_bal = toBal(qal);
-      piece_lc_bal = piece_bal.toLowerCase();
+      // @ts-ignore
+      let validated_abs_bal: Ts.SquareAbsBal = piece_bal.toUpperCase();
 
-      return piece_bal !== '*' ? (piece_bal === piece_lc_bal ? 'b' : 'w') + piece_lc_bal : '';
+      // @ts-ignore
+      let validated_class_name: Ts.SquareClassName =
+        piece_bal !== '*' ? (piece_bal === validated_abs_bal ? 'w' : 'b') + validated_abs_bal.toLowerCase() : '';
+
+      return validated_class_name;
     }
 
-    function toBos(qos: Ts.Qos) {
+    function toBos(pvqos: Ts.PreValidatedQos): null | Ts.SquareBos {
       let rtn: null | Ts.SquareBos = null;
 
-      if (_isArray(qos)) {
+      if (_isArray(pvqos)) {
         // @ts-ignore
-        let temp = _arrToPosHelper(qos);
+        let temp = _arrToPosHelper(pvqos);
 
         if (temp !== null) {
-          rtn = 'abcdefgh'.charAt(temp[1]) + '' + (8 - temp[0]);
+          // @ts-ignore
+          let bos: Ts.SquareBos = 'abcdefgh'.charAt(temp[1]) + '' + (8 - temp[0]);
+          rtn = bos;
         }
-      } else if (typeof qos === 'string') {
-        rtn = _strToBosHelper(qos);
-      } else if (_isSquare(qos)) {
+      } else if (typeof pvqos === 'string') {
+        rtn = _strToBosHelper(pvqos);
+      } else if (_isSquare(pvqos)) {
         // @ts-ignore
-        rtn = _strToBosHelper(qos.bos);
+        rtn = _strToBosHelper(pvqos.bos);
       }
 
       return rtn;
     }
 
-    function toPos(qos: Ts.Qos) {
+    function toPos(pvqos: Ts.PreValidatedQos): null | Ts.SquarePos {
       let rtn: null | Ts.SquarePos = null;
 
-      if (typeof qos === 'string') {
-        let temp = _strToBosHelper(qos);
+      if (typeof pvqos === 'string') {
+        let temp = _strToBosHelper(pvqos);
         if (temp !== null) {
           // @ts-ignore
           rtn = [8 - temp.charAt(1) * 1, 'abcdefgh'.indexOf(temp.charAt(0))];
         }
-      } else if (_isArray(qos)) {
+      } else if (_isArray(pvqos)) {
         // @ts-ignore
-        rtn = _arrToPosHelper(qos);
-      } else if (_isSquare(qos)) {
+        rtn = _arrToPosHelper(pvqos);
+      } else if (_isSquare(pvqos)) {
         // @ts-ignore
-        rtn = _arrToPosHelper(qos.pos);
+        let validated_pos: Ts.SquarePos = pvqos.pos;
+        rtn = _arrToPosHelper(validated_pos);
       }
 
       return rtn;
     }
 
-    function getSign(zal?) {
+    function getSign(zal: Ts.PreValidatedZal): Ts.Sign {
       return (typeof zal === 'boolean' ? !zal : toVal(zal) > 0) ? 1 : -1;
     }
 
-    function getRankPos(qos: Ts.Qos) {
-      var pos, rtn;
+    function getRankPos(pvqos: Ts.PreValidatedQos): null | Ts.SquareRankPos {
+      let rtn: null | Ts.SquareRankPos = null;
 
-      rtn = null;
-      pos = toPos(qos);
+      let pos = toPos(pvqos);
 
       if (pos !== null) {
         rtn = pos[0];
@@ -3718,11 +3733,10 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function getFilePos(qos: Ts.Qos) {
-      var pos, rtn;
+    function getFilePos(pvqos: Ts.PreValidatedQos): null | Ts.SquareFilePos {
+      let rtn: null | Ts.SquareFilePos = null;
 
-      rtn = null;
-      pos = toPos(qos);
+      let pos = toPos(pvqos);
 
       if (pos !== null) {
         rtn = pos[1];
@@ -3731,44 +3745,44 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function getRankBos(qos: Ts.Qos) {
-      var bos, rtn;
+    function getRankBos(pvqos: Ts.PreValidatedQos): null | Ts.SquareRankBos {
+      let rtn: null | Ts.SquareRankBos = null;
 
-      rtn = null;
-      bos = toBos(qos);
-
-      if (bos !== null) {
-        rtn = bos.charAt(1);
-      }
-
-      return rtn;
-    }
-
-    function getFileBos(qos: Ts.Qos) {
-      var bos, rtn;
-
-      rtn = null;
-      bos = toBos(qos);
+      let bos = toBos(pvqos);
 
       if (bos !== null) {
-        rtn = bos.charAt(0);
-      }
-
-      return rtn;
-    }
-
-    function isInsideBoard(qos: Ts.Qos) {
-      var rtn;
-
-      rtn = false;
-
-      if (typeof qos === 'string') {
-        rtn = _strToBosHelper(qos) !== null;
-      } else if (_isArray(qos)) {
         // @ts-ignore
-        rtn = _arrToPosHelper(qos) !== null;
+        let validated_rank_bos: Ts.SquareRankBos = bos.charAt(1);
+        rtn = validated_rank_bos;
+      }
+
+      return rtn;
+    }
+
+    function getFileBos(pvqos: Ts.PreValidatedQos): null | Ts.SquareFileBos {
+      let rtn: null | Ts.SquareFileBos = null;
+
+      let bos = toBos(pvqos);
+
+      if (bos !== null) {
+        // @ts-ignore
+        let validated_file_bos: Ts.SquareFileBos = bos.charAt(0);
+        rtn = validated_file_bos;
+      }
+
+      return rtn;
+    }
+
+    function isInsideBoard(pvqos: Ts.PreValidatedQos): boolean {
+      let rtn: boolean = false;
+
+      if (typeof pvqos === 'string') {
+        rtn = _strToBosHelper(pvqos) !== null;
+      } else if (_isArray(pvqos)) {
+        // @ts-ignore
+        rtn = _arrToPosHelper(pvqos) !== null;
       } else {
-        rtn = _isSquare(qos);
+        rtn = _isSquare(pvqos);
       }
 
       return rtn;
