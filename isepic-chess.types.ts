@@ -237,6 +237,16 @@ export type LegalRevTree = Partial<{
   [key in SquareBos]: RevTreeChild;
 }>;
 
+export type Metatags = Partial<{
+  [key: string]: any;
+}>;
+
+export type ParsedResult = {
+  tags: Metatags;
+  sanMoves: string[];
+  result: ManualResult;
+};
+
 interface _Move {
   colorMoved: null | WhiteColor | BlackColor;
   colorToPlay: null | WhiteColor | BlackColor;

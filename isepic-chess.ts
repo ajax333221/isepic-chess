@@ -80,9 +80,9 @@ import * as Ts from './isepic-chess.types';
 
     //!---------------- helpers
 
-    function _promoteValHelper(qal: Ts.Qal): Ts.PromotePiecesVal {
+    function _promoteValHelper(pvqal: Ts.PreValidatedQal): Ts.PromotePiecesVal {
       // @ts-ignore
-      let rtn: Ts.PromotePiecesVal = _toInt(toAbsVal(qal) || _QUEEN_W, _KNIGHT_W, _QUEEN_W);
+      let rtn: Ts.PromotePiecesVal = _toInt(toAbsVal(pvqal) || _QUEEN_W, _KNIGHT_W, _QUEEN_W);
       return rtn;
     }
 
@@ -172,20 +172,20 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _pgnParserHelper(str: string): null | object {
-      let rtn: null | object = null;
-
-      var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index;
+    function _pgnParserHelper(str: string): null | Ts.ParsedResult {
+      let rtn: null | Ts.ParsedResult = null;
 
       block: {
         if (!_isNonBlankStr(str)) {
           break block;
         }
 
-        meta_tags = {};
-        last_index = -1;
-        rgxp = /\[\s*(\w+)\s+\"([^\"]*)\"\s*\]/g;
+        let meta_tags: Ts.Metatags = {};
+        let last_index = -1;
+        let rgxp = /\[\s*(\w+)\s+\"([^\"]*)\"\s*\]/g;
         str = str.replace(/“|”/g, '"');
+
+        let mtch;
 
         while ((mtch = rgxp.exec(str))) {
           last_index = rgxp.lastIndex;
@@ -197,10 +197,12 @@ import * as Ts from './isepic-chess.types';
           last_index = 0;
         }
 
-        g = ' ' + _cleanSan(str.slice(last_index));
-        move_list = [];
+        let g = ' ' + _cleanSan(str.slice(last_index));
+        let move_list: string[] = [];
         last_index = -1;
         rgxp = /\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*([^\s]+)/g;
+
+        let temp;
 
         while ((mtch = rgxp.exec(g))) {
           last_index = rgxp.lastIndex;
@@ -212,7 +214,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        game_result = _RESULT_ONGOING;
+        let game_result: Ts.ManualResult = _RESULT_ONGOING;
         temp = _pgnResultHelper(temp);
 
         if (temp) {
@@ -395,8 +397,6 @@ import * as Ts from './isepic-chess.types';
     function _nullboardHelper(board_name: string): null | Ts.Board {
       let rtn: null | Ts.Board = getBoard(board_name);
 
-      var i, j, temp, current_pos, current_bos;
-
       if (rtn === null) {
         _BOARDS[board_name] = {
           boardName: board_name,
@@ -522,37 +522,39 @@ import * as Ts from './isepic-chess.types';
       rtn.legalRevTree = null;
       rtn.squares = {};
 
-      for (i = 0; i < 8; i++) {
+      for (let i = 0; i < 8; i++) {
         //0...7
-        for (j = 0; j < 8; j++) {
+        for (let j = 0; j < 8; j++) {
           //0...7
-          current_pos = [i, j];
-          current_bos = toBos(current_pos);
-          rtn.squares[current_bos] = {};
-          temp = rtn.squares[current_bos];
+          // @ts-ignore
+          let validated_pos: Ts.SquarePos = [i, j];
 
-          //static
-          temp.pos = current_pos;
-          temp.bos = current_bos;
-          temp.rankPos = getRankPos(current_pos);
-          temp.filePos = getFilePos(current_pos);
-          temp.rankBos = getRankBos(current_pos);
-          temp.fileBos = getFileBos(current_pos);
+          // @ts-ignore
+          let validated_bos: Ts.SquareBos = toBos(validated_pos);
 
-          //mutable
-          temp.bal = null;
-          temp.absBal = null;
-          temp.val = null;
-          temp.absVal = null;
-          temp.className = null;
-          temp.sign = null;
-          temp.isEmptySquare = null;
-          temp.isPawn = null;
-          temp.isKnight = null;
-          temp.isBishop = null;
-          temp.isRook = null;
-          temp.isQueen = null;
-          temp.isKing = null;
+          rtn.squares[validated_bos] = {
+            //static
+            pos: validated_pos,
+            bos: validated_bos,
+            rankPos: getRankPos(validated_pos),
+            filePos: getFilePos(validated_pos),
+            rankBos: getRankBos(validated_pos),
+            fileBos: getFileBos(validated_pos),
+            //mutable
+            bal: null,
+            absBal: null,
+            val: null,
+            absVal: null,
+            className: null,
+            sign: null,
+            isEmptySquare: null,
+            isPawn: null,
+            isKnight: null,
+            isBishop: null,
+            isRook: null,
+            isQueen: null,
+            isKing: null,
+          };
         }
       }
 
@@ -670,11 +672,9 @@ import * as Ts from './isepic-chess.types';
     function _hashCode(val: any): number {
       let rtn: number = 0;
 
-      var i, len;
-
       val = _isNonEmptyStr(val) ? val : '';
 
-      for (i = 0, len = val.length; i < len; i++) {
+      for (let i = 0, len = val.length; i < len; i++) {
         //0<len
         rtn = (rtn << 5) - rtn + val.charCodeAt(i);
         rtn |= 0; //to 32bit integer
@@ -691,10 +691,8 @@ import * as Ts from './isepic-chess.types';
     function _unreferenceP(p: any, changes?: Ts.ChangesTuple[]): object {
       let rtn: object = _isObject(p) ? { ...p } : {};
 
-      var i, len;
-
       if (_isArray(changes)) {
-        for (i = 0, len = changes!.length; i < len; i++) {
+        for (let i = 0, len = changes!.length; i < len; i++) {
           //0<len
           if (!_isArray(changes?.[i]) || changes?.[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
             _consoleLog('[_unreferenceP]: unexpected format', _ALERT_ERROR);
@@ -1013,14 +1011,12 @@ import * as Ts from './isepic-chess.types';
     function _perft(woard: string | Ts.Board, depth: number, specific_uci?: Ts.UciMove): number {
       let rtn: number = 1;
 
-      var i, len, board, count;
-
       block: {
         if (depth < 1) {
           break block;
         }
 
-        board = getBoard(woard);
+        let board: null | Ts.Board = getBoard(woard);
 
         if (board === null) {
           break block;
@@ -1030,20 +1026,20 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        count = 0;
+        let count = 0;
 
-        for (i = 0, len = board.legalUci.length; i < len; i++) {
+        for (let i = 0, len = board.legalUci!.length; i < len; i++) {
           //0<len
-          if (specific_uci && specific_uci !== board.legalUci[i]) {
+          if (specific_uci && specific_uci !== board.legalUci![i]) {
             continue;
           }
 
           if (depth === 1) {
             count++;
           } else {
-            board.playMove(board.legalUci[i], { isLegalMove: true });
+            board.playMove!(board.legalUci![i], { isLegalMove: true });
             count += _perft(board, depth - 1);
-            board.navPrevious();
+            board.navPrevious!();
           }
         }
 
@@ -1066,13 +1062,13 @@ import * as Ts from './isepic-chess.types';
         let rtn_square: Ts.Square = my_square;
 
         if (is_unreferenced) {
-          let temp: Ts.Square = {
-            pos: toPos(my_square.pos), //unreference
+          rtn_square = {
+            pos: toPos(my_square.pos!), //unreference
             bos: my_square.bos,
-            rankPos: getRankPos(my_square.pos),
-            filePos: getFilePos(my_square.pos),
-            rankBos: getRankBos(my_square.pos),
-            fileBos: getFileBos(my_square.pos),
+            rankPos: getRankPos(my_square.pos!),
+            filePos: getFilePos(my_square.pos!),
+            rankBos: getRankBos(my_square.pos!),
+            fileBos: getFileBos(my_square.pos!),
             bal: my_square.bal,
             absBal: my_square.absBal,
             val: my_square.val,
@@ -1087,8 +1083,6 @@ import * as Ts from './isepic-chess.types';
             isQueen: my_square.isQueen,
             isKing: my_square.isKing,
           };
-
-          rtn_square = temp;
         }
 
         return rtn_square;
@@ -3646,8 +3640,8 @@ import * as Ts from './isepic-chess.types';
 
       let abs_val: Ts.SquareAbsVal = toAbsVal(pvqal);
 
-      // @ts-ignore
-      let abs_bal: Ts.SquareAbsBal = ['*', 'P', 'N', 'B', 'R', 'Q', 'K'][abs_val]; //deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
+      const ARR_ABS_BAL: Ts.SquareAbsBal[] = ['*', 'P', 'N', 'B', 'R', 'Q', 'K']; //deprecate asterisk character as _occurrences() might use RegExp("*", "g") if not cautious
+      let abs_bal: Ts.SquareAbsBal = ARR_ABS_BAL[abs_val];
 
       // @ts-ignore
       let rtn: Ts.SquareBal = val === abs_val ? abs_bal : abs_bal.toLowerCase();
