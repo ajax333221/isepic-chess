@@ -80,16 +80,19 @@ import * as Ts from './isepic-chess.types';
 
     //!---------------- helpers
 
-    function _promoteValHelper(qal: Ts.Qal): number {
+    function _promoteValHelper(qal: Ts.Qal): Ts.PromotePiecesVal {
       // @ts-ignore
       let rtn: Ts.PromotePiecesVal = _toInt(toAbsVal(qal) || _QUEEN_W, _KNIGHT_W, _QUEEN_W);
       return rtn;
     }
 
-    function _pgnResultHelper(str: string) {
-      let rtn: '' | Ts.ManualResult = '';
+    function _pgnResultHelper(str: string): null | Ts.ManualResult {
+      let rtn: null | Ts.ManualResult = null;
 
-      str = String(str).replace(/\s/g, '').replace(/o/gi, '0').replace(/½/g, '1/2');
+      str = String(str || '')
+        .replace(/\s/g, '')
+        .replace(/o/gi, '0')
+        .replace(/½/g, '1/2');
 
       if (str === _RESULT_ONGOING || str === _RESULT_W_WINS || str === _RESULT_B_WINS || str === _RESULT_DRAW) {
         rtn = str;
@@ -98,7 +101,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _strToValHelper(str: string) {
+    function _strToValHelper(str: string): 0 | Ts.SquareVal {
       let rtn: 0 | Ts.SquareVal = 0;
 
       block: {
@@ -108,7 +111,7 @@ import * as Ts from './isepic-chess.types';
 
         if (!Number.isNaN(Number(str)) && _isIntOrStrInt(str)) {
           // @ts-ignore
-          let temp: Ts.SquareVal = _toInt(str, -_KING_W, _KING_W);
+          let temp: Ts.SquareVal = _toInt(str, _KING_B, _KING_W);
 
           rtn = temp;
           break block;
@@ -140,7 +143,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _strToBosHelper(str: string) {
+    function _strToBosHelper(str: string): null | Ts.SquareBos {
       let rtn: null | Ts.SquareBos = null;
 
       str = _trimSpaces(str);
@@ -153,7 +156,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _arrToPosHelper(arr: any[]) {
+    function _arrToPosHelper(arr: any[]): null | Ts.SquarePos {
       let rtn: null | Ts.SquarePos = null;
 
       if (_isArray(arr) && arr.length === 2) {
@@ -169,7 +172,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _pgnParserHelper(str: string) {
+    function _pgnParserHelper(str: string): null | object {
       let rtn: null | object = null;
 
       var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index;
@@ -236,7 +239,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _uciParserHelper(str: string) {
+    function _uciParserHelper(str: string): null | string[] {
       let rtn: null | string[] = null;
 
       block: {
@@ -258,7 +261,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _uciWrapmoveHelper(mov: Ts.Mov) {
+    function _uciWrapmoveHelper(mov: Ts.Mov): null | Ts.Wrapmove {
       let rtn: null | Ts.Wrapmove = null;
 
       block: {
@@ -291,7 +294,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {delimiter}
-    function _joinedWrapmoveHelper(mov: Ts.Mov, p?) {
+    function _joinedWrapmoveHelper(mov: Ts.Mov, p?): null | Ts.MoveFromTo {
       let rtn: null | Ts.MoveFromTo = null;
 
       p = _unreferenceP(p);
@@ -325,7 +328,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _fromToWrapmoveHelper(mov: Ts.Mov) {
+    function _fromToWrapmoveHelper(mov: Ts.Mov): null | Ts.MoveFromTo {
       let rtn: null | Ts.MoveFromTo = null;
 
       block: {
@@ -349,7 +352,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _moveWrapmoveHelper(mov: Ts.Mov) {
+    function _moveWrapmoveHelper(mov: Ts.Mov): null | Ts.Wrapmove {
       let rtn: null | Ts.Wrapmove = null;
 
       block: {
@@ -367,7 +370,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _unreferencedMoveHelper(obj: Ts.Move) {
+    function _unreferencedMoveHelper(obj: Ts.Move): Ts.Move {
       let rtn: Ts.Move = {};
 
       rtn.colorMoved = obj.colorMoved;
@@ -389,7 +392,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _nullboardHelper(board_name: string) {
+    function _nullboardHelper(board_name: string): null | Ts.Board {
       let rtn: null | Ts.Board = getBoard(board_name);
 
       var i, j, temp, current_pos, current_bos;
@@ -558,8 +561,8 @@ import * as Ts from './isepic-chess.types';
 
     //!---------------- utilities
 
-    function _consoleLog(msg: string, alert_type?: Ts.Alert) {
-      var rtn: boolean = false;
+    function _consoleLog(msg: string, alert_type?: Ts.Alert): boolean {
+      let rtn: boolean = false;
 
       if (!_SILENT_MODE) {
         rtn = true;
@@ -593,46 +596,44 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _isObject(obj?) {
+    function _isObject(obj: any): boolean {
       return typeof obj === 'object' && obj !== null && !_isArray(obj);
     }
 
-    function _isArray(arr?) {
+    function _isArray(arr: any): boolean {
       return Object.prototype.toString.call(arr) === '[object Array]';
     }
 
-    function _isSquare(obj?) {
+    function _isSquare(obj: any): boolean {
       return _isObject(obj) && typeof obj.bos === 'string';
     }
 
-    function _isBoard(obj?) {
+    function _isBoard(obj: any): boolean {
       return _isObject(obj) && typeof obj.boardName === 'string';
     }
 
-    function _isMove(obj?) {
+    function _isMove(obj: any): boolean {
       return _isObject(obj) && typeof obj.fromBos === 'string' && typeof obj.toBos === 'string';
     }
 
-    function _trimSpaces(str: string) {
+    function _trimSpaces(str: string): string {
       return String(str)
         .replace(/^\s+|\s+$/g, '')
         .replace(/\s\s+/g, ' ');
     }
 
-    function _formatName(str?) {
+    function _formatName(str: string): string {
       return _trimSpaces(str)
         .replace(/[^a-z0-9]/gi, '_')
         .replace(/__+/g, '_');
     }
 
-    function _strContains(str?, str_to_find?) {
+    function _strContains(str: string, str_to_find: string): boolean {
       return String(str).indexOf(str_to_find) !== -1;
     }
 
-    function _occurrences(str?, str_rgxp?) {
-      var rtn;
-
-      rtn = 0;
+    function _occurrences(str: string, str_rgxp: string): number {
+      let rtn: number = 0;
 
       if (_isNonEmptyStr(str) && _isNonEmptyStr(str_rgxp)) {
         rtn = (str.match(RegExp(str_rgxp, 'g')) || []).length;
@@ -641,11 +642,11 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _toInt(num?, min_val?, max_val?) {
-      num = num * 1 || 0;
+    function _toInt(num: any, min_val?: any, max_val?: any): number {
+      num = Number(num) || 0;
       num = num < 0 ? Math.ceil(num) : Math.floor(num);
-      min_val *= 1;
-      max_val *= 1;
+      min_val = Number(min_val);
+      max_val = Number(max_val);
 
       /*! NO remove default 0, (-0 || 0) = 0*/
       min_val = (Number.isNaN(min_val) ? -Infinity : min_val) || 0;
@@ -654,46 +655,48 @@ import * as Ts from './isepic-chess.types';
       return Math.min(Math.max(num, min_val), max_val);
     }
 
-    function _isIntOrStrInt(num?) {
+    function _isIntOrStrInt(num: any): boolean {
       return String(_toInt(num)) === String(num);
     }
 
-    function _isNonEmptyStr(val?) {
+    function _isNonEmptyStr(val: any): boolean {
       return !!(typeof val === 'string' && val);
     }
 
-    function _isNonBlankStr(val?) {
+    function _isNonBlankStr(val: any): boolean {
       return !!(typeof val === 'string' && _trimSpaces(val));
     }
 
-    function _hashCode(val?) {
-      var i, len, hash;
+    function _hashCode(val: any): number {
+      let rtn: number = 0;
 
-      hash = 0;
+      var i, len;
+
       val = _isNonEmptyStr(val) ? val : '';
 
       for (i = 0, len = val.length; i < len; i++) {
         //0<len
-        hash = (hash << 5) - hash + val.charCodeAt(i);
-        hash |= 0; //to 32bit integer
+        rtn = (rtn << 5) - rtn + val.charCodeAt(i);
+        rtn |= 0; //to 32bit integer
       }
 
-      return hash;
+      return rtn;
     }
 
-    function _castlingChars(num?) {
-      return ['', 'k', 'q', 'kq'][_toInt(num, 0, 3)];
+    function _castlingChars(num: any): Ts.CastlingRightsStr {
+      const castlingChars: Ts.CastlingRightsStr[] = ['', 'k', 'q', 'kq'];
+      return castlingChars[_toInt(num, 0, castlingChars.length - 1)];
     }
 
-    function _unreferenceP(p?, changes?) {
-      var i, len, rtn;
+    function _unreferenceP(p: any, changes?: Ts.ChangesTuple[]): object {
+      let rtn: object = _isObject(p) ? { ...p } : {};
 
-      rtn = _isObject(p) ? { ...p } : {};
+      var i, len;
 
       if (_isArray(changes)) {
-        for (i = 0, len = changes.length; i < len; i++) {
+        for (i = 0, len = changes!.length; i < len; i++) {
           //0<len
-          if (!_isArray(changes[i]) || changes[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
+          if (!_isArray(changes?.[i]) || changes?.[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
             _consoleLog('[_unreferenceP]: unexpected format', _ALERT_ERROR);
             continue;
           }
@@ -705,7 +708,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _cleanSan(rtn?) {
+    function _cleanSan(rtn: string): string {
       rtn = _isNonBlankStr(rtn) ? rtn : '';
 
       if (rtn) {
@@ -742,7 +745,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _cloneBoardToObj(to_obj: Ts.Board = {}, from_woard: string | Ts.Board) {
+    function _cloneBoardToObj(to_obj: Ts.Board = {}, from_woard: string | Ts.Board): Ts.Board {
       var i,
         j,
         k,
@@ -920,7 +923,9 @@ import * as Ts from './isepic-chess.types';
       return to_obj;
     }
 
-    function _basicFenTest(fen: string): string {
+    function _basicFenTest(fen: string): '' | string {
+      let rtn_msg: '' | string = '';
+
       var i,
         j,
         len,
@@ -930,10 +935,7 @@ import * as Ts from './isepic-chess.types';
         current_is_num,
         fen_board,
         fen_board_arr,
-        total_files_in_current_rank,
-        rtn_msg;
-
-      rtn_msg = '';
+        total_files_in_current_rank;
 
       block: {
         fen = String(fen);
@@ -1008,10 +1010,10 @@ import * as Ts from './isepic-chess.types';
       return rtn_msg;
     }
 
-    function _perft(woard: string | Ts.Board, depth?, specific_uci?) {
-      var i, len, board, count, rtn;
+    function _perft(woard: string | Ts.Board, depth: number, specific_uci?: Ts.UciMove): number {
+      let rtn: number = 1;
 
-      rtn = 1;
+      var i, len, board, count;
 
       block: {
         if (depth < 1) {
@@ -1641,6 +1643,7 @@ import * as Ts from './isepic-chess.types';
 
       for (i = _PAWN_W; i <= _KING_W; i++) {
         //1...6
+        // @ts-ignore
         temp = toBal(-i);
         current_diff = total_pieces.w[temp] - total_pieces.b[temp];
 
@@ -3588,7 +3591,7 @@ import * as Ts from './isepic-chess.types';
       return fenApply(fen, 'isLegalFen');
     }
 
-    function getBoard(woard: string | Ts.Board) {
+    function getBoard(woard: string | Ts.Board): null | Ts.Board {
       let rtn: null | Ts.Board = null;
 
       block: {
@@ -3599,6 +3602,7 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (_isNonEmptyStr(woard)) {
+          // @ts-ignore
           woard = _formatName(woard);
 
           if (woard && _BOARDS[woard]) {
@@ -3612,24 +3616,26 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function toVal(qal: Ts.Qal) {
-      var rtn;
-
-      rtn = 0;
+    function toVal(qal: Ts.Qal): Ts.SquareVal {
+      let rtn: Ts.SquareVal = 0;
 
       if (typeof qal === 'string') {
         rtn = _strToValHelper(qal);
       } else if (typeof qal === 'number') {
-        rtn = _toInt(qal, -_KING_W, _KING_W);
+        // @ts-ignore
+        rtn = _toInt(qal, _KING_B, _KING_W);
       } else if (_isSquare(qal)) {
-        rtn = _toInt(qal.val, -_KING_W, _KING_W);
+        // @ts-ignore
+        rtn = _toInt(qal.val, _KING_B, _KING_W);
       }
 
       return rtn;
     }
 
-    function toAbsVal(qal: Ts.Qal) {
-      return Math.abs(toVal(qal));
+    function toAbsVal(qal: Ts.Qal): Ts.SquareAbsVal {
+      // @ts-ignore
+      let rtn: Ts.SquareAbsVal = Math.abs(toVal(qal));
+      return rtn;
     }
 
     function toBal(qal: Ts.Qal) {
@@ -3798,6 +3804,7 @@ import * as Ts from './isepic-chess.types';
           for (j = 0; j < 2; j++) {
             //0...1
             current_side = j ? rtn.w : rtn.b;
+            // @ts-ignore
             current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
           }
         }

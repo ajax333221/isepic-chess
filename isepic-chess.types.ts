@@ -112,6 +112,13 @@ export type BothCastlingRights = 3;
 
 export type CastlingRights = NoCastlingRights | ShortCastle | LongCastle | BothCastlingRights;
 
+export type NoCastlingRightsStr = '';
+export type ShortCastleStr = 'k';
+export type LongCastleStr = 'q';
+export type BothCastlingRightsStr = 'kq';
+
+export type CastlingRightsStr = NoCastlingRightsStr | ShortCastleStr | LongCastleStr | BothCastlingRightsStr;
+
 export type TrueOnly = true;
 export type FalseOnly = false;
 
@@ -319,7 +326,7 @@ interface _Board {
   promoteTo: null | PromotePiecesVal;
   manualResult: null | ManualResult;
   isHidden: null | boolean;
-  legalUci: null | string[];
+  legalUci: null | UciMove[];
   legalUciTree: null | LegalUciTree;
   legalRevTree: null | LegalRevTree;
   squares: SquareMap;
@@ -363,7 +370,7 @@ export type TestCollisionOpIsAttacked = 2;
 
 export type TestCollisionOp = TestCollisionOpCandidateMoves | TestCollisionOpIsAttacked;
 
-export type Qal = number | SquareBal | SquareAbsBal | SquareVal | SquareAbsVal | SquareClassName | Square;
+export type Qal = SquareBal | SquareAbsBal | SquareVal | SquareAbsVal | SquareClassName | Square;
 
 export type Qos = SquareBos | SquarePos | Square;
 
@@ -372,3 +379,5 @@ export type MoveFromTo = [Qos, Qos];
 export type Mov = string | MoveFromTo | Move;
 
 export type Wrapmove = [MoveFromTo, '' | StringLenOne];
+
+export type ChangesTuple = [string, any];
