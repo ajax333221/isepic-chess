@@ -296,7 +296,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {delimiter}
-    function _joinedWrapmoveHelper(mov: Ts.Mov, p?): null | Ts.MoveFromTo {
+    function _joinedWrapmoveHelper(mov: Ts.Mov, p?: Ts.OptionalParam): null | Ts.MoveFromTo {
       let rtn: null | Ts.MoveFromTo = null;
 
       p = _unreferenceP(p);
@@ -1052,7 +1052,7 @@ import * as Ts from './isepic-chess.types';
     //!---------------- board
 
     //p = {rankShift, fileShift, isUnreferenced}
-    function _getSquare(qos: Ts.Qos, p?) {
+    function _getSquare(qos: Ts.Qos, p?: Ts.OptionalParam) {
       let that: Ts.Board = this;
 
       var rtn;
@@ -1111,7 +1111,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {rankShift, fileShift}
-    function _setSquare(qos: Ts.Qos, new_qal: Ts.Qal, p?): null | Ts.Square {
+    function _setSquare(qos: Ts.Qos, new_qal: Ts.Qal, p?: Ts.OptionalParam): null | Ts.Square {
       let that: Ts.Board = this;
 
       let rtn: null | Ts.Square = that?.getSquare?.(qos, _unreferenceP(p, [['isUnreferenced', false]])) || null;
@@ -1366,7 +1366,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {skipFenValidation, keepOptions}
-    function _loadFen(fen?, p?) {
+    function _loadFen(fen?, p?: Ts.OptionalParam) {
       var that, temp, hash_cache, rtn_changed;
 
       that = this;
@@ -1453,11 +1453,11 @@ import * as Ts from './isepic-chess.types';
       that.fullMove = fen_parts[5] * 1 || 1;
     }
 
-    function _getClocklessFenHelper() {
-      var i, j, that, fen_board, current_square, consecutive_empty_squares, rtn;
+    function _getClocklessFenHelper(): string {
+      var i, j, that, current_square, consecutive_empty_squares;
 
       that = this;
-      fen_board = '';
+      let fen_board = '';
 
       for (i = 0; i < 8; i++) {
         //0...7
@@ -1478,7 +1478,7 @@ import * as Ts from './isepic-chess.types';
         fen_board += (consecutive_empty_squares || '') + (i !== 7 ? '/' : '');
       }
 
-      rtn = fen_board;
+      let rtn: string = fen_board;
       rtn += ' ' + that.activeColor;
       rtn += ' ' + (_castlingChars(that.w.castling).toUpperCase() + '' + _castlingChars(that.b.castling) || '-');
       rtn += ' ' + (that.enPassantBos || '-');
@@ -1499,8 +1499,6 @@ import * as Ts from './isepic-chess.types';
         from_bos,
         to_bos,
         can_en_passant,
-        total_pieces,
-        clockless_fen,
         times_found,
         bishop_count,
         at_least_one_light,
@@ -1573,7 +1571,7 @@ import * as Ts from './isepic-chess.types';
         }
       }
 
-      clockless_fen = that.getClocklessFenHelper();
+      let clockless_fen: string = that.getClocklessFenHelper();
       that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
       that.isThreefold = false;
 
@@ -1601,7 +1599,7 @@ import * as Ts from './isepic-chess.types';
         }
       }
 
-      total_pieces = countPieces(clockless_fen);
+      let total_pieces = countPieces(clockless_fen);
       that.isInsufficientMaterial = false;
 
       if (
@@ -1639,7 +1637,6 @@ import * as Ts from './isepic-chess.types';
 
       for (i = _PAWN_W; i <= _KING_W; i++) {
         //1...6
-        // @ts-ignore
         temp = toBal(-i);
         current_diff = total_pieces.w[temp] - total_pieces.b[temp];
 
@@ -1664,7 +1661,6 @@ import * as Ts from './isepic-chess.types';
         behind_ep_val,
         infront_ep_is_empty,
         bishop_count,
-        total_pieces,
         fen_board,
         total_pawns_in_current_file,
         min_captured,
@@ -1722,7 +1718,7 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        total_pieces = countPieces(that.fen);
+        let total_pieces = countPieces(that.fen);
         bishop_count = that.countLightDarkBishops();
 
         for (i = 0; i < 2; i++) {
@@ -2139,7 +2135,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {returnType, squareType, delimiter}
-    function _legalMoves(target_qos: Ts.Qos, p?) {
+    function _legalMoves(target_qos: Ts.Qos, p?: Ts.OptionalParam) {
       var i, len, that, temp, temp2, temp3, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, rtn;
 
       that = this;
@@ -2255,7 +2251,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {delimiter}
-    function _isLegalMove(mov?, p?) {
+    function _isLegalMove(mov?, p?: Ts.OptionalParam) {
       var that, wrapped_move, legal_uci_in_bos, rtn;
 
       that = this;
@@ -2651,15 +2647,15 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _countLightDarkBishops() {
-      var i, j, that, current_square, current_side, rtn;
-
-      that = this;
-
-      rtn = {
+    function _countLightDarkBishops(): Ts.ColorBishopCounts {
+      let rtn: Ts.ColorBishopCounts = {
         w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
         b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
       };
+
+      var i, j, that, current_square;
+
+      that = this;
 
       for (i = 0; i < 8; i++) {
         //0...7
@@ -2668,7 +2664,7 @@ import * as Ts from './isepic-chess.types';
           current_square = that.getSquare([i, j]);
 
           if (current_square.isBishop) {
-            current_side = current_square.sign > 0 ? rtn.w : rtn.b;
+            let current_side: Ts.BishopCounts = current_square.sign > 0 ? rtn.w : rtn.b;
 
             if ((i + j) % 2) {
               current_side.darkSquaredBishops++;
@@ -2952,7 +2948,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {delimiter}
-    function _getWrappedMove(mov?, p?) {
+    function _getWrappedMove(mov?, p?: Ts.OptionalParam) {
       var that, temp, bubbling_promoted_to, is_confirmed_legal, rtn;
 
       that = this;
@@ -3024,7 +3020,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {promoteTo, delimiter, isLegalMove}
-    function _draftMove(mov?, p?) {
+    function _draftMove(mov?, p?: Ts.OptionalParam) {
       var that,
         temp,
         temp2,
@@ -3220,7 +3216,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds, isUnreferenced}
-    function _playMove(mov?, p?, sliced_fen_history?) {
+    function _playMove(mov?, p?: Ts.OptionalParam, sliced_fen_history?) {
       var i,
         that,
         temp,
@@ -3446,7 +3442,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
-    function _playMoves(arr?, p?, sliced_fen_history?) {
+    function _playMoves(arr?, p?: Ts.OptionalParam, sliced_fen_history?) {
       var i, len, that, temp, p_cache, at_least_one_parsed, everything_parsed, rtn;
 
       that = this;
@@ -3496,7 +3492,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, isInanimated, playSounds, isUnreferenced}
-    function _playRandomMove(p?, sliced_fen_history?) {
+    function _playRandomMove(p?: Ts.OptionalParam, sliced_fen_history?) {
       var i, len, that, temp, temp2, used_keys, rtn;
 
       that = this;
@@ -3711,8 +3707,8 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function getSign(zal: Ts.PreValidatedZal): Ts.Sign {
-      return (typeof zal === 'boolean' ? !zal : toVal(zal) > 0) ? 1 : -1;
+    function getSign(pvzal: Ts.PreValidatedZal): Ts.Sign {
+      return (typeof pvzal === 'boolean' ? !pvzal : toVal(pvzal) > 0) ? 1 : -1;
     }
 
     function getRankPos(pvqos: Ts.PreValidatedQos): null | Ts.SquareRankPos {
@@ -3782,27 +3778,26 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function sameSquare(qos1?, qos2?) {
-      var rtn;
+    function sameSquare(pvqos1: Ts.PreValidatedQos, pvqos2: Ts.PreValidatedQos): boolean {
+      let rtn: boolean = false;
 
-      rtn = false;
-      qos1 = toBos(qos1);
-      qos2 = toBos(qos2);
+      pvqos1 = toBos(pvqos1);
+      pvqos2 = toBos(pvqos2);
 
-      if (qos1 !== null && qos2 !== null) {
-        rtn = qos1 === qos2;
+      if (pvqos1 !== null && pvqos2 !== null) {
+        rtn = pvqos1 === pvqos2;
       }
 
       return rtn;
     }
 
-    function countPieces(fen?) {
-      var i, j, fen_board, current_side, rtn;
-
-      rtn = {
+    function countPieces(fen: string): Ts.ColorPieceCounts {
+      let rtn: Ts.ColorPieceCounts = {
         w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
         b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
       };
+
+      var i, j, fen_board;
 
       if (_isNonBlankStr(fen)) {
         fen_board = _trimSpaces(fen).split(' ')[0];
@@ -3811,8 +3806,7 @@ import * as Ts from './isepic-chess.types';
           //1...6
           for (j = 0; j < 2; j++) {
             //0...1
-            current_side = j ? rtn.w : rtn.b;
-            // @ts-ignore
+            let current_side: Ts.PieceCounts = j ? rtn.w : rtn.b;
             current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
           }
         }
@@ -3881,7 +3875,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {boardName, fen, pgn, uci, moveIndex, isRotated, isPuzzleMode, skipFenValidation, isHidden, promoteTo, manualResult, validOrBreak}
-    function initBoard(p?) {
+    function initBoard(p?: Ts.OptionalParam) {
       var temp,
         board_created,
         board_name,
@@ -3996,7 +3990,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isRotated, promoteTo, skipFenValidation}
-    function fenApply(fen?, fn_name?, args?, p?) {
+    function fenApply(fen?, fn_name?, args?, p?: Ts.OptionalParam) {
       var board, board_created, silent_mode_cache, rtn;
 
       rtn = null;
@@ -4108,7 +4102,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {skipFenValidation}
-    function fenGet(fen?, props?, p?) {
+    function fenGet(fen?, props?, p?: Ts.OptionalParam) {
       var i, j, len, len2, board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre, rtn;
 
       rtn = null;

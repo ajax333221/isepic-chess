@@ -69,13 +69,16 @@
       'squares',
     ];
     //!---------------- helpers
-    function _promoteValHelper(qal) {
-      let rtn = _toInt(toAbsVal(qal) || _QUEEN_W, _KNIGHT_W, _QUEEN_W);
+    function _promoteValHelper(pvqal) {
+      let rtn = _toInt(toAbsVal(pvqal) || _QUEEN_W, _KNIGHT_W, _QUEEN_W);
       return rtn;
     }
     function _pgnResultHelper(str) {
-      let rtn = '';
-      str = String(str).replace(/\s/g, '').replace(/o/gi, '0').replace(/½/g, '1/2');
+      let rtn = null;
+      str = String(str || '')
+        .replace(/\s/g, '')
+        .replace(/o/gi, '0')
+        .replace(/½/g, '1/2');
       if (str === _RESULT_ONGOING || str === _RESULT_W_WINS || str === _RESULT_B_WINS || str === _RESULT_DRAW) {
         rtn = str;
       }
@@ -88,7 +91,7 @@
           break block;
         }
         if (!Number.isNaN(Number(str)) && _isIntOrStrInt(str)) {
-          let temp = _toInt(str, -_KING_W, _KING_W);
+          let temp = _toInt(str, _KING_B, _KING_W);
           rtn = temp;
           break block;
         }
@@ -129,15 +132,15 @@
     }
     function _pgnParserHelper(str) {
       let rtn = null;
-      var g, temp, rgxp, mtch, meta_tags, move_list, game_result, last_index;
       block: {
         if (!_isNonBlankStr(str)) {
           break block;
         }
-        meta_tags = {};
-        last_index = -1;
-        rgxp = /\[\s*(\w+)\s+\"([^\"]*)\"\s*\]/g;
+        let meta_tags = {};
+        let last_index = -1;
+        let rgxp = /\[\s*(\w+)\s+\"([^\"]*)\"\s*\]/g;
         str = str.replace(/“|”/g, '"');
+        let mtch;
         while ((mtch = rgxp.exec(str))) {
           last_index = rgxp.lastIndex;
           meta_tags[_trimSpaces(mtch[1])] = _trimSpaces(mtch[2]);
@@ -145,10 +148,11 @@
         if (last_index === -1) {
           last_index = 0;
         }
-        g = ' ' + _cleanSan(str.slice(last_index));
-        move_list = [];
+        let g = ' ' + _cleanSan(str.slice(last_index));
+        let move_list = [];
         last_index = -1;
         rgxp = /\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*([^\s]+)/g;
+        let temp;
         while ((mtch = rgxp.exec(g))) {
           last_index = rgxp.lastIndex;
           temp = mtch[0];
@@ -157,7 +161,7 @@
         if (last_index === -1) {
           break block;
         }
-        game_result = _RESULT_ONGOING;
+        let game_result = _RESULT_ONGOING;
         temp = _pgnResultHelper(temp);
         if (temp) {
           move_list.pop();
@@ -284,7 +288,6 @@
     }
     function _nullboardHelper(board_name) {
       let rtn = getBoard(board_name);
-      var i, j, temp, current_pos, current_bos;
       if (rtn === null) {
         _BOARDS[board_name] = {
           boardName: board_name,
@@ -405,38 +408,40 @@
       rtn.legalUciTree = null;
       rtn.legalRevTree = null;
       rtn.squares = {};
-      for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-          current_pos = [i, j];
-          current_bos = toBos(current_pos);
-          rtn.squares[current_bos] = {};
-          temp = rtn.squares[current_bos];
-          temp.pos = current_pos;
-          temp.bos = current_bos;
-          temp.rankPos = getRankPos(current_pos);
-          temp.filePos = getFilePos(current_pos);
-          temp.rankBos = getRankBos(current_pos);
-          temp.fileBos = getFileBos(current_pos);
-          temp.bal = null;
-          temp.absBal = null;
-          temp.val = null;
-          temp.absVal = null;
-          temp.className = null;
-          temp.sign = null;
-          temp.isEmptySquare = null;
-          temp.isPawn = null;
-          temp.isKnight = null;
-          temp.isBishop = null;
-          temp.isRook = null;
-          temp.isQueen = null;
-          temp.isKing = null;
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          let validated_pos = [i, j];
+          let validated_bos = toBos(validated_pos);
+          rtn.squares[validated_bos] = {
+            //static
+            pos: validated_pos,
+            bos: validated_bos,
+            rankPos: getRankPos(validated_pos),
+            filePos: getFilePos(validated_pos),
+            rankBos: getRankBos(validated_pos),
+            fileBos: getFileBos(validated_pos),
+            //mutable
+            bal: null,
+            absBal: null,
+            val: null,
+            absVal: null,
+            className: null,
+            sign: null,
+            isEmptySquare: null,
+            isPawn: null,
+            isKnight: null,
+            isBishop: null,
+            isRook: null,
+            isQueen: null,
+            isKing: null,
+          };
         }
       }
       return rtn;
     }
     //!---------------- utilities
     function _consoleLog(msg, alert_type) {
-      var rtn = false;
+      let rtn = false;
       if (!_SILENT_MODE) {
         rtn = true;
         switch (alert_type) {
@@ -494,18 +499,17 @@
       return String(str).indexOf(str_to_find) !== -1;
     }
     function _occurrences(str, str_rgxp) {
-      var rtn;
-      rtn = 0;
+      let rtn = 0;
       if (_isNonEmptyStr(str) && _isNonEmptyStr(str_rgxp)) {
         rtn = (str.match(RegExp(str_rgxp, 'g')) || []).length;
       }
       return rtn;
     }
     function _toInt(num, min_val, max_val) {
-      num = num * 1 || 0;
+      num = Number(num) || 0;
       num = num < 0 ? Math.ceil(num) : Math.floor(num);
-      min_val *= 1;
-      max_val *= 1;
+      min_val = Number(min_val);
+      max_val = Number(max_val);
       /*! NO remove default 0, (-0 || 0) = 0*/
       min_val = (Number.isNaN(min_val) ? -Infinity : min_val) || 0;
       max_val = (Number.isNaN(max_val) ? Infinity : max_val) || 0;
@@ -521,24 +525,23 @@
       return !!(typeof val === 'string' && _trimSpaces(val));
     }
     function _hashCode(val) {
-      var i, len, hash;
-      hash = 0;
+      let rtn = 0;
       val = _isNonEmptyStr(val) ? val : '';
-      for (i = 0, len = val.length; i < len; i++) {
-        hash = (hash << 5) - hash + val.charCodeAt(i);
-        hash |= 0;
+      for (let i = 0, len = val.length; i < len; i++) {
+        rtn = (rtn << 5) - rtn + val.charCodeAt(i);
+        rtn |= 0;
       }
-      return hash;
+      return rtn;
     }
     function _castlingChars(num) {
-      return ['', 'k', 'q', 'kq'][_toInt(num, 0, 3)];
+      const castlingChars = ['', 'k', 'q', 'kq'];
+      return castlingChars[_toInt(num, 0, castlingChars.length - 1)];
     }
     function _unreferenceP(p, changes) {
-      var i, len, rtn;
-      rtn = _isObject(p) ? { ...p } : {};
+      let rtn = _isObject(p) ? { ...p } : {};
       if (_isArray(changes)) {
-        for (i = 0, len = changes.length; i < len; i++) {
-          if (!_isArray(changes[i]) || changes[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
+        for (let i = 0, len = changes.length; i < len; i++) {
+          if (!_isArray(changes?.[i]) || changes?.[i].length !== 2 || !_isNonBlankStr(changes[i][0])) {
             _consoleLog('[_unreferenceP]: unexpected format', _ALERT_ERROR);
             continue;
           }
@@ -713,6 +716,7 @@
       return to_obj;
     }
     function _basicFenTest(fen) {
+      let rtn_msg = '';
       var i,
         j,
         len,
@@ -722,9 +726,7 @@
         current_is_num,
         fen_board,
         fen_board_arr,
-        total_files_in_current_rank,
-        rtn_msg;
-      rtn_msg = '';
+        total_files_in_current_rank;
       block: {
         fen = String(fen);
         if (fen.length < 20) {
@@ -780,21 +782,20 @@
       return rtn_msg;
     }
     function _perft(woard, depth, specific_uci) {
-      var i, len, board, count, rtn;
-      rtn = 1;
+      let rtn = 1;
       block: {
         if (depth < 1) {
           break block;
         }
-        board = getBoard(woard);
+        let board = getBoard(woard);
         if (board === null) {
           break block;
         }
         if (board.isPuzzleMode) {
           break block;
         }
-        count = 0;
-        for (i = 0, len = board.legalUci.length; i < len; i++) {
+        let count = 0;
+        for (let i = 0, len = board.legalUci.length; i < len; i++) {
           if (specific_uci && specific_uci !== board.legalUci[i]) {
             continue;
           }
@@ -812,61 +813,61 @@
     }
     //!---------------- board
     function _getSquare(qos, p) {
-      var that, temp_pos, pre_validated_pos, rtn;
-      that = this;
+      let that = this;
+      var rtn;
       function _squareHelper(my_square, is_unreferenced) {
-        var temp, rtn_square;
-        rtn_square = my_square;
+        let rtn_square = my_square;
         if (is_unreferenced) {
-          temp = {};
-          temp.pos = toPos(my_square.pos);
-          temp.bos = my_square.bos;
-          temp.rankPos = getRankPos(my_square.pos);
-          temp.filePos = getFilePos(my_square.pos);
-          temp.rankBos = getRankBos(my_square.pos);
-          temp.fileBos = getFileBos(my_square.pos);
-          temp.bal = my_square.bal;
-          temp.absBal = my_square.absBal;
-          temp.val = my_square.val;
-          temp.absVal = my_square.absVal;
-          temp.className = my_square.className;
-          temp.sign = my_square.sign;
-          temp.isEmptySquare = my_square.isEmptySquare;
-          temp.isPawn = my_square.isPawn;
-          temp.isKnight = my_square.isKnight;
-          temp.isBishop = my_square.isBishop;
-          temp.isRook = my_square.isRook;
-          temp.isQueen = my_square.isQueen;
-          temp.isKing = my_square.isKing;
-          rtn_square = temp;
+          rtn_square = {
+            pos: toPos(my_square.pos),
+            //unreference
+            bos: my_square.bos,
+            rankPos: getRankPos(my_square.pos),
+            filePos: getFilePos(my_square.pos),
+            rankBos: getRankBos(my_square.pos),
+            fileBos: getFileBos(my_square.pos),
+            bal: my_square.bal,
+            absBal: my_square.absBal,
+            val: my_square.val,
+            absVal: my_square.absVal,
+            className: my_square.className,
+            sign: my_square.sign,
+            isEmptySquare: my_square.isEmptySquare,
+            isPawn: my_square.isPawn,
+            isKnight: my_square.isKnight,
+            isBishop: my_square.isBishop,
+            isRook: my_square.isRook,
+            isQueen: my_square.isQueen,
+            isKing: my_square.isKing,
+          };
         }
         return rtn_square;
       }
       rtn = null;
       p = _unreferenceP(p);
-      temp_pos = toPos(qos);
+      let temp_pos = toPos(qos);
       p.isUnreferenced = p.isUnreferenced === true;
       if (temp_pos !== null) {
-        pre_validated_pos = [temp_pos[0] + _toInt(p.rankShift), temp_pos[1] + _toInt(p.fileShift)];
+        let pre_validated_pos = [temp_pos[0] + _toInt(p.rankShift), temp_pos[1] + _toInt(p.fileShift)];
         if (isInsideBoard(pre_validated_pos)) {
-          rtn = _squareHelper(that.squares[toBos(pre_validated_pos)], p.isUnreferenced);
+          let validated_pos = pre_validated_pos;
+          rtn = _squareHelper(that.squares[toBos(validated_pos) || ''], p.isUnreferenced);
         }
       }
       return rtn;
     }
     function _setSquare(qos, new_qal, p) {
-      var that, current_side, new_val, new_abs_val, rtn;
-      that = this;
-      rtn = that.getSquare(qos, _unreferenceP(p, [['isUnreferenced', false]]));
+      let that = this;
+      let rtn = that?.getSquare?.(qos, _unreferenceP(p, [['isUnreferenced', false]])) || null;
       block: {
         if (rtn === null) {
           break block;
         }
-        new_val = toVal(new_qal);
+        let new_val = toVal(new_qal);
         if (rtn.val === new_val) {
           break block;
         }
-        new_abs_val = toAbsVal(new_val);
+        let new_abs_val = toAbsVal(new_val);
         rtn.bal = toBal(new_val);
         rtn.absBal = toAbsBal(new_val);
         rtn.val = new_val;
@@ -881,7 +882,7 @@
         rtn.isQueen = new_abs_val === _QUEEN_W;
         rtn.isKing = new_abs_val === _KING_W;
         if (rtn.isKing) {
-          current_side = rtn.sign < 0 ? that.b : that.w;
+          let current_side = rtn.sign < 0 ? that.b : that.w;
           current_side.kingBos = toBos(qos);
         }
       }
@@ -1104,9 +1105,9 @@
       that.fullMove = fen_parts[5] * 1 || 1;
     }
     function _getClocklessFenHelper() {
-      var i, j, that, fen_board, current_square, consecutive_empty_squares, rtn;
+      var i, j, that, current_square, consecutive_empty_squares;
       that = this;
-      fen_board = '';
+      let fen_board = '';
       for (i = 0; i < 8; i++) {
         consecutive_empty_squares = 0;
         for (j = 0; j < 8; j++) {
@@ -1119,7 +1120,7 @@
         }
         fen_board += (consecutive_empty_squares || '') + (i !== 7 ? '/' : '');
       }
-      rtn = fen_board;
+      let rtn = fen_board;
       rtn += ' ' + that.activeColor;
       rtn += ' ' + (_castlingChars(that.w.castling).toUpperCase() + '' + _castlingChars(that.b.castling) || '-');
       rtn += ' ' + (that.enPassantBos || '-');
@@ -1138,8 +1139,6 @@
         from_bos,
         to_bos,
         can_en_passant,
-        total_pieces,
-        clockless_fen,
         times_found,
         bishop_count,
         at_least_one_light,
@@ -1193,7 +1192,7 @@
           that.enPassantBos = '';
         }
       }
-      clockless_fen = that.getClocklessFenHelper();
+      let clockless_fen = that.getClocklessFenHelper();
       that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
       that.isThreefold = false;
       if (sliced_fen_history || (that.moveList && that.currentMove > 7 && that.halfMove > 7)) {
@@ -1214,7 +1213,7 @@
           }
         }
       }
-      total_pieces = countPieces(clockless_fen);
+      let total_pieces = countPieces(clockless_fen);
       that.isInsufficientMaterial = false;
       if (
         !(
@@ -1264,7 +1263,6 @@
         behind_ep_val,
         infront_ep_is_empty,
         bishop_count,
-        total_pieces,
         fen_board,
         total_pawns_in_current_file,
         min_captured,
@@ -1311,7 +1309,7 @@
             break block;
           }
         }
-        total_pieces = countPieces(that.fen);
+        let total_pieces = countPieces(that.fen);
         bishop_count = that.countLightDarkBishops();
         for (i = 0; i < 2; i++) {
           current_side = i ? total_pieces.b : total_pieces.w;
@@ -2002,17 +2000,17 @@
       return rtn;
     }
     function _countLightDarkBishops() {
-      var i, j, that, current_square, current_side, rtn;
-      that = this;
-      rtn = {
+      let rtn = {
         w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
         b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
       };
+      var i, j, that, current_square;
+      that = this;
       for (i = 0; i < 8; i++) {
         for (j = 0; j < 8; j++) {
           current_square = that.getSquare([i, j]);
           if (current_square.isBishop) {
-            current_side = current_square.sign > 0 ? rtn.w : rtn.b;
+            let current_side = current_square.sign > 0 ? rtn.w : rtn.b;
             if ((i + j) % 2) {
               current_side.darkSquaredBishops++;
             } else {
@@ -2725,137 +2723,139 @@
       }
       return rtn;
     }
-    function toVal(qal) {
-      var rtn;
-      rtn = 0;
-      if (typeof qal === 'string') {
-        rtn = _strToValHelper(qal);
-      } else if (typeof qal === 'number') {
-        rtn = _toInt(qal, -_KING_W, _KING_W);
-      } else if (_isSquare(qal)) {
-        rtn = _toInt(qal.val, -_KING_W, _KING_W);
+    function toVal(pvqal) {
+      let rtn = 0;
+      if (typeof pvqal === 'string') {
+        rtn = _strToValHelper(pvqal);
+      } else if (typeof pvqal === 'number') {
+        rtn = _toInt(pvqal, _KING_B, _KING_W);
+      } else if (_isSquare(pvqal)) {
+        let validated_val = _toInt(pvqal.val, _KING_B, _KING_W);
+        rtn = validated_val;
       }
       return rtn;
     }
-    function toAbsVal(qal) {
-      return Math.abs(toVal(qal));
+    function toAbsVal(pvqal) {
+      let rtn = Math.abs(toVal(pvqal));
+      return rtn;
     }
-    function toBal(qal) {
-      var temp, val, abs_val;
-      val = toVal(qal);
-      abs_val = toAbsVal(qal);
-      temp = ['*', 'p', 'n', 'b', 'r', 'q', 'k'][abs_val];
-      return val === abs_val ? temp.toUpperCase() : temp;
+    function toBal(pvqal) {
+      let val = toVal(pvqal);
+      let abs_val = toAbsVal(pvqal);
+      const ARR_ABS_BAL = ['*', 'P', 'N', 'B', 'R', 'Q', 'K'];
+      let abs_bal = ARR_ABS_BAL[abs_val];
+      let rtn = val === abs_val ? abs_bal : abs_bal.toLowerCase();
+      return rtn;
     }
-    function toAbsBal(qal) {
-      return toBal(toAbsVal(qal));
+    function toAbsBal(pvqal) {
+      let validated_abs_bal = toBal(toAbsVal(pvqal));
+      return validated_abs_bal;
     }
-    function toClassName(qal) {
-      var piece_bal, piece_lc_bal;
-      piece_bal = toBal(qal);
-      piece_lc_bal = piece_bal.toLowerCase();
-      return piece_bal !== '*' ? (piece_bal === piece_lc_bal ? 'b' : 'w') + piece_lc_bal : '';
+    function toClassName(pvqal) {
+      let piece_bal = toBal(pvqal);
+      let validated_abs_bal = piece_bal.toUpperCase();
+      let validated_class_name =
+        piece_bal !== '*' ? (piece_bal === validated_abs_bal ? 'w' : 'b') + validated_abs_bal.toLowerCase() : '';
+      return validated_class_name;
     }
-    function toBos(qos) {
+    function toBos(pvqos) {
       let rtn = null;
-      if (_isArray(qos)) {
-        let temp = _arrToPosHelper(qos);
+      if (_isArray(pvqos)) {
+        let temp = _arrToPosHelper(pvqos);
         if (temp !== null) {
-          rtn = 'abcdefgh'.charAt(temp[1]) + '' + (8 - temp[0]);
+          let bos = 'abcdefgh'.charAt(temp[1]) + '' + (8 - temp[0]);
+          rtn = bos;
         }
-      } else if (typeof qos === 'string') {
-        rtn = _strToBosHelper(qos);
-      } else if (_isSquare(qos)) {
-        rtn = _strToBosHelper(qos.bos);
+      } else if (typeof pvqos === 'string') {
+        rtn = _strToBosHelper(pvqos);
+      } else if (_isSquare(pvqos)) {
+        rtn = _strToBosHelper(pvqos.bos);
       }
       return rtn;
     }
-    function toPos(qos) {
+    function toPos(pvqos) {
       let rtn = null;
-      if (typeof qos === 'string') {
-        let temp = _strToBosHelper(qos);
+      if (typeof pvqos === 'string') {
+        let temp = _strToBosHelper(pvqos);
         if (temp !== null) {
           rtn = [8 - temp.charAt(1) * 1, 'abcdefgh'.indexOf(temp.charAt(0))];
         }
-      } else if (_isArray(qos)) {
-        rtn = _arrToPosHelper(qos);
-      } else if (_isSquare(qos)) {
-        rtn = _arrToPosHelper(qos.pos);
+      } else if (_isArray(pvqos)) {
+        rtn = _arrToPosHelper(pvqos);
+      } else if (_isSquare(pvqos)) {
+        let validated_pos = pvqos.pos;
+        rtn = _arrToPosHelper(validated_pos);
       }
       return rtn;
     }
-    function getSign(zal) {
-      return (typeof zal === 'boolean' ? !zal : toVal(zal) > 0) ? 1 : -1;
+    function getSign(pvzal) {
+      return (typeof pvzal === 'boolean' ? !pvzal : toVal(pvzal) > 0) ? 1 : -1;
     }
-    function getRankPos(qos) {
-      var pos, rtn;
-      rtn = null;
-      pos = toPos(qos);
+    function getRankPos(pvqos) {
+      let rtn = null;
+      let pos = toPos(pvqos);
       if (pos !== null) {
         rtn = pos[0];
       }
       return rtn;
     }
-    function getFilePos(qos) {
-      var pos, rtn;
-      rtn = null;
-      pos = toPos(qos);
+    function getFilePos(pvqos) {
+      let rtn = null;
+      let pos = toPos(pvqos);
       if (pos !== null) {
         rtn = pos[1];
       }
       return rtn;
     }
-    function getRankBos(qos) {
-      var bos, rtn;
-      rtn = null;
-      bos = toBos(qos);
+    function getRankBos(pvqos) {
+      let rtn = null;
+      let bos = toBos(pvqos);
       if (bos !== null) {
-        rtn = bos.charAt(1);
+        let validated_rank_bos = bos.charAt(1);
+        rtn = validated_rank_bos;
       }
       return rtn;
     }
-    function getFileBos(qos) {
-      var bos, rtn;
-      rtn = null;
-      bos = toBos(qos);
+    function getFileBos(pvqos) {
+      let rtn = null;
+      let bos = toBos(pvqos);
       if (bos !== null) {
-        rtn = bos.charAt(0);
+        let validated_file_bos = bos.charAt(0);
+        rtn = validated_file_bos;
       }
       return rtn;
     }
-    function isInsideBoard(qos) {
-      var rtn;
-      rtn = false;
-      if (typeof qos === 'string') {
-        rtn = _strToBosHelper(qos) !== null;
-      } else if (_isArray(qos)) {
-        rtn = _arrToPosHelper(qos) !== null;
+    function isInsideBoard(pvqos) {
+      let rtn = false;
+      if (typeof pvqos === 'string') {
+        rtn = _strToBosHelper(pvqos) !== null;
+      } else if (_isArray(pvqos)) {
+        rtn = _arrToPosHelper(pvqos) !== null;
       } else {
-        rtn = _isSquare(qos);
+        rtn = _isSquare(pvqos);
       }
       return rtn;
     }
-    function sameSquare(qos1, qos2) {
-      var rtn;
-      rtn = false;
-      qos1 = toBos(qos1);
-      qos2 = toBos(qos2);
-      if (qos1 !== null && qos2 !== null) {
-        rtn = qos1 === qos2;
+    function sameSquare(pvqos1, pvqos2) {
+      let rtn = false;
+      pvqos1 = toBos(pvqos1);
+      pvqos2 = toBos(pvqos2);
+      if (pvqos1 !== null && pvqos2 !== null) {
+        rtn = pvqos1 === pvqos2;
       }
       return rtn;
     }
     function countPieces(fen) {
-      var i, j, fen_board, current_side, rtn;
-      rtn = {
+      let rtn = {
         w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
         b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
       };
+      var i, j, fen_board;
       if (_isNonBlankStr(fen)) {
         fen_board = _trimSpaces(fen).split(' ')[0];
         for (i = _PAWN_W; i <= _KING_W; i++) {
           for (j = 0; j < 2; j++) {
-            current_side = j ? rtn.w : rtn.b;
+            let current_side = j ? rtn.w : rtn.b;
             current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
           }
         }

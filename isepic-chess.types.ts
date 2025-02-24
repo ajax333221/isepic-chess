@@ -67,6 +67,7 @@ export type Sign = WhiteSign | BlackSign;
 
 export type WhiteColor = 'w';
 export type BlackColor = 'b';
+export type Color = WhiteColor | BlackColor;
 export type SquareClassName = '' | `${WhiteColor}${LowercasePieceBal}` | `${BlackColor}${LowercasePieceBal}`;
 
 export interface Square {
@@ -248,8 +249,8 @@ export type ParsedResult = {
 };
 
 interface _Move {
-  colorMoved: null | WhiteColor | BlackColor;
-  colorToPlay: null | WhiteColor | BlackColor;
+  colorMoved: null | Color;
+  colorToPlay: null | Color;
   fen: null | string;
   san: null | string;
   uci: null | UciMove;
@@ -322,8 +323,8 @@ interface _Board {
   refreshUi: Function;
   w: WhiteInfo;
   b: BlackInfo;
-  activeColor: null | WhiteColor | BlackColor;
-  nonActiveColor: null | WhiteColor | BlackColor;
+  activeColor: null | Color;
+  nonActiveColor: null | Color;
   fen: null | string;
   enPassantBos: null | EnpassantSquareBos;
   halfMove: null | number;
@@ -402,3 +403,22 @@ export type Mov = string | MoveFromTo | Move;
 export type Wrapmove = [MoveFromTo, '' | StringLenOne];
 
 export type ChangesTuple = [string, any];
+
+export type OptionalParam = null | Record<string, any>;
+
+export type PieceCounts = {
+  [key in BPiecesBal]: number;
+};
+
+export type ColorPieceCounts = {
+  [key in Color]: PieceCounts;
+};
+
+export type BishopCounts = {
+  lightSquaredBishops: number;
+  darkSquaredBishops: number;
+};
+
+export type ColorBishopCounts = {
+  [key in Color]: BishopCounts;
+};
