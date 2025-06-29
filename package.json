@@ -6,7 +6,8 @@
   "main": "isepic-chess.js",
   "scripts": {
     "build": "esbuild isepic-chess.ts --outfile=./isepic-chess.js && esbuild isepic-chess.ts --outfile=./isepic-chess.min.js --minify && npm run format",
-    "test": "jest --runInBand --coverage",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
     "format": "npx prettier --write \"**/*.{ts,js,css,html,json,md}\""
   },
   "repository": {
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "esbuild": "^0.24.2",
+    "jest": "^30.0.3",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "prettier": "^2.7.1"
