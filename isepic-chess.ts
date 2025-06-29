@@ -86,7 +86,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _pgnResultHelper(str: string): null | Ts.ManualResult {
+    function _pgnResultHelper(str?: string): null | Ts.ManualResult {
       let rtn: null | Ts.ManualResult = null;
 
       str = String(str || '')
@@ -618,13 +618,13 @@ import * as Ts from './isepic-chess.types';
       return _isObject(obj) && typeof obj.fromBos === 'string' && typeof obj.toBos === 'string';
     }
 
-    function _trimSpaces(str: string): string {
+    function _trimSpaces(str?: string): string {
       return String(str)
         .replace(/^\s+|\s+$/g, '')
         .replace(/\s\s+/g, ' ');
     }
 
-    function _formatName(str: string): string {
+    function _formatName(str?: string): string {
       return _trimSpaces(str)
         .replace(/[^a-z0-9]/gi, '_')
         .replace(/__+/g, '_');
@@ -944,8 +944,8 @@ import * as Ts from './isepic-chess.types';
 
           for (let j = 0, len = fen_board_arr[i].length; j < len; j++) {
             //0<len
-            let current_num = Number(fen_board_arr[i].charAt(j));
-            let current_is_num = !!current_num;
+            let current_num_or_nan = Number(fen_board_arr[i].charAt(j));
+            let current_is_num = !!current_num_or_nan;
 
             if (last_is_num && current_is_num) {
               rtn_msg = 'Error [3] two consecutive numeric values';
@@ -953,7 +953,7 @@ import * as Ts from './isepic-chess.types';
             }
 
             last_is_num = current_is_num;
-            total_files_in_current_rank += current_num || 1;
+            total_files_in_current_rank += current_num_or_nan || 1;
           }
 
           if (total_files_in_current_rank !== 8) {
@@ -1123,37 +1123,37 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _attackersFromActive(target_qos: Ts.Qos, early_break?) {
-      var that, rtn_total_attackers;
+    function _attackersFromActive(target_qos: Ts.Qos, early_break?: boolean): number {
+      let that: Ts.Board = this;
 
-      that = this;
-      that.toggleActiveNonActive();
-      rtn_total_attackers = that.attackersFromNonActive(target_qos, early_break);
-      that.toggleActiveNonActive();
+      that?.toggleActiveNonActive?.();
+      let rtn_total_attackers: number = that?.attackersFromNonActive?.(target_qos, early_break);
+      that?.toggleActiveNonActive?.();
 
       return rtn_total_attackers;
     }
 
-    function _attackersFromNonActive(target_qos: Ts.Qos, early_break?) {
-      var i, j, that, as_knight, active_side, rtn_total_attackers;
+    function _attackersFromNonActive(target_qos: Ts.Qos, early_break?: boolean): number {
+      let that: Ts.Board = this;
 
-      that = this;
-
-      function _isAttacked(qos: Ts.Qos, piece_direction?, as_knight?) {
+      function _isAttacked(qos: Ts.Qos, piece_direction?, as_knight?: boolean) {
         //uses: that
-        return that.testCollision(_TEST_COLLISION_OP_IS_ATTACKED, qos, piece_direction, as_knight, null, null)
+        return that?.testCollision?.(_TEST_COLLISION_OP_IS_ATTACKED, qos, piece_direction, as_knight, null, null)
           .isAttacked;
       }
 
-      rtn_total_attackers = 0;
-      active_side = that[that.activeColor];
+      let rtn_total_attackers = 0;
+
+      // @ts-ignore
+      let active_side: Ts.BlackInfo | Ts.WhiteInfo = that[that!.activeColor];
+
       target_qos = target_qos || active_side.kingBos;
 
-      outer: for (i = 0; i < 2; i++) {
+      outer: for (let i = 0; i < 2; i++) {
         //0...1
-        as_knight = !!i;
+        let as_knight = !!i;
 
-        for (j = _DIRECTION_TOP; j <= _DIRECTION_TOP_LEFT; j++) {
+        for (let j = _DIRECTION_TOP; j <= _DIRECTION_TOP_LEFT; j++) {
           //1...8
           if (_isAttacked(target_qos, j, as_knight)) {
             rtn_total_attackers++;
@@ -1168,12 +1168,13 @@ import * as Ts from './isepic-chess.types';
       return rtn_total_attackers;
     }
 
-    function _toggleActiveNonActive(new_active?) {
-      var that, temp, rtn_changed;
+    function _toggleActiveNonActive(new_active?: boolean): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn_changed = false;
-      temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
+      let rtn_changed = false;
+
+      // @ts-ignore
+      let temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
 
       if ((temp ? 'b' : 'w') !== that.activeColor || (!temp ? 'b' : 'w') !== that.nonActiveColor) {
         rtn_changed = true;
@@ -1184,164 +1185,150 @@ import * as Ts from './isepic-chess.types';
       return rtn_changed;
     }
 
-    function _toggleIsRotated(new_is_rotated?) {
-      var that, temp, rtn_changed;
+    function _toggleIsRotated(new_is_rotated?: boolean): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn_changed = false;
-      temp = typeof new_is_rotated === 'boolean' ? new_is_rotated : !that.isRotated;
+      let rtn_changed = false;
+      let temp = typeof new_is_rotated === 'boolean' ? new_is_rotated : !that.isRotated;
 
       if (temp !== that.isRotated) {
         rtn_changed = true;
         that.isRotated = temp;
-        that.refreshUi(0, false); //autorefresh
+        that?.refreshUi?.(0, false); //autorefresh
       }
 
       return rtn_changed;
     }
 
-    function _setPromoteTo(qal: Ts.Qal) {
-      var that, temp, rtn_changed;
+    function _setPromoteTo(qal: Ts.Qal): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn_changed = false;
-      temp = _promoteValHelper(qal);
+      let rtn_changed = false;
+      let temp = _promoteValHelper(qal);
 
       if (temp !== that.promoteTo) {
         rtn_changed = true;
         that.promoteTo = temp;
-        that.refreshUi(0, false); //autorefresh
+        that?.refreshUi?.(0, false); //autorefresh
       }
 
       return rtn_changed;
     }
 
-    function _silentlyResetOptions() {
-      var that;
+    function _silentlyResetOptions(): void {
+      let that: Ts.Board = this;
 
-      that = this;
       that.isHidden = true; //prevents ui refresh from setPromoteTo()
       that.isRotated = false;
-      that.setPromoteTo(_QUEEN_W);
+      that?.setPromoteTo?.(_QUEEN_W);
       that.isHidden = false;
     }
 
-    function _silentlyResetManualResult() {
-      var that, temp;
+    function _silentlyResetManualResult(): void {
+      let that: Ts.Board = this;
 
-      that = this;
-      temp = that.isHidden;
+      let temp = that.isHidden;
       that.isHidden = true;
-      that.setManualResult(_RESULT_ONGOING);
+      that?.setManualResult?.(_RESULT_ONGOING);
       that.isHidden = temp;
     }
 
-    function _setManualResult(str?) {
-      var that, temp, rtn_changed;
+    function _setManualResult(str?: string): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn_changed = false;
-      temp = _pgnResultHelper(str) || _RESULT_ONGOING;
+      let rtn_changed = false;
+      let temp = _pgnResultHelper(str) || _RESULT_ONGOING;
 
       if (temp !== that.manualResult) {
         rtn_changed = true;
         that.manualResult = temp;
-        that.refreshUi(0, false); //autorefresh
+        that?.refreshUi?.(0, false); //autorefresh
       }
 
       return rtn_changed;
     }
 
-    function _setCurrentMove(num?, is_goto?, is_puzzle_move?) {
-      var len, that, temp, diff, rtn_changed;
+    function _setCurrentMove(num?, is_goto?, is_puzzle_move?): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn_changed = false;
+      let rtn_changed = false;
 
       block: {
         if (that.isPuzzleMode && !is_puzzle_move) {
           break block;
         }
 
-        len = that.moveList.length;
+        let len = that!.moveList!.length;
 
         if (len < 2) {
           break block;
         }
 
+        let current_move = Number(that!.currentMove);
+
         if (typeof is_goto !== 'boolean') {
           num = _toInt(num, 0, len - 1);
-          diff = num - that.currentMove;
+          let diff = num - current_move;
           is_goto = Math.abs(diff) !== 1;
           num = is_goto ? num : diff;
         }
 
         num = _toInt(num);
-        temp = _toInt(is_goto ? num : num + that.currentMove, 0, len - 1);
+        let temp = _toInt(is_goto ? num : num + current_move, 0, len - 1);
 
-        if (temp === that.currentMove) {
+        if (temp === current_move) {
           break block;
         }
 
-        that.updateHelper({
+        that?.updateHelper?.({
           currentMove: temp,
+          // @ts-ignore
           fen: that.moveList[temp].fen,
           skipFenValidation: true,
         }); /*! NO remove skipFenValidation*/
 
-        that.refreshUi(is_goto ? 0 : num, true); //autorefresh
+        that?.refreshUi?.(is_goto ? 0 : num, true); //autorefresh
         rtn_changed = true;
       }
 
       return rtn_changed;
     }
 
-    function _navFirst() {
-      var that;
+    function _navFirst(): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.setCurrentMove(0); //autorefresh (sometimes)
+      return that?.setCurrentMove?.(0); //autorefresh (sometimes)
     }
 
-    function _navPrevious() {
-      var that;
+    function _navPrevious(): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.setCurrentMove(that.currentMove - 1); //autorefresh (sometimes)
+      return that?.setCurrentMove?.(Number(that!.currentMove) - 1); //autorefresh (sometimes)
     }
 
-    function _navNext() {
-      var that;
+    function _navNext(): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.setCurrentMove(that.currentMove + 1); //autorefresh (sometimes)
+      return that?.setCurrentMove?.(Number(that!.currentMove) + 1); //autorefresh (sometimes)
     }
 
-    function _navLast() {
-      var that;
+    function _navLast(): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.setCurrentMove(that.moveList.length - 1); //autorefresh (sometimes)
+      return that?.setCurrentMove?.(Number(that!.moveList!.length) - 1); //autorefresh (sometimes)
     }
 
-    function _navLinkMove(move_index?) {
-      var that;
+    function _navLinkMove(move_index?: number): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.setCurrentMove(move_index); //autorefresh (sometimes)
+      return that?.setCurrentMove?.(move_index); //autorefresh (sometimes)
     }
 
     //p = {skipFenValidation, keepOptions}
-    function _loadFen(fen?, p?: Ts.OptionalParam) {
-      var that, temp, hash_cache, rtn_changed;
+    function _loadFen(fen?, p?: Ts.OptionalParam): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn_changed = false;
+      let rtn_changed = false;
       p = _unreferenceP(p);
 
       block: {
@@ -1351,9 +1338,9 @@ import * as Ts from './isepic-chess.types';
 
         p.skipFenValidation = p.skipFenValidation === true;
         p.keepOptions = p.keepOptions === true;
-        hash_cache = that.boardHash();
+        let hash_cache = that?.boardHash?.();
 
-        temp = that.updateHelper({
+        let temp = that?.updateHelper?.({
           currentMove: 0,
           fen: fen,
           skipFenValidation: p.skipFenValidation,
@@ -1366,59 +1353,64 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        that.silentlyResetManualResult();
+        that?.silentlyResetManualResult?.();
 
-        if (that.boardHash() !== hash_cache) {
+        if (that?.boardHash?.() !== hash_cache) {
           rtn_changed = true;
-          that.refreshUi(0, false); //autorefresh
+          that?.refreshUi?.(0, false); //autorefresh
         }
       }
 
       return rtn_changed;
     }
 
-    function _loadValidatedFen(fen?) {
-      var i, j, len, that, fen_parts, current_file, current_char, fen_board_arr, skip_files;
+    function _loadValidatedFen(fen?: string): void {
+      let that: Ts.Board = this;
 
-      that = this;
-
-      for (i = 0; i < 8; i++) {
+      for (let i = 0; i < 8; i++) {
         //0...7
-        for (j = 0; j < 8; j++) {
+        for (let j = 0; j < 8; j++) {
           //0...7
-          that.setSquare([i, j], _EMPTY_SQR);
+          that?.setSquare?.([i, j], _EMPTY_SQR);
         }
       }
 
       fen = _trimSpaces(fen);
-      fen_parts = fen.split(' ');
-      fen_board_arr = fen_parts[0].split('/');
+      let fen_parts = fen.split(' ');
+      let fen_board_arr = fen_parts[0].split('/');
 
-      for (i = 0; i < 8; i++) {
+      for (let i = 0; i < 8; i++) {
         //0...7
-        current_file = 0;
+        let current_file = 0;
 
-        for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
+        for (let j = 0, len = fen_board_arr[i].length; j < len; j++) {
           //0<len
-          current_char = fen_board_arr[i].charAt(j);
-          skip_files = Number(current_char);
+          let current_char = fen_board_arr[i].charAt(j);
+          let current_num_or_nan = Number(current_char);
 
-          if (!skip_files) {
-            that.setSquare([i, current_file], current_char);
+          if (!current_num_or_nan) {
+            that?.setSquare?.([i, current_file], current_char);
           }
 
-          current_file += skip_files || 1;
+          current_file += current_num_or_nan || 1;
         }
       }
 
-      that.w.castling =
+      // @ts-ignore
+      let castling_w_rights: Ts.CastlingRights =
         (_strContains(fen_parts[2], 'K') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'Q') ? _LONG_CASTLE : 0);
-      that.b.castling =
+      that!.w!.castling = castling_w_rights;
+
+      // @ts-ignore
+      let castling_b_rights: Ts.CastlingRights =
         (_strContains(fen_parts[2], 'k') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'q') ? _LONG_CASTLE : 0);
+      that!.b!.castling = castling_b_rights;
 
-      that.enPassantBos = fen_parts[3].replace('-', '');
+      // @ts-ignore
+      let en_passant_bos: Ts.EnpassantSquareBos = fen_parts[3].replace('-', '');
+      that!.enPassantBos = en_passant_bos;
 
-      that.toggleActiveNonActive(fen_parts[1] === 'b');
+      that?.toggleActiveNonActive?.(fen_parts[1] === 'b');
 
       that.halfMove = Number(fen_parts[4]) || 0;
       that.fullMove = Number(fen_parts[5]) || 1;
@@ -2649,11 +2641,11 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _updateHelper(obj?) {
-      var that, temp, fen_was_valid, rtn;
+    function _updateHelper(obj?): boolean {
+      var that, temp, fen_was_valid;
 
       that = this;
-      rtn = false;
+      let rtn = false;
 
       block: {
         if (!_isObject(obj)) {
@@ -3961,7 +3953,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isRotated, promoteTo, skipFenValidation}
-    function fenApply(fen?, fn_name?, args?, p?: Ts.OptionalParam) {
+    function fenApply(fen?, fn_name?, args?, p?: Ts.OptionalParam): any {
       var board, board_created, silent_mode_cache, rtn;
 
       rtn = null;
@@ -4073,7 +4065,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {skipFenValidation}
-    function fenGet(fen?, props?, p?: Ts.OptionalParam) {
+    function fenGet(fen?, props?, p?: Ts.OptionalParam): any {
       var i, j, len, len2, board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre, rtn;
 
       rtn = null;
