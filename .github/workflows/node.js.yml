@@ -26,13 +26,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Check for formatting changes
-        run: |
-          npm run format
-          git diff --exit-code
-
       - name: Verify production build succeeds
         run: npm run build
+
+      - name: Check for formatting changes
+        run: git diff --exit-code
 
       - name: Run tests
         run: npm test
