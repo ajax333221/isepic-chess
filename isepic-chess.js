@@ -2921,7 +2921,7 @@
           ? _formatName(p.boardName)
           : 'b_' +
             (
-              (/* @__PURE__ */ new Date().getTime() + '').slice(-10) +
+              /* @__PURE__ */ (new Date().getTime() + '').slice(-10) +
               '' +
               Math.random().toString(36).slice(2, 7)
             ).slice(-10);
