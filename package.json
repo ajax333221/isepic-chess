@@ -5,9 +5,9 @@
   "description": "Chess utility library written in JavaScript",
   "main": "isepic-chess.js",
   "scripts": {
-    "build": "esbuild isepic-chess.ts --outfile=./isepic-chess.js && esbuild isepic-chess.ts --outfile=./isepic-chess.min.js --minify && npm run prettier",
+    "build": "esbuild isepic-chess.ts --outfile=./isepic-chess.js && esbuild isepic-chess.ts --outfile=./isepic-chess.min.js --minify && npm run format",
     "test": "jest --runInBand --coverage",
-    "prettier": "npx prettier --write \"**/*.{js,css,html,json,md}\""
+    "format": "npx prettier --write \"**/*.{ts,js,css,html,json,md}\""
   },
   "repository": {
     "type": "git",
