@@ -14,7 +14,7 @@ describe('Move properties', () => {
 
     shared_fen = 'kr6/7P/8/8/8/8/8/K7 w - - 0 1';
 
-    expect(Ic.fenApply(shared_fen, 'playMove', ['h8=N'], { skipFenValidation: true }).promotion).toBe('b');
+    expect(Ic.fenApply(shared_fen, 'playMove', ['h8=N'], { skipFenValidation: true }).promotion).toBe('n');
     expect(Ic.fenApply(shared_fen, 'playMove', ['h8=B'], { skipFenValidation: true }).promotion).toBe('b');
     expect(Ic.fenApply(shared_fen, 'playMove', ['h8=R'], { skipFenValidation: true }).promotion).toBe('r');
     expect(Ic.fenApply(shared_fen, 'playMove', ['h8=Q'], { skipFenValidation: true }).promotion).toBe('q');
