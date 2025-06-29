@@ -754,7 +754,7 @@
           total_files_in_current_rank = 0;
           last_is_num = false;
           for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
-            temp = fen_board_arr[i].charAt(j) * 1;
+            temp = Number(fen_board_arr[i].charAt(j));
             current_is_num = !!temp;
             if (last_is_num && current_is_num) {
               rtn_msg = 'Error [3] two consecutive numeric values';
@@ -1088,7 +1088,7 @@
         current_file = 0;
         for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
           current_char = fen_board_arr[i].charAt(j);
-          skip_files = current_char * 1;
+          skip_files = Number(current_char);
           if (!skip_files) {
             that.setSquare([i, current_file], current_char);
           }
@@ -1101,8 +1101,8 @@
         (_strContains(fen_parts[2], 'k') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'q') ? _LONG_CASTLE : 0);
       that.enPassantBos = fen_parts[3].replace('-', '');
       that.toggleActiveNonActive(fen_parts[1] === 'b');
-      that.halfMove = fen_parts[4] * 1 || 0;
-      that.fullMove = fen_parts[5] * 1 || 1;
+      that.halfMove = Number(fen_parts[4]) || 0;
+      that.fullMove = Number(fen_parts[5]) || 1;
     }
     function _getClocklessFenHelper() {
       var i, j, that, current_square, consecutive_empty_squares;
@@ -2778,7 +2778,7 @@
       if (typeof pvqos === 'string') {
         let temp = _strToBosHelper(pvqos);
         if (temp !== null) {
-          rtn = [8 - temp.charAt(1) * 1, 'abcdefgh'.indexOf(temp.charAt(0))];
+          rtn = [8 - Number(temp.charAt(1)), 'abcdefgh'.indexOf(temp.charAt(0))];
         }
       } else if (_isArray(pvqos)) {
         rtn = _arrToPosHelper(pvqos);

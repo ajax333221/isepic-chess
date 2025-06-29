@@ -972,7 +972,7 @@ import * as Ts from './isepic-chess.types';
 
           for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
             //0<len
-            temp = fen_board_arr[i].charAt(j) * 1;
+            temp = Number(fen_board_arr[i].charAt(j));
             current_is_num = !!temp;
 
             if (last_is_num && current_is_num) {
@@ -1430,7 +1430,7 @@ import * as Ts from './isepic-chess.types';
         for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
           //0<len
           current_char = fen_board_arr[i].charAt(j);
-          skip_files = current_char * 1;
+          skip_files = Number(current_char);
 
           if (!skip_files) {
             that.setSquare([i, current_file], current_char);
@@ -1449,8 +1449,8 @@ import * as Ts from './isepic-chess.types';
 
       that.toggleActiveNonActive(fen_parts[1] === 'b');
 
-      that.halfMove = fen_parts[4] * 1 || 0;
-      that.fullMove = fen_parts[5] * 1 || 1;
+      that.halfMove = Number(fen_parts[4]) || 0;
+      that.fullMove = Number(fen_parts[5]) || 1;
     }
 
     function _getClocklessFenHelper(): string {
@@ -3693,7 +3693,7 @@ import * as Ts from './isepic-chess.types';
         let temp = _strToBosHelper(pvqos);
         if (temp !== null) {
           // @ts-ignore
-          rtn = [8 - temp.charAt(1) * 1, 'abcdefgh'.indexOf(temp.charAt(0))];
+          rtn = [8 - Number(temp.charAt(1)), 'abcdefgh'.indexOf(temp.charAt(0))];
         }
       } else if (_isArray(pvqos)) {
         // @ts-ignore
