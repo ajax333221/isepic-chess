@@ -744,32 +744,13 @@ import * as Ts from './isepic-chess.types';
     }
 
     function _cloneBoardToObj(to_obj: Ts.Board = {}, from_woard: string | Ts.Board): Ts.Board {
-      var i,
-        j,
-        k,
-        len,
-        len2,
-        len3,
-        current_key,
-        to_prop,
-        from_prop,
-        sub_current_key,
-        sub_from_prop,
-        sub_to_prop,
-        sub_sub_current_key,
-        sub_sub_from_prop,
-        //sub_sub_to_prop,
-        sub_keys,
-        sub_sub_keys,
-        from_board;
-
       block: {
         if (!_isObject(to_obj)) {
           _consoleLog('[_cloneBoardToObj]: to_obj must be Object type', _ALERT_ERROR);
           break block;
         }
 
-        from_board = getBoard(from_woard);
+        let from_board: null | Ts.Board = getBoard(from_woard);
 
         if (from_board === null) {
           _consoleLog("[_cloneBoardToObj]: from_woard doesn't exist", _ALERT_ERROR);
@@ -786,13 +767,14 @@ import * as Ts from './isepic-chess.types';
         to_obj.legalUciTree = {};
         to_obj.legalRevTree = {};
 
-        for (i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
+        for (let i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
           //0<len
-          current_key = _MUTABLE_KEYS[i];
-          to_prop = to_obj[current_key];
-          from_prop = from_board[current_key];
+          let current_key = _MUTABLE_KEYS[i];
+          let to_prop = to_obj[current_key];
+          let from_prop = from_board[current_key];
 
           if (!to_prop && (current_key === 'w' || current_key === 'b' || current_key === 'squares')) {
+            // @ts-ignore
             to_obj[current_key] = {};
             to_prop = to_obj[current_key];
           }
@@ -804,6 +786,7 @@ import * as Ts from './isepic-chess.types';
           }
 
           if (current_key === 'legalUci') {
+            // @ts-ignore
             to_obj.legalUci = from_board.legalUci.slice(0);
             continue;
           }
@@ -832,13 +815,13 @@ import * as Ts from './isepic-chess.types';
             continue;
           }
 
-          sub_keys = Object.keys(from_prop);
+          let sub_keys = Object.keys(from_prop);
 
-          for (j = 0, len2 = sub_keys.length; j < len2; j++) {
+          for (let j = 0, len2 = sub_keys.length; j < len2; j++) {
             //0<len2
-            sub_current_key = sub_keys[j];
-            sub_to_prop = to_prop[sub_current_key];
-            sub_from_prop = from_prop[sub_current_key];
+            let sub_current_key = sub_keys[j];
+            let sub_to_prop = to_prop[sub_current_key];
+            let sub_from_prop = from_prop[sub_current_key];
 
             if (!sub_to_prop && current_key === 'squares') {
               to_prop[sub_current_key] = {};
@@ -886,7 +869,7 @@ import * as Ts from './isepic-chess.types';
               continue;
             }
 
-            sub_sub_keys = Object.keys(sub_from_prop);
+            let sub_sub_keys = Object.keys(sub_from_prop);
 
             if (current_key === 'moveList' || current_key === 'legalRevTree') {
               to_prop[sub_current_key] = {};
@@ -894,11 +877,11 @@ import * as Ts from './isepic-chess.types';
               /*! NO put a "continue" in here*/
             }
 
-            for (k = 0, len3 = sub_sub_keys.length; k < len3; k++) {
+            for (let k = 0, len3 = sub_sub_keys.length; k < len3; k++) {
               //0<len3
-              sub_sub_current_key = sub_sub_keys[k];
+              let sub_sub_current_key = sub_sub_keys[k];
               //sub_sub_to_prop = sub_to_prop[sub_sub_current_key];
-              sub_sub_from_prop = sub_from_prop[sub_sub_current_key];
+              let sub_sub_from_prop = sub_from_prop[sub_sub_current_key];
 
               if (current_key === 'legalRevTree') {
                 sub_to_prop[sub_sub_current_key] = sub_sub_from_prop.slice(0); //can't use sub_sub_to_prop, it's not a reference here
@@ -924,17 +907,6 @@ import * as Ts from './isepic-chess.types';
     function _basicFenTest(fen: string): '' | string {
       let rtn_msg: '' | string = '';
 
-      var i,
-        j,
-        len,
-        temp,
-        optional_clocks,
-        last_is_num,
-        current_is_num,
-        fen_board,
-        fen_board_arr,
-        total_files_in_current_rank;
-
       block: {
         fen = String(fen);
 
@@ -945,7 +917,7 @@ import * as Ts from './isepic-chess.types';
 
         fen = _trimSpaces(fen);
 
-        optional_clocks = fen.replace(
+        let optional_clocks = fen.replace(
           /^([rnbqkRNBQK1-8]+\/)([rnbqkpRNBQKP1-8]+\/){6}([rnbqkRNBQK1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])($|\s)/,
           ''
         );
@@ -962,18 +934,18 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        fen_board = fen.split(' ')[0];
-        fen_board_arr = fen_board.split('/');
+        let fen_board = fen.split(' ')[0];
+        let fen_board_arr = fen_board.split('/');
 
-        for (i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
           //0...7
-          total_files_in_current_rank = 0;
-          last_is_num = false;
+          let total_files_in_current_rank = 0;
+          let last_is_num = false;
 
-          for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
+          for (let j = 0, len = fen_board_arr[i].length; j < len; j++) {
             //0<len
-            temp = Number(fen_board_arr[i].charAt(j));
-            current_is_num = !!temp;
+            let current_num = Number(fen_board_arr[i].charAt(j));
+            let current_is_num = !!current_num;
 
             if (last_is_num && current_is_num) {
               rtn_msg = 'Error [3] two consecutive numeric values';
@@ -981,7 +953,7 @@ import * as Ts from './isepic-chess.types';
             }
 
             last_is_num = current_is_num;
-            total_files_in_current_rank += temp || 1;
+            total_files_in_current_rank += current_num || 1;
           }
 
           if (total_files_in_current_rank !== 8) {
@@ -990,16 +962,16 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        temp = fen_board.indexOf('K');
+        let index_w_king = fen_board.indexOf('K');
 
-        if (temp === -1 || fen_board.lastIndexOf('K') !== temp) {
+        if (index_w_king === -1 || fen_board.lastIndexOf('K') !== index_w_king) {
           rtn_msg = 'Error [5] board without exactly one white king';
           break block;
         }
 
-        temp = fen_board.indexOf('k');
+        let index_b_king = fen_board.indexOf('k');
 
-        if (temp === -1 || fen_board.lastIndexOf('k') !== temp) {
+        if (index_b_king === -1 || fen_board.lastIndexOf('k') !== index_b_king) {
           rtn_msg = 'Error [6] board without exactly one black king';
           break block;
         }
@@ -1052,10 +1024,10 @@ import * as Ts from './isepic-chess.types';
     //!---------------- board
 
     //p = {rankShift, fileShift, isUnreferenced}
-    function _getSquare(qos: Ts.Qos, p?: Ts.OptionalParam) {
+    function _getSquare(qos: Ts.Qos, p?: Ts.OptionalParam): null | Ts.Square {
       let that: Ts.Board = this;
 
-      var rtn;
+      let rtn: null | Ts.Square = null;
 
       function _squareHelper(my_square: Ts.Square, is_unreferenced: boolean): Ts.Square {
         //uses: that
@@ -1088,7 +1060,6 @@ import * as Ts from './isepic-chess.types';
         return rtn_square;
       }
 
-      rtn = null;
       p = _unreferenceP(p);
       let temp_pos = toPos(qos);
       p.isUnreferenced = p.isUnreferenced === true;
