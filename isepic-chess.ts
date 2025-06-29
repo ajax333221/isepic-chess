@@ -564,7 +564,7 @@ import * as Ts from './isepic-chess.types';
     //!---------------- utilities
 
     function _consoleLog(msg: string, alert_type?: Ts.Alert): boolean {
-      let rtn: boolean = false;
+      let rtn = false;
 
       if (!_SILENT_MODE) {
         rtn = true;
@@ -1264,19 +1264,19 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let current_move = Number(that!.currentMove);
+        let that_current_move = Number(that!.currentMove);
 
         if (typeof is_goto !== 'boolean') {
           num = _toInt(num, 0, len - 1);
-          let diff = num - current_move;
+          let diff = num - that_current_move;
           is_goto = Math.abs(diff) !== 1;
           num = is_goto ? num : diff;
         }
 
         num = _toInt(num);
-        let temp = _toInt(is_goto ? num : num + current_move, 0, len - 1);
+        let temp = _toInt(is_goto ? num : num + that_current_move, 0, len - 1);
 
-        if (temp === current_move) {
+        if (temp === that_current_move) {
           break block;
         }
 
@@ -2190,38 +2190,31 @@ import * as Ts from './isepic-chess.types';
     }
 
     function _legalFenMoves(target_qos: Ts.Qos) {
-      var that;
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.legalMoves(target_qos, { returnType: 'fen' });
+      return that?.legalMoves?.(target_qos, { returnType: 'fen' });
     }
 
     function _legalSanMoves(target_qos: Ts.Qos) {
-      var that;
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.legalMoves(target_qos, { returnType: 'san' });
+      return that?.legalMoves?.(target_qos, { returnType: 'san' });
     }
 
     function _legalUciMoves(target_qos: Ts.Qos) {
-      var that;
+      let that: Ts.Board = this;
 
-      that = this;
-
-      return that.legalMoves(target_qos, { returnType: 'uci' });
+      return that?.legalMoves?.(target_qos, { returnType: 'uci' });
     }
 
     //p = {delimiter}
-    function _isLegalMove(mov?, p?: Ts.OptionalParam) {
-      var that, wrapped_move, legal_uci_in_bos, rtn;
+    function _isLegalMove(mov?: Ts.Mov, p?: Ts.OptionalParam): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = false;
+      let rtn = false;
 
       block: {
-        wrapped_move = that.getWrappedMove(mov, p);
+        let wrapped_move = that?.getWrappedMove?.(mov, p);
 
         if (wrapped_move === null) {
           break block;
@@ -2233,7 +2226,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        legal_uci_in_bos = that.legalUciTree[wrapped_move.fromBos];
+        let legal_uci_in_bos = that?.legalUciTree?.[wrapped_move.fromBos];
 
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
@@ -2247,15 +2240,14 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _getCheckmateMoves(early_break?) {
-      var i, len, that, temp, rtn;
+    function _getCheckmateMoves(early_break?: boolean): Ts.UciMove[] {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = [];
+      let rtn: Ts.UciMove[] = [];
 
-      outer: for (i = 0, len = that.legalUci.length; i < len; i++) {
+      outer: for (let i = 0, len = that!.legalUci!.length; i < len; i++) {
         //0<len
-        temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
+        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
 
         if (temp.moveResult && !temp.canDraw) {
           rtn.push(temp.uci);
@@ -2269,15 +2261,14 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _getDrawMoves(early_break?) {
-      var i, len, that, temp, rtn;
+    function _getDrawMoves(early_break?: boolean): Ts.UciMove[] {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = [];
+      let rtn: Ts.UciMove[] = [];
 
-      outer: for (i = 0, len = that.legalUci.length; i < len; i++) {
+      outer: for (let i = 0, len = that!.legalUci!.length; i < len; i++) {
         //0<len
-        temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
+        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
 
         if (temp.canDraw) {
           rtn.push(temp.uci);
@@ -2291,25 +2282,27 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _fenHistoryExport() {
-      var i, len, that, rtn;
+    function _fenHistoryExport(): string[] {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = [];
+      let rtn: string[] = [];
 
-      for (i = 0, len = that.moveList.length; i < len; i++) {
+      for (let i = 0, len = that!.moveList!.length; i < len; i++) {
         //0<len
-        rtn.push(that.moveList[i].fen);
+        rtn.push(String(that?.moveList?.[i]?.fen));
       }
 
       return rtn;
     }
 
-    function _pgnExport() {
+    function _pgnExport(): string {
+      let that: Ts.Board = this;
+
+      let rtn = '';
+
       /*! TODO p options: remove comments, max line len, tag white-list*/
       var i,
         len,
-        that,
         header,
         ordered_tags,
         result_tag_ow,
@@ -2318,21 +2311,20 @@ import * as Ts from './isepic-chess.types';
         initial_fen,
         initial_full_move,
         current_move,
-        text_game,
-        rtn;
-
-      that = this;
-      rtn = '';
+        text_game;
 
       header = _unreferenceP(header); /*! TODO header from _pgnParserHelper()*/
       move_list = that.moveList;
       initial_fen = move_list[0].fen;
       black_starts = move_list[0].colorToPlay === 'b';
 
+      let that_current_move = Number(that!.currentMove);
+      let that_full_move = Number(that!.fullMove);
+
       initial_full_move =
-        that.fullMove -
-        Math.floor((that.currentMove + black_starts - 1) / 2) +
-        Number(black_starts === !(that.currentMove % 2)) -
+        that_full_move -
+        Math.floor((that_current_move + black_starts - 1) / 2) +
+        Number(black_starts === !(that_current_move % 2)) -
         1;
 
       result_tag_ow = _RESULT_ONGOING;
@@ -2405,16 +2397,16 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _uciExport() {
-      var i, len, that, uci_arr, rtn;
+    function _uciExport(): string {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = '';
-      uci_arr = [];
+      let rtn = '';
+      let uci_arr: Ts.UciMove[] = [];
 
-      for (i = 1, len = that.moveList.length; i < len; i++) {
+      for (let i = 1, len = that!.moveList!.length; i < len; i++) {
         //1<len
-        uci_arr.push(that.moveList[i].uci);
+        // @ts-ignore
+        uci_arr.push(String(that?.moveList?.[i]?.uci));
       }
 
       if (uci_arr.length) {
@@ -3497,9 +3489,7 @@ import * as Ts from './isepic-chess.types';
     //!---------------- board (using IcUi)
 
     function _refreshUi(animation_type?, play_sounds?) {
-      var that;
-
-      that = this;
+      let that: Ts.Board = this;
 
       if (_WIN?.IcUi?.refreshUi) {
         _WIN.IcUi.refreshUi.apply(that, [animation_type, play_sounds]);
@@ -3513,9 +3503,7 @@ import * as Ts from './isepic-chess.types';
       public stack: any[];
 
       constructor(woard: string | Ts.Board) {
-        var board;
-
-        board = getBoard(woard);
+        let board = getBoard(woard);
 
         this.board =
           board === null
@@ -3727,7 +3715,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     function isInsideBoard(pvqos: Ts.PreValidatedQos): boolean {
-      let rtn: boolean = false;
+      let rtn = false;
 
       if (typeof pvqos === 'string') {
         rtn = _strToBosHelper(pvqos) !== null;
@@ -3742,7 +3730,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     function sameSquare(pvqos1: Ts.PreValidatedQos, pvqos2: Ts.PreValidatedQos): boolean {
-      let rtn: boolean = false;
+      let rtn = false;
 
       pvqos1 = toBos(pvqos1);
       pvqos2 = toBos(pvqos2);
@@ -3760,14 +3748,12 @@ import * as Ts from './isepic-chess.types';
         b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
       };
 
-      var i, j, fen_board;
-
       if (_isNonBlankStr(fen)) {
-        fen_board = _trimSpaces(fen).split(' ')[0];
+        let fen_board = _trimSpaces(fen).split(' ')[0];
 
-        for (i = _PAWN_W; i <= _KING_W; i++) {
+        for (let i = _PAWN_W; i <= _KING_W; i++) {
           //1...6
-          for (j = 0; j < 2; j++) {
+          for (let j = 0; j < 2; j++) {
             //0...1
             let current_side: Ts.PieceCounts = j ? rtn.w : rtn.b;
             current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
@@ -3778,16 +3764,15 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function removeBoard(woard: string | Ts.Board) {
-      var del_board, del_board_name_cache, rtn;
+    function removeBoard(woard: string | Ts.Board): boolean {
+      let rtn = false;
 
-      rtn = false;
-      del_board = getBoard(woard);
+      let del_board = getBoard(woard);
 
       if (del_board !== null) {
         //if exists
         rtn = true;
-        del_board_name_cache = del_board.boardName;
+        let del_board_name_cache = String(del_board!.boardName);
         del_board = null;
         _BOARDS[del_board_name_cache] = null;
 
@@ -3799,39 +3784,35 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function isEqualBoard(left_woard: string | Ts.Board, right_woard: string | Ts.Board) {
-      var left_board, rtn;
-
-      rtn = false;
+    function isEqualBoard(left_woard: string | Ts.Board, right_woard: string | Ts.Board): boolean {
+      let rtn = false;
 
       block: {
-        left_board = getBoard(left_woard);
+        let left_board = getBoard(left_woard);
 
         if (left_board === null) {
           _consoleLog("[isEqualBoard]: left_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
 
-        rtn = left_board.isEqualBoard(right_woard);
+        rtn = left_board?.isEqualBoard?.(right_woard);
       }
 
       return rtn;
     }
 
-    function cloneBoard(to_woard: string | Ts.Board, from_woard: string | Ts.Board) {
-      var to_board, rtn;
-
-      rtn = false;
+    function cloneBoard(to_woard: string | Ts.Board, from_woard: string | Ts.Board): boolean {
+      let rtn = false;
 
       block: {
-        to_board = getBoard(to_woard);
+        let to_board = getBoard(to_woard);
 
         if (to_board === null) {
           _consoleLog("[cloneBoard]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
 
-        rtn = to_board.cloneBoardFrom(from_woard); //autorefresh (sometimes)
+        rtn = to_board?.cloneBoardFrom?.(from_woard); //autorefresh (sometimes)
       }
 
       return rtn;
@@ -3954,9 +3935,10 @@ import * as Ts from './isepic-chess.types';
 
     //p = {isRotated, promoteTo, skipFenValidation}
     function fenApply(fen?, fn_name?, args?, p?: Ts.OptionalParam): any {
-      var board, board_created, silent_mode_cache, rtn;
+      let rtn = null;
 
-      rtn = null;
+      var board, board_created, silent_mode_cache;
+
       args = _isArray(args) ? args : [];
       p = _unreferenceP(p);
       board_created = false;
@@ -4066,9 +4048,10 @@ import * as Ts from './isepic-chess.types';
 
     //p = {skipFenValidation}
     function fenGet(fen?, props?, p?: Ts.OptionalParam): any {
-      var i, j, len, len2, board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre, rtn;
+      let rtn = null;
 
-      rtn = null;
+      var board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre;
+
       p = _unreferenceP(p);
       board_created = false;
 
@@ -4104,14 +4087,14 @@ import * as Ts from './isepic-chess.types';
 
         rtn_pre = {};
 
-        for (i = 0, len = board_keys.length; i < len; i++) {
+        for (let i = 0, len = board_keys.length; i < len; i++) {
           //0<len
           current_key = _formatName(board_keys[i]);
 
           if (current_key && !rtn_pre[current_key]) {
             invalid_key = true;
 
-            for (j = 0, len2 = _MUTABLE_KEYS.length; j < len2; j++) {
+            for (let j = 0, len2 = _MUTABLE_KEYS.length; j < len2; j++) {
               //0<len2
               if (current_key === _MUTABLE_KEYS[j]) {
                 invalid_key = false;
@@ -4137,7 +4120,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function getBoardNames() {
+    function getBoardNames(): string[] {
       return Object.keys(_BOARDS);
     }
 
