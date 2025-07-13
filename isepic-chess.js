@@ -583,29 +583,12 @@
       return rtn;
     }
     function _cloneBoardToObj(to_obj = {}, from_woard) {
-      var i,
-        j,
-        k,
-        len,
-        len2,
-        len3,
-        current_key,
-        to_prop,
-        from_prop,
-        sub_current_key,
-        sub_from_prop,
-        sub_to_prop,
-        sub_sub_current_key,
-        sub_sub_from_prop,
-        sub_keys,
-        sub_sub_keys,
-        from_board;
       block: {
         if (!_isObject(to_obj)) {
           _consoleLog('[_cloneBoardToObj]: to_obj must be Object type', _ALERT_ERROR);
           break block;
         }
-        from_board = getBoard(from_woard);
+        let from_board = getBoard(from_woard);
         if (from_board === null) {
           _consoleLog("[_cloneBoardToObj]: from_woard doesn't exist", _ALERT_ERROR);
           break block;
@@ -618,10 +601,10 @@
         to_obj.legalUci = [];
         to_obj.legalUciTree = {};
         to_obj.legalRevTree = {};
-        for (i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
-          current_key = _MUTABLE_KEYS[i];
-          to_prop = to_obj[current_key];
-          from_prop = from_board[current_key];
+        for (let i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
+          let current_key = _MUTABLE_KEYS[i];
+          let to_prop = to_obj[current_key];
+          let from_prop = from_board[current_key];
           if (!to_prop && (current_key === 'w' || current_key === 'b' || current_key === 'squares')) {
             to_obj[current_key] = {};
             to_prop = to_obj[current_key];
@@ -652,11 +635,11 @@
             to_prop.castling = from_prop.castling;
             continue;
           }
-          sub_keys = Object.keys(from_prop);
-          for (j = 0, len2 = sub_keys.length; j < len2; j++) {
-            sub_current_key = sub_keys[j];
-            sub_to_prop = to_prop[sub_current_key];
-            sub_from_prop = from_prop[sub_current_key];
+          let sub_keys = Object.keys(from_prop);
+          for (let j = 0, len2 = sub_keys.length; j < len2; j++) {
+            let sub_current_key = sub_keys[j];
+            let sub_to_prop = to_prop[sub_current_key];
+            let sub_from_prop = from_prop[sub_current_key];
             if (!sub_to_prop && current_key === 'squares') {
               to_prop[sub_current_key] = {};
               sub_to_prop = to_prop[sub_current_key];
@@ -691,15 +674,15 @@
               sub_to_prop.isKing = sub_from_prop.isKing;
               continue;
             }
-            sub_sub_keys = Object.keys(sub_from_prop);
+            let sub_sub_keys = Object.keys(sub_from_prop);
             if (current_key === 'moveList' || current_key === 'legalRevTree') {
               to_prop[sub_current_key] = {};
               sub_to_prop = to_prop[sub_current_key];
               /*! NO put a "continue" in here*/
             }
-            for (k = 0, len3 = sub_sub_keys.length; k < len3; k++) {
-              sub_sub_current_key = sub_sub_keys[k];
-              sub_sub_from_prop = sub_from_prop[sub_sub_current_key];
+            for (let k = 0, len3 = sub_sub_keys.length; k < len3; k++) {
+              let sub_sub_current_key = sub_sub_keys[k];
+              let sub_sub_from_prop = sub_from_prop[sub_sub_current_key];
               if (current_key === 'legalRevTree') {
                 sub_to_prop[sub_sub_current_key] = sub_sub_from_prop.slice(0);
                 continue;
@@ -717,16 +700,6 @@
     }
     function _basicFenTest(fen) {
       let rtn_msg = '';
-      var i,
-        j,
-        len,
-        temp,
-        optional_clocks,
-        last_is_num,
-        current_is_num,
-        fen_board,
-        fen_board_arr,
-        total_files_in_current_rank;
       block: {
         fen = String(fen);
         if (fen.length < 20) {
@@ -734,7 +707,7 @@
           break block;
         }
         fen = _trimSpaces(fen);
-        optional_clocks = fen.replace(
+        let optional_clocks = fen.replace(
           /^([rnbqkRNBQK1-8]+\/)([rnbqkpRNBQKP1-8]+\/){6}([rnbqkRNBQK1-8]+)\s[bw]\s(-|K?Q?k?q?)\s(-|[a-h][36])($|\s)/,
           ''
         );
@@ -748,33 +721,33 @@
             break block;
           }
         }
-        fen_board = fen.split(' ')[0];
-        fen_board_arr = fen_board.split('/');
-        for (i = 0; i < 8; i++) {
-          total_files_in_current_rank = 0;
-          last_is_num = false;
-          for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
-            temp = Number(fen_board_arr[i].charAt(j));
-            current_is_num = !!temp;
+        let fen_board = fen.split(' ')[0];
+        let fen_board_arr = fen_board.split('/');
+        for (let i = 0; i < 8; i++) {
+          let total_files_in_current_rank = 0;
+          let last_is_num = false;
+          for (let j = 0, len = fen_board_arr[i].length; j < len; j++) {
+            let current_num_or_nan = Number(fen_board_arr[i].charAt(j));
+            let current_is_num = !!current_num_or_nan;
             if (last_is_num && current_is_num) {
               rtn_msg = 'Error [3] two consecutive numeric values';
               break block;
             }
             last_is_num = current_is_num;
-            total_files_in_current_rank += temp || 1;
+            total_files_in_current_rank += current_num_or_nan || 1;
           }
           if (total_files_in_current_rank !== 8) {
             rtn_msg = 'Error [4] rank without exactly 8 columns';
             break block;
           }
         }
-        temp = fen_board.indexOf('K');
-        if (temp === -1 || fen_board.lastIndexOf('K') !== temp) {
+        let index_w_king = fen_board.indexOf('K');
+        if (index_w_king === -1 || fen_board.lastIndexOf('K') !== index_w_king) {
           rtn_msg = 'Error [5] board without exactly one white king';
           break block;
         }
-        temp = fen_board.indexOf('k');
-        if (temp === -1 || fen_board.lastIndexOf('k') !== temp) {
+        let index_b_king = fen_board.indexOf('k');
+        if (index_b_king === -1 || fen_board.lastIndexOf('k') !== index_b_king) {
           rtn_msg = 'Error [6] board without exactly one black king';
           break block;
         }
@@ -814,7 +787,7 @@
     //!---------------- board
     function _getSquare(qos, p) {
       let that = this;
-      var rtn;
+      let rtn = null;
       function _squareHelper(my_square, is_unreferenced) {
         let rtn_square = my_square;
         if (is_unreferenced) {
@@ -843,7 +816,6 @@
         }
         return rtn_square;
       }
-      rtn = null;
       p = _unreferenceP(p);
       let temp_pos = toPos(qos);
       p.isUnreferenced = p.isUnreferenced === true;
@@ -851,7 +823,7 @@
         let pre_validated_pos = [temp_pos[0] + _toInt(p.rankShift), temp_pos[1] + _toInt(p.fileShift)];
         if (isInsideBoard(pre_validated_pos)) {
           let validated_pos = pre_validated_pos;
-          rtn = _squareHelper(that.squares[toBos(validated_pos) || ''], p.isUnreferenced);
+          rtn = _squareHelper(that.squares[String(toBos(validated_pos) || '')], p.isUnreferenced);
         }
       }
       return rtn;
@@ -889,26 +861,32 @@
       return rtn;
     }
     function _attackersFromActive(target_qos, early_break) {
-      var that, rtn_total_attackers;
-      that = this;
-      that.toggleActiveNonActive();
-      rtn_total_attackers = that.attackersFromNonActive(target_qos, early_break);
-      that.toggleActiveNonActive();
+      let that = this;
+      that?.toggleActiveNonActive?.();
+      let rtn_total_attackers = that?.attackersFromNonActive?.(target_qos, early_break);
+      that?.toggleActiveNonActive?.();
       return rtn_total_attackers;
     }
     function _attackersFromNonActive(target_qos, early_break) {
-      var i, j, that, as_knight, active_side, rtn_total_attackers;
-      that = this;
-      function _isAttacked(qos, piece_direction, as_knight2) {
-        return that.testCollision(_TEST_COLLISION_OP_IS_ATTACKED, qos, piece_direction, as_knight2, null, null)
-          .isAttacked;
+      let that = this;
+      function _isAttacked(qos, piece_direction, as_knight) {
+        let rtn_is_attacked = that?.testCollision?.(
+          _TEST_COLLISION_OP_IS_ATTACKED,
+          qos,
+          piece_direction,
+          as_knight,
+          null,
+          null
+        ).isAttacked;
+        return rtn_is_attacked;
       }
-      rtn_total_attackers = 0;
-      active_side = that[that.activeColor];
-      target_qos = target_qos || active_side.kingBos;
-      outer: for (i = 0; i < 2; i++) {
-        as_knight = !!i;
-        for (j = _DIRECTION_TOP; j <= _DIRECTION_TOP_LEFT; j++) {
+      let rtn_total_attackers = 0;
+      let active_side = that[that.activeColor];
+      let king_bos = active_side.kingBos;
+      target_qos = target_qos || king_bos;
+      outer: for (let i = 0; i < 2; i++) {
+        let as_knight = !!i;
+        for (let j = _DIRECTION_TOP; j <= _DIRECTION_TOP_LEFT; j++) {
           if (_isAttacked(target_qos, j, as_knight)) {
             rtn_total_attackers++;
             if (early_break) {
@@ -920,10 +898,9 @@
       return rtn_total_attackers;
     }
     function _toggleActiveNonActive(new_active) {
-      var that, temp, rtn_changed;
-      that = this;
-      rtn_changed = false;
-      temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
+      let that = this;
+      let rtn_changed = false;
+      let temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
       if ((temp ? 'b' : 'w') !== that.activeColor || (!temp ? 'b' : 'w') !== that.nonActiveColor) {
         rtn_changed = true;
         that.activeColor = temp ? 'b' : 'w';
@@ -932,120 +909,110 @@
       return rtn_changed;
     }
     function _toggleIsRotated(new_is_rotated) {
-      var that, temp, rtn_changed;
-      that = this;
-      rtn_changed = false;
-      temp = typeof new_is_rotated === 'boolean' ? new_is_rotated : !that.isRotated;
+      let that = this;
+      let rtn_changed = false;
+      let temp = typeof new_is_rotated === 'boolean' ? new_is_rotated : !that.isRotated;
       if (temp !== that.isRotated) {
         rtn_changed = true;
         that.isRotated = temp;
-        that.refreshUi(0, false);
+        that?.refreshUi?.(0, false);
       }
       return rtn_changed;
     }
     function _setPromoteTo(qal) {
-      var that, temp, rtn_changed;
-      that = this;
-      rtn_changed = false;
-      temp = _promoteValHelper(qal);
+      let that = this;
+      let rtn_changed = false;
+      let temp = _promoteValHelper(qal);
       if (temp !== that.promoteTo) {
         rtn_changed = true;
         that.promoteTo = temp;
-        that.refreshUi(0, false);
+        that?.refreshUi?.(0, false);
       }
       return rtn_changed;
     }
     function _silentlyResetOptions() {
-      var that;
-      that = this;
+      let that = this;
       that.isHidden = true;
       that.isRotated = false;
-      that.setPromoteTo(_QUEEN_W);
+      that?.setPromoteTo?.(_QUEEN_W);
       that.isHidden = false;
     }
     function _silentlyResetManualResult() {
-      var that, temp;
-      that = this;
-      temp = that.isHidden;
+      let that = this;
+      let temp = that.isHidden;
       that.isHidden = true;
-      that.setManualResult(_RESULT_ONGOING);
+      that?.setManualResult?.(_RESULT_ONGOING);
       that.isHidden = temp;
     }
     function _setManualResult(str) {
-      var that, temp, rtn_changed;
-      that = this;
-      rtn_changed = false;
-      temp = _pgnResultHelper(str) || _RESULT_ONGOING;
+      let that = this;
+      let rtn_changed = false;
+      let temp = _pgnResultHelper(str) || _RESULT_ONGOING;
       if (temp !== that.manualResult) {
         rtn_changed = true;
         that.manualResult = temp;
-        that.refreshUi(0, false);
+        that?.refreshUi?.(0, false);
       }
       return rtn_changed;
     }
     function _setCurrentMove(num, is_goto, is_puzzle_move) {
-      var len, that, temp, diff, rtn_changed;
-      that = this;
-      rtn_changed = false;
+      let that = this;
+      let rtn_changed = false;
       block: {
         if (that.isPuzzleMode && !is_puzzle_move) {
           break block;
         }
-        len = that.moveList.length;
+        let len = that.moveList.length;
         if (len < 2) {
           break block;
         }
+        let that_current_move = Number(that.currentMove);
         if (typeof is_goto !== 'boolean') {
           num = _toInt(num, 0, len - 1);
-          diff = num - that.currentMove;
+          let diff = num - that_current_move;
           is_goto = Math.abs(diff) !== 1;
           num = is_goto ? num : diff;
         }
         num = _toInt(num);
-        temp = _toInt(is_goto ? num : num + that.currentMove, 0, len - 1);
-        if (temp === that.currentMove) {
+        let temp = _toInt(is_goto ? num : num + that_current_move, 0, len - 1);
+        if (temp === that_current_move) {
           break block;
         }
-        that.updateHelper({
+        that?.updateHelper?.({
           currentMove: temp,
+          // @ts-ignore
           fen: that.moveList[temp].fen,
           skipFenValidation: true,
         });
         /*! NO remove skipFenValidation*/
-        that.refreshUi(is_goto ? 0 : num, true);
+        that?.refreshUi?.(is_goto ? 0 : num, true);
         rtn_changed = true;
       }
       return rtn_changed;
     }
     function _navFirst() {
-      var that;
-      that = this;
-      return that.setCurrentMove(0);
+      let that = this;
+      return that?.setCurrentMove?.(0);
     }
     function _navPrevious() {
-      var that;
-      that = this;
-      return that.setCurrentMove(that.currentMove - 1);
+      let that = this;
+      return that?.setCurrentMove?.(Number(that.currentMove) - 1);
     }
     function _navNext() {
-      var that;
-      that = this;
-      return that.setCurrentMove(that.currentMove + 1);
+      let that = this;
+      return that?.setCurrentMove?.(Number(that.currentMove) + 1);
     }
     function _navLast() {
-      var that;
-      that = this;
-      return that.setCurrentMove(that.moveList.length - 1);
+      let that = this;
+      return that?.setCurrentMove?.(Number(that.moveList.length) - 1);
     }
     function _navLinkMove(move_index) {
-      var that;
-      that = this;
-      return that.setCurrentMove(move_index);
+      let that = this;
+      return that?.setCurrentMove?.(move_index);
     }
     function _loadFen(fen, p) {
-      var that, temp, hash_cache, rtn_changed;
-      that = this;
-      rtn_changed = false;
+      let that = this;
+      let rtn_changed = false;
       p = _unreferenceP(p);
       block: {
         if (that.isPuzzleMode) {
@@ -1053,8 +1020,8 @@
         }
         p.skipFenValidation = p.skipFenValidation === true;
         p.keepOptions = p.keepOptions === true;
-        hash_cache = that.boardHash();
-        temp = that.updateHelper({
+        let hash_cache = that?.boardHash?.();
+        let temp = that?.updateHelper?.({
           currentMove: 0,
           fen,
           skipFenValidation: p.skipFenValidation,
@@ -1065,53 +1032,55 @@
           _consoleLog('[_loadFen]: bad FEN', _ALERT_ERROR);
           break block;
         }
-        that.silentlyResetManualResult();
-        if (that.boardHash() !== hash_cache) {
+        that?.silentlyResetManualResult?.();
+        if (that?.boardHash?.() !== hash_cache) {
           rtn_changed = true;
-          that.refreshUi(0, false);
+          that?.refreshUi?.(0, false);
         }
       }
       return rtn_changed;
     }
     function _loadValidatedFen(fen) {
-      var i, j, len, that, fen_parts, current_file, current_char, fen_board_arr, skip_files;
-      that = this;
-      for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-          that.setSquare([i, j], _EMPTY_SQR);
+      let that = this;
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          that?.setSquare?.([i, j], _EMPTY_SQR);
         }
       }
       fen = _trimSpaces(fen);
-      fen_parts = fen.split(' ');
-      fen_board_arr = fen_parts[0].split('/');
-      for (i = 0; i < 8; i++) {
-        current_file = 0;
-        for (j = 0, len = fen_board_arr[i].length; j < len; j++) {
-          current_char = fen_board_arr[i].charAt(j);
-          skip_files = Number(current_char);
-          if (!skip_files) {
-            that.setSquare([i, current_file], current_char);
+      let fen_parts = fen.split(' ');
+      let fen_board_arr = fen_parts[0].split('/');
+      for (let i = 0; i < 8; i++) {
+        let current_file = 0;
+        for (let j = 0, len = fen_board_arr[i].length; j < len; j++) {
+          let current_char = fen_board_arr[i].charAt(j);
+          let current_num_or_nan = Number(current_char);
+          if (!current_num_or_nan) {
+            that?.setSquare?.([i, current_file], current_char);
           }
-          current_file += skip_files || 1;
+          current_file += current_num_or_nan || 1;
         }
       }
-      that.w.castling =
+      let castling_w_rights =
         (_strContains(fen_parts[2], 'K') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'Q') ? _LONG_CASTLE : 0);
-      that.b.castling =
+      that.w.castling = castling_w_rights;
+      let castling_b_rights =
         (_strContains(fen_parts[2], 'k') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'q') ? _LONG_CASTLE : 0);
-      that.enPassantBos = fen_parts[3].replace('-', '');
-      that.toggleActiveNonActive(fen_parts[1] === 'b');
+      that.b.castling = castling_b_rights;
+      let en_passant_bos = fen_parts[3].replace('-', '');
+      that.enPassantBos = en_passant_bos;
+      that?.toggleActiveNonActive?.(fen_parts[1] === 'b');
       that.halfMove = Number(fen_parts[4]) || 0;
       that.fullMove = Number(fen_parts[5]) || 1;
     }
     function _getClocklessFenHelper() {
-      var i, j, that, current_square, consecutive_empty_squares;
-      that = this;
+      let that = this;
+      let rtn = '';
       let fen_board = '';
-      for (i = 0; i < 8; i++) {
-        consecutive_empty_squares = 0;
-        for (j = 0; j < 8; j++) {
-          current_square = that.getSquare([i, j]);
+      for (let i = 0; i < 8; i++) {
+        let consecutive_empty_squares = 0;
+        for (let j = 0; j < 8; j++) {
+          let current_square = that?.getSquare?.([i, j]);
           if (!current_square.isEmptySquare) {
             fen_board += (consecutive_empty_squares || '') + current_square.bal;
             consecutive_empty_squares = -1;
@@ -1120,22 +1089,16 @@
         }
         fen_board += (consecutive_empty_squares || '') + (i !== 7 ? '/' : '');
       }
-      let rtn = fen_board;
+      rtn += fen_board;
       rtn += ' ' + that.activeColor;
-      rtn += ' ' + (_castlingChars(that.w.castling).toUpperCase() + '' + _castlingChars(that.b.castling) || '-');
+      rtn += ' ' + (_castlingChars(that?.w?.castling).toUpperCase() + '' + _castlingChars(that?.b?.castling) || '-');
       rtn += ' ' + (that.enPassantBos || '-');
       return rtn;
     }
     function _updateFenAndMisc(sliced_fen_history) {
-      var i,
-        j,
-        k,
-        m,
-        len,
-        that,
-        temp,
+      let that = this;
+      let temp,
         temp2,
-        current_diff,
         from_bos,
         to_bos,
         can_en_passant,
@@ -1143,28 +1106,28 @@
         bishop_count,
         at_least_one_light,
         at_least_one_dark;
-      that = this;
-      that.checks = that.attackersFromNonActive(null);
+      that.checks = that?.attackersFromNonActive?.(null);
       that.isCheck = !!that.checks;
       /*! NO move below legalMovesHelper()*/
       that.legalUci = [];
       that.legalUciTree = {};
       that.legalRevTree = {};
-      for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-          temp = that.legalMovesHelper([i, j]);
-          len = temp.uciMoves.length;
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          let temp3 = that?.legalMovesHelper?.([i, j]);
+          let len = temp3.uciMoves.length;
           if (!len) {
             continue;
           }
           from_bos = toBos([i, j]);
           that.legalUciTree[from_bos] = [];
-          for (k = 0; k < len; k++) {
-            temp2 = temp.uciMoves[k];
-            if (temp.isPromotion) {
-              for (m = _KNIGHT_W; m <= _QUEEN_W; m++) {
-                that.legalUci.push(temp2 + toBal(m).toLowerCase());
-                that.legalUciTree[from_bos].push(temp2 + toBal(m).toLowerCase());
+          for (let k = 0; k < len; k++) {
+            temp2 = temp3.uciMoves[k];
+            if (temp3.isPromotion) {
+              for (let m = _KNIGHT_W; m <= _QUEEN_W; m++) {
+                let uci_promotion_move = temp2 + toBal(m).toLowerCase();
+                that.legalUci.push(uci_promotion_move);
+                that.legalUciTree[from_bos].push(uci_promotion_move);
               }
             } else {
               that.legalUci.push(temp2);
@@ -1174,10 +1137,10 @@
             if (!that.legalRevTree[to_bos]) {
               that.legalRevTree[to_bos] = {};
             }
-            if (!that.legalRevTree[to_bos][temp.piece]) {
-              that.legalRevTree[to_bos][temp.piece] = [];
+            if (!that.legalRevTree[to_bos][temp3.piece]) {
+              that.legalRevTree[to_bos][temp3.piece] = [];
             }
-            that.legalRevTree[to_bos][temp.piece].push(from_bos);
+            that.legalRevTree[to_bos][temp3.piece].push(from_bos);
           }
         }
       }
@@ -1185,20 +1148,20 @@
       that.isStalemate = !that.isCheck && !that.legalUci.length;
       if (that.enPassantBos) {
         can_en_passant = false;
-        if (that.legalRevTree[that.enPassantBos] && that.legalRevTree[that.enPassantBos]['p']) {
+        if (that.legalRevTree[that.enPassantBos] && that?.legalRevTree?.[String(that.enPassantBos)]['p']) {
           can_en_passant = true;
         }
         if (!can_en_passant) {
           that.enPassantBos = '';
         }
       }
-      let clockless_fen = that.getClocklessFenHelper();
+      let clockless_fen = that?.getClocklessFenHelper?.();
       that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
       that.isThreefold = false;
-      if (sliced_fen_history || (that.moveList && that.currentMove > 7 && that.halfMove > 7)) {
+      if (sliced_fen_history || (that.moveList && Number(that.currentMove) > 7 && Number(that.halfMove) > 7)) {
         times_found = 1;
-        temp = sliced_fen_history || that.fenHistoryExport();
-        i = sliced_fen_history ? sliced_fen_history.length - 1 : that.currentMove - 1;
+        temp = sliced_fen_history || that?.fenHistoryExport?.();
+        let i = sliced_fen_history ? sliced_fen_history.length - 1 : Number(that.currentMove) - 1;
         for (; i >= 0; i--) {
           temp2 = temp[i].split(' ');
           if (temp2.slice(0, 4).join(' ') === clockless_fen) {
@@ -1228,7 +1191,7 @@
         if (total_pieces.w.n + total_pieces.b.n) {
           that.isInsufficientMaterial = total_pieces.w.n + total_pieces.b.n + total_pieces.w.b + total_pieces.b.b === 1;
         } else if (total_pieces.w.b + total_pieces.b.b) {
-          bishop_count = that.countLightDarkBishops();
+          bishop_count = that?.countLightDarkBishops?.();
           at_least_one_light = !!(bishop_count.w.lightSquaredBishops + bishop_count.b.lightSquaredBishops);
           at_least_one_dark = !!(bishop_count.w.darkSquaredBishops + bishop_count.b.darkSquaredBishops);
           that.isInsufficientMaterial = at_least_one_light !== at_least_one_dark;
@@ -1236,66 +1199,49 @@
           that.isInsufficientMaterial = true;
         }
       }
-      that.isFiftyMove = that.halfMove >= 100;
+      that.isFiftyMove = Number(that.halfMove) >= 100;
       that.inDraw =
         !that.isCheckmate && (that.isStalemate || that.isThreefold || that.isInsufficientMaterial || that.isFiftyMove);
       that.w.materialDiff = [];
       that.b.materialDiff = [];
-      for (i = _PAWN_W; i <= _KING_W; i++) {
+      for (let i = _PAWN_W; i <= _KING_W; i++) {
         temp = toBal(-i);
-        current_diff = total_pieces.w[temp] - total_pieces.b[temp];
-        for (j = 0, len = Math.abs(current_diff); j < len; j++) {
+        let current_diff = total_pieces.w[temp] - total_pieces.b[temp];
+        for (let j = 0, len = Math.abs(current_diff); j < len; j++) {
           if (current_diff > 0) {
-            that.w.materialDiff.push(i);
+            let w_piece_val = i;
+            that.w.materialDiff.push(w_piece_val);
           } else {
-            that.b.materialDiff.push(-i);
+            let b_piece_val = -i;
+            that.b.materialDiff.push(b_piece_val);
           }
         }
       }
     }
     function _refinedFenTest() {
-      var i,
-        j,
-        k,
-        that,
-        temp,
-        en_passant_square,
-        behind_ep_val,
-        infront_ep_is_empty,
-        bishop_count,
-        fen_board,
-        total_pawns_in_current_file,
-        min_captured,
-        active_side,
-        non_active_side,
-        current_side,
-        current_other_side,
-        current_bishop_count,
-        current_promoted_count,
-        rtn_msg;
-      that = this;
-      rtn_msg = '';
+      let that = this;
+      let rtn_msg = '';
       block: {
-        active_side = that[that.activeColor];
-        non_active_side = that[that.nonActiveColor];
-        if (that.halfMove - active_side.isBlack + 1 >= that.fullMove * 2) {
+        let active_side = that[String(that.activeColor)];
+        let non_active_side = that[String(that.nonActiveColor)];
+        if (Number(that.halfMove) - active_side.isBlack + 1 >= Number(that.fullMove) * 2) {
           rtn_msg = 'Error [0] exceeding half moves ratio';
           break block;
         }
-        if (that.checks > 2) {
+        if (Number(that.checks) > 2) {
           rtn_msg = 'Error [1] king is checked more times than possible';
           break block;
         }
-        if (that.attackersFromActive(null, true)) {
+        if (that?.attackersFromActive?.(null, true)) {
           rtn_msg = 'Error [2] non-active king in check';
           break block;
         }
         if (that.enPassantBos) {
-          en_passant_square = that.getSquare(that.enPassantBos);
-          infront_ep_is_empty = that.getSquare(en_passant_square, {
+          let en_passant_square = that?.getSquare?.(that.enPassantBos);
+          let infront_ep_is_empty = that?.getSquare?.(en_passant_square, {
             rankShift: active_side.singlePawnRankShift,
           }).isEmptySquare;
-          behind_ep_val = that.getSquare(en_passant_square, {
+          let behind_ep_val = that?.getSquare?.(en_passant_square, {
             rankShift: non_active_side.singlePawnRankShift,
           }).val;
           if (
@@ -1309,23 +1255,23 @@
             break block;
           }
         }
-        let total_pieces = countPieces(that.fen);
-        bishop_count = that.countLightDarkBishops();
-        for (i = 0; i < 2; i++) {
-          current_side = i ? total_pieces.b : total_pieces.w;
-          current_other_side = i ? total_pieces.w : total_pieces.b;
-          current_bishop_count = i ? bishop_count.b : bishop_count.w;
+        let total_pieces = countPieces(String(that.fen));
+        let bishop_count = that?.countLightDarkBishops?.();
+        for (let i = 0; i < 2; i++) {
+          let current_side = i ? total_pieces.b : total_pieces.w;
+          let current_other_side = i ? total_pieces.w : total_pieces.b;
+          let current_bishop_count = i ? bishop_count.b : bishop_count.w;
           if (current_side.p > 8) {
             rtn_msg = 'Error [' + (i + 4) + '] more than 8 pawns';
             break block;
           }
-          current_promoted_count =
+          let current_promoted_count =
             Math.max(current_side.n - 2, 0) +
             Math.max(current_bishop_count.lightSquaredBishops - 1, 0) +
             Math.max(current_bishop_count.darkSquaredBishops - 1, 0) +
             Math.max(current_side.r - 2, 0) +
             Math.max(current_side.q - 1, 0);
-          temp =
+          let temp =
             current_other_side.p +
             current_other_side.n +
             current_other_side.b +
@@ -1341,17 +1287,17 @@
             break block;
           }
         }
-        fen_board = that.fen.split(' ')[0];
-        for (i = 0; i < 2; i++) {
-          current_side = i ? that.b : that.w;
-          min_captured = 0;
-          for (j = 0; j < 8; j++) {
-            total_pawns_in_current_file = 0;
-            for (k = 0; k < 8; k++) {
-              total_pawns_in_current_file += that.getSquare([k, j]).val === current_side.pawn;
+        let fen_board = that.fen.split(' ')[0];
+        for (let i = 0; i < 2; i++) {
+          let current_side = i ? that.b : that.w;
+          let min_captured = 0;
+          for (let j = 0; j < 8; j++) {
+            let total_pawns_in_current_file = 0;
+            for (let k = 0; k < 8; k++) {
+              total_pawns_in_current_file += Number(that?.getSquare?.([k, j]).val === current_side.pawn);
             }
             if (total_pawns_in_current_file > 1) {
-              temp = j === 0 || j === 7 ? [1, 3, 6, 10, 99] : [1, 2, 4, 6, 9];
+              let temp = j === 0 || j === 7 ? [1, 3, 6, 10, 99] : [1, 2, 4, 6, 9];
               min_captured += temp[total_pawns_in_current_file - 2];
             }
           }
@@ -1360,31 +1306,31 @@
             break block;
           }
         }
-        for (i = 0; i < 2; i++) {
-          current_side = i ? that.b : that.w;
+        for (let i = 0; i < 2; i++) {
+          let current_side = i ? that.b : that.w;
           if (!current_side.castling) {
             continue;
           }
-          temp = {
+          let temp = {
             completeActiveColor: i ? 'black' : 'white',
             originalKingBos: i ? 'e8' : 'e1',
             originalLongRookBos: i ? 'a8' : 'a1',
             originalShortRookBos: i ? 'h8' : 'h1',
           };
-          if (that.getSquare(temp.originalKingBos).val !== current_side.king) {
+          if (that?.getSquare?.(temp.originalKingBos).val !== current_side.king) {
             rtn_msg = 'Error [11] ' + temp.completeActiveColor + ' castling rights without king in original square';
             break block;
           }
           if (
             current_side.castling !== _LONG_CASTLE &&
-            that.getSquare(temp.originalShortRookBos).val !== current_side.rook
+            that?.getSquare?.(temp.originalShortRookBos).val !== current_side.rook
           ) {
             rtn_msg = 'Error [12] ' + temp.completeActiveColor + ' short castling rights with missing H-file rook';
             break block;
           }
           if (
             current_side.castling !== _SHORT_CASTLE &&
-            that.getSquare(temp.originalLongRookBos).val !== current_side.rook
+            that?.getSquare?.(temp.originalLongRookBos).val !== current_side.rook
           ) {
             rtn_msg = 'Error [13] ' + temp.completeActiveColor + ' long castling rights with missing A-file rook';
             break block;
@@ -1394,19 +1340,18 @@
       return rtn_msg;
     }
     function _testCollision(op, initial_qos, piece_direction, as_knight, max_shifts, allow_capture) {
-      var i, that, current_square, rank_change, file_change, active_side, rtn;
-      that = this;
-      rtn = {
+      let that = this;
+      let rtn = {
         candidateMoves: [],
         isAttacked: false,
       };
-      active_side = that[that.activeColor];
+      let active_side = that[String(that.activeColor)];
       piece_direction = _toInt(piece_direction, 1, 8);
-      rank_change = (as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction - 1];
-      file_change = (as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction - 1];
       max_shifts = _toInt(as_knight ? 1 : max_shifts || 7);
-      for (i = 0; i < max_shifts; i++) {
-        current_square = that.getSquare(initial_qos, {
+      let rank_change = (as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction - 1];
+      let file_change = (as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction - 1];
+      for (let i = 0; i < max_shifts; i++) {
+        let current_square = that?.getSquare?.(initial_qos, {
           rankShift: rank_change * (i + 1),
           fileShift: file_change * (i + 1),
         });
@@ -1461,11 +1406,16 @@
       return rtn;
     }
     function _legalMovesHelper(target_qos) {
+      let that = this;
+      let rtn = {
+        uciMoves: [],
+        piece: '',
+        isPromotion: false,
+      };
       var i,
         j,
         len,
         len2,
-        that,
         temp,
         temp2,
         current_cached_square,
@@ -1476,11 +1426,9 @@
         en_passant_capturable_cached_square,
         piece_directions,
         active_side,
-        non_active_side,
-        rtn;
-      that = this;
+        non_active_side;
       function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture) {
-        return that.testCollision(
+        let rtn_candidate_moves = that?.testCollision?.(
           _TEST_COLLISION_OP_CANDIDATE_MOVES,
           qos,
           piece_direction,
@@ -1488,21 +1436,17 @@
           max_shifts,
           allow_capture
         ).candidateMoves;
+        return rtn_candidate_moves;
       }
-      rtn = {
-        uciMoves: [],
-        piece: '',
-        isPromotion: false,
-      };
       block: {
-        target_cached_square = that.getSquare(target_qos, {
+        target_cached_square = that?.getSquare?.(target_qos, {
           isUnreferenced: true,
         });
         if (target_cached_square === null) {
           break block;
         }
-        active_side = that[that.activeColor];
-        non_active_side = that[that.nonActiveColor];
+        active_side = that[String(that.activeColor)];
+        non_active_side = that[String(that.nonActiveColor)];
         if (target_cached_square.isEmptySquare || target_cached_square.sign === non_active_side.sign) {
           break block;
         }
@@ -1510,6 +1454,7 @@
         en_passant_capturable_cached_square = null;
         is_promotion = false;
         rtn.piece = target_cached_square.bal.toLowerCase();
+        let en_passant_bos = that.enPassantBos;
         if (target_cached_square.isKing) {
           for (i = _DIRECTION_TOP; i <= _DIRECTION_TOP_LEFT; i++) {
             temp = _candidateMoves(target_cached_square, i, false, 1, true);
@@ -1535,14 +1480,14 @@
                 continue;
               }
               if (
-                that.attackersFromNonActive(
-                  that.getSquare(target_cached_square, { fileShift: temp2.singleFileShift }),
+                that?.attackersFromNonActive?.(
+                  that?.getSquare?.(target_cached_square, { fileShift: temp2.singleFileShift }),
                   true
                 )
               ) {
                 continue;
               }
-              temp = that.getSquare(target_cached_square, {
+              temp = that?.getSquare?.(target_cached_square, {
                 fileShift: temp2.singleFileShift * 2,
               });
               pseudo_legal_arr.push([temp]);
@@ -1561,14 +1506,14 @@
             pseudo_legal_arr.push(temp);
           }
           for (i = 0; i < 2; i++) {
-            current_diagonal_square = that.getSquare(target_cached_square, {
+            current_diagonal_square = that?.getSquare?.(target_cached_square, {
               rankShift: active_side.singlePawnRankShift,
               fileShift: i ? -1 : 1,
             });
             if (current_diagonal_square === null) {
               continue;
             }
-            temp = sameSquare(current_diagonal_square, that.enPassantBos);
+            temp = sameSquare(current_diagonal_square, en_passant_bos);
             if (
               temp ||
               (current_diagonal_square.sign !== active_side.sign &&
@@ -1578,7 +1523,7 @@
               pseudo_legal_arr.push([current_diagonal_square]);
             }
             if (temp) {
-              en_passant_capturable_cached_square = that.getSquare(current_diagonal_square, {
+              en_passant_capturable_cached_square = that?.getSquare?.(current_diagonal_square, {
                 rankShift: non_active_side.singlePawnRankShift,
                 isUnreferenced: true,
               });
@@ -1607,23 +1552,23 @@
         }
         for (i = 0, len = pseudo_legal_arr.length; i < len; i++) {
           for (j = 0, len2 = pseudo_legal_arr[i].length; j < len2; j++) {
-            current_cached_square = that.getSquare(pseudo_legal_arr[i][j], {
+            current_cached_square = that?.getSquare?.(pseudo_legal_arr[i][j], {
               isUnreferenced: true,
             });
-            that.setSquare(current_cached_square, target_cached_square.val);
-            that.setSquare(target_cached_square, _EMPTY_SQR);
+            that?.setSquare?.(current_cached_square, target_cached_square.val);
+            that?.setSquare?.(target_cached_square, _EMPTY_SQR);
             if (en_passant_capturable_cached_square !== null) {
-              if (sameSquare(current_cached_square, that.enPassantBos)) {
-                that.setSquare(en_passant_capturable_cached_square, _EMPTY_SQR);
+              if (sameSquare(current_cached_square, en_passant_bos)) {
+                that?.setSquare?.(en_passant_capturable_cached_square, _EMPTY_SQR);
               }
             }
-            if (!that.attackersFromNonActive(null, true)) {
+            if (!that?.attackersFromNonActive?.(null, true)) {
               rtn.uciMoves.push(target_cached_square.bos + current_cached_square.bos);
             }
-            that.setSquare(current_cached_square, current_cached_square.val);
-            that.setSquare(target_cached_square, target_cached_square.val);
+            that?.setSquare?.(current_cached_square, current_cached_square.val);
+            that?.setSquare?.(target_cached_square, target_cached_square.val);
             if (en_passant_capturable_cached_square !== null) {
-              that.setSquare(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
+              that?.setSquare?.(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
             }
           }
         }
@@ -1702,26 +1647,22 @@
       return rtn;
     }
     function _legalFenMoves(target_qos) {
-      var that;
-      that = this;
-      return that.legalMoves(target_qos, { returnType: 'fen' });
+      let that = this;
+      return that?.legalMoves?.(target_qos, { returnType: 'fen' });
     }
     function _legalSanMoves(target_qos) {
-      var that;
-      that = this;
-      return that.legalMoves(target_qos, { returnType: 'san' });
+      let that = this;
+      return that?.legalMoves?.(target_qos, { returnType: 'san' });
     }
     function _legalUciMoves(target_qos) {
-      var that;
-      that = this;
-      return that.legalMoves(target_qos, { returnType: 'uci' });
+      let that = this;
+      return that?.legalMoves?.(target_qos, { returnType: 'uci' });
     }
     function _isLegalMove(mov, p) {
-      var that, wrapped_move, legal_uci_in_bos, rtn;
-      that = this;
-      rtn = false;
+      let that = this;
+      let rtn = false;
       block: {
-        wrapped_move = that.getWrappedMove(mov, p);
+        let wrapped_move = that?.getWrappedMove?.(mov, p);
         if (wrapped_move === null) {
           break block;
         }
@@ -1729,7 +1670,7 @@
           rtn = true;
           break block;
         }
-        legal_uci_in_bos = that.legalUciTree[wrapped_move.fromBos];
+        let legal_uci_in_bos = that?.legalUciTree?.[wrapped_move.fromBos];
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
         }
@@ -1739,11 +1680,10 @@
       return rtn;
     }
     function _getCheckmateMoves(early_break) {
-      var i, len, that, temp, rtn;
-      that = this;
-      rtn = [];
-      outer: for (i = 0, len = that.legalUci.length; i < len; i++) {
-        temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
+      let that = this;
+      let rtn = [];
+      outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
+        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
         if (temp.moveResult && !temp.canDraw) {
           rtn.push(temp.uci);
           if (early_break) {
@@ -1754,11 +1694,10 @@
       return rtn;
     }
     function _getDrawMoves(early_break) {
-      var i, len, that, temp, rtn;
-      that = this;
-      rtn = [];
-      outer: for (i = 0, len = that.legalUci.length; i < len; i++) {
-        temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
+      let that = this;
+      let rtn = [];
+      outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
+        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
         if (temp.canDraw) {
           rtn.push(temp.uci);
           if (early_break) {
@@ -1769,19 +1708,19 @@
       return rtn;
     }
     function _fenHistoryExport() {
-      var i, len, that, rtn;
-      that = this;
-      rtn = [];
-      for (i = 0, len = that.moveList.length; i < len; i++) {
-        rtn.push(that.moveList[i].fen);
+      let that = this;
+      let rtn = [];
+      for (let i = 0, len = that.moveList.length; i < len; i++) {
+        rtn.push(String(that?.moveList?.[i]?.fen));
       }
       return rtn;
     }
     function _pgnExport() {
+      let that = this;
+      let rtn = '';
       /*! TODO p options: remove comments, max line len, tag white-list*/
       var i,
         len,
-        that,
         header,
         ordered_tags,
         result_tag_ow,
@@ -1790,19 +1729,18 @@
         initial_fen,
         initial_full_move,
         current_move,
-        text_game,
-        rtn;
-      that = this;
-      rtn = '';
+        text_game;
       header = _unreferenceP(header);
       /*! TODO header from _pgnParserHelper()*/
       move_list = that.moveList;
       initial_fen = move_list[0].fen;
       black_starts = move_list[0].colorToPlay === 'b';
+      let that_current_move = Number(that.currentMove);
+      let that_full_move = Number(that.fullMove);
       initial_full_move =
-        that.fullMove -
-        Math.floor((that.currentMove + black_starts - 1) / 2) +
-        Number(black_starts === !(that.currentMove % 2)) -
+        that_full_move -
+        Math.floor((that_current_move + black_starts - 1) / 2) +
+        Number(black_starts === !(that_current_move % 2)) -
         1;
       result_tag_ow = _RESULT_ONGOING;
       text_game = '';
@@ -1858,12 +1796,11 @@
       return rtn;
     }
     function _uciExport() {
-      var i, len, that, uci_arr, rtn;
-      that = this;
-      rtn = '';
-      uci_arr = [];
-      for (i = 1, len = that.moveList.length; i < len; i++) {
-        uci_arr.push(that.moveList[i].uci);
+      let that = this;
+      let rtn = '';
+      let uci_arr = [];
+      for (let i = 1, len = that.moveList.length; i < len; i++) {
+        uci_arr.push(String(that?.moveList?.[i]?.uci));
       }
       if (uci_arr.length) {
         rtn = uci_arr.join(' ');
@@ -1871,14 +1808,13 @@
       return rtn;
     }
     function _ascii(is_rotated) {
-      var i, j, that, bottom_label, current_square, rtn;
-      that = this;
+      let that = this;
+      let rtn = '   +------------------------+\n';
+      let bottom_label = '';
       is_rotated = typeof is_rotated === 'boolean' ? is_rotated : that.isRotated;
-      rtn = '   +------------------------+\n';
-      bottom_label = '';
-      for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-          current_square = that.getSquare(is_rotated ? [7 - i, 7 - j] : [i, j]);
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          let current_square = that?.getSquare?.(is_rotated ? [7 - i, 7 - j] : [i, j]);
           rtn += j ? '' : ' ' + current_square.rankBos + ' |';
           rtn += ' ' + current_square.bal.replace('*', '.') + ' ';
           rtn += j === 7 ? '|\n' : '';
@@ -1890,73 +1826,68 @@
       return rtn;
     }
     function _boardHash() {
-      var i, len, that, temp;
-      that = this;
-      temp = '';
-      for (i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
+      let that = this;
+      let temp = '';
+      for (let i = 0, len = _MUTABLE_KEYS.length; i < len; i++) {
         temp += JSON.stringify(that[_MUTABLE_KEYS[i]]);
       }
       return _hashCode(temp);
     }
     function _isEqualBoard(to_woard) {
-      var that, to_board, rtn;
-      that = this;
-      rtn = false;
+      let that = this;
+      let rtn = false;
       block: {
-        to_board = getBoard(to_woard);
+        let to_board = getBoard(to_woard);
         if (to_board === null) {
           _consoleLog("[_isEqualBoard]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        rtn = that === to_board || that.boardHash() === to_board.boardHash();
+        rtn = that === to_board || that?.boardHash?.() === to_board?.boardHash?.();
       }
       return rtn;
     }
     function _cloneBoardFrom(from_woard) {
-      var that, hash_cache, rtn_changed;
-      that = this;
-      hash_cache = that.boardHash();
-      rtn_changed = false;
+      let that = this;
+      let rtn_changed = false;
+      let hash_cache = that?.boardHash?.();
       _cloneBoardToObj(that, from_woard);
-      if (that.boardHash() !== hash_cache) {
+      if (that?.boardHash?.() !== hash_cache) {
         rtn_changed = true;
-        that.refreshUi(0, false);
+        that?.refreshUi?.(0, false);
       }
       return rtn_changed;
     }
     function _cloneBoardTo(to_woard) {
-      var that, hash_cache, to_board, rtn_changed;
-      that = this;
-      rtn_changed = false;
+      let that = this;
+      let rtn_changed = false;
       block: {
-        to_board = getBoard(to_woard);
+        let to_board = getBoard(to_woard);
         if (to_board === null) {
           _consoleLog("[_cloneBoardTo]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        hash_cache = to_board.boardHash();
+        let hash_cache = to_board?.boardHash?.();
         _cloneBoardToObj(to_board, that);
-        if (to_board.boardHash() !== hash_cache) {
+        if (to_board?.boardHash?.() !== hash_cache) {
           rtn_changed = true;
-          to_board.refreshUi(0, false);
+          to_board?.refreshUi?.(0, false);
         }
       }
       return rtn_changed;
     }
     function _reset(keep_options) {
-      var that;
-      that = this;
-      return that.loadFen(_DEFAULT_FEN, {
+      let that = this;
+      let rtn = that?.loadFen?.(_DEFAULT_FEN, {
         skipFenValidation: true,
         keepOptions: keep_options,
       });
+      return rtn;
     }
     function _undoMove() {
-      var that, temp, rtn;
-      that = this;
-      rtn = null;
+      let that = this;
+      let rtn = null;
       block: {
-        temp = that.undoMoves(1);
+        let temp = that?.undoMoves?.(1);
         if (temp.length !== 1) {
           break block;
         }
@@ -1965,50 +1896,49 @@
       return rtn;
     }
     function _undoMoves(decrease_by) {
-      var i, that, temp, hash_cache, rtn;
-      that = this;
-      rtn = [];
+      let that = this;
+      let rtn = [];
       block: {
         if (that.isPuzzleMode) {
           break block;
         }
-        if (that.moveList.length < 2) {
+        if (Number(that.moveList.length) < 2) {
           break block;
         }
         if (!decrease_by && decrease_by !== 0) {
           decrease_by = Infinity;
         }
-        decrease_by = _toInt(decrease_by, 0, that.moveList.length - 1);
+        decrease_by = _toInt(decrease_by, 0, Number(that.moveList.length) - 1);
         if (!decrease_by) {
           break block;
         }
-        hash_cache = that.boardHash();
-        temp = that.isHidden;
+        let hash_cache = that?.boardHash?.();
+        let temp = that.isHidden;
         that.isHidden = true;
-        that.navLinkMove(Math.min(that.moveList.length - decrease_by - 1, that.currentMove));
+        that?.navLinkMove?.(Math.min(Number(that.moveList.length) - decrease_by - 1, Number(that.currentMove)));
         that.isHidden = temp;
         rtn = new Array(decrease_by);
-        for (i = 0; i < decrease_by; i++) {
-          rtn[decrease_by - i - 1] = _unreferencedMoveHelper(that.moveList[that.moveList.length - i - 1]);
+        for (let i = 0; i < decrease_by; i++) {
+          let move = that.moveList?.[Number(that.moveList.length) - i - 1];
+          rtn[decrease_by - i - 1] = _unreferencedMoveHelper(move);
         }
         that.moveList = that.moveList.slice(0, -decrease_by);
-        if (that.boardHash() !== hash_cache) {
-          that.silentlyResetManualResult();
-          that.refreshUi(0, false);
+        if (that?.boardHash?.() !== hash_cache) {
+          that?.silentlyResetManualResult?.();
+          that?.refreshUi?.(0, false);
         }
       }
       return rtn;
     }
     function _countLightDarkBishops() {
+      let that = this;
       let rtn = {
         w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
         b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
       };
-      var i, j, that, current_square;
-      that = this;
-      for (i = 0; i < 8; i++) {
-        for (j = 0; j < 8; j++) {
-          current_square = that.getSquare([i, j]);
+      for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+          let current_square = that?.getSquare?.([i, j]);
           if (current_square.isBishop) {
             let current_side = current_square.sign > 0 ? rtn.w : rtn.b;
             if ((i + j) % 2) {
@@ -2022,16 +1952,15 @@
       return rtn;
     }
     function _updateHelper(obj) {
-      var that, temp, fen_was_valid, rtn;
-      that = this;
-      rtn = false;
+      let that = this;
+      let rtn = false;
       block: {
         if (!_isObject(obj)) {
           _consoleLog('[_updateHelper]: wrong input type', _ALERT_ERROR);
           break block;
         }
         if (obj.fen) {
-          fen_was_valid = obj.skipFenValidation || isLegalFen(obj.fen);
+          let fen_was_valid = obj.skipFenValidation || isLegalFen(obj.fen);
           if (!fen_was_valid) {
             _consoleLog('[_updateHelper]: bad FEN', _ALERT_ERROR);
             break block;
@@ -2039,13 +1968,13 @@
         }
         that.currentMove = _toInt(obj.currentMove);
         if (obj.fen) {
-          that.loadValidatedFen(obj.fen);
+          that?.loadValidatedFen?.(obj.fen);
         }
-        that.updateFenAndMisc(obj.slicedFenHistory);
+        that?.updateFenAndMisc?.(obj.slicedFenHistory);
         if (obj.resetMoveList) {
-          temp = '';
+          let temp = '';
           if (that.isCheckmate) {
-            temp = that[that.activeColor].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
+            temp = that[String(that.activeColor)].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
           } else if (that.isStalemate) {
             temp = _RESULT_DRAW;
           }
@@ -2070,7 +1999,7 @@
           ];
         }
         if (obj.resetOptions) {
-          that.silentlyResetOptions();
+          that?.silentlyResetOptions?.();
         }
         rtn = true;
       }
@@ -2669,8 +2598,7 @@
     }
     //!---------------- board (using IcUi)
     function _refreshUi(animation_type, play_sounds) {
-      var that;
-      that = this;
+      let that = this;
       if (_WIN?.IcUi?.refreshUi) {
         _WIN.IcUi.refreshUi.apply(that, [animation_type, play_sounds]);
       }
@@ -2680,8 +2608,7 @@
       board;
       stack;
       constructor(woard) {
-        var board;
-        board = getBoard(woard);
+        let board = getBoard(woard);
         this.board =
           board === null
             ? initBoard({
@@ -2850,11 +2777,10 @@
         w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
         b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
       };
-      var i, j, fen_board;
       if (_isNonBlankStr(fen)) {
-        fen_board = _trimSpaces(fen).split(' ')[0];
-        for (i = _PAWN_W; i <= _KING_W; i++) {
-          for (j = 0; j < 2; j++) {
+        let fen_board = _trimSpaces(fen).split(' ')[0];
+        for (let i = _PAWN_W; i <= _KING_W; i++) {
+          for (let j = 0; j < 2; j++) {
             let current_side = j ? rtn.w : rtn.b;
             current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
           }
@@ -2863,12 +2789,11 @@
       return rtn;
     }
     function removeBoard(woard) {
-      var del_board, del_board_name_cache, rtn;
-      rtn = false;
-      del_board = getBoard(woard);
+      let rtn = false;
+      let del_board = getBoard(woard);
       if (del_board !== null) {
         rtn = true;
-        del_board_name_cache = del_board.boardName;
+        let del_board_name_cache = String(del_board.boardName);
         del_board = null;
         _BOARDS[del_board_name_cache] = null;
         delete _BOARDS[del_board_name_cache];
@@ -2877,28 +2802,26 @@
       return rtn;
     }
     function isEqualBoard(left_woard, right_woard) {
-      var left_board, rtn;
-      rtn = false;
+      let rtn = false;
       block: {
-        left_board = getBoard(left_woard);
+        let left_board = getBoard(left_woard);
         if (left_board === null) {
           _consoleLog("[isEqualBoard]: left_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        rtn = left_board.isEqualBoard(right_woard);
+        rtn = left_board?.isEqualBoard?.(right_woard);
       }
       return rtn;
     }
     function cloneBoard(to_woard, from_woard) {
-      var to_board, rtn;
-      rtn = false;
+      let rtn = false;
       block: {
-        to_board = getBoard(to_woard);
+        let to_board = getBoard(to_woard);
         if (to_board === null) {
           _consoleLog("[cloneBoard]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        rtn = to_board.cloneBoardFrom(from_woard);
+        rtn = to_board?.cloneBoardFrom?.(from_woard);
       }
       return rtn;
     }
@@ -3007,8 +2930,8 @@
       return rtn;
     }
     function fenApply(fen, fn_name, args, p) {
-      var board, board_created, silent_mode_cache, rtn;
-      rtn = null;
+      let rtn = null;
+      var board, board_created, silent_mode_cache;
       args = _isArray(args) ? args : [];
       p = _unreferenceP(p);
       board_created = false;
@@ -3109,8 +3032,8 @@
       return rtn;
     }
     function fenGet(fen, props, p) {
-      var i, j, len, len2, board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre, rtn;
-      rtn = null;
+      let rtn = null;
+      var board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre;
       p = _unreferenceP(p);
       board_created = false;
       block: {
@@ -3138,11 +3061,11 @@
           board_keys = _MUTABLE_KEYS.slice(0);
         }
         rtn_pre = {};
-        for (i = 0, len = board_keys.length; i < len; i++) {
+        for (let i = 0, len = board_keys.length; i < len; i++) {
           current_key = _formatName(board_keys[i]);
           if (current_key && !rtn_pre[current_key]) {
             invalid_key = true;
-            for (j = 0, len2 = _MUTABLE_KEYS.length; j < len2; j++) {
+            for (let j = 0, len2 = _MUTABLE_KEYS.length; j < len2; j++) {
               if (current_key === _MUTABLE_KEYS[j]) {
                 invalid_key = false;
                 rtn_pre[current_key] = board[current_key];
