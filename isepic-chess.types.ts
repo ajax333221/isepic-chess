@@ -6,8 +6,9 @@ export type SquareFilePos = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type SquareRankBos = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8';
 export type SquareFileBos = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h';
 
+export type NoSquareBos = '';
 export type SquarePos = [SquareRankPos, SquareFilePos];
-export type SquareBos = `${SquareFileBos}${SquareRankBos}`;
+export type SquareBos = NoSquareBos | `${SquareFileBos}${SquareRankBos}`;
 
 export type PreValidatedSquarePos = [number, number];
 export type PreValidatedSquareBos = string;
@@ -29,7 +30,9 @@ export type BkBal = 'k';
 export type WPiecesBal = WpBal | WnBal | WbBal | WrBal | WqBal | WkBal;
 export type BPiecesBal = BpBal | BnBal | BbBal | BrBal | BqBal | BkBal;
 
+export type NoLowercasePromotePiecesBal = '';
 export type LowercasePromotePiecesBal = BnBal | BbBal | BrBal | BqBal;
+export type NoLowercasePieceBal = '';
 export type LowercasePieceBal = BPiecesBal;
 
 export type SquareAbsBal = EmptyBal | WPiecesBal;
@@ -65,10 +68,14 @@ export type WhiteSign = 1;
 export type BlackSign = -1;
 export type Sign = WhiteSign | BlackSign;
 
+export type NoSquareClassName = '';
 export type WhiteColor = 'w';
 export type BlackColor = 'b';
 export type Color = WhiteColor | BlackColor;
-export type SquareClassName = '' | `${WhiteColor}${LowercasePieceBal}` | `${BlackColor}${LowercasePieceBal}`;
+export type SquareClassName =
+  | NoSquareClassName
+  | `${WhiteColor}${LowercasePieceBal}`
+  | `${BlackColor}${LowercasePieceBal}`;
 
 export interface Square {
   pos: null | SquarePos;
@@ -102,7 +109,7 @@ export type BlackEnpassantRankBos = '6';
 export type WhiteEnpassantSquareBos = `${SquareFileBos}${WhiteEnpassantRankBos}`;
 export type BlackEnpassantSquareBos = `${SquareFileBos}${BlackEnpassantRankBos}`;
 
-export type EnpassantSquareBos = WhiteEnpassantSquareBos | BlackEnpassantSquareBos;
+export type EnpassantSquareBos = NoSquareBos | WhiteEnpassantSquareBos | BlackEnpassantSquareBos;
 
 export type NoMoveResult = '';
 export type OngoingResult = '*';
@@ -223,8 +230,10 @@ export type BlackUciPromotionMoveWihoutPromotionBal =
 
 export type WhiteUciPromotionMove = `${WhiteUciPromotionMoveWihoutPromotionBal}${LowercasePromotePiecesBal}`;
 export type BlackUciPromotionMove = `${BlackUciPromotionMoveWihoutPromotionBal}${LowercasePromotePiecesBal}`;
+export type UciPromotionMove = WhiteUciPromotionMove | BlackUciPromotionMove;
 
-export type UciMove = `${SquareBos}${SquareBos}` | WhiteUciPromotionMove | BlackUciPromotionMove;
+export type NoUciMove = '';
+export type UciMove = NoUciMove | `${SquareBos}${SquareBos}` | UciPromotionMove;
 
 export type LegalUciTree = Partial<{
   [key in SquareBos]: UciMove[];
@@ -257,9 +266,9 @@ interface _Move {
   fromBos: null | SquareBos;
   toBos: null | SquareBos;
   enPassantBos: null | EnpassantSquareBos;
-  piece: null | LowercasePieceBal;
-  captured: null | LowercasePieceBal;
-  promotion: null | LowercasePromotePiecesBal;
+  piece: null | NoLowercasePieceBal | LowercasePieceBal;
+  captured: null | NoLowercasePieceBal | LowercasePieceBal;
+  promotion: null | NoLowercasePromotePiecesBal | LowercasePromotePiecesBal;
   comment: null | string;
   moveResult: null | MoveResult;
   canDraw: null | boolean;
@@ -417,6 +426,17 @@ export type ColorPieceCounts = {
 export type BishopCounts = {
   lightSquaredBishops: number;
   darkSquaredBishops: number;
+};
+
+export type LegalMovesHelper = {
+  uciMoves: UciMove[];
+  piece: NoLowercasePieceBal | LowercasePieceBal;
+  isPromotion: boolean;
+};
+
+export type TestCollision = {
+  candidateMoves: SquareBos[];
+  isAttacked: boolean;
 };
 
 export type ColorBishopCounts = {
