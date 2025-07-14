@@ -1237,10 +1237,10 @@ import * as Ts from './isepic-chess.types';
     function _silentlyResetManualResult(): void {
       let that: Ts.Board = this;
 
-      let temp = that.isHidden;
+      let cache_is_hidden = that.isHidden;
       that.isHidden = true;
       that?.setManualResult?.(_RESULT_ONGOING);
-      that.isHidden = temp;
+      that.isHidden = cache_is_hidden;
     }
 
     function _setManualResult(str?: string): boolean {
@@ -2095,19 +2095,22 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {returnType, squareType, delimiter}
-    function _legalMoves(target_qos: Ts.Qos, p?: Ts.OptionalParam) {
-      var i, len, that, temp, temp2, temp3, is_fen_or_san, from_bos, to_bos, used_keys, legal_uci_in_bos, rtn;
+    function _legalMoves(target_qos: Ts.Qos, p?: Ts.OptionalParam): any[] {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = [];
+      let rtn: any[] = [];
+
       p = _unreferenceP(p);
 
       block: {
-        legal_uci_in_bos = that.legalUciTree[toBos(target_qos) || ''];
+        let pre_legal_uci_in_bos = that?.legalUciTree?.[toBos(target_qos) || ''];
 
-        if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
+        if (!pre_legal_uci_in_bos || !pre_legal_uci_in_bos.length) {
           break block;
         }
+
+        // @ts-ignore
+        let legal_uci_in_bos: Ts.UciMove[] = pre_legal_uci_in_bos;
 
         legal_uci_in_bos = legal_uci_in_bos.slice(0);
         p.returnType = _isNonEmptyStr(p.returnType) ? p.returnType : 'toSquare';
@@ -2119,29 +2122,33 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        temp = [];
-        used_keys = {};
-        is_fen_or_san = p.returnType === 'fen' || p.returnType === 'san';
+        let mov: any[] = [];
+        let used_keys = {};
+        let is_fen_or_san = p.returnType === 'fen' || p.returnType === 'san';
 
-        for (i = 0, len = legal_uci_in_bos.length; i < len; i++) {
+        for (let i = 0, len = legal_uci_in_bos.length; i < len; i++) {
           //0<len
-          temp2 = legal_uci_in_bos[i];
+          let temp2 = legal_uci_in_bos[i];
 
           if (is_fen_or_san) {
-            temp3 = that.playMove(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
+            let temp3 = that?.playMove?.(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
 
             if (p.returnType === 'fen') {
-              temp.push(temp3.fen);
+              let fen_move: string = temp3.fen;
+              mov.push(fen_move);
             } else {
               //type "san"
-              temp.push(temp3.san);
+              let san_move: string = temp3.san;
+              mov.push(san_move);
             }
 
             continue;
           }
 
-          from_bos = temp2.slice(0, 2);
-          to_bos = temp2.slice(2, 4);
+          // @ts-ignore
+          let from_bos: Ts.SquareBos = temp2.slice(0, 2);
+          // @ts-ignore
+          let to_bos: Ts.SquareBos = temp2.slice(2, 4);
 
           if (used_keys[to_bos]) {
             continue;
@@ -2150,37 +2157,49 @@ import * as Ts from './isepic-chess.types';
           used_keys[to_bos] = true;
 
           if (p.returnType === 'joined') {
-            temp.push(from_bos + p.delimiter + to_bos);
+            let joined_move: string = from_bos + p.delimiter + to_bos;
+            mov.push(joined_move);
           } else if (p.returnType === 'fromToSquares') {
             if (p.squareType === 'square') {
-              temp.push([
-                that.getSquare(from_bos, { isUnreferenced: true }),
-                that.getSquare(to_bos, { isUnreferenced: true }),
-              ]);
+              let from_square: Ts.Square = that?.getSquare?.(from_bos, { isUnreferenced: true });
+              let to_square: Ts.Square = that?.getSquare?.(to_bos, { isUnreferenced: true });
+
+              let square_move_from_to: Ts.MoveFromTo = [from_square, to_square];
+              mov.push(square_move_from_to);
             } else if (p.squareType === 'pos') {
-              temp.push([toPos(from_bos), toPos(to_bos)]);
+              // @ts-ignore
+              let from_pos: Ts.SquarePos = toPos(from_bos);
+              // @ts-ignore
+              let to_pos: Ts.SquarePos = toPos(to_bos);
+
+              let pos_move_from_to: Ts.MoveFromTo = [from_pos, to_pos];
+              mov.push(pos_move_from_to);
             } else {
               //type "bos"
-              temp.push([from_bos, to_bos]);
+              let bos_move_from_to: Ts.MoveFromTo = [from_bos, to_bos];
+              mov.push(bos_move_from_to);
             }
           } else {
             //type "toSquare"
             if (p.squareType === 'square') {
-              temp.push(that.getSquare(to_bos, { isUnreferenced: true }));
+              let to_square: Ts.Square = that?.getSquare?.(to_bos, { isUnreferenced: true });
+              mov.push(to_square);
             } else if (p.squareType === 'pos') {
-              temp.push(toPos(to_bos));
+              // @ts-ignore
+              let to_pos: Ts.SquarePos = toPos(to_bos);
+              mov.push(to_pos);
             } else {
               //type "bos"
-              temp.push(to_bos);
+              mov.push(to_bos);
             }
           }
         }
 
-        if (is_fen_or_san && temp.length !== legal_uci_in_bos.length) {
+        if (is_fen_or_san && mov.length !== legal_uci_in_bos.length) {
           break block;
         }
 
-        rtn = temp;
+        rtn = mov;
       }
 
       return rtn;
@@ -2571,10 +2590,10 @@ import * as Ts from './isepic-chess.types';
         }
 
         let hash_cache = that?.boardHash?.();
-        let temp = that.isHidden;
+        let cache_is_hidden = that.isHidden;
         that!.isHidden = true;
         that?.navLinkMove?.(Math.min(Number(that!.moveList!.length) - decrease_by - 1, Number(that!.currentMove)));
-        that.isHidden = temp;
+        that.isHidden = cache_is_hidden;
 
         rtn = new Array(decrease_by); //safe to use because every spot will be assigned below
 
@@ -3388,32 +3407,31 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
-    function _playMoves(arr?, p?: Ts.OptionalParam, sliced_fen_history?) {
-      var i, len, that, temp, p_cache, at_least_one_parsed, everything_parsed, rtn;
+    function _playMoves(arr?, p?: Ts.OptionalParam, sliced_fen_history?): boolean {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = false;
+      let rtn = false;
 
-      p_cache = _unreferenceP(p, [['isUnreferenced', false]]);
+      let p_cache: Ts.OptionalParam = _unreferenceP(p, [['isUnreferenced', false]]);
       p = _unreferenceP(p, [
         ['isInanimated', true],
         ['playSounds', false],
         ['isUnreferenced', false],
       ]);
-      at_least_one_parsed = false;
+      let at_least_one_parsed = false;
 
       block: {
         if (!_isArray(arr) || !arr.length) {
           break block;
         }
 
-        everything_parsed = true;
-        temp = that.isHidden;
+        let everything_parsed = true;
+        let cache_is_hidden = that.isHidden;
         that.isHidden = true;
 
-        for (i = 0, len = arr.length; i < len; i++) {
+        for (let i = 0, len = arr.length; i < len; i++) {
           //0<len
-          if (that.playMove(arr[i], p, sliced_fen_history) === null) {
+          if (that?.playMove?.(arr[i], p, sliced_fen_history) === null) {
             everything_parsed = false;
             break;
           }
@@ -3421,7 +3439,7 @@ import * as Ts from './isepic-chess.types';
           at_least_one_parsed = true;
         }
 
-        that.isHidden = temp;
+        that.isHidden = cache_is_hidden;
 
         if (!everything_parsed) {
           break block;
@@ -3431,7 +3449,7 @@ import * as Ts from './isepic-chess.types';
       }
 
       if (at_least_one_parsed) {
-        that.refreshUi(p_cache.isInanimated ? 0 : 1, p_cache.playSounds); //autorefresh
+        that?.refreshUi?.(p_cache.isInanimated ? 0 : 1, p_cache.playSounds); //autorefresh
       }
 
       return rtn;
@@ -3926,21 +3944,20 @@ import * as Ts from './isepic-chess.types';
 
     //p = {isRotated, promoteTo, skipFenValidation}
     function fenApply(fen?, fn_name?, args?, p?: Ts.OptionalParam): any {
-      let rtn = null;
-
-      var board, board_created, silent_mode_cache;
+      let rtn: any = null;
 
       args = _isArray(args) ? args : [];
       p = _unreferenceP(p);
-      board_created = false;
-      silent_mode_cache = _SILENT_MODE;
+
+      let silent_mode_cache = _SILENT_MODE;
+
       fn_name = _isNonBlankStr(fn_name) ? _formatName(fn_name) : 'isLegalFen';
 
       if (fn_name === 'isLegalFen') {
         setSilentMode(true);
       }
 
-      board = initBoard({
+      let board = initBoard({
         boardName: 'board_fenApply_' + fn_name,
         fen: fen,
         isRotated: p.isRotated,
@@ -3954,7 +3971,7 @@ import * as Ts from './isepic-chess.types';
         setSilentMode(silent_mode_cache);
       }
 
-      board_created = board !== null;
+      let board_created = board !== null;
 
       switch (fn_name) {
         case 'playMove':

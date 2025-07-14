@@ -407,7 +407,7 @@ export type PreValidatedZal = Zal | PreValidatedQal;
 
 export type MoveFromTo = [Qos, Qos];
 
-export type Mov = string | MoveFromTo | Move;
+export type Mov = string | MoveFromTo | Move | UciMove;
 
 export type Wrapmove = [MoveFromTo, '' | StringLenOne];
 
