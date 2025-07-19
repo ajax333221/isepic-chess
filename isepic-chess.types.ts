@@ -409,7 +409,14 @@ export type MoveFromTo = [Qos, Qos];
 
 export type Mov = string | MoveFromTo | Move | UciMove;
 
-export type Wrapmove = [MoveFromTo, '' | StringLenOne];
+export type Wrapmove = [MoveFromTo, NoLowercasePromotePiecesBal | LowercasePromotePiecesBal];
+
+export type WrappedMove = {
+  fromBos: SquareBos;
+  toBos: SquareBos;
+  promotion: PromotePiecesVal;
+  isConfirmedLegalMove: boolean;
+};
 
 export type ChangesTuple = [string, any];
 

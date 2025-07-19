@@ -287,7 +287,7 @@ import * as Ts from './isepic-chess.types';
         let fromTo: Ts.MoveFromTo = temp2;
 
         // @ts-ignore
-        let possible_promote: '' | Ts.StringLenOne = temp.charAt(4) || '';
+        let possible_promote: Ts.NoLowercasePromotePiecesBal | Ts.LowercasePromotePiecesBal = temp.charAt(4) || '';
 
         rtn = [fromTo, possible_promote];
       }
@@ -363,7 +363,7 @@ import * as Ts from './isepic-chess.types';
         }
 
         // @ts-ignore
-        let possible_promote: '' | Ts.StringLenOne = mov.promotion || '';
+        let possible_promote: Ts.NoLowercasePromotePiecesBal | Ts.LowercasePromotePiecesBal = mov.promotion || '';
 
         // @ts-ignore
         rtn = [[mov.fromBos, mov.toBos], possible_promote];
@@ -2712,68 +2712,56 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _fenWrapmoveHelper(mov?) {
-      var i,
-        j,
-        that,
-        obj,
-        from_squares,
-        to_squares,
-        current_bos,
-        old_square,
-        new_square,
-        parsed_promote,
-        is_long_castle,
-        king_rank,
-        silent_mode_cache,
-        rtn;
+    function _fenWrapmoveHelper(mov?): null | Ts.Wrapmove {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = null;
+      let rtn: null | Ts.Wrapmove = null;
 
       block: {
-        parsed_promote = '';
+        let parsed_promote: Ts.NoLowercasePromotePiecesBal | Ts.LowercasePromotePiecesBal = '';
 
         if (!_isNonBlankStr(mov)) {
           break block;
         }
 
-        silent_mode_cache = _SILENT_MODE;
+        let silent_mode_cache = _SILENT_MODE;
         setSilentMode(true);
-        obj = fenGet(mov, 'squares activeColor');
+        let obj = fenGet(mov, 'squares activeColor');
         setSilentMode(silent_mode_cache);
 
         if (!obj || that.activeColor === obj.activeColor) {
           break block;
         }
 
-        from_squares = [];
-        to_squares = [];
+        let from_squares: Ts.SquareBos[] = [];
+        let to_squares: Ts.SquareBos[] = [];
 
-        for (i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
           //0...7
-          for (j = 0; j < 8; j++) {
+          for (let j = 0; j < 8; j++) {
             //0...7
-            current_bos = Ic.toBos([i, j]);
-            old_square = that.getSquare(current_bos);
-            new_square = obj.squares[current_bos]; //can't use getSquare()
+            // @ts-ignore
+            let current_bos: Ts.SquareBos = Ic.toBos([i, j]);
 
-            if (old_square.val === new_square.val) {
+            let current_old_square: Ts.Square = that?.getSquare?.(current_bos);
+            let current_new_square: Ts.Square = obj.squares[current_bos]; //can't use getSquare()
+
+            if (current_old_square.val === current_new_square.val) {
               continue;
             }
 
-            if (new_square.val === 0) {
+            if (current_new_square.val === 0) {
               //piece disappearing
               //this excludes enpassant capture
               //can't be 0 here (no problem with inverted logic >0 being <=0)
-              if (old_square.val > 0 === (that.activeColor === 'w')) {
+              if (Number(current_old_square.val) > 0 === (that.activeColor === 'w')) {
                 from_squares.push(current_bos);
               }
             } else {
               //piece overwriting
               //this excludes enemy piece changes in ally turn and wrong color promotion
               //can't be 0 here (no problem with inverted logic >0 being <=0)
-              if (new_square.val > 0 === (that.activeColor === 'w')) {
+              if (Number(current_new_square.val) > 0 === (that.activeColor === 'w')) {
                 to_squares.push(current_bos);
               }
             }
@@ -2785,83 +2773,95 @@ import * as Ts from './isepic-chess.types';
         //1 or 3 changes : invalid
         //0 changes : nothing moved
         if (from_squares.length === 2 && to_squares.length === 2) {
-          is_long_castle = _strContains(from_squares.join(''), 'a');
-          king_rank = that.activeColor === 'w' ? 1 : 8;
+          let is_long_castle = _strContains(from_squares.join(''), 'a');
+          let king_rank_bos: Ts.SquareRankBos = that.activeColor === 'w' ? '1' : '8';
 
-          to_squares = [(is_long_castle ? 'c' : 'g') + king_rank];
-          from_squares = ['e' + king_rank];
+          // @ts-ignore
+          let to_bos: Ts.SquareBos = (is_long_castle ? 'c' : 'g') + king_rank_bos;
+          to_squares = [to_bos];
+
+          // @ts-ignore
+          let from_bos: Ts.SquareBos = 'e' + king_rank_bos;
+          from_squares = [from_bos];
         }
 
         if (from_squares.length !== 1 || to_squares.length !== 1) {
           break block;
         }
 
-        old_square = that.getSquare(from_squares[0]);
+        let pre_old_square: null | Ts.Square = that?.getSquare?.(from_squares[0]);
 
-        if (old_square === null) {
+        if (pre_old_square === null) {
           break block;
         }
 
-        new_square = obj.squares[to_squares[0]]; //can't use getSquare()
+        let old_square: Ts.Square = pre_old_square;
 
-        if (!new_square) {
+        let pre_new_square: undefined | Ts.Square = obj.squares[to_squares[0]]; //can't use getSquare()
+
+        if (!pre_new_square) {
           //this might be undefined but never null (is not a getSquare() return)
           break block;
         }
 
+        let new_square: Ts.Square = pre_new_square;
+
         if (old_square.val !== new_square.val) {
-          parsed_promote = new_square.bal;
+          // @ts-ignore
+          parsed_promote = new_square.bal || '';
         }
 
+        // @ts-ignore
         rtn = [[old_square.bos, new_square.bos], parsed_promote];
       }
 
       return rtn;
     }
 
-    function _sanWrapmoveHelper(mov?) {
-      var i, j, len, len2, that, temp, to_bos, validated_move, parsed_promote, lc_piece, parse_exec, pgn_obj, rtn;
+    function _sanWrapmoveHelper(mov?): null | Ts.Wrapmove {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = null;
+      let rtn: null | Ts.Wrapmove = null;
 
       block: {
-        validated_move = null;
-        parsed_promote = '';
+        let validated_move: null | Ts.MoveFromTo = null;
+        let parsed_promote: Ts.NoLowercasePromotePiecesBal | Ts.LowercasePromotePiecesBal = '';
         mov = (' ' + mov).replace(/^\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*/, '');
 
         if (!_isNonBlankStr(mov)) {
           break block;
         }
 
-        lc_piece = '';
-        to_bos = '';
+        let lc_piece: '' | Ts.LowercasePieceBal = '';
+        let to_bos: '' | null | Ts.SquareBos = '';
         mov = _cleanSan(mov);
 
         if (/^[a-h]/.exec(mov)) {
           //pawn move
           lc_piece = 'p';
-          parse_exec = /([^=]+)=(.?).*$/.exec(mov);
+          let pawn_parse_exec = /([^=]+)=(.?).*$/.exec(mov);
 
-          if (parse_exec) {
-            mov = parse_exec[1];
-            parsed_promote = parse_exec[2];
+          if (pawn_parse_exec) {
+            mov = pawn_parse_exec[1];
+            // @ts-ignore
+            parsed_promote = pawn_parse_exec[2];
           }
 
           to_bos = toBos(mov.slice(-2));
         } else if (mov === 'O-O') {
           //castling king (short)
           lc_piece = 'k';
-          to_bos = that[that.activeColor].isBlack ? 'g8' : 'g1';
+          to_bos = that[String(that!.activeColor)].isBlack ? 'g8' : 'g1';
         } else if (mov === 'O-O-O') {
           //castling king (long)
           lc_piece = 'k';
-          to_bos = that[that.activeColor].isBlack ? 'c8' : 'c1';
+          to_bos = that[String(that!.activeColor)].isBlack ? 'c8' : 'c1';
         } else {
-          parse_exec = /^[NBRQK]/.exec(mov);
+          let parse_exec = /^[NBRQK]/.exec(mov);
 
           if (parse_exec) {
             //knight, bishop, rook, queen, non-castling king
+            // @ts-ignore
             lc_piece = parse_exec[0].toLowerCase();
             to_bos = toBos(mov.slice(-2));
           }
@@ -2871,33 +2871,35 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        temp = that.legalRevTree[to_bos];
+        let temp: undefined | Ts.RevTreeChild = that?.legalRevTree?.[to_bos];
 
         if (!temp) {
           break block;
         }
 
-        temp = temp[lc_piece];
+        let bos_moves: undefined | Ts.SquareBos[] = temp[lc_piece];
 
-        if (!temp) {
+        if (!bos_moves) {
           break block;
         }
 
-        outer: for (i = 0, len = temp.length; i < len; i++) {
+        outer: for (let i = 0, len = bos_moves.length; i < len; i++) {
           //0<len
-          pgn_obj = that.draftMove([temp[i], to_bos], { isLegalMove: true }); /*! NO pass unnecessary promoteTo*/
+          let pgn_obj = that?.draftMove?.([bos_moves[i], to_bos], {
+            isLegalMove: true,
+          }); /*! NO pass unnecessary promoteTo*/
 
           if (!pgn_obj.canMove) {
             continue;
           }
 
-          for (j = 0, len2 = pgn_obj.withOverdisambiguated.length; j < len2; j++) {
+          for (let j = 0, len2 = pgn_obj.withOverdisambiguated.length; j < len2; j++) {
             //0<len2
             if (mov !== pgn_obj.withOverdisambiguated[j]) {
               continue;
             }
 
-            validated_move = [temp[i], to_bos];
+            validated_move = [bos_moves[i], to_bos];
             break outer;
           }
         }
@@ -2913,70 +2915,76 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {delimiter}
-    function _getWrappedMove(mov?, p?: Ts.OptionalParam) {
-      var that, temp, bubbling_promoted_to, is_confirmed_legal, rtn;
+    function _getWrappedMove(mov?, p?: Ts.OptionalParam): null | Ts.WrappedMove {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = null;
+      let rtn: null | Ts.WrappedMove = null;
+      let move_from_to: null | Ts.MoveFromTo = null;
+
+      let bubbling_promoted_to: Ts.NoLowercasePromotePiecesBal | Ts.LowercasePromotePiecesBal = '';
+      let is_confirmed_legal = false;
 
       block: {
-        bubbling_promoted_to = 0;
-        is_confirmed_legal = false;
-        temp = _uciWrapmoveHelper(mov);
+        let res_uci = _uciWrapmoveHelper(mov);
 
-        if (temp) {
-          bubbling_promoted_to = temp[1]; //default ""
-          rtn = temp[0];
+        if (res_uci) {
+          bubbling_promoted_to = res_uci[1]; //default ""
+          move_from_to = res_uci[0];
           break block;
         }
 
-        temp = _joinedWrapmoveHelper(mov, p);
+        let res_joined = _joinedWrapmoveHelper(mov, p);
 
-        if (temp) {
-          rtn = temp;
+        if (res_joined) {
+          move_from_to = res_joined;
           break block;
         }
 
-        temp = _fromToWrapmoveHelper(mov);
+        let res_from_to = _fromToWrapmoveHelper(mov);
 
-        if (temp) {
-          rtn = temp;
+        if (res_from_to) {
+          move_from_to = res_from_to;
           break block;
         }
 
-        temp = _moveWrapmoveHelper(mov);
+        let res_move = _moveWrapmoveHelper(mov);
 
-        if (temp) {
-          bubbling_promoted_to = temp[1]; //default ""
-          rtn = temp[0];
+        if (res_move) {
+          bubbling_promoted_to = res_move[1]; //default ""
+          move_from_to = res_move[0];
           break block;
         }
 
-        temp = that.fenWrapmoveHelper(mov);
+        let res_fen = that?.fenWrapmoveHelper?.(mov);
 
-        if (temp) {
-          bubbling_promoted_to = temp[1]; //default ""
-          rtn = temp[0];
+        if (res_fen) {
+          bubbling_promoted_to = res_fen[1]; //default ""
+          move_from_to = res_fen[0];
           break block;
         }
 
-        temp = that.sanWrapmoveHelper(mov); //place last for better performance
+        let res_san = that?.sanWrapmoveHelper?.(mov); //place last for better performance
 
-        if (temp) {
-          bubbling_promoted_to = temp[1]; //default ""
+        if (res_san) {
+          bubbling_promoted_to = res_san[1]; //default ""
           is_confirmed_legal = true;
-          rtn = temp[0];
+          move_from_to = res_san[0];
           break block;
         }
       }
 
-      if (rtn) {
-        temp = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN_W; /*! NO remove toAbsVal()*/
+      if (move_from_to !== null) {
+        let promotion_abs_val = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN_W; /*! NO remove toAbsVal()*/
+
+        // @ts-ignore
+        let from_bos: Ts.SquareBos = move_from_to[0];
+        // @ts-ignore
+        let to_bos: Ts.SquareBos = move_from_to[1];
 
         rtn = {
-          fromBos: rtn[0],
-          toBos: rtn[1],
-          promotion: _promoteValHelper(temp),
+          fromBos: from_bos,
+          toBos: to_bos,
+          promotion: _promoteValHelper(promotion_abs_val),
           isConfirmedLegalMove: is_confirmed_legal,
         };
       }

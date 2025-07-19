@@ -2015,109 +2015,98 @@
       return rtn;
     }
     function _fenWrapmoveHelper(mov) {
-      var i,
-        j,
-        that,
-        obj,
-        from_squares,
-        to_squares,
-        current_bos,
-        old_square,
-        new_square,
-        parsed_promote,
-        is_long_castle,
-        king_rank,
-        silent_mode_cache,
-        rtn;
-      that = this;
-      rtn = null;
+      let that = this;
+      let rtn = null;
       block: {
-        parsed_promote = '';
+        let parsed_promote = '';
         if (!_isNonBlankStr(mov)) {
           break block;
         }
-        silent_mode_cache = _SILENT_MODE;
+        let silent_mode_cache = _SILENT_MODE;
         setSilentMode(true);
-        obj = fenGet(mov, 'squares activeColor');
+        let obj = fenGet(mov, 'squares activeColor');
         setSilentMode(silent_mode_cache);
         if (!obj || that.activeColor === obj.activeColor) {
           break block;
         }
-        from_squares = [];
-        to_squares = [];
-        for (i = 0; i < 8; i++) {
-          for (j = 0; j < 8; j++) {
-            current_bos = Ic2.toBos([i, j]);
-            old_square = that.getSquare(current_bos);
-            new_square = obj.squares[current_bos];
-            if (old_square.val === new_square.val) {
+        let from_squares = [];
+        let to_squares = [];
+        for (let i = 0; i < 8; i++) {
+          for (let j = 0; j < 8; j++) {
+            let current_bos = Ic2.toBos([i, j]);
+            let current_old_square = that?.getSquare?.(current_bos);
+            let current_new_square = obj.squares[current_bos];
+            if (current_old_square.val === current_new_square.val) {
               continue;
             }
-            if (new_square.val === 0) {
-              if (old_square.val > 0 === (that.activeColor === 'w')) {
+            if (current_new_square.val === 0) {
+              if (Number(current_old_square.val) > 0 === (that.activeColor === 'w')) {
                 from_squares.push(current_bos);
               }
             } else {
-              if (new_square.val > 0 === (that.activeColor === 'w')) {
+              if (Number(current_new_square.val) > 0 === (that.activeColor === 'w')) {
                 to_squares.push(current_bos);
               }
             }
           }
         }
         if (from_squares.length === 2 && to_squares.length === 2) {
-          is_long_castle = _strContains(from_squares.join(''), 'a');
-          king_rank = that.activeColor === 'w' ? 1 : 8;
-          to_squares = [(is_long_castle ? 'c' : 'g') + king_rank];
-          from_squares = ['e' + king_rank];
+          let is_long_castle = _strContains(from_squares.join(''), 'a');
+          let king_rank_bos = that.activeColor === 'w' ? '1' : '8';
+          let to_bos = (is_long_castle ? 'c' : 'g') + king_rank_bos;
+          to_squares = [to_bos];
+          let from_bos = 'e' + king_rank_bos;
+          from_squares = [from_bos];
         }
         if (from_squares.length !== 1 || to_squares.length !== 1) {
           break block;
         }
-        old_square = that.getSquare(from_squares[0]);
-        if (old_square === null) {
+        let pre_old_square = that?.getSquare?.(from_squares[0]);
+        if (pre_old_square === null) {
           break block;
         }
-        new_square = obj.squares[to_squares[0]];
-        if (!new_square) {
+        let old_square = pre_old_square;
+        let pre_new_square = obj.squares[to_squares[0]];
+        if (!pre_new_square) {
           break block;
         }
+        let new_square = pre_new_square;
         if (old_square.val !== new_square.val) {
-          parsed_promote = new_square.bal;
+          parsed_promote = new_square.bal || '';
         }
         rtn = [[old_square.bos, new_square.bos], parsed_promote];
       }
       return rtn;
     }
     function _sanWrapmoveHelper(mov) {
-      var i, j, len, len2, that, temp, to_bos, validated_move, parsed_promote, lc_piece, parse_exec, pgn_obj, rtn;
-      that = this;
-      rtn = null;
+      let that = this;
+      let rtn = null;
       block: {
-        validated_move = null;
-        parsed_promote = '';
+        let validated_move = null;
+        let parsed_promote = '';
         mov = (' ' + mov).replace(/^\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*/, '');
         if (!_isNonBlankStr(mov)) {
           break block;
         }
-        lc_piece = '';
-        to_bos = '';
+        let lc_piece = '';
+        let to_bos = '';
         mov = _cleanSan(mov);
         if (/^[a-h]/.exec(mov)) {
           lc_piece = 'p';
-          parse_exec = /([^=]+)=(.?).*$/.exec(mov);
-          if (parse_exec) {
-            mov = parse_exec[1];
-            parsed_promote = parse_exec[2];
+          let pawn_parse_exec = /([^=]+)=(.?).*$/.exec(mov);
+          if (pawn_parse_exec) {
+            mov = pawn_parse_exec[1];
+            parsed_promote = pawn_parse_exec[2];
           }
           to_bos = toBos(mov.slice(-2));
         } else if (mov === 'O-O') {
           lc_piece = 'k';
-          to_bos = that[that.activeColor].isBlack ? 'g8' : 'g1';
+          to_bos = that[String(that.activeColor)].isBlack ? 'g8' : 'g1';
         } else if (mov === 'O-O-O') {
           lc_piece = 'k';
-          to_bos = that[that.activeColor].isBlack ? 'c8' : 'c1';
+          to_bos = that[String(that.activeColor)].isBlack ? 'c8' : 'c1';
         } else {
-          parse_exec = /^[NBRQK]/.exec(mov);
+          let parse_exec = /^[NBRQK]/.exec(mov);
           if (parse_exec) {
             lc_piece = parse_exec[0].toLowerCase();
             to_bos = toBos(mov.slice(-2));
@@ -2126,25 +2115,27 @@
         if (!lc_piece || !to_bos) {
           break block;
         }
-        temp = that.legalRevTree[to_bos];
+        let temp = that?.legalRevTree?.[to_bos];
         if (!temp) {
           break block;
         }
-        temp = temp[lc_piece];
-        if (!temp) {
+        let bos_moves = temp[lc_piece];
+        if (!bos_moves) {
           break block;
         }
-        outer: for (i = 0, len = temp.length; i < len; i++) {
-          pgn_obj = that.draftMove([temp[i], to_bos], { isLegalMove: true });
+        outer: for (let i = 0, len = bos_moves.length; i < len; i++) {
+          let pgn_obj = that?.draftMove?.([bos_moves[i], to_bos], {
+            isLegalMove: true,
+          });
           /*! NO pass unnecessary promoteTo*/
           if (!pgn_obj.canMove) {
             continue;
           }
-          for (j = 0, len2 = pgn_obj.withOverdisambiguated.length; j < len2; j++) {
+          for (let j = 0, len2 = pgn_obj.withOverdisambiguated.length; j < len2; j++) {
             if (mov !== pgn_obj.withOverdisambiguated[j]) {
               continue;
             }
-            validated_move = [temp[i], to_bos];
+            validated_move = [bos_moves[i], to_bos];
             break outer;
           }
         }
@@ -2156,55 +2147,57 @@
       return rtn;
     }
     function _getWrappedMove(mov, p) {
-      var that, temp, bubbling_promoted_to, is_confirmed_legal, rtn;
-      that = this;
-      rtn = null;
+      let that = this;
+      let rtn = null;
+      let move_from_to = null;
+      let bubbling_promoted_to = '';
+      let is_confirmed_legal = false;
       block: {
-        bubbling_promoted_to = 0;
-        is_confirmed_legal = false;
-        temp = _uciWrapmoveHelper(mov);
-        if (temp) {
-          bubbling_promoted_to = temp[1];
-          rtn = temp[0];
+        let res_uci = _uciWrapmoveHelper(mov);
+        if (res_uci) {
+          bubbling_promoted_to = res_uci[1];
+          move_from_to = res_uci[0];
           break block;
         }
-        temp = _joinedWrapmoveHelper(mov, p);
-        if (temp) {
-          rtn = temp;
+        let res_joined = _joinedWrapmoveHelper(mov, p);
+        if (res_joined) {
+          move_from_to = res_joined;
           break block;
         }
-        temp = _fromToWrapmoveHelper(mov);
-        if (temp) {
-          rtn = temp;
+        let res_from_to = _fromToWrapmoveHelper(mov);
+        if (res_from_to) {
+          move_from_to = res_from_to;
           break block;
         }
-        temp = _moveWrapmoveHelper(mov);
-        if (temp) {
-          bubbling_promoted_to = temp[1];
-          rtn = temp[0];
+        let res_move = _moveWrapmoveHelper(mov);
+        if (res_move) {
+          bubbling_promoted_to = res_move[1];
+          move_from_to = res_move[0];
           break block;
         }
-        temp = that.fenWrapmoveHelper(mov);
-        if (temp) {
-          bubbling_promoted_to = temp[1];
-          rtn = temp[0];
+        let res_fen = that?.fenWrapmoveHelper?.(mov);
+        if (res_fen) {
+          bubbling_promoted_to = res_fen[1];
+          move_from_to = res_fen[0];
           break block;
         }
-        temp = that.sanWrapmoveHelper(mov);
-        if (temp) {
-          bubbling_promoted_to = temp[1];
+        let res_san = that?.sanWrapmoveHelper?.(mov);
+        if (res_san) {
+          bubbling_promoted_to = res_san[1];
           is_confirmed_legal = true;
-          rtn = temp[0];
+          move_from_to = res_san[0];
           break block;
         }
       }
-      if (rtn) {
-        temp = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN_W;
+      if (move_from_to !== null) {
+        let promotion_abs_val = toAbsVal(bubbling_promoted_to) || that.promoteTo || _QUEEN_W;
         /*! NO remove toAbsVal()*/
+        let from_bos = move_from_to[0];
+        let to_bos = move_from_to[1];
         rtn = {
-          fromBos: rtn[0],
-          toBos: rtn[1],
-          promotion: _promoteValHelper(temp),
+          fromBos: from_bos,
+          toBos: to_bos,
+          promotion: _promoteValHelper(promotion_abs_val),
           isConfirmedLegalMove: is_confirmed_legal,
         };
       }
