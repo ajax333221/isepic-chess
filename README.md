@@ -14,15 +14,13 @@
 
 `isepic-chess.js` is a lightweight and flexible chess utility library for JavaScript, providing robust features like legal moves calculation, FEN validation, SAN parsing, and more. It emphasizes a UI-less and dependency-less design, making it a powerful backend for any chess application.
 
-<strong>:sparkles: Flexibility:</strong> Inspired by JavaScript's flexibility, it strives to make things work without easily giving up and throwing errors.
-
-<strong>:white_check_mark: Code Coverage:</strong> Despite its flexibility and complexity, it achieves an impressive <strong>98~%</strong> code coverage <sup>(as of `v6.0.0`)</sup>, ensuring reliability.
-
-<strong>:chart_with_upwards_trend: Perft-Tested:</strong> Each release is rigorously tested against known Perft positions to guarantee accurate move generation.
-
-<strong>:no_entry_sign: UI-less:</strong> All user interface code is completely separated into the [Isepic Chess UI project](https://github.com/ajax333221/isepic-chess-ui), keeping this library lean.
-
-<strong>:x: Dependency-less:</strong> It operates entirely without relying on any other external libraries.
+<ul>
+<li><strong>:sparkles: Flexibility:</strong> Inspired by JavaScript's flexibility, it strives to make things work without easily giving up and throwing errors.</li>
+<li><strong>:white_check_mark: Code Coverage:</strong> Despite its flexibility and complexity, it achieves an impressive <strong>98~%</strong> code coverage <sup>(as of `v6.0.0`)</sup>, ensuring reliability.</li>
+<li><strong>:chart_with_upwards_trend: Perft-Tested:</strong> Each release is rigorously tested against known Perft positions to guarantee accurate move generation.</li>
+<li><strong>:no_entry_sign: UI-less:</strong> All user interface code is completely separated into the [Isepic Chess UI project](https://github.com/ajax333221/isepic-chess-ui), keeping this library lean.</li>
+<li><strong>:x: Dependency-less:</strong> It operates entirely without relying on any other external libraries.</li>
+</ul>
 
 ## :pushpin: Table of contents
 
@@ -172,7 +170,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 
 ## :rocket: Features
 
-<h3><strong>Core Game Logic:</strong></h3>
+<h4><strong>Core Game Logic:</strong></h4>
 <ul>
 <li><strong>Generates Legal Moves:</strong> Efficiently calculates all legal moves for any given board state.</li>
 <li><strong>Detects Checks, Checkmates &amp; Draws:</strong> Identifies when a king is in check and recognizes checkmate and various draw positions. It also includes functions to find moves that <em>lead to</em> checkmate or a draw.</li>
@@ -181,7 +179,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 <li><strong>Analyzes Square Control:</strong> Provides functionality to determine the number of attackers/defenders on any given square.</li>
 </ul>
 
-<h3><strong>Game State Management:</strong></h3>
+<h4><strong>Game State Management:</strong></h4>
 <ul>
 <li><strong>Comprehensive FEN Support:</strong> Imports (<code>loadFen</code>), exports (<code>toFen</code>), and performs advanced validation of FEN strings. Features powerful one-liner operations via <code>Ic.fenApply()</code> and <code>Ic.fenGet()</code>.</li>
 <li><strong>PGN Import/Export:</strong> Supports importing and exporting games in Portable Game Notation (PGN).</li>
@@ -191,7 +189,7 @@ https://ajax333221.github.io/isepic-chess-ui/
 <li><strong>Multiple Board Instances:</strong> Allows managing several independent chess boards concurrently.</li>
 </ul>
 
-<h3><strong>Utility &amp; Presentation:</strong></h3>
+<h4><strong>Utility &amp; Presentation:</strong></h4>
 <ul>
 <li><strong>Chainable Board Methods:</strong> Provides a fluent API for chaining multiple board operations together for concise code.</li>
 <li><strong>Generates ASCII Board Diagrams:</strong> Creates visual ASCII representations of the board state, useful for debugging or console output.</li>
