@@ -12,17 +12,17 @@
 
 <br>
 
-`isepic-chess.js` is a chess utility library written in JavaScript, it provides features like legal moves calculation, FEN validation, SAN parsing, etc. (see: [Features](https://github.com/ajax333221/isepic-chess#rocket-features)).
+`isepic-chess.js` is a lightweight and flexible chess utility library for JavaScript, providing robust features like legal moves calculation, FEN validation, SAN parsing, and more. It emphasizes a UI-less and dependency-less design, making it a powerful backend for any chess application.
 
-<strong>Flexibility:</strong> it strives to be flexible (inspired by JavaScript) and attempts to make things work without easily giving up and throwing errors.
+<strong>:sparkles: Flexibility:</strong> Inspired by JavaScript's flexibility, it strives to make things work without easily giving up and throwing errors.
 
-<strong>Code coverage:</strong> the extra flexibility adds extra complexity and paths to be tested, but despite this, the code coverage is <strong>98~%</strong> <sup>(as of `v6.0.0`)</sup>.
+<strong>:white_check_mark: Code Coverage:</strong> Despite its flexibility and complexity, it achieves an impressive <strong>98~%</strong> code coverage <sup>(as of `v6.0.0`)</sup>, ensuring reliability.
 
-<strong>Perft-tested:</strong> each release is tested against known <em>Perft positions</em> to ensure that the move generation tree of legal moves do not vary from the correct count.
+<strong>:chart_with_upwards_trend: Perft-Tested:</strong> Each release is rigorously tested against known Perft positions to guarantee accurate move generation.
 
-<strong>UI-less:</strong> all the bloating code that a user interface brings is completely separated into this other project: [Isepic Chess UI](https://github.com/ajax333221/isepic-chess-ui).
+<strong>:no_entry_sign: UI-less:</strong> All user interface code is completely separated into the [Isepic Chess UI project](https://github.com/ajax333221/isepic-chess-ui), keeping this library lean.
 
-<strong>Dependency-less:</strong> does not depend on any other library.
+<strong>:x: Dependency-less:</strong> It operates entirely without relying on any other external libraries.
 
 ## :pushpin: Table of contents
 
@@ -172,22 +172,31 @@ https://ajax333221.github.io/isepic-chess-ui/
 
 ## :rocket: Features
 
-- Get legal moves
-- Lookahead moves that result in checkmate / draw
-- Check / checkmate / draw detection
-- Pawn promotion options
-- PGN import / export
-- UCI import / export
-- ASCII diagram
-- Material difference
-- Multiple boards at once
-- Number of attackers / defenders on a square
-- Navigable move history and helper methods (first, last, previous, undo move, reset, etc.)
-- Chainable board methods
-- Powerful FEN one-liner operations <sup>(`Ic.fenApply()` and `Ic.fenGet()`)</sup>
-- Advanced FEN validation
-- SAN parsing
-- Puzzle mode (:construction: work in progress :construction:)
+<h3><strong>Core Game Logic:</strong></h3>
+<ul>
+<li><strong>Generates Legal Moves:</strong> Efficiently calculates all legal moves for any given board state.</li>
+<li><strong>Detects Checks, Checkmates &amp; Draws:</strong> Identifies when a king is in check and recognizes checkmate and various draw positions. It also includes functions to find moves that <em>lead to</em> checkmate or a draw.</li>
+<li><strong>Handles Pawn Promotion:</strong> Offers options to specify the desired promotion piece (Queen, Rook, Bishop, Knight).</li>
+<li><strong>Calculates Material Difference:</strong> Quickly determines the material advantage for each side.</li>
+<li><strong>Analyzes Square Control:</strong> Provides functionality to determine the number of attackers/defenders on any given square.</li>
+</ul>
+
+<h3><strong>Game State Management:</strong></h3>
+<ul>
+<li><strong>Comprehensive FEN Support:</strong> Imports (<code>loadFen</code>), exports (<code>toFen</code>), and performs advanced validation of FEN strings. Features powerful one-liner operations via <code>Ic.fenApply()</code> and <code>Ic.fenGet()</code>.</li>
+<li><strong>PGN Import/Export:</strong> Supports importing and exporting games in Portable Game Notation (PGN).</li>
+<li><strong>UCI Import/Export:</strong> Compatible with Universal Chess Interface (UCI) for moves.</li>
+<li><strong>Parses SAN (Standard Algebraic Notation):</strong> Converts human-readable SAN move strings into a machine-interpretable format for board operations.</li>
+<li><strong>Navigable Move History:</strong> Offers full control over game history with methods for navigating (<code>navFirst</code>, <code>navLast</code>, <code>navPrevious</code>, <code>navNext</code>, <code>undoMove</code>, <code>redoMove</code>, <code>toMove</code>, <code>reset</code>).</li>
+<li><strong>Multiple Board Instances:</strong> Allows managing several independent chess boards concurrently.</li>
+</ul>
+
+<h3><strong>Utility &amp; Presentation:</strong></h3>
+<ul>
+<li><strong>Chainable Board Methods:</strong> Provides a fluent API for chaining multiple board operations together for concise code.</li>
+<li><strong>Generates ASCII Board Diagrams:</strong> Creates visual ASCII representations of the board state, useful for debugging or console output.</li>
+<li><strong>Puzzle Mode:</strong> (&#x1f6a7; work in progress &#x1f6a7;) An upcoming feature designed to facilitate the creation, analysis, and solving of chess puzzles directly within the library.</li>
+</ul>
 
 ## :book: Documentation
 
