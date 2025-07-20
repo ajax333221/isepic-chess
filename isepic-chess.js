@@ -1,7 +1,7 @@
 /*! Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    const _VERSION = '8.7.2';
+    const _VERSION = '9.0.0';
     let _SILENT_MODE = true;
     let _BOARDS = {};
     const _EMPTY_SQR = 0;

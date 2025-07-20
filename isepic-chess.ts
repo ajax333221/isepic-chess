@@ -6,7 +6,7 @@ import * as Ts from './isepic-chess.types';
 
 (function (windw?, expts?, defin?) {
   var Ic = (function (_WIN?: any) {
-    const _VERSION: string = '8.7.2';
+    const _VERSION: string = '9.0.0';
 
     let _SILENT_MODE: boolean = true; //mutable
     let _BOARDS: Ts.Boards = {}; //mutable
