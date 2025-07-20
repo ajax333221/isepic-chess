@@ -8,5 +8,12 @@ node_modules/
 # Jest test coverage
 coverage/
 
+# Minified js/css
+*.min.js
+*.min.css
+
+# Typescript build
+build/
+
 # Not really needed for our 0 dependencies
 package-lock.json

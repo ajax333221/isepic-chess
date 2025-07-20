@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./build",
+    "typeRoots": []
+  },
+  "files": ["./isepic-chess.types.ts"]
+}
