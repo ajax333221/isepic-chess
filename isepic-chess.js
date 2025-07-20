@@ -1,45 +1,45 @@
 /*! Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    var _VERSION = '8.7.2';
-    var _SILENT_MODE = true;
-    var _BOARDS = {};
-    var _EMPTY_SQR = 0;
-    var _PAWN_W = 1;
-    var _KNIGHT_W = 2;
-    var _BISHOP_W = 3;
-    var _ROOK_W = 4;
-    var _QUEEN_W = 5;
-    var _KING_W = 6;
-    var _PAWN_B = -1;
-    var _KNIGHT_B = -2;
-    var _BISHOP_B = -3;
-    var _ROOK_B = -4;
-    var _QUEEN_B = -5;
-    var _KING_B = -6;
-    var _DIRECTION_TOP = 1;
-    var _DIRECTION_TOP_RIGHT = 2;
-    var _DIRECTION_RIGHT = 3;
-    var _DIRECTION_BOTTOM_RIGHT = 4;
-    var _DIRECTION_BOTTOM = 5;
-    var _DIRECTION_BOTTOM_LEFT = 6;
-    var _DIRECTION_LEFT = 7;
-    var _DIRECTION_TOP_LEFT = 8;
-    var _SHORT_CASTLE = 1;
-    var _LONG_CASTLE = 2;
-    var _RESULT_ONGOING = '*';
-    var _RESULT_W_WINS = '1-0';
-    var _RESULT_B_WINS = '0-1';
-    var _RESULT_DRAW = '1/2-1/2';
-    var _DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
-    var _ALERT_LIGHT = 'light';
-    var _ALERT_DARK = 'dark';
-    var _ALERT_SUCCESS = 'success';
-    var _ALERT_WARNING = 'warning';
-    var _ALERT_ERROR = 'error';
-    var _TEST_COLLISION_OP_CANDIDATE_MOVES = 1;
-    var _TEST_COLLISION_OP_IS_ATTACKED = 2;
-    var _MUTABLE_KEYS = [
+    const _VERSION = '8.7.2';
+    let _SILENT_MODE = true;
+    let _BOARDS = {};
+    const _EMPTY_SQR = 0;
+    const _PAWN_W = 1;
+    const _KNIGHT_W = 2;
+    const _BISHOP_W = 3;
+    const _ROOK_W = 4;
+    const _QUEEN_W = 5;
+    const _KING_W = 6;
+    const _PAWN_B = -1;
+    const _KNIGHT_B = -2;
+    const _BISHOP_B = -3;
+    const _ROOK_B = -4;
+    const _QUEEN_B = -5;
+    const _KING_B = -6;
+    const _DIRECTION_TOP = 1;
+    const _DIRECTION_TOP_RIGHT = 2;
+    const _DIRECTION_RIGHT = 3;
+    const _DIRECTION_BOTTOM_RIGHT = 4;
+    const _DIRECTION_BOTTOM = 5;
+    const _DIRECTION_BOTTOM_LEFT = 6;
+    const _DIRECTION_LEFT = 7;
+    const _DIRECTION_TOP_LEFT = 8;
+    const _SHORT_CASTLE = 1;
+    const _LONG_CASTLE = 2;
+    const _RESULT_ONGOING = '*';
+    const _RESULT_W_WINS = '1-0';
+    const _RESULT_B_WINS = '0-1';
+    const _RESULT_DRAW = '1/2-1/2';
+    const _DEFAULT_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    const _ALERT_LIGHT = 'light';
+    const _ALERT_DARK = 'dark';
+    const _ALERT_SUCCESS = 'success';
+    const _ALERT_WARNING = 'warning';
+    const _ALERT_ERROR = 'error';
+    const _TEST_COLLISION_OP_CANDIDATE_MOVES = 1;
+    const _TEST_COLLISION_OP_IS_ATTACKED = 2;
+    const _MUTABLE_KEYS = [
       'w',
       'b',
       'activeColor',
@@ -875,8 +875,8 @@
           qos,
           piece_direction,
           as_knight,
-          null,
-          null
+          0,
+          false
         ).isAttacked;
         return rtn_is_attacked;
       }
@@ -1412,19 +1412,14 @@
         piece: '',
         isPromotion: false,
       };
-      var i,
-        j,
-        len,
-        len2,
-        temp,
+      var temp,
         temp2,
         current_cached_square,
         target_cached_square,
         current_diagonal_square,
         pseudo_legal_arr,
         is_promotion,
-        en_passant_capturable_cached_square,
-        piece_directions;
+        en_passant_capturable_cached_square;
       function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture) {
         let rtn_candidate_moves = that?.testCollision?.(
           _TEST_COLLISION_OP_CANDIDATE_MOVES,
@@ -1454,14 +1449,14 @@
         rtn.piece = target_cached_square.bal.toLowerCase();
         let en_passant_bos = that.enPassantBos;
         if (target_cached_square.isKing) {
-          for (i = _DIRECTION_TOP; i <= _DIRECTION_TOP_LEFT; i++) {
+          for (let i = _DIRECTION_TOP; i <= _DIRECTION_TOP_LEFT; i++) {
             temp = _candidateMoves(target_cached_square, i, false, 1, true);
             if (temp.length) {
               pseudo_legal_arr.push(temp);
             }
           }
           if (active_side.castling && !that.isCheck) {
-            for (i = 0; i < 2; i++) {
+            for (let i = 0; i < 2; i++) {
               temp2 = {
                 castleToSkip: i ? _SHORT_CASTLE : _LONG_CASTLE,
                 direction: i ? _DIRECTION_LEFT : _DIRECTION_RIGHT,
@@ -1503,7 +1498,7 @@
           if (temp.length) {
             pseudo_legal_arr.push(temp);
           }
-          for (i = 0; i < 2; i++) {
+          for (let i = 0; i < 2; i++) {
             current_diagonal_square = that?.getSquare?.(target_cached_square, {
               rankShift: active_side.singlePawnRankShift,
               fileShift: i ? -1 : 1,
@@ -1528,28 +1523,22 @@
             }
           }
         } else {
-          piece_directions = [];
+          let piece_directions = [];
           if (!target_cached_square.isBishop) {
             piece_directions.push(1, 3, 5, 7);
           }
           if (!target_cached_square.isRook) {
             piece_directions.push(2, 4, 6, 8);
           }
-          for (i = 0, len = piece_directions.length; i < len; i++) {
-            temp = _candidateMoves(
-              target_cached_square,
-              piece_directions[i],
-              target_cached_square.isKnight,
-              null,
-              true
-            );
+          for (let i = 0, len = piece_directions.length; i < len; i++) {
+            temp = _candidateMoves(target_cached_square, piece_directions[i], target_cached_square.isKnight, 0, true);
             if (temp.length) {
               pseudo_legal_arr.push(temp);
             }
           }
         }
-        for (i = 0, len = pseudo_legal_arr.length; i < len; i++) {
-          for (j = 0, len2 = pseudo_legal_arr[i].length; j < len2; j++) {
+        for (let i = 0, len = pseudo_legal_arr.length; i < len; i++) {
+          for (let j = 0, len2 = pseudo_legal_arr[i].length; j < len2; j++) {
             current_cached_square = that?.getSquare?.(pseudo_legal_arr[i][j], {
               isUnreferenced: true,
             });
@@ -1726,80 +1715,75 @@
       let that = this;
       let rtn = '';
       /*! TODO p options: remove comments, max line len, tag white-list*/
-      var i,
-        len,
-        header,
-        ordered_tags,
-        result_tag_ow,
-        move_list,
-        black_starts,
-        initial_fen,
-        initial_full_move,
-        current_move,
-        text_game;
-      header = _unreferenceP(header);
-      /*! TODO header from _pgnParserHelper()*/
-      move_list = that.moveList;
-      initial_fen = move_list[0].fen;
-      black_starts = move_list[0].colorToPlay === 'b';
-      let that_current_move = Number(that.currentMove);
-      let that_full_move = Number(that.fullMove);
-      initial_full_move =
-        that_full_move -
-        Math.floor((that_current_move + black_starts - 1) / 2) +
-        Number(black_starts === !(that_current_move % 2)) -
-        1;
-      result_tag_ow = _RESULT_ONGOING;
-      text_game = '';
-      for (i = 0, len = move_list.length; i < len; i++) {
-        if (i) {
-          current_move = initial_full_move + Math.floor((i + black_starts - 1) / 2);
-          text_game += i !== 1 ? ' ' : '';
-          text_game += move_list[i - 1].comment && black_starts === !!(i % 2) ? current_move + '...' : '';
-          text_game += black_starts === !(i % 2) ? current_move + '. ' : '';
-          text_game += move_list[i].san;
-          if (move_list[i].comment) {
-            text_game += ' ' + move_list[i].comment;
+      block: {
+        let move_list = that.moveList;
+        if (!move_list?.length) {
+          _consoleLog('[_pgnExport]: board without move zero', _ALERT_ERROR);
+          break block;
+        }
+        let header = _unreferenceP({});
+        /*! TODO header from _pgnParserHelper()*/
+        let initial_fen = move_list[0].fen || '';
+        let black_starts = move_list[0].colorToPlay === 'b';
+        let that_current_move = Number(that.currentMove);
+        let that_full_move = Number(that.fullMove);
+        let initial_full_move =
+          that_full_move -
+          Math.floor((that_current_move + Number(black_starts) - 1) / 2) +
+          Number(black_starts === !(that_current_move % 2)) -
+          1;
+        let result_tag_ow = _RESULT_ONGOING;
+        let text_game = '';
+        for (let i = 0, len = move_list.length; i < len; i++) {
+          if (i) {
+            let current_move = initial_full_move + Math.floor((i + Number(black_starts) - 1) / 2);
+            text_game += i !== 1 ? ' ' : '';
+            text_game += move_list[i - 1].comment && black_starts === !!(i % 2) ? current_move + '...' : '';
+            text_game += black_starts === !(i % 2) ? current_move + '. ' : '';
+            text_game += move_list[i].san;
+            if (move_list[i].comment) {
+              text_game += ' ' + move_list[i].comment;
+            }
+          }
+          if (move_list[i].moveResult) {
+            result_tag_ow = move_list[i].moveResult;
           }
         }
-        if (move_list[i].moveResult) {
-          result_tag_ow = move_list[i].moveResult;
+        if (result_tag_ow === _RESULT_ONGOING) {
+          if (move_list[move_list.length - 1].canDraw) {
+            result_tag_ow = _RESULT_DRAW;
+          }
         }
-      }
-      if (result_tag_ow === _RESULT_ONGOING) {
-        if (move_list[move_list.length - 1].canDraw) {
-          result_tag_ow = _RESULT_DRAW;
+        if (that.manualResult !== _RESULT_ONGOING) {
+          result_tag_ow = that.manualResult;
         }
-      }
-      if (that.manualResult !== _RESULT_ONGOING) {
-        result_tag_ow = that.manualResult;
-      }
-      if (text_game) {
-        if (black_starts) {
-          text_game = initial_full_move + '...' + text_game;
+        if (text_game) {
+          if (black_starts) {
+            text_game = initial_full_move + '...' + text_game;
+          }
+          text_game += ' ' + result_tag_ow;
+        } else {
+          text_game += result_tag_ow;
         }
-        text_game += ' ' + result_tag_ow;
-      } else {
-        text_game += result_tag_ow;
+        text_game = text_game || _RESULT_ONGOING;
+        let ordered_tags = [
+          ['Event', header.Event || 'Chess game'],
+          ['Site', header.Site || '?'],
+          ['Date', header.Date || '????.??.??'],
+          ['Round', header.Round || '?'],
+          ['White', header.White || '?'],
+          ['Black', header.Black || '?'],
+          ['Result', result_tag_ow],
+        ];
+        if (initial_fen !== _DEFAULT_FEN) {
+          ordered_tags.push(['SetUp', '1']);
+          ordered_tags.push(['FEN', initial_fen]);
+        }
+        for (let i = 0, len = ordered_tags.length; i < len; i++) {
+          rtn += '[' + ordered_tags[i][0] + ' "' + ordered_tags[i][1] + '"]\n';
+        }
+        rtn += '\n' + text_game;
       }
-      text_game = text_game || _RESULT_ONGOING;
-      ordered_tags = [
-        ['Event', header.Event || 'Chess game'],
-        ['Site', header.Site || '?'],
-        ['Date', header.Date || '????.??.??'],
-        ['Round', header.Round || '?'],
-        ['White', header.White || '?'],
-        ['Black', header.Black || '?'],
-        ['Result', result_tag_ow],
-      ];
-      if (initial_fen !== _DEFAULT_FEN) {
-        ordered_tags.push(['SetUp', '1']);
-        ordered_tags.push(['FEN', initial_fen]);
-      }
-      for (i = 0, len = ordered_tags.length; i < len; i++) {
-        rtn += '[' + ordered_tags[i][0] + ' "' + ordered_tags[i][1] + '"]\n';
-      }
-      rtn += '\n' + text_game;
       return rtn;
     }
     function _uciExport() {
@@ -2335,20 +2319,6 @@
     function _playMove(mov, p, sliced_fen_history) {
       let that = this;
       let rtn_move_obj = null;
-      var temp,
-        temp2,
-        temp3,
-        complete_san,
-        move_res,
-        active_side,
-        non_active_side,
-        current_side,
-        is_promotion,
-        mov_uci,
-        wrapped_move,
-        max_current_move_possible,
-        on_solve_out_of_bounds,
-        autogen_comment;
       p = _unreferenceP(p);
       block: {
         p.isMockMove = p.isMockMove === true;
@@ -2357,21 +2327,21 @@
         p.isUnreferenced = p.isUnreferenced === true;
         let that_movelist = that.moveList;
         if (that.isPuzzleMode) {
-          max_current_move_possible = that_movelist.length - 1;
+          let max_current_move_possible = that_movelist.length - 1;
           if (Number(that.currentMove) < max_current_move_possible) {
-            wrapped_move = that?.getWrappedMove?.(mov, p);
+            let wrapped_move = that?.getWrappedMove?.(mov, p);
             if (
               wrapped_move !== null &&
               (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that?.isLegalMove?.(mov, p))
             ) {
-              is_promotion = !!that_movelist[Number(that.currentMove) + 1].promotion;
-              mov_uci =
+              let is_promotion = !!that_movelist[Number(that.currentMove) + 1].promotion;
+              let mov_uci =
                 wrapped_move.fromBos +
                 '' +
                 wrapped_move.toBos +
                 (is_promotion ? toBal(wrapped_move.promotion).toLowerCase() : '');
               if (mov_uci === that_movelist[Number(that.currentMove) + 1].uci) {
-                on_solve_out_of_bounds = Number(that.currentMove) + 2 > max_current_move_possible;
+                let on_solve_out_of_bounds = Number(that.currentMove) + 2 > max_current_move_possible;
                 if (p.isMockMove) {
                   rtn_move_obj = on_solve_out_of_bounds
                     ? that_movelist[max_current_move_possible]
@@ -2406,8 +2376,8 @@
         if (!pgn_obj.canMove) {
           break block;
         }
-        active_side = that[String(that.activeColor)];
-        non_active_side = that[String(that.nonActiveColor)];
+        let active_side = that[String(that.activeColor)];
+        let non_active_side = that[String(that.nonActiveColor)];
         let initial_cached_square = pgn_obj.initialCachedSquare;
         let final_cached_square = pgn_obj.finalCachedSquare;
         if (pgn_obj.activeSideCastlingZero) {
@@ -2429,13 +2399,19 @@
           });
         }
         for (let i = 0; i < 2; i++) {
-          current_side = i ? active_side : non_active_side;
-          temp = i ? initial_cached_square : final_cached_square;
-          if (current_side.castling && temp.isRook) {
-            temp2 = current_side.isBlack ? '8' : '1';
-            if (current_side.castling !== _LONG_CASTLE && sameSquare(temp, that?.getSquare?.('h' + temp2))) {
+          let current_side = i ? active_side : non_active_side;
+          let current_square = i ? initial_cached_square : final_cached_square;
+          if (current_side.castling && current_square.isRook) {
+            let current_rank_bos = current_side.isBlack ? '8' : '1';
+            if (
+              current_side.castling !== _LONG_CASTLE &&
+              sameSquare(current_square, that?.getSquare?.('h' + current_rank_bos))
+            ) {
               current_side.castling -= _SHORT_CASTLE;
-            } else if (current_side.castling !== _SHORT_CASTLE && sameSquare(temp, that?.getSquare?.('a' + temp2))) {
+            } else if (
+              current_side.castling !== _SHORT_CASTLE &&
+              sameSquare(current_square, that?.getSquare?.('a' + current_rank_bos))
+            ) {
               current_side.castling -= _LONG_CASTLE;
             }
           }
@@ -2455,8 +2431,8 @@
           currentMove: Number(that.currentMove) + 1,
           slicedFenHistory: sliced_fen_history,
         });
-        complete_san = pgn_obj.partialSan;
-        move_res = '';
+        let complete_san = pgn_obj.partialSan || '';
+        let move_res = '';
         if (that.isCheckmate) {
           complete_san += '#';
           move_res = non_active_side.isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
@@ -2465,7 +2441,7 @@
         } else if (that.isCheck) {
           complete_san += '+';
         }
-        autogen_comment = '';
+        let autogen_comment = '';
         if (that.inDraw) {
           if (that.isStalemate) {
             autogen_comment = '{Stalemate}';
@@ -2477,9 +2453,9 @@
             autogen_comment = '{50 moves rule}';
           }
         }
-        temp = (initial_cached_square.bal || '').replace('*', '').toLowerCase();
-        temp2 = (toBal(pgn_obj.promotedVal || 0) || '').replace('*', '').toLowerCase();
-        temp3 = initial_cached_square.bos + '' + final_cached_square.bos + temp2;
+        let lc_piece = (initial_cached_square.bal || '').replace('*', '').toLowerCase();
+        let promotion_bal = (toBal(pgn_obj.promotedVal || 0) || '').replace('*', '').toLowerCase();
+        let uci_move = initial_cached_square.bos + '' + final_cached_square.bos + promotion_bal;
         if (Number(that.currentMove) !== that_movelist.length) {
           that.moveList = that_movelist.slice(0, Number(that.currentMove));
           that_movelist = that.moveList;
@@ -2489,13 +2465,13 @@
           colorToPlay: that.activeColor,
           fen: that.fen,
           san: complete_san,
-          uci: temp3,
+          uci: uci_move,
           fromBos: initial_cached_square.bos,
           toBos: final_cached_square.bos,
           enPassantBos: that.enPassantBos,
-          piece: temp,
+          piece: lc_piece,
           captured: pgn_obj.captured,
-          promotion: temp2,
+          promotion: promotion_bal,
           comment: autogen_comment,
           moveResult: move_res,
           canDraw: that.inDraw,
