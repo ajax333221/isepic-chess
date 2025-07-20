@@ -287,8 +287,9 @@
       return rtn;
     }
     function _nullboardHelper(board_name) {
-      let rtn = getBoard(board_name);
-      if (rtn === null) {
+      let rtn;
+      let pre_rtn = getBoard(board_name);
+      if (pre_rtn === null) {
         _BOARDS[board_name] = {
           boardName: board_name,
           getSquare: _getSquare,
@@ -343,9 +344,9 @@
           navLinkMove: _navLinkMove,
           refreshUi: _refreshUi,
         };
-        rtn = _BOARDS[board_name];
+        pre_rtn = _BOARDS[board_name];
       }
-      rtn.w = {
+      pre_rtn.w = {
         //static
         isBlack: false,
         sign: 1,
@@ -364,7 +365,7 @@
         castling: null,
         materialDiff: null,
       };
-      rtn.b = {
+      pre_rtn.b = {
         //static
         isBlack: true,
         sign: -1,
@@ -383,36 +384,36 @@
         castling: null,
         materialDiff: null,
       };
-      rtn.activeColor = null;
-      rtn.nonActiveColor = null;
-      rtn.fen = null;
-      rtn.enPassantBos = null;
-      rtn.halfMove = null;
-      rtn.fullMove = null;
-      rtn.moveList = null;
-      rtn.currentMove = null;
-      rtn.isRotated = null;
-      rtn.isPuzzleMode = null;
-      rtn.checks = null;
-      rtn.isCheck = null;
-      rtn.isCheckmate = null;
-      rtn.isStalemate = null;
-      rtn.isThreefold = null;
-      rtn.isInsufficientMaterial = null;
-      rtn.isFiftyMove = null;
-      rtn.inDraw = null;
-      rtn.promoteTo = null;
-      rtn.manualResult = null;
-      rtn.isHidden = null;
-      rtn.legalUci = null;
-      rtn.legalUciTree = null;
-      rtn.legalRevTree = null;
-      rtn.squares = {};
+      pre_rtn.activeColor = null;
+      pre_rtn.nonActiveColor = null;
+      pre_rtn.fen = null;
+      pre_rtn.enPassantBos = null;
+      pre_rtn.halfMove = null;
+      pre_rtn.fullMove = null;
+      pre_rtn.moveList = null;
+      pre_rtn.currentMove = null;
+      pre_rtn.isRotated = null;
+      pre_rtn.isPuzzleMode = null;
+      pre_rtn.checks = null;
+      pre_rtn.isCheck = null;
+      pre_rtn.isCheckmate = null;
+      pre_rtn.isStalemate = null;
+      pre_rtn.isThreefold = null;
+      pre_rtn.isInsufficientMaterial = null;
+      pre_rtn.isFiftyMove = null;
+      pre_rtn.inDraw = null;
+      pre_rtn.promoteTo = null;
+      pre_rtn.manualResult = null;
+      pre_rtn.isHidden = null;
+      pre_rtn.legalUci = null;
+      pre_rtn.legalUciTree = null;
+      pre_rtn.legalRevTree = null;
+      pre_rtn.squares = {};
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
           let validated_pos = [i, j];
           let validated_bos = toBos(validated_pos);
-          rtn.squares[validated_bos] = {
+          pre_rtn.squares[validated_bos] = {
             //static
             pos: validated_pos,
             bos: validated_bos,
@@ -437,6 +438,7 @@
           };
         }
       }
+      rtn = pre_rtn;
       return rtn;
     }
     //!---------------- utilities
@@ -1081,8 +1083,8 @@
         let consecutive_empty_squares = 0;
         for (let j = 0; j < 8; j++) {
           let current_square = that?.getSquare?.([i, j]);
-          if (!current_square.isEmptySquare) {
-            fen_board += (consecutive_empty_squares || '') + current_square.bal;
+          if (current_square !== null && !current_square.isEmptySquare) {
+            fen_board += (consecutive_empty_squares || '') + (current_square.bal || '');
             consecutive_empty_squares = -1;
           }
           consecutive_empty_squares++;
@@ -1390,7 +1392,7 @@
           } else if (current_square.isBishop) {
             rtn.isAttacked = true;
           } else if (!i && current_square.isPawn) {
-            if (current_square.sign > 0) {
+            if (Number(current_square.sign) > 0) {
               if (piece_direction === _DIRECTION_BOTTOM_RIGHT || piece_direction === _DIRECTION_BOTTOM_LEFT) {
                 rtn.isAttacked = true;
               }
@@ -1412,14 +1414,6 @@
         piece: '',
         isPromotion: false,
       };
-      var temp,
-        temp2,
-        current_cached_square,
-        target_cached_square,
-        current_diagonal_square,
-        pseudo_legal_arr,
-        is_promotion,
-        en_passant_capturable_cached_square;
       function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture) {
         let rtn_candidate_moves = that?.testCollision?.(
           _TEST_COLLISION_OP_CANDIDATE_MOVES,
@@ -1432,7 +1426,7 @@
         return rtn_candidate_moves;
       }
       block: {
-        target_cached_square = that?.getSquare?.(target_qos, {
+        let target_cached_square = that?.getSquare?.(target_qos, {
           isUnreferenced: true,
         });
         if (target_cached_square === null) {
@@ -1443,79 +1437,85 @@
         if (target_cached_square.isEmptySquare || target_cached_square.sign === non_active_side.sign) {
           break block;
         }
-        pseudo_legal_arr = [];
-        en_passant_capturable_cached_square = null;
-        is_promotion = false;
-        rtn.piece = target_cached_square.bal.toLowerCase();
+        let pseudo_legal_arr = [];
+        let en_passant_capturable_cached_square = null;
+        let is_promotion = false;
+        let lc_piece = (target_cached_square.bal || '').toLowerCase();
+        rtn.piece = lc_piece;
         let en_passant_bos = that.enPassantBos;
         if (target_cached_square.isKing) {
           for (let i = _DIRECTION_TOP; i <= _DIRECTION_TOP_LEFT; i++) {
-            temp = _candidateMoves(target_cached_square, i, false, 1, true);
-            if (temp.length) {
-              pseudo_legal_arr.push(temp);
+            let king_candidate_moves = _candidateMoves(target_cached_square, i, false, 1, true);
+            if (king_candidate_moves.length) {
+              pseudo_legal_arr.push(king_candidate_moves);
             }
           }
           if (active_side.castling && !that.isCheck) {
             for (let i = 0; i < 2; i++) {
-              temp2 = {
+              let current_shift = {
                 castleToSkip: i ? _SHORT_CASTLE : _LONG_CASTLE,
                 direction: i ? _DIRECTION_LEFT : _DIRECTION_RIGHT,
                 consecutiveEmpty: i ? 3 : 2,
                 singleFileShift: i ? -1 : 1,
               };
-              if (active_side.castling === temp2.castleToSkip) {
+              if (active_side.castling === current_shift.castleToSkip) {
                 continue;
               }
               if (
-                _candidateMoves(target_cached_square, temp2.direction, false, temp2.consecutiveEmpty, false).length !==
-                temp2.consecutiveEmpty
+                _candidateMoves(
+                  target_cached_square,
+                  current_shift.direction,
+                  false,
+                  current_shift.consecutiveEmpty,
+                  false
+                ).length !== current_shift.consecutiveEmpty
               ) {
                 continue;
               }
               if (
                 that?.attackersFromNonActive?.(
-                  that?.getSquare?.(target_cached_square, { fileShift: temp2.singleFileShift }),
+                  that?.getSquare?.(target_cached_square, { fileShift: current_shift.singleFileShift }),
                   true
                 )
               ) {
                 continue;
               }
-              temp = that?.getSquare?.(target_cached_square, {
-                fileShift: temp2.singleFileShift * 2,
+              let shifted_square = that?.getSquare?.(target_cached_square, {
+                fileShift: current_shift.singleFileShift * 2,
               });
-              pseudo_legal_arr.push([temp]);
+              pseudo_legal_arr.push([shifted_square]);
             }
           }
         } else if (target_cached_square.isPawn) {
           is_promotion = target_cached_square.rankPos === non_active_side.secondRankPos;
-          temp = _candidateMoves(
+          let pawn_candidate_moves = _candidateMoves(
             target_cached_square,
             active_side.isBlack ? _DIRECTION_BOTTOM : _DIRECTION_TOP,
             false,
             target_cached_square.rankPos === active_side.secondRankPos ? 2 : 1,
             false
           );
-          if (temp.length) {
-            pseudo_legal_arr.push(temp);
+          if (pawn_candidate_moves.length) {
+            pseudo_legal_arr.push(pawn_candidate_moves);
           }
           for (let i = 0; i < 2; i++) {
-            current_diagonal_square = that?.getSquare?.(target_cached_square, {
+            let current_diagonal_square = that?.getSquare?.(target_cached_square, {
               rankShift: active_side.singlePawnRankShift,
               fileShift: i ? -1 : 1,
             });
             if (current_diagonal_square === null) {
               continue;
             }
-            temp = sameSquare(current_diagonal_square, en_passant_bos);
+            let is_same_square = sameSquare(current_diagonal_square, en_passant_bos);
             if (
-              temp ||
+              is_same_square ||
               (current_diagonal_square.sign !== active_side.sign &&
                 !current_diagonal_square.isEmptySquare &&
                 !current_diagonal_square.isKing)
             ) {
               pseudo_legal_arr.push([current_diagonal_square]);
             }
-            if (temp) {
+            if (is_same_square) {
               en_passant_capturable_cached_square = that?.getSquare?.(current_diagonal_square, {
                 rankShift: non_active_side.singlePawnRankShift,
                 isUnreferenced: true,
@@ -1531,15 +1531,21 @@
             piece_directions.push(2, 4, 6, 8);
           }
           for (let i = 0, len = piece_directions.length; i < len; i++) {
-            temp = _candidateMoves(target_cached_square, piece_directions[i], target_cached_square.isKnight, 0, true);
-            if (temp.length) {
-              pseudo_legal_arr.push(temp);
+            let rest_candidate_moves = _candidateMoves(
+              target_cached_square,
+              piece_directions[i],
+              !!target_cached_square.isKnight,
+              0,
+              true
+            );
+            if (rest_candidate_moves.length) {
+              pseudo_legal_arr.push(rest_candidate_moves);
             }
           }
         }
         for (let i = 0, len = pseudo_legal_arr.length; i < len; i++) {
           for (let j = 0, len2 = pseudo_legal_arr[i].length; j < len2; j++) {
-            current_cached_square = that?.getSquare?.(pseudo_legal_arr[i][j], {
+            let current_cached_square = that?.getSquare?.(pseudo_legal_arr[i][j], {
               isUnreferenced: true,
             });
             that?.setSquare?.(current_cached_square, target_cached_square.val);
@@ -1550,7 +1556,8 @@
               }
             }
             if (!that?.attackersFromNonActive?.(null, true)) {
-              rtn.uciMoves.push(target_cached_square.bos + current_cached_square.bos);
+              let uci_move = target_cached_square.bos + current_cached_square.bos;
+              rtn.uciMoves.push(uci_move);
             }
             that?.setSquare?.(current_cached_square, current_cached_square.val);
             that?.setSquare?.(target_cached_square, target_cached_square.val);
@@ -1807,7 +1814,7 @@
         for (let j = 0; j < 8; j++) {
           let current_square = that?.getSquare?.(is_rotated ? [7 - i, 7 - j] : [i, j]);
           rtn += j ? '' : ' ' + current_square.rankBos + ' |';
-          rtn += ' ' + current_square.bal.replace('*', '.') + ' ';
+          rtn += ' ' + (current_square.bal || '').replace('*', '.') + ' ';
           rtn += j === 7 ? '|\n' : '';
           bottom_label += i === j ? '  ' + current_square.fileBos : '';
         }
@@ -1931,7 +1938,7 @@
         for (let j = 0; j < 8; j++) {
           let current_square = that?.getSquare?.([i, j]);
           if (current_square.isBishop) {
-            let current_side = current_square.sign > 0 ? rtn.w : rtn.b;
+            let current_side = Number(current_square.sign) > 0 ? rtn.w : rtn.b;
             if ((i + j) % 2) {
               current_side.darkSquaredBishops++;
             } else {
@@ -2581,7 +2588,7 @@
       _SILENT_MODE = !!val;
     }
     function isLegalFen(fen) {
-      return fenApply(fen, 'isLegalFen');
+      return !!fenApply(fen, 'isLegalFen');
     }
     function getBoard(woard) {
       let rtn = null;
@@ -2776,19 +2783,11 @@
       return rtn;
     }
     function initBoard(p) {
-      var temp,
-        board_created,
-        board_name,
-        fen_was_valid,
-        postfen_was_valid,
-        new_board,
-        everything_parsed,
-        finished_block,
-        rtn;
-      rtn = null;
+      let rtn = null;
       p = _unreferenceP(p);
-      board_created = false;
-      finished_block = false;
+      let board_created = false;
+      let finished_block = false;
+      let new_board = null;
       block: {
         p.boardName = _isNonBlankStr(p.boardName)
           ? _formatName(p.boardName)
@@ -2798,7 +2797,7 @@
               '' +
               Math.random().toString(36).slice(2, 7)
             ).slice(-10);
-        board_name = p.boardName;
+        let board_name = p.boardName;
         p.isRotated = p.isRotated === true;
         p.isPuzzleMode = p.isPuzzleMode === true;
         p.skipFenValidation = p.skipFenValidation === true;
@@ -2813,7 +2812,7 @@
             p.fen = p.fen || _DEFAULT_FEN;
           }
         }
-        fen_was_valid = p.skipFenValidation || !_basicFenTest(p.fen);
+        let fen_was_valid = p.skipFenValidation || !_basicFenTest(p.fen);
         if (p.validOrBreak && !fen_was_valid) {
           _consoleLog('[initBoard]: "' + board_name + '" bad FEN', _ALERT_ERROR);
           break block;
@@ -2821,21 +2820,21 @@
         new_board = _nullboardHelper(board_name);
         board_created = true;
         new_board.isHidden = true;
-        temp = fen_was_valid ? p.fen : _DEFAULT_FEN;
-        new_board.updateHelper({
+        let valid_fen = fen_was_valid ? p.fen : _DEFAULT_FEN;
+        new_board?.updateHelper?.({
           currentMove: 0,
-          fen: temp,
+          fen: valid_fen,
           skipFenValidation: true,
           resetMoveList: true,
         });
         /*! NO remove skipFenValidation*/
-        postfen_was_valid = p.skipFenValidation || !new_board.refinedFenTest();
+        let postfen_was_valid = p.skipFenValidation || !new_board?.refinedFenTest?.();
         if (p.validOrBreak && !postfen_was_valid) {
           _consoleLog('[initBoard]: "' + board_name + '" bad postFEN', _ALERT_ERROR);
           break block;
         }
         if (!postfen_was_valid) {
-          new_board.updateHelper({
+          new_board?.updateHelper?.({
             currentMove: 0,
             fen: _DEFAULT_FEN,
             skipFenValidation: true,
@@ -2844,9 +2843,9 @@
           /*! NO remove skipFenValidation*/
         }
         if (p.pgn) {
-          everything_parsed = new_board.playMoves(p.pgn.sanMoves);
+          let everything_parsed_pgn = new_board?.playMoves?.(p.pgn.sanMoves);
           /*! NO p.validOrBreak short-circuit*/
-          if (p.validOrBreak && !everything_parsed) {
+          if (p.validOrBreak && !everything_parsed_pgn) {
             _consoleLog('[initBoard]: "' + board_name + '" bad PGN', _ALERT_ERROR);
             break block;
           } else {
@@ -2855,22 +2854,22 @@
             }
           }
         } else if (p.uci) {
-          everything_parsed = new_board.playMoves(p.uci);
+          let everything_parsed_uci = new_board?.playMoves?.(p.uci);
           /*! NO p.validOrBreak short-circuit*/
-          if (p.validOrBreak && !everything_parsed) {
+          if (p.validOrBreak && !everything_parsed_uci) {
             _consoleLog('[initBoard]: "' + board_name + '" bad UCI', _ALERT_ERROR);
             break block;
           }
         }
-        p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : new_board.moveList.length - 1;
-        new_board.setCurrentMove(p.moveIndex, true);
+        p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : Number(new_board.moveList.length) - 1;
+        new_board?.setCurrentMove?.(p.moveIndex, true);
         /*! NO move below isPuzzleMode*/
         new_board.isRotated = p.isRotated;
         new_board.isPuzzleMode = p.isPuzzleMode;
-        new_board.setPromoteTo(p.promoteTo);
-        new_board.setManualResult(p.manualResult);
+        new_board?.setPromoteTo?.(p.promoteTo);
+        new_board?.setManualResult?.(p.manualResult);
         new_board.isHidden = p.isHidden;
-        new_board.refreshUi(0, false);
+        new_board?.refreshUi?.(0, false);
         rtn = new_board;
         finished_block = true;
       }

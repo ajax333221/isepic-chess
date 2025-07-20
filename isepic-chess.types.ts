@@ -365,6 +365,8 @@ interface _Board {
 
 export type Board = Partial<_Board>;
 
+export type Woard = null | string | Board;
+
 export type Boards = Partial<{
   [key: string]: null | Board;
 }>;
