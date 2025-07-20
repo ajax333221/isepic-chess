@@ -1183,8 +1183,7 @@ import * as Ts from './isepic-chess.types';
 
       let rtn_changed = false;
 
-      // @ts-ignore
-      let temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
+      let temp = typeof new_active === 'boolean' ? new_active : !that[String(that.activeColor)].isBlack;
 
       if ((temp ? 'b' : 'w') !== that.activeColor || (!temp ? 'b' : 'w') !== that.nonActiveColor) {
         rtn_changed = true;
@@ -1632,10 +1631,10 @@ import * as Ts from './isepic-chess.types';
       let rtn_msg = '';
 
       block: {
-        let active_side = that[String(that!.activeColor)];
-        let non_active_side = that[String(that!.nonActiveColor)];
+        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
+        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.nonActiveColor)];
 
-        if (Number(that!.halfMove) - active_side.isBlack + 1 >= Number(that!.fullMove) * 2) {
+        if (Number(that!.halfMove) - Number(active_side.isBlack) + 1 >= Number(that!.fullMove) * 2) {
           rtn_msg = 'Error [0] exceeding half moves ratio';
           break block;
         }
@@ -1801,7 +1800,7 @@ import * as Ts from './isepic-chess.types';
         isAttacked: false,
       };
 
-      let active_side = that[String(that!.activeColor)];
+      let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
 
       piece_direction = _toInt(piece_direction, 1, 8);
       max_shifts = _toInt(as_knight ? 1 : max_shifts || 7);
@@ -1895,9 +1894,7 @@ import * as Ts from './isepic-chess.types';
         pseudo_legal_arr,
         is_promotion,
         en_passant_capturable_cached_square,
-        piece_directions,
-        active_side,
-        non_active_side;
+        piece_directions;
 
       function _candidateMoves(qos: Ts.Qos, piece_direction?, as_knight?, max_shifts?, allow_capture?) {
         //uses: that
@@ -1923,8 +1920,8 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        active_side = that[String(that!.activeColor)];
-        non_active_side = that[String(that!.nonActiveColor)];
+        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
+        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.nonActiveColor)];
 
         if (target_cached_square.isEmptySquare || target_cached_square.sign === non_active_side.sign) {
           break block;
@@ -2993,37 +2990,17 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {promoteTo, delimiter, isLegalMove}
-    function _draftMove(mov?, p?: Ts.OptionalParam) {
-      var that,
-        temp,
-        temp2,
-        initial_cached_square,
-        final_cached_square,
-        new_en_passant_bos,
-        pawn_moved,
-        is_en_passant_capture,
-        promoted_val,
-        lc_captured,
-        wrapped_move,
-        bubbling_promoted_to,
-        king_castled,
-        partial_san,
-        with_overdisambiguated,
-        extra_file_bos,
-        extra_rank_bos,
-        active_side,
-        non_active_side,
-        is_ambiguous,
-        rtn;
+    function _draftMove(mov?, p?: Ts.OptionalParam): Ts.DraftMove {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = {};
+      let rtn: Ts.DraftMove = {};
+
       p = _unreferenceP(p);
 
       block: {
         rtn.canMove = false;
         p.isLegalMove = p.isLegalMove === true;
-        wrapped_move = that.getWrappedMove(mov, p);
+        let wrapped_move: null | Ts.WrappedMove = that?.getWrappedMove?.(mov, p);
 
         if (wrapped_move === null) {
           break block;
@@ -3033,35 +3010,37 @@ import * as Ts from './isepic-chess.types';
           p.isLegalMove = true;
         }
 
-        if (!p.isLegalMove && !that.isLegalMove(wrapped_move.fromBos + '' + wrapped_move.toBos)) {
+        if (!p.isLegalMove && !that?.isLegalMove?.(wrapped_move.fromBos + '' + wrapped_move.toBos)) {
           break block;
         }
 
         rtn.canMove = true;
 
-        bubbling_promoted_to = _promoteValHelper(
+        let bubbling_promoted_to: Ts.PromotePiecesVal = _promoteValHelper(
           toAbsVal(p.promoteTo) || wrapped_move.promotion
         ); /*! NO remove toAbsVal()*/
 
-        initial_cached_square = that.getSquare(wrapped_move.fromBos, {
+        let initial_cached_square: Ts.Square = that?.getSquare?.(wrapped_move.fromBos, {
           isUnreferenced: true,
         });
 
-        final_cached_square = that.getSquare(wrapped_move.toBos, {
+        let final_cached_square: Ts.Square = that?.getSquare?.(wrapped_move.toBos, {
           isUnreferenced: true,
         });
 
         rtn.initialCachedSquare = initial_cached_square;
         rtn.finalCachedSquare = final_cached_square;
-        active_side = that[that.activeColor];
-        non_active_side = that[that.nonActiveColor];
+        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that.activeColor)];
+        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that.nonActiveColor)];
 
-        pawn_moved = false;
-        is_en_passant_capture = false;
-        new_en_passant_bos = '';
-        lc_captured = (final_cached_square.bal.replace('*', '') || '').toLowerCase();
-        promoted_val = 0;
-        king_castled = 0;
+        let pawn_moved = false;
+        let is_en_passant_capture = false;
+        let new_en_passant_bos: Ts.SquareBos = '';
+        let promoted_val: Ts.SquareVal = 0;
+        let king_castled: Ts.CastlingRights = 0;
+
+        // @ts-ignore
+        let lc_captured: Ts.LowercasePieceBal = (final_cached_square.bal || '').replace('*', '').toLowerCase();
 
         if (initial_cached_square.isKing) {
           if (active_side.castling) {
@@ -3082,12 +3061,12 @@ import * as Ts from './isepic-chess.types';
         } else if (initial_cached_square.isPawn) {
           pawn_moved = true;
 
-          if (Math.abs(initial_cached_square.rankPos - final_cached_square.rankPos) > 1) {
+          if (Math.abs(Number(initial_cached_square.rankPos) - Number(final_cached_square.rankPos)) > 1) {
             //new enpassant
-            new_en_passant_bos = that.getSquare(final_cached_square, {
+            new_en_passant_bos = that?.getSquare?.(final_cached_square, {
               rankShift: non_active_side.singlePawnRankShift,
             }).bos;
-          } else if (sameSquare(final_cached_square, that.enPassantBos)) {
+          } else if (sameSquare(final_cached_square, String(that!.enPassantBos))) {
             //enpassant capture
             lc_captured = 'p';
             is_en_passant_capture = true;
@@ -3095,12 +3074,14 @@ import * as Ts from './isepic-chess.types';
             rtn.enPassantCaptureAtRankShift = non_active_side.singlePawnRankShift;
           } else if (final_cached_square.rankPos === active_side.lastRankPos) {
             //promotion
-            promoted_val = bubbling_promoted_to * active_side.sign;
+            // @ts-ignore
+            let new_promoted_val: Ts.SquareVal = bubbling_promoted_to * active_side.sign;
+            promoted_val = new_promoted_val;
           }
         }
 
-        partial_san = '';
-        with_overdisambiguated = [];
+        let partial_san = '';
+        let with_overdisambiguated: string[] = [];
 
         if (king_castled) {
           //castling king
@@ -3120,34 +3101,34 @@ import * as Ts from './isepic-chess.types';
           }
         } else {
           //knight, bishop, rook, queen, non-castling king
-          is_ambiguous = false;
-          extra_file_bos = '';
-          extra_rank_bos = '';
+          let is_ambiguous = false;
+          let extra_file_bos: '' | null | Ts.SquareFileBos = '';
+          let extra_rank_bos: '' | null | Ts.SquareRankBos = '';
 
           if (!initial_cached_square.isKing) {
             //knight, bishop, rook, queen
-            temp = that.legalRevTree[final_cached_square.bos];
+            let legal_rev_tree: undefined | Ts.RevTreeChild = that?.legalRevTree?.[final_cached_square.bos || ''];
 
-            if (temp) {
-              temp = temp[initial_cached_square.bal.toLowerCase()];
+            if (legal_rev_tree) {
+              let bos_moves: Ts.SquareBos[] = legal_rev_tree[(initial_cached_square.bal || '').toLowerCase()];
 
-              if (temp && temp.length > 1) {
+              if (bos_moves?.length > 1) {
                 is_ambiguous = true;
-                temp = temp.join(',');
+                let bos_csv_list = bos_moves.join(',');
 
-                if (_occurrences(temp, initial_cached_square.fileBos) > 1) {
+                if (_occurrences(bos_csv_list, initial_cached_square.fileBos || '') > 1) {
                   extra_rank_bos = initial_cached_square.rankBos;
                 }
 
-                if (_occurrences(temp, initial_cached_square.rankBos) > 1) {
+                if (_occurrences(bos_csv_list, initial_cached_square.rankBos || '') > 1) {
                   extra_file_bos = initial_cached_square.fileBos;
                 }
               }
             }
           }
 
-          temp = initial_cached_square.absBal;
-          temp2 = (final_cached_square.isEmptySquare ? '' : 'x') + final_cached_square.bos;
+          let temp = initial_cached_square.absBal || ''; //it should never empty though
+          let temp2 = (final_cached_square.isEmptySquare ? '' : 'x') + final_cached_square.bos;
 
           if (is_ambiguous) {
             if (!extra_file_bos && !extra_rank_bos) {
@@ -3189,15 +3170,14 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds, isUnreferenced}
-    function _playMove(mov?, p?: Ts.OptionalParam, sliced_fen_history?) {
-      var i,
-        that,
-        temp,
+    function _playMove(mov?, p?: Ts.OptionalParam, sliced_fen_history?): null | Ts.Move {
+      let that: Ts.Board = this;
+
+      let rtn_move_obj: null | Ts.Move = null;
+
+      var temp,
         temp2,
         temp3,
-        initial_cached_square,
-        final_cached_square,
-        pgn_obj,
         complete_san,
         move_res,
         active_side,
@@ -3208,11 +3188,8 @@ import * as Ts from './isepic-chess.types';
         wrapped_move,
         max_current_move_possible,
         on_solve_out_of_bounds,
-        autogen_comment,
-        rtn_move_obj;
+        autogen_comment;
 
-      that = this;
-      rtn_move_obj = null;
       p = _unreferenceP(p);
 
       block: {
@@ -3221,17 +3198,20 @@ import * as Ts from './isepic-chess.types';
         p.playSounds = p.playSounds === true;
         p.isUnreferenced = p.isUnreferenced === true;
 
-        if (that.isPuzzleMode) {
-          max_current_move_possible = that.moveList.length - 1;
+        // @ts-ignore
+        let that_movelist: Ts.Move[] = that!.moveList;
 
-          if (that.currentMove < max_current_move_possible) {
-            wrapped_move = that.getWrappedMove(mov, p);
+        if (that.isPuzzleMode) {
+          max_current_move_possible = that_movelist.length - 1;
+
+          if (Number(that.currentMove) < max_current_move_possible) {
+            wrapped_move = that?.getWrappedMove?.(mov, p);
 
             if (
               wrapped_move !== null &&
-              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that.isLegalMove(mov, p))
+              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that?.isLegalMove?.(mov, p))
             ) {
-              is_promotion = !!that.moveList[that.currentMove + 1].promotion;
+              is_promotion = !!that_movelist[Number(that.currentMove) + 1].promotion;
               mov_uci =
                 wrapped_move.fromBos +
                 '' +
@@ -3239,20 +3219,20 @@ import * as Ts from './isepic-chess.types';
                 '' +
                 (is_promotion ? toBal(wrapped_move.promotion).toLowerCase() : '');
 
-              if (mov_uci === that.moveList[that.currentMove + 1].uci) {
-                on_solve_out_of_bounds = that.currentMove + 2 > max_current_move_possible;
+              if (mov_uci === that_movelist[Number(that.currentMove) + 1].uci) {
+                on_solve_out_of_bounds = Number(that.currentMove) + 2 > max_current_move_possible;
 
                 if (p.isMockMove) {
                   rtn_move_obj = on_solve_out_of_bounds
-                    ? that.moveList[max_current_move_possible]
-                    : that.moveList[that.currentMove + 2];
+                    ? that_movelist[max_current_move_possible]
+                    : that_movelist[Number(that.currentMove) + 2];
                 } else {
                   if (p.isInanimated && on_solve_out_of_bounds) {
-                    that.setCurrentMove(max_current_move_possible, true, true);
+                    that?.setCurrentMove?.(max_current_move_possible, true, true);
                   } else {
-                    that.setCurrentMove(2, false, true);
+                    that?.setCurrentMove?.(2, false, true);
                   }
-                  rtn_move_obj = that.moveList[that.currentMove];
+                  rtn_move_obj = that_movelist[Number(that.currentMove)];
                 }
 
                 if (p.isUnreferenced) {
@@ -3266,8 +3246,8 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (p.isMockMove) {
-          if (that.moveList) {
-            sliced_fen_history = that.fenHistoryExport().slice(0, that.currentMove + 1);
+          if (that_movelist) {
+            sliced_fen_history = that?.fenHistoryExport?.().slice(0, Number(that.currentMove) + 1);
           }
 
           rtn_move_obj = fenApply(that.fen, 'playMove', [mov, p, sliced_fen_history], {
@@ -3278,40 +3258,43 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        pgn_obj = that.draftMove(mov, p);
+        let pgn_obj: Ts.DraftMove = that?.draftMove?.(mov, p);
 
         if (!pgn_obj.canMove) {
           break block;
         }
 
-        active_side = that[that.activeColor];
-        non_active_side = that[that.nonActiveColor];
-        initial_cached_square = pgn_obj.initialCachedSquare;
-        final_cached_square = pgn_obj.finalCachedSquare;
+        active_side = that[String(that.activeColor)];
+        non_active_side = that[String(that.nonActiveColor)];
+
+        // @ts-ignore
+        let initial_cached_square: Ts.Square = pgn_obj.initialCachedSquare;
+        // @ts-ignore
+        let final_cached_square: Ts.Square = pgn_obj.finalCachedSquare;
 
         if (pgn_obj.activeSideCastlingZero) {
           active_side.castling = 0;
         }
 
         if (pgn_obj.putRookAtFileShift) {
-          that.setSquare(final_cached_square, active_side.rook, {
+          that?.setSquare?.(final_cached_square, active_side.rook, {
             fileShift: pgn_obj.putRookAtFileShift,
           });
         }
 
         if (pgn_obj.removeRookAtFileShift) {
-          that.setSquare(final_cached_square, _EMPTY_SQR, {
+          that?.setSquare?.(final_cached_square, _EMPTY_SQR, {
             fileShift: pgn_obj.removeRookAtFileShift,
           });
         }
 
         if (pgn_obj.enPassantCaptureAtRankShift) {
-          that.setSquare(final_cached_square, _EMPTY_SQR, {
+          that?.setSquare?.(final_cached_square, _EMPTY_SQR, {
             rankShift: pgn_obj.enPassantCaptureAtRankShift,
           });
         }
 
-        for (i = 0; i < 2; i++) {
+        for (let i = 0; i < 2; i++) {
           //0...1
           current_side = i ? active_side : non_active_side;
           temp = i ? initial_cached_square : final_cached_square;
@@ -3319,19 +3302,22 @@ import * as Ts from './isepic-chess.types';
           if (current_side.castling && temp.isRook) {
             temp2 = current_side.isBlack ? '8' : '1';
 
-            if (current_side.castling !== _LONG_CASTLE && sameSquare(temp, that.getSquare('h' + temp2))) {
+            if (current_side.castling !== _LONG_CASTLE && sameSquare(temp, that?.getSquare?.('h' + temp2))) {
               current_side.castling -= _SHORT_CASTLE;
-            } else if (current_side.castling !== _SHORT_CASTLE && sameSquare(temp, that.getSquare('a' + temp2))) {
+            } else if (current_side.castling !== _SHORT_CASTLE && sameSquare(temp, that?.getSquare?.('a' + temp2))) {
               current_side.castling -= _LONG_CASTLE;
             }
           }
         }
 
+        // @ts-ignore
         that.enPassantBos = pgn_obj.newEnPassantBos;
-        that.setSquare(final_cached_square, pgn_obj.promotedVal || initial_cached_square.val);
-        that.setSquare(initial_cached_square, _EMPTY_SQR);
-        that.toggleActiveNonActive();
 
+        that?.setSquare?.(final_cached_square, pgn_obj.promotedVal || initial_cached_square.val);
+        that?.setSquare?.(initial_cached_square, _EMPTY_SQR);
+        that?.toggleActiveNonActive?.();
+
+        // @ts-ignore
         that.halfMove++;
         if (pgn_obj.pawnMoved || final_cached_square.val) {
           that.halfMove = 0;
@@ -3339,11 +3325,12 @@ import * as Ts from './isepic-chess.types';
 
         if (active_side.isBlack) {
           //active_side is toggled
+          // @ts-ignore
           that.fullMove++;
         }
 
-        that.updateHelper({
-          currentMove: that.currentMove + 1,
+        that?.updateHelper?.({
+          currentMove: Number(that.currentMove) + 1,
           slicedFenHistory: sliced_fen_history,
         });
 
@@ -3375,15 +3362,16 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        temp = (initial_cached_square.bal.replace('*', '') || '').toLowerCase(); //piece
-        temp2 = (toBal(pgn_obj.promotedVal).replace('*', '') || '').toLowerCase(); //promotion
+        temp = (initial_cached_square.bal || '').replace('*', '').toLowerCase(); //piece
+        temp2 = (toBal(pgn_obj.promotedVal || 0) || '').replace('*', '').toLowerCase(); //promotion
         temp3 = initial_cached_square.bos + '' + final_cached_square.bos + '' + temp2; //uci
 
-        if (that.currentMove !== that.moveList.length) {
-          that.moveList = that.moveList.slice(0, that.currentMove);
+        if (Number(that.currentMove) !== that_movelist.length) {
+          that.moveList = that_movelist.slice(0, Number(that.currentMove));
+          that_movelist = that.moveList;
         }
 
-        that.moveList.push({
+        that_movelist.push({
           colorMoved: that.nonActiveColor,
           colorToPlay: that.activeColor,
           fen: that.fen,
@@ -3401,14 +3389,14 @@ import * as Ts from './isepic-chess.types';
           isEnPassantCapture: pgn_obj.isEnPassantCapture,
         });
 
-        rtn_move_obj = that.moveList[that.moveList.length - 1];
+        rtn_move_obj = that_movelist[that_movelist.length - 1];
 
         if (p.isUnreferenced) {
           rtn_move_obj = _unreferencedMoveHelper(rtn_move_obj);
         }
 
-        that.silentlyResetManualResult();
-        that.refreshUi(p.isInanimated ? 0 : 1, p.playSounds); //autorefresh
+        that?.silentlyResetManualResult?.();
+        that?.refreshUi?.(p.isInanimated ? 0 : 1, p.playSounds); //autorefresh
       }
 
       return rtn_move_obj;
@@ -3464,40 +3452,41 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, isInanimated, playSounds, isUnreferenced}
-    function _playRandomMove(p?: Ts.OptionalParam, sliced_fen_history?) {
-      var i, len, that, temp, temp2, used_keys, rtn;
+    function _playRandomMove(p?: Ts.OptionalParam, sliced_fen_history?): null | Ts.Move {
+      let that: Ts.Board = this;
 
-      that = this;
-      rtn = null;
+      let rtn: null | Ts.Move = null;
+
       p = _unreferenceP(p, [['isLegalMove', true]]);
 
       block: {
-        temp = that.legalUci.slice(0);
+        let uci_moves = that!.legalUci!.slice(0);
 
         //when there is a promotion overwrite (promoteTo), we should collapse them
         //into one move in order to keep the correct distribution of probabilities
         if (toVal(p.promoteTo)) {
-          temp = [];
-          used_keys = {};
+          uci_moves = [];
+          let used_keys = {};
 
-          for (i = 0, len = that.legalUci.length; i < len; i++) {
+          for (let i = 0, len = that!.legalUci!.length; i < len; i++) {
             //0<len
-            temp2 = that.legalUci[i].slice(0, 4); //uci without promotion char
+            // @ts-ignore
+            let uci_without_promotion: Ts.UciMove = that.legalUci[i].slice(0, 4);
 
-            if (used_keys[temp2]) {
+            if (used_keys[uci_without_promotion]) {
               continue;
             }
 
-            used_keys[temp2] = true;
-            temp.push(temp2);
+            used_keys[uci_without_promotion] = true;
+            uci_moves.push(uci_without_promotion);
           }
         }
 
-        if (!temp.length) {
+        if (!uci_moves.length) {
           break block;
         }
 
-        rtn = that.playMove(temp[Math.floor(Math.random() * temp.length)], p, sliced_fen_history);
+        rtn = that?.playMove?.(uci_moves[Math.floor(Math.random() * uci_moves.length)], p, sliced_fen_history);
       }
 
       return rtn;
@@ -4064,17 +4053,15 @@ import * as Ts from './isepic-chess.types';
 
     //p = {skipFenValidation}
     function fenGet(fen?, props?, p?: Ts.OptionalParam): any {
-      let rtn = null;
-
-      var board, board_name, board_created, board_keys, current_key, invalid_key, rtn_pre;
+      let rtn: any = null;
 
       p = _unreferenceP(p);
-      board_created = false;
+
+      let board_created = false;
+      let board_name = 'board_fenGet';
 
       block: {
-        board_name = 'board_fenGet';
-
-        board = initBoard({
+        let board = initBoard({
           boardName: board_name,
           fen: fen,
           skipFenValidation: p.skipFenValidation,
@@ -4089,7 +4076,7 @@ import * as Ts from './isepic-chess.types';
 
         board = _cloneBoardToObj({ boardName: board_name + '_copy' }, board);
         board_created = true;
-        board_keys = [];
+        let board_keys: any[] = [];
 
         if (_isArray(props)) {
           board_keys = props;
@@ -4101,14 +4088,14 @@ import * as Ts from './isepic-chess.types';
           board_keys = _MUTABLE_KEYS.slice(0);
         }
 
-        rtn_pre = {};
+        let rtn_pre = {};
 
         for (let i = 0, len = board_keys.length; i < len; i++) {
           //0<len
-          current_key = _formatName(board_keys[i]);
+          let current_key = _formatName(board_keys[i]);
 
           if (current_key && !rtn_pre[current_key]) {
-            invalid_key = true;
+            let invalid_key = true;
 
             for (let j = 0, len2 = _MUTABLE_KEYS.length; j < len2; j++) {
               //0<len2

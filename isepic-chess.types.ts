@@ -68,6 +68,12 @@ export type WhiteSign = 1;
 export type BlackSign = -1;
 export type Sign = WhiteSign | BlackSign;
 
+export type PositiveOneShift = 1;
+export type NegativeOneShift = -1;
+export type PositiveTwoShift = 2;
+export type NegativeTwoShift = -2;
+export type Shift = PositiveOneShift | NegativeOneShift | PositiveTwoShift | NegativeTwoShift;
+
 export type NoSquareClassName = '';
 export type WhiteColor = 'w';
 export type BlackColor = 'b';
@@ -137,8 +143,6 @@ export type CastlingRightsStr = NoCastlingRightsStr | ShortCastleStr | LongCastl
 export type TrueOnly = true;
 export type FalseOnly = false;
 
-export type StringLenOne = string & { length: 1 };
-
 export type NumberZero = 0;
 export type NumberOne = 1;
 export type NumberSix = 6;
@@ -150,7 +154,7 @@ export interface WhiteInfo {
   firstRankPos: NumberSeven;
   secondRankPos: NumberSix;
   lastRankPos: NumberZero;
-  singlePawnRankShift: BlackSign;
+  singlePawnRankShift: NegativeOneShift;
   pawn: WpVal;
   knight: WnVal;
   bishop: WbVal;
@@ -168,7 +172,7 @@ export interface BlackInfo {
   firstRankPos: NumberZero;
   secondRankPos: NumberOne;
   lastRankPos: NumberSeven;
-  singlePawnRankShift: WhiteSign;
+  singlePawnRankShift: PositiveOneShift;
   pawn: BpVal;
   knight: BnVal;
   bishop: BbVal;
@@ -449,3 +453,20 @@ export type TestCollision = {
 export type ColorBishopCounts = {
   [key in Color]: BishopCounts;
 };
+
+export type DraftMove = Partial<{
+  canMove: boolean;
+  initialCachedSquare: Square;
+  finalCachedSquare: Square;
+  activeSideCastlingZero: boolean;
+  putRookAtFileShift: Shift;
+  removeRookAtFileShift: Shift;
+  enPassantCaptureAtRankShift: Sign;
+  pawnMoved: boolean;
+  isEnPassantCapture: boolean;
+  newEnPassantBos: SquareBos;
+  captured: LowercasePieceBal;
+  promotedVal: SquareVal;
+  partialSan: string;
+  withOverdisambiguated: string[];
+}>;
