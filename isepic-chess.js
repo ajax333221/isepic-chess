@@ -85,7 +85,7 @@
       return rtn;
     }
     function _strToValHelper(str) {
-      let rtn = 0;
+      let rtn = _EMPTY_SQR;
       block: {
         if (!str) {
           break block;
@@ -122,9 +122,11 @@
     function _arrToPosHelper(arr) {
       let rtn = null;
       if (_isArray(arr) && arr.length === 2) {
-        let rank_pos = _toInt(arr[0]);
-        let file_pos = _toInt(arr[1]);
-        if (rank_pos <= 7 && rank_pos >= 0 && file_pos <= 7 && file_pos >= 0) {
+        let pre_rank_pos = _toInt(arr[0]);
+        let pre_file_pos = _toInt(arr[1]);
+        if (pre_rank_pos <= 7 && pre_rank_pos >= 0 && pre_file_pos <= 7 && pre_file_pos >= 0) {
+          let rank_pos = pre_rank_pos;
+          let file_pos = pre_file_pos;
           rtn = [rank_pos, file_pos];
         }
       }
@@ -152,26 +154,26 @@
         let move_list = [];
         last_index = -1;
         rgxp = /\s+([1-9][0-9]*)*\s*\.*\s*\.*\s*([^\s]+)/g;
-        let temp;
+        let last_match = '';
         while ((mtch = rgxp.exec(g))) {
           last_index = rgxp.lastIndex;
-          temp = mtch[0];
+          last_match = mtch[0];
           move_list.push(mtch[2]);
         }
         if (last_index === -1) {
           break block;
         }
         let game_result = _RESULT_ONGOING;
-        temp = _pgnResultHelper(temp);
-        if (temp) {
+        let result_last_match = _pgnResultHelper(last_match);
+        if (result_last_match) {
           move_list.pop();
-          game_result = temp;
+          game_result = result_last_match;
         }
         if (meta_tags.Result) {
-          temp = _pgnResultHelper(meta_tags.Result);
-          if (temp) {
-            meta_tags.Result = temp;
-            game_result = temp;
+          let result_meta_tag = _pgnResultHelper(meta_tags.Result);
+          if (result_meta_tag) {
+            meta_tags.Result = result_meta_tag;
+            game_result = result_meta_tag;
           }
         }
         rtn = {
@@ -208,11 +210,14 @@
         if (temp.length !== 4 && temp.length !== 5) {
           break block;
         }
-        let temp2 = [_strToBosHelper(temp.slice(0, 2)), _strToBosHelper(temp.slice(2, 4))];
-        if (temp2[0] === null || temp2[1] === null) {
+        let pre_from_bos = _strToBosHelper(temp.slice(0, 2));
+        let pre_to_bos = _strToBosHelper(temp.slice(2, 4));
+        if (pre_from_bos === null || pre_to_bos === null) {
           break block;
         }
-        let fromTo = temp2;
+        let from_bos = pre_from_bos;
+        let to_bos = pre_to_bos;
+        let fromTo = [from_bos, to_bos];
         let possible_promote = temp.charAt(4) || '';
         rtn = [fromTo, possible_promote];
       }
@@ -231,11 +236,14 @@
           break block;
         }
         let temp2 = temp.split(p.delimiter);
-        let temp3 = [_strToBosHelper(temp2[0]), _strToBosHelper(temp2[1])];
-        if (temp3[0] === null || temp3[1] === null) {
+        let pre_from_bos = _strToBosHelper(temp2[0]);
+        let pre_to_bos = _strToBosHelper(temp2[1]);
+        if (pre_from_bos === null || pre_to_bos === null) {
           break block;
         }
-        let fromTo = temp3;
+        let from_bos = pre_from_bos;
+        let to_bos = pre_to_bos;
+        let fromTo = [from_bos, to_bos];
         rtn = fromTo;
       }
       return rtn;
@@ -252,7 +260,10 @@
         if (!isInsideBoard(mov[0]) || !isInsideBoard(mov[1])) {
           break block;
         }
-        rtn = [toBos(mov[0]), toBos(mov[1])];
+        let from_bos = toBos(mov[0]);
+        let to_bos = toBos(mov[1]);
+        let fromTo = [from_bos, to_bos];
+        rtn = fromTo;
       }
       return rtn;
     }
@@ -1099,15 +1110,6 @@
     }
     function _updateFenAndMisc(sliced_fen_history) {
       let that = this;
-      let temp,
-        temp2,
-        from_bos,
-        to_bos,
-        can_en_passant,
-        times_found,
-        bishop_count,
-        at_least_one_light,
-        at_least_one_dark;
       that.checks = that?.attackersFromNonActive?.(null);
       that.isCheck = !!that.checks;
       /*! NO move below legalMovesHelper()*/
@@ -1116,40 +1118,40 @@
       that.legalRevTree = {};
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-          let temp3 = that?.legalMovesHelper?.([i, j]);
-          let len = temp3.uciMoves.length;
+          let legal_moves = that?.legalMovesHelper?.([i, j]);
+          let len = legal_moves.uciMoves.length;
           if (!len) {
             continue;
           }
-          from_bos = toBos([i, j]);
+          let from_bos = toBos([i, j]);
           that.legalUciTree[from_bos] = [];
           for (let k = 0; k < len; k++) {
-            temp2 = temp3.uciMoves[k];
-            if (temp3.isPromotion) {
+            let uci_move = legal_moves.uciMoves[k];
+            if (legal_moves.isPromotion) {
               for (let m = _KNIGHT_W; m <= _QUEEN_W; m++) {
-                let uci_promotion_move = temp2 + toBal(m).toLowerCase();
+                let uci_promotion_move = uci_move + toBal(m).toLowerCase();
                 that.legalUci.push(uci_promotion_move);
                 that.legalUciTree[from_bos].push(uci_promotion_move);
               }
             } else {
-              that.legalUci.push(temp2);
-              that.legalUciTree[from_bos].push(temp2);
+              that.legalUci.push(uci_move);
+              that.legalUciTree[from_bos].push(uci_move);
             }
-            to_bos = temp2.slice(2, 4);
+            let to_bos = uci_move.slice(2, 4);
             if (!that.legalRevTree[to_bos]) {
               that.legalRevTree[to_bos] = {};
             }
-            if (!that.legalRevTree[to_bos][temp3.piece]) {
-              that.legalRevTree[to_bos][temp3.piece] = [];
+            if (!that.legalRevTree[to_bos][legal_moves.piece]) {
+              that.legalRevTree[to_bos][legal_moves.piece] = [];
             }
-            that.legalRevTree[to_bos][temp3.piece].push(from_bos);
+            that.legalRevTree[to_bos][legal_moves.piece].push(from_bos);
           }
         }
       }
       that.isCheckmate = that.isCheck && !that.legalUci.length;
       that.isStalemate = !that.isCheck && !that.legalUci.length;
       if (that.enPassantBos) {
-        can_en_passant = false;
+        let can_en_passant = false;
         if (that.legalRevTree[that.enPassantBos] && that?.legalRevTree?.[String(that.enPassantBos)]['p']) {
           can_en_passant = true;
         }
@@ -1161,19 +1163,19 @@
       that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
       that.isThreefold = false;
       if (sliced_fen_history || (that.moveList && Number(that.currentMove) > 7 && Number(that.halfMove) > 7)) {
-        times_found = 1;
-        temp = sliced_fen_history || that?.fenHistoryExport?.();
+        let times_found = 1;
+        let fen_arr = sliced_fen_history || that?.fenHistoryExport?.();
         let i = sliced_fen_history ? sliced_fen_history.length - 1 : Number(that.currentMove) - 1;
         for (; i >= 0; i--) {
-          temp2 = temp[i].split(' ');
-          if (temp2.slice(0, 4).join(' ') === clockless_fen) {
+          let fen_parts = fen_arr[i].split(' ');
+          if (fen_parts.slice(0, 4).join(' ') === clockless_fen) {
             times_found++;
             if (times_found > 2) {
               that.isThreefold = true;
               break;
             }
           }
-          if (temp2[4] === '0') {
+          if (fen_parts[4] === '0') {
             break;
           }
         }
@@ -1193,9 +1195,9 @@
         if (total_pieces.w.n + total_pieces.b.n) {
           that.isInsufficientMaterial = total_pieces.w.n + total_pieces.b.n + total_pieces.w.b + total_pieces.b.b === 1;
         } else if (total_pieces.w.b + total_pieces.b.b) {
-          bishop_count = that?.countLightDarkBishops?.();
-          at_least_one_light = !!(bishop_count.w.lightSquaredBishops + bishop_count.b.lightSquaredBishops);
-          at_least_one_dark = !!(bishop_count.w.darkSquaredBishops + bishop_count.b.darkSquaredBishops);
+          let bishop_count = that?.countLightDarkBishops?.();
+          let at_least_one_light = !!(bishop_count.w.lightSquaredBishops + bishop_count.b.lightSquaredBishops);
+          let at_least_one_dark = !!(bishop_count.w.darkSquaredBishops + bishop_count.b.darkSquaredBishops);
           that.isInsufficientMaterial = at_least_one_light !== at_least_one_dark;
         } else {
           that.isInsufficientMaterial = true;
@@ -1207,8 +1209,8 @@
       that.w.materialDiff = [];
       that.b.materialDiff = [];
       for (let i = _PAWN_W; i <= _KING_W; i++) {
-        temp = toBal(-i);
-        let current_diff = total_pieces.w[temp] - total_pieces.b[temp];
+        let piece_bal = toBal(-i);
+        let current_diff = total_pieces.w[piece_bal] - total_pieces.b[piece_bal];
         for (let j = 0, len = Math.abs(current_diff); j < len; j++) {
           if (current_diff > 0) {
             let w_piece_val = i;
@@ -2120,8 +2122,8 @@
           if (!pgn_obj.canMove) {
             continue;
           }
-          for (let j = 0, len2 = pgn_obj.withOverdisambiguated.length; j < len2; j++) {
-            if (mov !== pgn_obj.withOverdisambiguated[j]) {
+          for (let j = 0, len2 = Number(pgn_obj?.withOverdisambiguated?.length); j < len2; j++) {
+            if (pgn_obj?.withOverdisambiguated && mov !== pgn_obj.withOverdisambiguated[j]) {
               continue;
             }
             validated_move = [bos_moves[i], to_bos];
@@ -2566,12 +2568,14 @@
       stack;
       constructor(woard) {
         let board = getBoard(woard);
-        this.board =
-          board === null
-            ? initBoard({
-                ...(typeof woard === 'string' && { boardName: woard }),
-              })
-            : board;
+        if (board === null) {
+          let new_board = initBoard({
+            ...(typeof woard === 'string' && { boardName: woard }),
+          });
+          this.board = new_board;
+        } else {
+          this.board = board;
+        }
         this.stack = [];
         for (const key in this.board) {
           if (typeof this.board[key] === 'function') {
@@ -2608,7 +2612,7 @@
       return rtn;
     }
     function toVal(pvqal) {
-      let rtn = 0;
+      let rtn = _EMPTY_SQR;
       if (typeof pvqal === 'string') {
         rtn = _strToValHelper(pvqal);
       } else if (typeof pvqal === 'number') {
