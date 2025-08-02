@@ -993,7 +993,6 @@
         }
         that.updateHelper({
           currentMove: temp,
-          // @ts-ignore
           fen: that.moveList[temp].fen,
           skipFenValidation: true,
         });

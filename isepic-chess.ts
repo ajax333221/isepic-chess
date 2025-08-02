@@ -800,7 +800,6 @@ import * as Ts from './isepic-chess.types';
           let from_prop = from_board[current_key];
 
           if (!to_prop && (current_key === 'w' || current_key === 'b' || current_key === 'squares')) {
-            // @ts-ignore
             to_obj[current_key] = {};
             to_prop = to_obj[current_key];
           }
@@ -812,7 +811,6 @@ import * as Ts from './isepic-chess.types';
           }
 
           if (current_key === 'legalUci') {
-            // @ts-ignore
             to_obj.legalUci = from_board.legalUci.slice(0);
             continue;
           }
@@ -1319,7 +1317,6 @@ import * as Ts from './isepic-chess.types';
 
         that.updateHelper({
           currentMove: temp,
-          // @ts-ignore
           fen: that.moveList[temp].fen,
           skipFenValidation: true,
         }); /*! NO remove skipFenValidation*/
@@ -1951,7 +1948,6 @@ import * as Ts from './isepic-chess.types';
         let lc_piece: Ts.NoLowercasePieceBal | Ts.LowercasePieceBal = (target_cached_square.bal || '').toLowerCase();
         rtn.piece = lc_piece;
 
-        // @ts-ignore
         let en_passant_bos: Ts.PreValidatedQos = that.enPassantBos;
 
         if (target_cached_square.isKing) {
@@ -2132,7 +2128,6 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        // @ts-ignore
         let legal_uci_in_bos: Ts.UciMove[] = pre_legal_uci_in_bos;
 
         legal_uci_in_bos = legal_uci_in_bos.slice(0);
@@ -2391,7 +2386,6 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (that.manualResult !== _RESULT_ONGOING) {
-          // @ts-ignore
           result_tag_ow = that.manualResult;
         }
 
@@ -3328,7 +3322,6 @@ import * as Ts from './isepic-chess.types';
         that.setSquare(initial_cached_square, _EMPTY_SQR);
         that.toggleActiveNonActive();
 
-        // @ts-ignore
         that.halfMove++;
         if (pgn_obj.pawnMoved || final_cached_square.val) {
           that.halfMove = 0;
@@ -3336,7 +3329,6 @@ import * as Ts from './isepic-chess.types';
 
         if (active_side.isBlack) {
           //active_side is toggled
-          // @ts-ignore
           that.fullMove++;
         }
 
