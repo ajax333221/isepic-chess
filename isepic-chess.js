@@ -804,14 +804,19 @@
       function _squareHelper(my_square, is_unreferenced) {
         let rtn_square = my_square;
         if (is_unreferenced) {
+          let square_pos = toPos(my_square.pos);
+          let square_rank_pos = getRankPos(my_square.pos);
+          let square_file_pos = getFilePos(my_square.pos);
+          let square_rank_bos = getRankBos(my_square.pos);
+          let square_file_bos = getFileBos(my_square.pos);
           rtn_square = {
-            pos: toPos(my_square.pos),
+            pos: square_pos,
             //unreference
             bos: my_square.bos,
-            rankPos: getRankPos(my_square.pos),
-            filePos: getFilePos(my_square.pos),
-            rankBos: getRankBos(my_square.pos),
-            fileBos: getFileBos(my_square.pos),
+            rankPos: square_rank_pos,
+            filePos: square_file_pos,
+            rankBos: square_rank_bos,
+            fileBos: square_file_bos,
             bal: my_square.bal,
             absBal: my_square.absBal,
             val: my_square.val,

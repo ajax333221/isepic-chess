@@ -84,30 +84,28 @@ export type SquareClassName =
   | `${BlackColor}${LowercasePieceBal}`;
 
 export interface Square {
-  pos: null | SquarePos;
-  bos: null | SquareBos;
-  rankPos: null | SquareRankPos;
-  filePos: null | SquareFilePos;
-  rankBos: null | SquareRankBos;
-  fileBos: null | SquareFileBos;
-  bal: null | SquareBal;
-  absBal: null | SquareAbsBal;
-  val: null | SquareVal;
-  absVal: null | SquareAbsVal;
-  className: null | SquareClassName;
-  sign: null | Sign;
-  isEmptySquare: null | boolean;
-  isPawn: null | boolean;
-  isKnight: null | boolean;
-  isBishop: null | boolean;
-  isRook: null | boolean;
-  isQueen: null | boolean;
-  isKing: null | boolean;
+  pos: SquarePos;
+  bos: SquareBos;
+  rankPos: SquareRankPos;
+  filePos: SquareFilePos;
+  rankBos: SquareRankBos;
+  fileBos: SquareFileBos;
+  bal: SquareBal;
+  absBal: SquareAbsBal;
+  val: SquareVal;
+  absVal: SquareAbsVal;
+  className: SquareClassName;
+  sign: Sign;
+  isEmptySquare: boolean;
+  isPawn: boolean;
+  isKnight: boolean;
+  isBishop: boolean;
+  isRook: boolean;
+  isQueen: boolean;
+  isKing: boolean;
 }
 
-export type SquareMap = Partial<{
-  [key in SquareBos]: null | Square;
-}>;
+export type SquareMap = Record<SquareBos, Square>;
 
 export type WhiteEnpassantRankBos = '3';
 export type BlackEnpassantRankBos = '6';
