@@ -2162,14 +2162,15 @@ import * as Ts from './isepic-chess.types';
           let temp2 = legal_uci_in_bos[i];
 
           if (is_fen_or_san) {
-            let temp3 = that.playMove(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
+            // @ts-ignore
+            let temp3: Ts.Move = that.playMove(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
 
             if (p.returnType === 'fen') {
-              let fen_move: string = temp3.fen;
+              let fen_move = temp3.fen;
               mov.push(fen_move);
             } else {
               //type "san"
-              let san_move: string = temp3.san;
+              let san_move = temp3.san;
               mov.push(san_move);
             }
 
@@ -2294,9 +2295,11 @@ import * as Ts from './isepic-chess.types';
 
       outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
         //0<len
-        let temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
+        // @ts-ignore
+        let temp: Ts.Move = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
 
         if (temp.moveResult && !temp.canDraw) {
+          // @ts-ignore
           rtn.push(temp.uci);
 
           if (early_break) {
@@ -2315,9 +2318,11 @@ import * as Ts from './isepic-chess.types';
 
       outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
         //0<len
-        let temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
+        // @ts-ignore
+        let temp: Ts.Move = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
 
         if (temp.canDraw) {
+          // @ts-ignore
           rtn.push(temp.uci);
 
           if (early_break) {
@@ -3204,7 +3209,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds, isUnreferenced}
-    function _playMove(mov?, p?: Ts.OptionalParam, sliced_fen_history?): null | Ts.Move {
+    function _playMove(mov: Ts.Mov, p?: Ts.OptionalParam, sliced_fen_history?): null | Ts.Move {
       let that: Ts.Board = this;
 
       let rtn_move_obj: null | Ts.Move = null;
@@ -3433,7 +3438,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     //p = {isMockMove, promoteTo, delimiter, isLegalMove, isInanimated, playSounds}
-    function _playMoves(arr?, p?: Ts.OptionalParam, sliced_fen_history?): boolean {
+    function _playMoves(arr: Ts.Mov[], p?: Ts.OptionalParam, sliced_fen_history?): boolean {
       let that: Ts.Board = this;
 
       let rtn: boolean = false;

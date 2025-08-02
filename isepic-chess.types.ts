@@ -330,8 +330,8 @@ interface _Board {
   sanWrapmoveHelper(mov?: string): null | Wrapmove;
   getWrappedMove(mov?: Mov, p?: OptionalParam): null | WrappedMove;
   draftMove(mov?: Mov, p?: OptionalParam): DraftMove;
-  playMove: Function; //TODO: specify Params and Return
-  playMoves(arr?: Mov[], p?: OptionalParam, sliced_fen_history?: string[]): boolean;
+  playMove(mov: Mov, p?: OptionalParam, sliced_fen_history?: string[]): null | Move;
+  playMoves(arr: Mov[], p?: OptionalParam, sliced_fen_history?: string[]): boolean;
   playRandomMove(p?: OptionalParam, sliced_fen_history?: string[]): null | Move;
   navFirst(): boolean;
   navPrevious(): boolean;
