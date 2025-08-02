@@ -189,8 +189,9 @@ https://ajax333221.github.io/isepic-chess-ui/
 <li><strong>Multiple Board Instances:</strong> Allows managing several independent chess boards concurrently.</li>
 </ul>
 
-<h4><strong>Utility &amp; Presentation:</strong></h4>
+<h4><strong>Miscellaneous:</strong></h4>
 <ul>
+<li><strong>Type-Safe (TypeScript):</strong> Rewritten in TypeScript for improved code quality, maintainability, and enhanced developer experience.</li>
 <li><strong>Chainable Board Methods:</strong> Provides a fluent API for chaining multiple board operations together for concise code.</li>
 <li><strong>Generates ASCII Board Diagrams:</strong> Creates visual ASCII representations of the board state, useful for debugging or console output.</li>
 <li><strong>Puzzle Mode:</strong> (&#x1f6a7; work in progress &#x1f6a7;) An upcoming feature designed to facilitate the creation, analysis, and solving of chess puzzles directly within the library.</li>
