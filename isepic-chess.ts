@@ -1026,7 +1026,7 @@ import * as Ts from './isepic-chess.types';
 
         let count = 0;
 
-        for (let i = 0, len = board.legalUci!.length; i < len; i++) {
+        for (let i = 0, len = board.legalUci.length; i < len; i++) {
           //0<len
           if (specific_uci && specific_uci !== board.legalUci![i]) {
             continue;
@@ -1651,32 +1651,32 @@ import * as Ts from './isepic-chess.types';
       let rtn_msg: string = '';
 
       block: {
-        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
-        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.nonActiveColor)];
+        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.activeColor];
+        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.nonActiveColor];
 
-        if (Number(that!.halfMove) - Number(active_side.isBlack) + 1 >= Number(that!.fullMove) * 2) {
+        if (that.halfMove - Number(active_side.isBlack) + 1 >= that.fullMove * 2) {
           rtn_msg = 'Error [0] exceeding half moves ratio';
           break block;
         }
 
-        if (Number(that.checks) > 2) {
+        if (that.checks > 2) {
           rtn_msg = 'Error [1] king is checked more times than possible';
           break block;
         }
 
-        if (that?.attackersFromActive?.(null, true)) {
+        if (that.attackersFromActive(null, true)) {
           rtn_msg = 'Error [2] non-active king in check';
           break block;
         }
 
         if (that.enPassantBos) {
-          let en_passant_square: Ts.Square = that?.getSquare?.(that.enPassantBos);
+          let en_passant_square: Ts.Square = that.getSquare(that.enPassantBos);
 
-          let infront_ep_is_empty: Ts.Square = that?.getSquare?.(en_passant_square, {
+          let infront_ep_is_empty: Ts.Square = that.getSquare(en_passant_square, {
             rankShift: active_side.singlePawnRankShift,
           }).isEmptySquare;
 
-          let behind_ep_val: Ts.SquareVal = that?.getSquare?.(en_passant_square, {
+          let behind_ep_val: Ts.SquareVal = that.getSquare(en_passant_square, {
             rankShift: non_active_side.singlePawnRankShift,
           }).val;
 
@@ -1693,8 +1693,8 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        let total_pieces = countPieces(String(that.fen));
-        let bishop_count: Ts.ColorBishopCounts = that?.countLightDarkBishops?.();
+        let total_pieces = countPieces(that.fen);
+        let bishop_count: Ts.ColorBishopCounts = that.countLightDarkBishops();
 
         for (let i = 0; i < 2; i++) {
           //0...1
@@ -1735,7 +1735,7 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        let fen_board = that!.fen!.split(' ')[0];
+        let fen_board = that.fen.split(' ')[0];
 
         for (let i = 0; i < 2; i++) {
           //0...1
@@ -1748,7 +1748,7 @@ import * as Ts from './isepic-chess.types';
 
             for (let k = 0; k < 8; k++) {
               //0...7
-              total_pawns_in_current_file += Number(that?.getSquare?.([k, j]).val === current_side!.pawn);
+              total_pawns_in_current_file += Number(that.getSquare([k, j]).val === current_side.pawn);
             }
 
             if (total_pawns_in_current_file > 1) {
@@ -1779,14 +1779,14 @@ import * as Ts from './isepic-chess.types';
             originalShortRookBos: i ? 'h8' : 'h1',
           };
 
-          if (that?.getSquare?.(temp.originalKingBos).val !== current_side!.king) {
+          if (that.getSquare(temp.originalKingBos).val !== current_side.king) {
             rtn_msg = 'Error [11] ' + temp.completeActiveColor + ' castling rights without king in original square';
             break block;
           }
 
           if (
             current_side.castling !== _LONG_CASTLE &&
-            that?.getSquare?.(temp.originalShortRookBos).val !== current_side!.rook
+            that.getSquare(temp.originalShortRookBos).val !== current_side.rook
           ) {
             rtn_msg = 'Error [12] ' + temp.completeActiveColor + ' short castling rights with missing H-file rook';
             break block;
@@ -1794,7 +1794,7 @@ import * as Ts from './isepic-chess.types';
 
           if (
             current_side.castling !== _SHORT_CASTLE &&
-            that?.getSquare?.(temp.originalLongRookBos).val !== current_side!.rook
+            that.getSquare(temp.originalLongRookBos).val !== current_side.rook
           ) {
             rtn_msg = 'Error [13] ' + temp.completeActiveColor + ' long castling rights with missing A-file rook';
             break block;
@@ -1820,7 +1820,7 @@ import * as Ts from './isepic-chess.types';
         isAttacked: false,
       };
 
-      let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
+      let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.activeColor];
 
       // @ts-ignore
       piece_direction = _toInt(piece_direction, 1, 8);
@@ -1832,7 +1832,7 @@ import * as Ts from './isepic-chess.types';
 
       for (let i = 0; i < max_shifts; i++) {
         //0<max_shifts
-        let current_square: Ts.Square = that?.getSquare?.(initial_qos, {
+        let current_square: Ts.Square = that.getSquare(initial_qos, {
           rankShift: rank_change * (i + 1),
           fileShift: file_change * (i + 1),
         });
@@ -1915,7 +1915,7 @@ import * as Ts from './isepic-chess.types';
       ): Ts.SquareBos[] {
         //uses: that
 
-        let rtn_candidate_moves: Ts.SquareBos[] = that?.testCollision?.(
+        let rtn_candidate_moves: Ts.SquareBos[] = that.testCollision(
           _TEST_COLLISION_OP_CANDIDATE_MOVES,
           qos,
           piece_direction,
@@ -1928,7 +1928,7 @@ import * as Ts from './isepic-chess.types';
       }
 
       block: {
-        let target_cached_square: Ts.Square = that?.getSquare?.(target_qos, {
+        let target_cached_square: Ts.Square = that.getSquare(target_qos, {
           isUnreferenced: true,
         });
 
@@ -1936,8 +1936,8 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
-        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.nonActiveColor)];
+        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.activeColor];
+        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.nonActiveColor];
 
         if (target_cached_square.isEmptySquare || target_cached_square.sign === non_active_side.sign) {
           break block;
@@ -1952,7 +1952,7 @@ import * as Ts from './isepic-chess.types';
         rtn.piece = lc_piece;
 
         // @ts-ignore
-        let en_passant_bos: Ts.PreValidatedQos = that!.enPassantBos;
+        let en_passant_bos: Ts.PreValidatedQos = that.enPassantBos;
 
         if (target_cached_square.isKing) {
           for (let i = _DIRECTION_TOP; i <= _DIRECTION_TOP_LEFT; i++) {
@@ -1991,15 +1991,15 @@ import * as Ts from './isepic-chess.types';
               }
 
               if (
-                that?.attackersFromNonActive?.(
-                  that?.getSquare?.(target_cached_square, { fileShift: current_shift.singleFileShift }),
+                that.attackersFromNonActive(
+                  that.getSquare(target_cached_square, { fileShift: current_shift.singleFileShift }),
                   true
                 )
               ) {
                 continue;
               }
 
-              let shifted_square: Ts.Square = that?.getSquare?.(target_cached_square, {
+              let shifted_square: Ts.Square = that.getSquare(target_cached_square, {
                 fileShift: current_shift.singleFileShift * 2,
               });
 
@@ -2024,7 +2024,7 @@ import * as Ts from './isepic-chess.types';
 
           for (let i = 0; i < 2; i++) {
             //0...1
-            let current_diagonal_square: null | Ts.Square = that?.getSquare?.(target_cached_square, {
+            let current_diagonal_square: null | Ts.Square = that.getSquare(target_cached_square, {
               rankShift: active_side.singlePawnRankShift,
               fileShift: i ? -1 : 1,
             });
@@ -2045,7 +2045,7 @@ import * as Ts from './isepic-chess.types';
             }
 
             if (is_same_square) {
-              en_passant_capturable_cached_square = that?.getSquare?.(current_diagonal_square, {
+              en_passant_capturable_cached_square = that.getSquare(current_diagonal_square, {
                 rankShift: non_active_side.singlePawnRankShift,
                 isUnreferenced: true,
               });
@@ -2081,30 +2081,30 @@ import * as Ts from './isepic-chess.types';
           //0<len
           for (let j = 0, len2 = pseudo_legal_arr[i].length; j < len2; j++) {
             //0<len2
-            let current_cached_square: Ts.Square = that?.getSquare?.(pseudo_legal_arr[i][j], {
+            let current_cached_square: Ts.Square = that.getSquare(pseudo_legal_arr[i][j], {
               isUnreferenced: true,
             });
 
-            that?.setSquare?.(current_cached_square, target_cached_square.val);
-            that?.setSquare?.(target_cached_square, _EMPTY_SQR);
+            that.setSquare(current_cached_square, target_cached_square.val);
+            that.setSquare(target_cached_square, _EMPTY_SQR);
 
             if (en_passant_capturable_cached_square !== null) {
               if (sameSquare(current_cached_square, en_passant_bos)) {
-                that?.setSquare?.(en_passant_capturable_cached_square, _EMPTY_SQR);
+                that.setSquare(en_passant_capturable_cached_square, _EMPTY_SQR);
               }
             }
 
-            if (!that?.attackersFromNonActive?.(null, true)) {
+            if (!that.attackersFromNonActive(null, true)) {
               // @ts-ignore
               let uci_move: Ts.UciMove = target_cached_square.bos + current_cached_square.bos;
               rtn.uciMoves.push(uci_move);
             }
 
-            that?.setSquare?.(current_cached_square, current_cached_square.val);
-            that?.setSquare?.(target_cached_square, target_cached_square.val);
+            that.setSquare(current_cached_square, current_cached_square.val);
+            that.setSquare(target_cached_square, target_cached_square.val);
 
             if (en_passant_capturable_cached_square !== null) {
-              that?.setSquare?.(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
+              that.setSquare(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
             }
           }
         }
@@ -2126,7 +2126,7 @@ import * as Ts from './isepic-chess.types';
       p = _unreferenceP(p);
 
       block: {
-        let pre_legal_uci_in_bos = that?.legalUciTree?.[toBos(target_qos) || ''];
+        let pre_legal_uci_in_bos = that.legalUciTree[toBos(target_qos) || ''];
 
         if (!pre_legal_uci_in_bos || !pre_legal_uci_in_bos.length) {
           break block;
@@ -2154,7 +2154,7 @@ import * as Ts from './isepic-chess.types';
           let temp2 = legal_uci_in_bos[i];
 
           if (is_fen_or_san) {
-            let temp3 = that?.playMove?.(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
+            let temp3 = that.playMove(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
 
             if (p.returnType === 'fen') {
               let fen_move: string = temp3.fen;
@@ -2184,8 +2184,8 @@ import * as Ts from './isepic-chess.types';
             mov.push(joined_move);
           } else if (p.returnType === 'fromToSquares') {
             if (p.squareType === 'square') {
-              let from_square: Ts.Square = that?.getSquare?.(from_bos, { isUnreferenced: true });
-              let to_square: Ts.Square = that?.getSquare?.(to_bos, { isUnreferenced: true });
+              let from_square: Ts.Square = that.getSquare(from_bos, { isUnreferenced: true });
+              let to_square: Ts.Square = that.getSquare(to_bos, { isUnreferenced: true });
 
               let square_move_from_to: Ts.MoveFromTo = [from_square, to_square];
               mov.push(square_move_from_to);
@@ -2205,7 +2205,7 @@ import * as Ts from './isepic-chess.types';
           } else {
             //type "toSquare"
             if (p.squareType === 'square') {
-              let to_square: Ts.Square = that?.getSquare?.(to_bos, { isUnreferenced: true });
+              let to_square: Ts.Square = that.getSquare(to_bos, { isUnreferenced: true });
               mov.push(to_square);
             } else if (p.squareType === 'pos') {
               // @ts-ignore
@@ -2231,19 +2231,19 @@ import * as Ts from './isepic-chess.types';
     function _legalFenMoves(target_qos: Ts.Qos) {
       let that: Ts.Board = this;
 
-      return that?.legalMoves?.(target_qos, { returnType: 'fen' });
+      return that.legalMoves(target_qos, { returnType: 'fen' });
     }
 
     function _legalSanMoves(target_qos: Ts.Qos) {
       let that: Ts.Board = this;
 
-      return that?.legalMoves?.(target_qos, { returnType: 'san' });
+      return that.legalMoves(target_qos, { returnType: 'san' });
     }
 
     function _legalUciMoves(target_qos: Ts.Qos) {
       let that: Ts.Board = this;
 
-      return that?.legalMoves?.(target_qos, { returnType: 'uci' });
+      return that.legalMoves(target_qos, { returnType: 'uci' });
     }
 
     //p = {delimiter}
@@ -2253,7 +2253,7 @@ import * as Ts from './isepic-chess.types';
       let rtn: boolean = false;
 
       block: {
-        let wrapped_move = that?.getWrappedMove?.(mov, p);
+        let wrapped_move = that.getWrappedMove(mov, p);
 
         if (wrapped_move === null) {
           break block;
@@ -2265,7 +2265,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let legal_uci_in_bos = that?.legalUciTree?.[wrapped_move.fromBos];
+        let legal_uci_in_bos = that.legalUciTree[wrapped_move.fromBos];
 
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
@@ -2284,9 +2284,9 @@ import * as Ts from './isepic-chess.types';
 
       let rtn: Ts.UciMove[] = [];
 
-      outer: for (let i = 0, len = that!.legalUci!.length; i < len; i++) {
+      outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
         //0<len
-        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
+        let temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
 
         if (temp.moveResult && !temp.canDraw) {
           rtn.push(temp.uci);
@@ -2305,9 +2305,9 @@ import * as Ts from './isepic-chess.types';
 
       let rtn: Ts.UciMove[] = [];
 
-      outer: for (let i = 0, len = that!.legalUci!.length; i < len; i++) {
+      outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
         //0<len
-        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
+        let temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
 
         if (temp.canDraw) {
           rtn.push(temp.uci);
@@ -2326,9 +2326,9 @@ import * as Ts from './isepic-chess.types';
 
       let rtn: string[] = [];
 
-      for (let i = 0, len = that!.moveList!.length; i < len; i++) {
+      for (let i = 0, len = that.moveList.length; i < len; i++) {
         //0<len
-        rtn.push(String(that?.moveList?.[i]?.fen));
+        rtn.push(String(that.moveList[i].fen));
       }
 
       return rtn;
@@ -2440,10 +2440,10 @@ import * as Ts from './isepic-chess.types';
 
       let uci_arr: Ts.UciMove[] = [];
 
-      for (let i = 1, len = that!.moveList!.length; i < len; i++) {
+      for (let i = 1, len = that.moveList.length; i < len; i++) {
         //1<len
         // @ts-ignore
-        uci_arr.push(String(that?.moveList?.[i]?.uci));
+        uci_arr.push(that.moveList[i].uci);
       }
 
       if (uci_arr.length) {
@@ -2465,7 +2465,7 @@ import * as Ts from './isepic-chess.types';
         //0...7
         for (let j = 0; j < 8; j++) {
           //0...7
-          let current_square: Ts.Square = that?.getSquare?.(is_rotated ? [7 - i, 7 - j] : [i, j]);
+          let current_square: Ts.Square = that.getSquare(is_rotated ? [7 - i, 7 - j] : [i, j]);
 
           rtn += j ? '' : ' ' + current_square.rankBos + ' |';
           rtn += ' ' + (current_square.bal || '').replace('*', '.') + ' ';
@@ -2507,7 +2507,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        rtn = that === to_board || that?.boardHash?.() === to_board?.boardHash?.();
+        rtn = that === to_board || that.boardHash() === to_board.boardHash();
       }
 
       return rtn;
@@ -2518,13 +2518,13 @@ import * as Ts from './isepic-chess.types';
 
       let rtn_changed: boolean = false;
 
-      let hash_cache = that?.boardHash?.();
+      let hash_cache = that.boardHash();
 
       _cloneBoardToObj(that, from_woard);
 
-      if (that?.boardHash?.() !== hash_cache) {
+      if (that.boardHash() !== hash_cache) {
         rtn_changed = true;
-        that?.refreshUi?.(0, false); //autorefresh
+        that.refreshUi(0, false); //autorefresh
       }
 
       return rtn_changed;
@@ -2543,13 +2543,13 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let hash_cache = to_board?.boardHash?.();
+        let hash_cache = to_board.boardHash();
 
         _cloneBoardToObj(to_board, that);
 
-        if (to_board?.boardHash?.() !== hash_cache) {
+        if (to_board.boardHash() !== hash_cache) {
           rtn_changed = true;
-          to_board?.refreshUi?.(0, false); //autorefresh
+          to_board.refreshUi(0, false); //autorefresh
         }
       }
 
@@ -2559,7 +2559,7 @@ import * as Ts from './isepic-chess.types';
     function _reset(keep_options?): boolean {
       let that: Ts.Board = this;
 
-      let rtn: boolean = that?.loadFen?.(_DEFAULT_FEN, {
+      let rtn: boolean = that.loadFen(_DEFAULT_FEN, {
         skipFenValidation: true,
         keepOptions: keep_options,
       });
@@ -2573,7 +2573,7 @@ import * as Ts from './isepic-chess.types';
       let rtn: null | Ts.Move = null;
 
       block: {
-        let temp = that?.undoMoves?.(1);
+        let temp = that.undoMoves(1);
 
         if (temp.length !== 1) {
           break block;
@@ -2595,7 +2595,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        if (Number(that!.moveList!.length) < 2) {
+        if (that.moveList.length < 2) {
           break block;
         }
 
@@ -2604,32 +2604,31 @@ import * as Ts from './isepic-chess.types';
           decrease_by = Infinity;
         }
 
-        decrease_by = _toInt(decrease_by, 0, Number(that!.moveList!.length) - 1);
+        decrease_by = _toInt(decrease_by, 0, that.moveList.length - 1);
 
         if (!decrease_by) {
           break block;
         }
 
-        let hash_cache = that?.boardHash?.();
+        let hash_cache = that.boardHash();
         let cache_is_hidden = that.isHidden;
-        that!.isHidden = true;
-        that?.navLinkMove?.(Math.min(Number(that!.moveList!.length) - decrease_by - 1, Number(that!.currentMove)));
+        that.isHidden = true;
+        that.navLinkMove(Math.min(that.moveList.length - decrease_by - 1, that.currentMove));
         that.isHidden = cache_is_hidden;
 
         rtn = new Array(decrease_by); //safe to use because every spot will be assigned below
 
         for (let i = 0; i < decrease_by; i++) {
           //0<decrease_by
-          // @ts-ignore
-          let move: Ts.Move = that!.moveList?.[Number(that!.moveList!.length) - i - 1];
+          let move: Ts.Move = that.moveList[that.moveList.length - i - 1];
           rtn[decrease_by - i - 1] = _unreferencedMoveHelper(move);
         }
 
-        that.moveList = that!.moveList!.slice(0, -decrease_by);
+        that.moveList = that.moveList.slice(0, -decrease_by);
 
-        if (that?.boardHash?.() !== hash_cache) {
-          that?.silentlyResetManualResult?.();
-          that?.refreshUi?.(0, false); //autorefresh
+        if (that.boardHash() !== hash_cache) {
+          that.silentlyResetManualResult();
+          that.refreshUi(0, false); //autorefresh
         }
       }
 
@@ -2648,7 +2647,7 @@ import * as Ts from './isepic-chess.types';
         //0...7
         for (let j = 0; j < 8; j++) {
           //0...7
-          let current_square: Ts.Square = that?.getSquare?.([i, j]);
+          let current_square: Ts.Square = that.getSquare([i, j]);
 
           if (current_square.isBishop) {
             let current_side: Ts.BishopCounts = Number(current_square.sign) > 0 ? rtn.w : rtn.b;
@@ -2688,16 +2687,16 @@ import * as Ts from './isepic-chess.types';
         that.currentMove = _toInt(obj.currentMove);
 
         if (obj.fen) {
-          that?.loadValidatedFen?.(obj.fen);
+          that.loadValidatedFen(obj.fen);
         }
 
-        that?.updateFenAndMisc?.(obj.slicedFenHistory);
+        that.updateFenAndMisc(obj.slicedFenHistory);
 
         if (obj.resetMoveList) {
           let temp: Ts.MoveResult = '';
 
           if (that.isCheckmate) {
-            temp = that[String(that!.activeColor)].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
+            temp = that[that.activeColor].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
           } else if (that.isStalemate) {
             temp = _RESULT_DRAW;
           }
@@ -2724,7 +2723,7 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (obj.resetOptions) {
-          that?.silentlyResetOptions?.();
+          that.silentlyResetOptions();
         }
 
         rtn = true;
@@ -2764,7 +2763,7 @@ import * as Ts from './isepic-chess.types';
             // @ts-ignore
             let current_bos: Ts.SquareBos = Ic.toBos([i, j]);
 
-            let current_old_square: Ts.Square = that?.getSquare?.(current_bos);
+            let current_old_square: Ts.Square = that.getSquare(current_bos);
             let current_new_square: Ts.Square = obj.squares[current_bos]; //can't use getSquare()
 
             if (current_old_square.val === current_new_square.val) {
@@ -2810,7 +2809,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let pre_old_square: null | Ts.Square = that?.getSquare?.(from_squares[0]);
+        let pre_old_square: null | Ts.Square = that.getSquare(from_squares[0]);
 
         if (pre_old_square === null) {
           break block;
@@ -2872,11 +2871,11 @@ import * as Ts from './isepic-chess.types';
         } else if (mov === 'O-O') {
           //castling king (short)
           lc_piece = 'k';
-          to_bos = that[String(that!.activeColor)].isBlack ? 'g8' : 'g1';
+          to_bos = that[that.activeColor].isBlack ? 'g8' : 'g1';
         } else if (mov === 'O-O-O') {
           //castling king (long)
           lc_piece = 'k';
-          to_bos = that[String(that!.activeColor)].isBlack ? 'c8' : 'c1';
+          to_bos = that[that.activeColor].isBlack ? 'c8' : 'c1';
         } else {
           let parse_exec = /^[NBRQK]/.exec(mov);
 
@@ -2892,7 +2891,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let temp: undefined | Ts.RevTreeChild = that?.legalRevTree?.[to_bos];
+        let temp: undefined | Ts.RevTreeChild = that.legalRevTree[to_bos];
 
         if (!temp) {
           break block;
@@ -2906,7 +2905,7 @@ import * as Ts from './isepic-chess.types';
 
         outer: for (let i = 0, len = bos_moves.length; i < len; i++) {
           //0<len
-          let pgn_obj: Ts.DraftMove = that?.draftMove?.([bos_moves[i], to_bos], {
+          let pgn_obj: Ts.DraftMove = that.draftMove([bos_moves[i], to_bos], {
             isLegalMove: true,
           }); /*! NO pass unnecessary promoteTo*/
 
@@ -2916,7 +2915,7 @@ import * as Ts from './isepic-chess.types';
 
           for (let j = 0, len2 = Number(pgn_obj?.withOverdisambiguated?.length); j < len2; j++) {
             //0<len2
-            if (pgn_obj?.withOverdisambiguated && mov !== pgn_obj.withOverdisambiguated[j]) {
+            if (pgn_obj.withOverdisambiguated && mov !== pgn_obj.withOverdisambiguated[j]) {
               continue;
             }
 
@@ -2976,7 +2975,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let res_fen: null | Ts.Wrapmove = that?.fenWrapmoveHelper?.(mov);
+        let res_fen: null | Ts.Wrapmove = that.fenWrapmoveHelper(mov);
 
         if (res_fen) {
           bubbling_promoted_to = res_fen[1]; //default ""
@@ -2984,7 +2983,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let res_san: null | Ts.Wrapmove = that?.sanWrapmoveHelper?.(mov); //place last for better performance
+        let res_san: null | Ts.Wrapmove = that.sanWrapmoveHelper(mov); //place last for better performance
 
         if (res_san) {
           bubbling_promoted_to = res_san[1]; //default ""
@@ -3024,7 +3023,7 @@ import * as Ts from './isepic-chess.types';
       block: {
         rtn.canMove = false;
         p.isLegalMove = p.isLegalMove === true;
-        let wrapped_move: null | Ts.WrappedMove = that?.getWrappedMove?.(mov, p);
+        let wrapped_move: null | Ts.WrappedMove = that.getWrappedMove(mov, p);
 
         if (wrapped_move === null) {
           break block;
@@ -3034,7 +3033,7 @@ import * as Ts from './isepic-chess.types';
           p.isLegalMove = true;
         }
 
-        if (!p.isLegalMove && !that?.isLegalMove?.(wrapped_move.fromBos + '' + wrapped_move.toBos)) {
+        if (!p.isLegalMove && !that.isLegalMove(wrapped_move.fromBos + '' + wrapped_move.toBos)) {
           break block;
         }
 
@@ -3044,18 +3043,18 @@ import * as Ts from './isepic-chess.types';
           toAbsVal(p.promoteTo) || wrapped_move.promotion
         ); /*! NO remove toAbsVal()*/
 
-        let initial_cached_square: Ts.Square = that?.getSquare?.(wrapped_move.fromBos, {
+        let initial_cached_square: Ts.Square = that.getSquare(wrapped_move.fromBos, {
           isUnreferenced: true,
         });
 
-        let final_cached_square: Ts.Square = that?.getSquare?.(wrapped_move.toBos, {
+        let final_cached_square: Ts.Square = that.getSquare(wrapped_move.toBos, {
           isUnreferenced: true,
         });
 
         rtn.initialCachedSquare = initial_cached_square;
         rtn.finalCachedSquare = final_cached_square;
-        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
-        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.nonActiveColor)];
+        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.activeColor];
+        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.nonActiveColor];
 
         let pawn_moved = false;
         let is_en_passant_capture = false;
@@ -3087,10 +3086,10 @@ import * as Ts from './isepic-chess.types';
 
           if (Math.abs(Number(initial_cached_square.rankPos) - Number(final_cached_square.rankPos)) > 1) {
             //new enpassant
-            new_en_passant_bos = that?.getSquare?.(final_cached_square, {
+            new_en_passant_bos = that.getSquare(final_cached_square, {
               rankShift: non_active_side.singlePawnRankShift,
             }).bos;
-          } else if (sameSquare(final_cached_square, String(that!.enPassantBos))) {
+          } else if (sameSquare(final_cached_square, that.enPassantBos)) {
             //enpassant capture
             lc_captured = 'p';
             is_en_passant_capture = true;
@@ -3131,12 +3130,12 @@ import * as Ts from './isepic-chess.types';
 
           if (!initial_cached_square.isKing) {
             //knight, bishop, rook, queen
-            let legal_rev_tree: undefined | Ts.RevTreeChild = that?.legalRevTree?.[final_cached_square.bos || ''];
+            let legal_rev_tree: undefined | Ts.RevTreeChild = that.legalRevTree[final_cached_square.bos || ''];
 
             if (legal_rev_tree) {
               let bos_moves: Ts.SquareBos[] = legal_rev_tree[(initial_cached_square.bal || '').toLowerCase()];
 
-              if (bos_moves?.length > 1) {
+              if (bos_moves.length > 1) {
                 is_ambiguous = true;
                 let bos_csv_list = bos_moves.join(',');
 
@@ -3207,20 +3206,17 @@ import * as Ts from './isepic-chess.types';
         p.playSounds = p.playSounds === true;
         p.isUnreferenced = p.isUnreferenced === true;
 
-        // @ts-ignore
-        let that_movelist: Ts.Move[] = that!.moveList;
-
         if (that.isPuzzleMode) {
-          let max_current_move_possible = that_movelist.length - 1;
+          let max_current_move_possible = that.moveList.length - 1;
 
-          if (Number(that.currentMove) < max_current_move_possible) {
-            let wrapped_move: null | Ts.WrappedMove = that?.getWrappedMove?.(mov, p);
+          if (that.currentMove < max_current_move_possible) {
+            let wrapped_move: null | Ts.WrappedMove = that.getWrappedMove(mov, p);
 
             if (
               wrapped_move !== null &&
-              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that?.isLegalMove?.(mov, p))
+              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that.isLegalMove(mov, p))
             ) {
-              let is_promotion = !!that_movelist[Number(that.currentMove) + 1].promotion;
+              let is_promotion = !!that.moveList[that.currentMove + 1].promotion;
               let mov_uci =
                 wrapped_move.fromBos +
                 '' +
@@ -3228,20 +3224,20 @@ import * as Ts from './isepic-chess.types';
                 '' +
                 (is_promotion ? toBal(wrapped_move.promotion).toLowerCase() : '');
 
-              if (mov_uci === that_movelist[Number(that.currentMove) + 1].uci) {
-                let on_solve_out_of_bounds = Number(that.currentMove) + 2 > max_current_move_possible;
+              if (mov_uci === that.moveList[that.currentMove + 1].uci) {
+                let on_solve_out_of_bounds = that.currentMove + 2 > max_current_move_possible;
 
                 if (p.isMockMove) {
                   rtn_move_obj = on_solve_out_of_bounds
-                    ? that_movelist[max_current_move_possible]
-                    : that_movelist[Number(that.currentMove) + 2];
+                    ? that.moveList[max_current_move_possible]
+                    : that.moveList[that.currentMove + 2];
                 } else {
                   if (p.isInanimated && on_solve_out_of_bounds) {
-                    that?.setCurrentMove?.(max_current_move_possible, true, true);
+                    that.setCurrentMove(max_current_move_possible, true, true);
                   } else {
-                    that?.setCurrentMove?.(2, false, true);
+                    that.setCurrentMove(2, false, true);
                   }
-                  rtn_move_obj = that_movelist[Number(that.currentMove)];
+                  rtn_move_obj = that.moveList[that.currentMove];
                 }
 
                 if (p.isUnreferenced) {
@@ -3255,8 +3251,8 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (p.isMockMove) {
-          if (that_movelist) {
-            sliced_fen_history = that?.fenHistoryExport?.().slice(0, Number(that.currentMove) + 1);
+          if (that.moveList) {
+            sliced_fen_history = that.fenHistoryExport().slice(0, that.currentMove + 1);
           }
 
           rtn_move_obj = fenApply(that.fen, 'playMove', [mov, p, sliced_fen_history], {
@@ -3267,14 +3263,14 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let pgn_obj: Ts.DraftMove = that?.draftMove?.(mov, p);
+        let pgn_obj: Ts.DraftMove = that.draftMove(mov, p);
 
         if (!pgn_obj.canMove) {
           break block;
         }
 
-        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.activeColor)];
-        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[String(that!.nonActiveColor)];
+        let active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.activeColor];
+        let non_active_side: Ts.WhiteInfo | Ts.BlackInfo = that[that.nonActiveColor];
 
         // @ts-ignore
         let initial_cached_square: Ts.Square = pgn_obj.initialCachedSquare;
@@ -3286,19 +3282,19 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (pgn_obj.putRookAtFileShift) {
-          that?.setSquare?.(final_cached_square, active_side.rook, {
+          that.setSquare(final_cached_square, active_side.rook, {
             fileShift: pgn_obj.putRookAtFileShift,
           });
         }
 
         if (pgn_obj.removeRookAtFileShift) {
-          that?.setSquare?.(final_cached_square, _EMPTY_SQR, {
+          that.setSquare(final_cached_square, _EMPTY_SQR, {
             fileShift: pgn_obj.removeRookAtFileShift,
           });
         }
 
         if (pgn_obj.enPassantCaptureAtRankShift) {
-          that?.setSquare?.(final_cached_square, _EMPTY_SQR, {
+          that.setSquare(final_cached_square, _EMPTY_SQR, {
             rankShift: pgn_obj.enPassantCaptureAtRankShift,
           });
         }
@@ -3313,12 +3309,12 @@ import * as Ts from './isepic-chess.types';
 
             if (
               current_side.castling !== _LONG_CASTLE &&
-              sameSquare(current_square, that?.getSquare?.('h' + current_rank_bos))
+              sameSquare(current_square, that.getSquare('h' + current_rank_bos))
             ) {
               current_side.castling -= _SHORT_CASTLE;
             } else if (
               current_side.castling !== _SHORT_CASTLE &&
-              sameSquare(current_square, that?.getSquare?.('a' + current_rank_bos))
+              sameSquare(current_square, that.getSquare('a' + current_rank_bos))
             ) {
               current_side.castling -= _LONG_CASTLE;
             }
@@ -3328,9 +3324,9 @@ import * as Ts from './isepic-chess.types';
         // @ts-ignore
         that.enPassantBos = pgn_obj.newEnPassantBos;
 
-        that?.setSquare?.(final_cached_square, pgn_obj.promotedVal || initial_cached_square.val);
-        that?.setSquare?.(initial_cached_square, _EMPTY_SQR);
-        that?.toggleActiveNonActive?.();
+        that.setSquare(final_cached_square, pgn_obj.promotedVal || initial_cached_square.val);
+        that.setSquare(initial_cached_square, _EMPTY_SQR);
+        that.toggleActiveNonActive();
 
         // @ts-ignore
         that.halfMove++;
@@ -3344,8 +3340,8 @@ import * as Ts from './isepic-chess.types';
           that.fullMove++;
         }
 
-        that?.updateHelper?.({
-          currentMove: Number(that.currentMove) + 1,
+        that.updateHelper({
+          currentMove: that.currentMove + 1,
           slicedFenHistory: sliced_fen_history,
         });
 
@@ -3392,12 +3388,11 @@ import * as Ts from './isepic-chess.types';
         // @ts-ignore
         let uci_move: Ts.UciMove = initial_cached_square.bos + '' + final_cached_square.bos + '' + promotion_bal;
 
-        if (Number(that.currentMove) !== that_movelist.length) {
-          that.moveList = that_movelist.slice(0, Number(that.currentMove));
-          that_movelist = that.moveList;
+        if (that.currentMove !== that.moveList.length) {
+          that.moveList = that.moveList.slice(0, that.currentMove);
         }
 
-        that_movelist.push({
+        that.moveList.push({
           colorMoved: that.nonActiveColor,
           colorToPlay: that.activeColor,
           fen: that.fen,
@@ -3415,14 +3410,14 @@ import * as Ts from './isepic-chess.types';
           isEnPassantCapture: pgn_obj.isEnPassantCapture,
         });
 
-        rtn_move_obj = that_movelist[that_movelist.length - 1];
+        rtn_move_obj = that.moveList[that.moveList.length - 1];
 
         if (p.isUnreferenced) {
           rtn_move_obj = _unreferencedMoveHelper(rtn_move_obj);
         }
 
-        that?.silentlyResetManualResult?.();
-        that?.refreshUi?.(p.isInanimated ? 0 : 1, p.playSounds); //autorefresh
+        that.silentlyResetManualResult();
+        that.refreshUi(p.isInanimated ? 0 : 1, p.playSounds); //autorefresh
       }
 
       return rtn_move_obj;
@@ -3453,7 +3448,7 @@ import * as Ts from './isepic-chess.types';
 
         for (let i = 0, len = arr.length; i < len; i++) {
           //0<len
-          if (that?.playMove?.(arr[i], p, sliced_fen_history) === null) {
+          if (that.playMove(arr[i], p, sliced_fen_history) === null) {
             everything_parsed = false;
             break;
           }
@@ -3471,7 +3466,7 @@ import * as Ts from './isepic-chess.types';
       }
 
       if (at_least_one_parsed) {
-        that?.refreshUi?.(p_cache.isInanimated ? 0 : 1, p_cache.playSounds); //autorefresh
+        that.refreshUi(p_cache.isInanimated ? 0 : 1, p_cache.playSounds); //autorefresh
       }
 
       return rtn;
@@ -3486,7 +3481,7 @@ import * as Ts from './isepic-chess.types';
       p = _unreferenceP(p, [['isLegalMove', true]]);
 
       block: {
-        let uci_moves = that!.legalUci!.slice(0);
+        let uci_moves = that.legalUci.slice(0);
 
         //when there is a promotion overwrite (promoteTo), we should collapse them
         //into one move in order to keep the correct distribution of probabilities
@@ -3494,7 +3489,7 @@ import * as Ts from './isepic-chess.types';
           uci_moves = [];
           let used_keys = {};
 
-          for (let i = 0, len = that!.legalUci!.length; i < len; i++) {
+          for (let i = 0, len = that.legalUci.length; i < len; i++) {
             //0<len
             // @ts-ignore
             let uci_without_promotion: Ts.UciMove = that.legalUci[i].slice(0, 4);
@@ -3512,7 +3507,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        rtn = that?.playMove?.(uci_moves[Math.floor(Math.random() * uci_moves.length)], p, sliced_fen_history);
+        rtn = that.playMove(uci_moves[Math.floor(Math.random() * uci_moves.length)], p, sliced_fen_history);
       }
 
       return rtn;
@@ -3809,7 +3804,7 @@ import * as Ts from './isepic-chess.types';
       if (del_board !== null) {
         //if exists
         rtn = true;
-        let del_board_name_cache = String(del_board!.boardName);
+        let del_board_name_cache = del_board.boardName;
         del_board = null;
         _BOARDS[del_board_name_cache] = null;
 
@@ -3832,7 +3827,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        rtn = left_board?.isEqualBoard?.(right_woard);
+        rtn = left_board.isEqualBoard(right_woard);
       }
 
       return rtn;
@@ -3849,7 +3844,7 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        rtn = to_board?.cloneBoardFrom?.(from_woard); //autorefresh (sometimes)
+        rtn = to_board.cloneBoardFrom(from_woard); //autorefresh (sometimes)
       }
 
       return rtn;

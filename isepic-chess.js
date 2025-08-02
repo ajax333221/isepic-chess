@@ -1226,26 +1226,26 @@
       let that = this;
       let rtn_msg = '';
       block: {
-        let active_side = that[String(that.activeColor)];
-        let non_active_side = that[String(that.nonActiveColor)];
-        if (Number(that.halfMove) - Number(active_side.isBlack) + 1 >= Number(that.fullMove) * 2) {
+        let active_side = that[that.activeColor];
+        let non_active_side = that[that.nonActiveColor];
+        if (that.halfMove - Number(active_side.isBlack) + 1 >= that.fullMove * 2) {
           rtn_msg = 'Error [0] exceeding half moves ratio';
           break block;
         }
-        if (Number(that.checks) > 2) {
+        if (that.checks > 2) {
           rtn_msg = 'Error [1] king is checked more times than possible';
           break block;
         }
-        if (that?.attackersFromActive?.(null, true)) {
+        if (that.attackersFromActive(null, true)) {
           rtn_msg = 'Error [2] non-active king in check';
           break block;
         }
         if (that.enPassantBos) {
-          let en_passant_square = that?.getSquare?.(that.enPassantBos);
-          let infront_ep_is_empty = that?.getSquare?.(en_passant_square, {
+          let en_passant_square = that.getSquare(that.enPassantBos);
+          let infront_ep_is_empty = that.getSquare(en_passant_square, {
             rankShift: active_side.singlePawnRankShift,
           }).isEmptySquare;
-          let behind_ep_val = that?.getSquare?.(en_passant_square, {
+          let behind_ep_val = that.getSquare(en_passant_square, {
             rankShift: non_active_side.singlePawnRankShift,
           }).val;
           if (
@@ -1259,8 +1259,8 @@
             break block;
           }
         }
-        let total_pieces = countPieces(String(that.fen));
-        let bishop_count = that?.countLightDarkBishops?.();
+        let total_pieces = countPieces(that.fen);
+        let bishop_count = that.countLightDarkBishops();
         for (let i = 0; i < 2; i++) {
           let current_side = i ? total_pieces.b : total_pieces.w;
           let current_other_side = i ? total_pieces.w : total_pieces.b;
@@ -1298,7 +1298,7 @@
           for (let j = 0; j < 8; j++) {
             let total_pawns_in_current_file = 0;
             for (let k = 0; k < 8; k++) {
-              total_pawns_in_current_file += Number(that?.getSquare?.([k, j]).val === current_side.pawn);
+              total_pawns_in_current_file += Number(that.getSquare([k, j]).val === current_side.pawn);
             }
             if (total_pawns_in_current_file > 1) {
               let temp = j === 0 || j === 7 ? [1, 3, 6, 10, 99] : [1, 2, 4, 6, 9];
@@ -1321,20 +1321,20 @@
             originalLongRookBos: i ? 'a8' : 'a1',
             originalShortRookBos: i ? 'h8' : 'h1',
           };
-          if (that?.getSquare?.(temp.originalKingBos).val !== current_side.king) {
+          if (that.getSquare(temp.originalKingBos).val !== current_side.king) {
             rtn_msg = 'Error [11] ' + temp.completeActiveColor + ' castling rights without king in original square';
             break block;
           }
           if (
             current_side.castling !== _LONG_CASTLE &&
-            that?.getSquare?.(temp.originalShortRookBos).val !== current_side.rook
+            that.getSquare(temp.originalShortRookBos).val !== current_side.rook
           ) {
             rtn_msg = 'Error [12] ' + temp.completeActiveColor + ' short castling rights with missing H-file rook';
             break block;
           }
           if (
             current_side.castling !== _SHORT_CASTLE &&
-            that?.getSquare?.(temp.originalLongRookBos).val !== current_side.rook
+            that.getSquare(temp.originalLongRookBos).val !== current_side.rook
           ) {
             rtn_msg = 'Error [13] ' + temp.completeActiveColor + ' long castling rights with missing A-file rook';
             break block;
@@ -1349,13 +1349,13 @@
         candidateMoves: [],
         isAttacked: false,
       };
-      let active_side = that[String(that.activeColor)];
+      let active_side = that[that.activeColor];
       piece_direction = _toInt(piece_direction, 1, 8);
       max_shifts = _toInt(as_knight ? 1 : max_shifts || 7);
       let rank_change = (as_knight ? [-2, -1, 1, 2, 2, 1, -1, -2] : [-1, -1, 0, 1, 1, 1, 0, -1])[piece_direction - 1];
       let file_change = (as_knight ? [1, 2, 2, 1, -1, -2, -2, -1] : [0, 1, 1, 1, 0, -1, -1, -1])[piece_direction - 1];
       for (let i = 0; i < max_shifts; i++) {
-        let current_square = that?.getSquare?.(initial_qos, {
+        let current_square = that.getSquare(initial_qos, {
           rankShift: rank_change * (i + 1),
           fileShift: file_change * (i + 1),
         });
@@ -1417,7 +1417,7 @@
         isPromotion: false,
       };
       function _candidateMoves(qos, piece_direction, as_knight, max_shifts, allow_capture) {
-        let rtn_candidate_moves = that?.testCollision?.(
+        let rtn_candidate_moves = that.testCollision(
           _TEST_COLLISION_OP_CANDIDATE_MOVES,
           qos,
           piece_direction,
@@ -1428,14 +1428,14 @@
         return rtn_candidate_moves;
       }
       block: {
-        let target_cached_square = that?.getSquare?.(target_qos, {
+        let target_cached_square = that.getSquare(target_qos, {
           isUnreferenced: true,
         });
         if (target_cached_square === null) {
           break block;
         }
-        let active_side = that[String(that.activeColor)];
-        let non_active_side = that[String(that.nonActiveColor)];
+        let active_side = that[that.activeColor];
+        let non_active_side = that[that.nonActiveColor];
         if (target_cached_square.isEmptySquare || target_cached_square.sign === non_active_side.sign) {
           break block;
         }
@@ -1475,14 +1475,14 @@
                 continue;
               }
               if (
-                that?.attackersFromNonActive?.(
-                  that?.getSquare?.(target_cached_square, { fileShift: current_shift.singleFileShift }),
+                that.attackersFromNonActive(
+                  that.getSquare(target_cached_square, { fileShift: current_shift.singleFileShift }),
                   true
                 )
               ) {
                 continue;
               }
-              let shifted_square = that?.getSquare?.(target_cached_square, {
+              let shifted_square = that.getSquare(target_cached_square, {
                 fileShift: current_shift.singleFileShift * 2,
               });
               pseudo_legal_arr.push([shifted_square]);
@@ -1501,7 +1501,7 @@
             pseudo_legal_arr.push(pawn_candidate_moves);
           }
           for (let i = 0; i < 2; i++) {
-            let current_diagonal_square = that?.getSquare?.(target_cached_square, {
+            let current_diagonal_square = that.getSquare(target_cached_square, {
               rankShift: active_side.singlePawnRankShift,
               fileShift: i ? -1 : 1,
             });
@@ -1518,7 +1518,7 @@
               pseudo_legal_arr.push([current_diagonal_square]);
             }
             if (is_same_square) {
-              en_passant_capturable_cached_square = that?.getSquare?.(current_diagonal_square, {
+              en_passant_capturable_cached_square = that.getSquare(current_diagonal_square, {
                 rankShift: non_active_side.singlePawnRankShift,
                 isUnreferenced: true,
               });
@@ -1547,24 +1547,24 @@
         }
         for (let i = 0, len = pseudo_legal_arr.length; i < len; i++) {
           for (let j = 0, len2 = pseudo_legal_arr[i].length; j < len2; j++) {
-            let current_cached_square = that?.getSquare?.(pseudo_legal_arr[i][j], {
+            let current_cached_square = that.getSquare(pseudo_legal_arr[i][j], {
               isUnreferenced: true,
             });
-            that?.setSquare?.(current_cached_square, target_cached_square.val);
-            that?.setSquare?.(target_cached_square, _EMPTY_SQR);
+            that.setSquare(current_cached_square, target_cached_square.val);
+            that.setSquare(target_cached_square, _EMPTY_SQR);
             if (en_passant_capturable_cached_square !== null) {
               if (sameSquare(current_cached_square, en_passant_bos)) {
-                that?.setSquare?.(en_passant_capturable_cached_square, _EMPTY_SQR);
+                that.setSquare(en_passant_capturable_cached_square, _EMPTY_SQR);
               }
             }
-            if (!that?.attackersFromNonActive?.(null, true)) {
+            if (!that.attackersFromNonActive(null, true)) {
               let uci_move = target_cached_square.bos + current_cached_square.bos;
               rtn.uciMoves.push(uci_move);
             }
-            that?.setSquare?.(current_cached_square, current_cached_square.val);
-            that?.setSquare?.(target_cached_square, target_cached_square.val);
+            that.setSquare(current_cached_square, current_cached_square.val);
+            that.setSquare(target_cached_square, target_cached_square.val);
             if (en_passant_capturable_cached_square !== null) {
-              that?.setSquare?.(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
+              that.setSquare(en_passant_capturable_cached_square, en_passant_capturable_cached_square.val);
             }
           }
         }
@@ -1579,7 +1579,7 @@
       let rtn = [];
       p = _unreferenceP(p);
       block: {
-        let pre_legal_uci_in_bos = that?.legalUciTree?.[toBos(target_qos) || ''];
+        let pre_legal_uci_in_bos = that.legalUciTree[toBos(target_qos) || ''];
         if (!pre_legal_uci_in_bos || !pre_legal_uci_in_bos.length) {
           break block;
         }
@@ -1598,7 +1598,7 @@
         for (let i = 0, len = legal_uci_in_bos.length; i < len; i++) {
           let temp2 = legal_uci_in_bos[i];
           if (is_fen_or_san) {
-            let temp3 = that?.playMove?.(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
+            let temp3 = that.playMove(temp2, { isMockMove: true, isLegalMove: true, isUnreferenced: true });
             if (p.returnType === 'fen') {
               let fen_move = temp3.fen;
               mov.push(fen_move);
@@ -1619,8 +1619,8 @@
             mov.push(joined_move);
           } else if (p.returnType === 'fromToSquares') {
             if (p.squareType === 'square') {
-              let from_square = that?.getSquare?.(from_bos, { isUnreferenced: true });
-              let to_square = that?.getSquare?.(to_bos, { isUnreferenced: true });
+              let from_square = that.getSquare(from_bos, { isUnreferenced: true });
+              let to_square = that.getSquare(to_bos, { isUnreferenced: true });
               let square_move_from_to = [from_square, to_square];
               mov.push(square_move_from_to);
             } else if (p.squareType === 'pos') {
@@ -1634,7 +1634,7 @@
             }
           } else {
             if (p.squareType === 'square') {
-              let to_square = that?.getSquare?.(to_bos, { isUnreferenced: true });
+              let to_square = that.getSquare(to_bos, { isUnreferenced: true });
               mov.push(to_square);
             } else if (p.squareType === 'pos') {
               let to_pos = toPos(to_bos);
@@ -1653,21 +1653,21 @@
     }
     function _legalFenMoves(target_qos) {
       let that = this;
-      return that?.legalMoves?.(target_qos, { returnType: 'fen' });
+      return that.legalMoves(target_qos, { returnType: 'fen' });
     }
     function _legalSanMoves(target_qos) {
       let that = this;
-      return that?.legalMoves?.(target_qos, { returnType: 'san' });
+      return that.legalMoves(target_qos, { returnType: 'san' });
     }
     function _legalUciMoves(target_qos) {
       let that = this;
-      return that?.legalMoves?.(target_qos, { returnType: 'uci' });
+      return that.legalMoves(target_qos, { returnType: 'uci' });
     }
     function _isLegalMove(mov, p) {
       let that = this;
       let rtn = false;
       block: {
-        let wrapped_move = that?.getWrappedMove?.(mov, p);
+        let wrapped_move = that.getWrappedMove(mov, p);
         if (wrapped_move === null) {
           break block;
         }
@@ -1675,7 +1675,7 @@
           rtn = true;
           break block;
         }
-        let legal_uci_in_bos = that?.legalUciTree?.[wrapped_move.fromBos];
+        let legal_uci_in_bos = that.legalUciTree[wrapped_move.fromBos];
         if (!legal_uci_in_bos || !legal_uci_in_bos.length) {
           break block;
         }
@@ -1688,7 +1688,7 @@
       let that = this;
       let rtn = [];
       outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
-        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
+        let temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
         if (temp.moveResult && !temp.canDraw) {
           rtn.push(temp.uci);
           if (early_break) {
@@ -1702,7 +1702,7 @@
       let that = this;
       let rtn = [];
       outer: for (let i = 0, len = that.legalUci.length; i < len; i++) {
-        let temp = that?.playMove?.(that?.legalUci?.[i], { isLegalMove: true, isMockMove: true });
+        let temp = that.playMove(that.legalUci[i], { isLegalMove: true, isMockMove: true });
         if (temp.canDraw) {
           rtn.push(temp.uci);
           if (early_break) {
@@ -1716,7 +1716,7 @@
       let that = this;
       let rtn = [];
       for (let i = 0, len = that.moveList.length; i < len; i++) {
-        rtn.push(String(that?.moveList?.[i]?.fen));
+        rtn.push(String(that.moveList[i].fen));
       }
       return rtn;
     }
@@ -1798,7 +1798,7 @@
       let rtn = '';
       let uci_arr = [];
       for (let i = 1, len = that.moveList.length; i < len; i++) {
-        uci_arr.push(String(that?.moveList?.[i]?.uci));
+        uci_arr.push(that.moveList[i].uci);
       }
       if (uci_arr.length) {
         rtn = uci_arr.join(' ');
@@ -1812,7 +1812,7 @@
       is_rotated = typeof is_rotated === 'boolean' ? is_rotated : that.isRotated;
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-          let current_square = that?.getSquare?.(is_rotated ? [7 - i, 7 - j] : [i, j]);
+          let current_square = that.getSquare(is_rotated ? [7 - i, 7 - j] : [i, j]);
           rtn += j ? '' : ' ' + current_square.rankBos + ' |';
           rtn += ' ' + (current_square.bal || '').replace('*', '.') + ' ';
           rtn += j === 7 ? '|\n' : '';
@@ -1840,18 +1840,18 @@
           _consoleLog("[_isEqualBoard]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        rtn = that === to_board || that?.boardHash?.() === to_board?.boardHash?.();
+        rtn = that === to_board || that.boardHash() === to_board.boardHash();
       }
       return rtn;
     }
     function _cloneBoardFrom(from_woard) {
       let that = this;
       let rtn_changed = false;
-      let hash_cache = that?.boardHash?.();
+      let hash_cache = that.boardHash();
       _cloneBoardToObj(that, from_woard);
-      if (that?.boardHash?.() !== hash_cache) {
+      if (that.boardHash() !== hash_cache) {
         rtn_changed = true;
-        that?.refreshUi?.(0, false);
+        that.refreshUi(0, false);
       }
       return rtn_changed;
     }
@@ -1864,18 +1864,18 @@
           _consoleLog("[_cloneBoardTo]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        let hash_cache = to_board?.boardHash?.();
+        let hash_cache = to_board.boardHash();
         _cloneBoardToObj(to_board, that);
-        if (to_board?.boardHash?.() !== hash_cache) {
+        if (to_board.boardHash() !== hash_cache) {
           rtn_changed = true;
-          to_board?.refreshUi?.(0, false);
+          to_board.refreshUi(0, false);
         }
       }
       return rtn_changed;
     }
     function _reset(keep_options) {
       let that = this;
-      let rtn = that?.loadFen?.(_DEFAULT_FEN, {
+      let rtn = that.loadFen(_DEFAULT_FEN, {
         skipFenValidation: true,
         keepOptions: keep_options,
       });
@@ -1885,7 +1885,7 @@
       let that = this;
       let rtn = null;
       block: {
-        let temp = that?.undoMoves?.(1);
+        let temp = that.undoMoves(1);
         if (temp.length !== 1) {
           break block;
         }
@@ -1900,30 +1900,30 @@
         if (that.isPuzzleMode) {
           break block;
         }
-        if (Number(that.moveList.length) < 2) {
+        if (that.moveList.length < 2) {
           break block;
         }
         if (!decrease_by && decrease_by !== 0) {
           decrease_by = Infinity;
         }
-        decrease_by = _toInt(decrease_by, 0, Number(that.moveList.length) - 1);
+        decrease_by = _toInt(decrease_by, 0, that.moveList.length - 1);
         if (!decrease_by) {
           break block;
         }
-        let hash_cache = that?.boardHash?.();
+        let hash_cache = that.boardHash();
         let cache_is_hidden = that.isHidden;
         that.isHidden = true;
-        that?.navLinkMove?.(Math.min(Number(that.moveList.length) - decrease_by - 1, Number(that.currentMove)));
+        that.navLinkMove(Math.min(that.moveList.length - decrease_by - 1, that.currentMove));
         that.isHidden = cache_is_hidden;
         rtn = new Array(decrease_by);
         for (let i = 0; i < decrease_by; i++) {
-          let move = that.moveList?.[Number(that.moveList.length) - i - 1];
+          let move = that.moveList[that.moveList.length - i - 1];
           rtn[decrease_by - i - 1] = _unreferencedMoveHelper(move);
         }
         that.moveList = that.moveList.slice(0, -decrease_by);
-        if (that?.boardHash?.() !== hash_cache) {
-          that?.silentlyResetManualResult?.();
-          that?.refreshUi?.(0, false);
+        if (that.boardHash() !== hash_cache) {
+          that.silentlyResetManualResult();
+          that.refreshUi(0, false);
         }
       }
       return rtn;
@@ -1936,7 +1936,7 @@
       };
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-          let current_square = that?.getSquare?.([i, j]);
+          let current_square = that.getSquare([i, j]);
           if (current_square.isBishop) {
             let current_side = Number(current_square.sign) > 0 ? rtn.w : rtn.b;
             if ((i + j) % 2) {
@@ -1966,13 +1966,13 @@
         }
         that.currentMove = _toInt(obj.currentMove);
         if (obj.fen) {
-          that?.loadValidatedFen?.(obj.fen);
+          that.loadValidatedFen(obj.fen);
         }
-        that?.updateFenAndMisc?.(obj.slicedFenHistory);
+        that.updateFenAndMisc(obj.slicedFenHistory);
         if (obj.resetMoveList) {
           let temp = '';
           if (that.isCheckmate) {
-            temp = that[String(that.activeColor)].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
+            temp = that[that.activeColor].isBlack ? _RESULT_W_WINS : _RESULT_B_WINS;
           } else if (that.isStalemate) {
             temp = _RESULT_DRAW;
           }
@@ -1997,7 +1997,7 @@
           ];
         }
         if (obj.resetOptions) {
-          that?.silentlyResetOptions?.();
+          that.silentlyResetOptions();
         }
         rtn = true;
       }
@@ -2023,7 +2023,7 @@
         for (let i = 0; i < 8; i++) {
           for (let j = 0; j < 8; j++) {
             let current_bos = Ic2.toBos([i, j]);
-            let current_old_square = that?.getSquare?.(current_bos);
+            let current_old_square = that.getSquare(current_bos);
             let current_new_square = obj.squares[current_bos];
             if (current_old_square.val === current_new_square.val) {
               continue;
@@ -2050,7 +2050,7 @@
         if (from_squares.length !== 1 || to_squares.length !== 1) {
           break block;
         }
-        let pre_old_square = that?.getSquare?.(from_squares[0]);
+        let pre_old_square = that.getSquare(from_squares[0]);
         if (pre_old_square === null) {
           break block;
         }
@@ -2090,10 +2090,10 @@
           to_bos = toBos(mov.slice(-2));
         } else if (mov === 'O-O') {
           lc_piece = 'k';
-          to_bos = that[String(that.activeColor)].isBlack ? 'g8' : 'g1';
+          to_bos = that[that.activeColor].isBlack ? 'g8' : 'g1';
         } else if (mov === 'O-O-O') {
           lc_piece = 'k';
-          to_bos = that[String(that.activeColor)].isBlack ? 'c8' : 'c1';
+          to_bos = that[that.activeColor].isBlack ? 'c8' : 'c1';
         } else {
           let parse_exec = /^[NBRQK]/.exec(mov);
           if (parse_exec) {
@@ -2104,7 +2104,7 @@
         if (!lc_piece || !to_bos) {
           break block;
         }
-        let temp = that?.legalRevTree?.[to_bos];
+        let temp = that.legalRevTree[to_bos];
         if (!temp) {
           break block;
         }
@@ -2113,7 +2113,7 @@
           break block;
         }
         outer: for (let i = 0, len = bos_moves.length; i < len; i++) {
-          let pgn_obj = that?.draftMove?.([bos_moves[i], to_bos], {
+          let pgn_obj = that.draftMove([bos_moves[i], to_bos], {
             isLegalMove: true,
           });
           /*! NO pass unnecessary promoteTo*/
@@ -2121,7 +2121,7 @@
             continue;
           }
           for (let j = 0, len2 = Number(pgn_obj?.withOverdisambiguated?.length); j < len2; j++) {
-            if (pgn_obj?.withOverdisambiguated && mov !== pgn_obj.withOverdisambiguated[j]) {
+            if (pgn_obj.withOverdisambiguated && mov !== pgn_obj.withOverdisambiguated[j]) {
               continue;
             }
             validated_move = [bos_moves[i], to_bos];
@@ -2164,13 +2164,13 @@
           move_from_to = res_move[0];
           break block;
         }
-        let res_fen = that?.fenWrapmoveHelper?.(mov);
+        let res_fen = that.fenWrapmoveHelper(mov);
         if (res_fen) {
           bubbling_promoted_to = res_fen[1];
           move_from_to = res_fen[0];
           break block;
         }
-        let res_san = that?.sanWrapmoveHelper?.(mov);
+        let res_san = that.sanWrapmoveHelper(mov);
         if (res_san) {
           bubbling_promoted_to = res_san[1];
           is_confirmed_legal = true;
@@ -2199,29 +2199,29 @@
       block: {
         rtn.canMove = false;
         p.isLegalMove = p.isLegalMove === true;
-        let wrapped_move = that?.getWrappedMove?.(mov, p);
+        let wrapped_move = that.getWrappedMove(mov, p);
         if (wrapped_move === null) {
           break block;
         }
         if (wrapped_move.isConfirmedLegalMove) {
           p.isLegalMove = true;
         }
-        if (!p.isLegalMove && !that?.isLegalMove?.(wrapped_move.fromBos + '' + wrapped_move.toBos)) {
+        if (!p.isLegalMove && !that.isLegalMove(wrapped_move.fromBos + '' + wrapped_move.toBos)) {
           break block;
         }
         rtn.canMove = true;
         let bubbling_promoted_to = _promoteValHelper(toAbsVal(p.promoteTo) || wrapped_move.promotion);
         /*! NO remove toAbsVal()*/
-        let initial_cached_square = that?.getSquare?.(wrapped_move.fromBos, {
+        let initial_cached_square = that.getSquare(wrapped_move.fromBos, {
           isUnreferenced: true,
         });
-        let final_cached_square = that?.getSquare?.(wrapped_move.toBos, {
+        let final_cached_square = that.getSquare(wrapped_move.toBos, {
           isUnreferenced: true,
         });
         rtn.initialCachedSquare = initial_cached_square;
         rtn.finalCachedSquare = final_cached_square;
-        let active_side = that[String(that.activeColor)];
-        let non_active_side = that[String(that.nonActiveColor)];
+        let active_side = that[that.activeColor];
+        let non_active_side = that[that.nonActiveColor];
         let pawn_moved = false;
         let is_en_passant_capture = false;
         let new_en_passant_bos = '';
@@ -2244,10 +2244,10 @@
         } else if (initial_cached_square.isPawn) {
           pawn_moved = true;
           if (Math.abs(Number(initial_cached_square.rankPos) - Number(final_cached_square.rankPos)) > 1) {
-            new_en_passant_bos = that?.getSquare?.(final_cached_square, {
+            new_en_passant_bos = that.getSquare(final_cached_square, {
               rankShift: non_active_side.singlePawnRankShift,
             }).bos;
-          } else if (sameSquare(final_cached_square, String(that.enPassantBos))) {
+          } else if (sameSquare(final_cached_square, that.enPassantBos)) {
             lc_captured = 'p';
             is_en_passant_capture = true;
             rtn.enPassantCaptureAtRankShift = non_active_side.singlePawnRankShift;
@@ -2275,10 +2275,10 @@
           let extra_file_bos = '';
           let extra_rank_bos = '';
           if (!initial_cached_square.isKing) {
-            let legal_rev_tree = that?.legalRevTree?.[final_cached_square.bos || ''];
+            let legal_rev_tree = that.legalRevTree[final_cached_square.bos || ''];
             if (legal_rev_tree) {
               let bos_moves = legal_rev_tree[(initial_cached_square.bal || '').toLowerCase()];
-              if (bos_moves?.length > 1) {
+              if (bos_moves.length > 1) {
                 is_ambiguous = true;
                 let bos_csv_list = bos_moves.join(',');
                 if (_occurrences(bos_csv_list, initial_cached_square.fileBos || '') > 1) {
@@ -2332,34 +2332,33 @@
         p.isInanimated = p.isInanimated === true;
         p.playSounds = p.playSounds === true;
         p.isUnreferenced = p.isUnreferenced === true;
-        let that_movelist = that.moveList;
         if (that.isPuzzleMode) {
-          let max_current_move_possible = that_movelist.length - 1;
-          if (Number(that.currentMove) < max_current_move_possible) {
-            let wrapped_move = that?.getWrappedMove?.(mov, p);
+          let max_current_move_possible = that.moveList.length - 1;
+          if (that.currentMove < max_current_move_possible) {
+            let wrapped_move = that.getWrappedMove(mov, p);
             if (
               wrapped_move !== null &&
-              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that?.isLegalMove?.(mov, p))
+              (p.isLegalMove || wrapped_move.isConfirmedLegalMove || that.isLegalMove(mov, p))
             ) {
-              let is_promotion = !!that_movelist[Number(that.currentMove) + 1].promotion;
+              let is_promotion = !!that.moveList[that.currentMove + 1].promotion;
               let mov_uci =
                 wrapped_move.fromBos +
                 '' +
                 wrapped_move.toBos +
                 (is_promotion ? toBal(wrapped_move.promotion).toLowerCase() : '');
-              if (mov_uci === that_movelist[Number(that.currentMove) + 1].uci) {
-                let on_solve_out_of_bounds = Number(that.currentMove) + 2 > max_current_move_possible;
+              if (mov_uci === that.moveList[that.currentMove + 1].uci) {
+                let on_solve_out_of_bounds = that.currentMove + 2 > max_current_move_possible;
                 if (p.isMockMove) {
                   rtn_move_obj = on_solve_out_of_bounds
-                    ? that_movelist[max_current_move_possible]
-                    : that_movelist[Number(that.currentMove) + 2];
+                    ? that.moveList[max_current_move_possible]
+                    : that.moveList[that.currentMove + 2];
                 } else {
                   if (p.isInanimated && on_solve_out_of_bounds) {
-                    that?.setCurrentMove?.(max_current_move_possible, true, true);
+                    that.setCurrentMove(max_current_move_possible, true, true);
                   } else {
-                    that?.setCurrentMove?.(2, false, true);
+                    that.setCurrentMove(2, false, true);
                   }
-                  rtn_move_obj = that_movelist[Number(that.currentMove)];
+                  rtn_move_obj = that.moveList[that.currentMove];
                 }
                 if (p.isUnreferenced) {
                   rtn_move_obj = _unreferencedMoveHelper(rtn_move_obj);
@@ -2370,8 +2369,8 @@
           break block;
         }
         if (p.isMockMove) {
-          if (that_movelist) {
-            sliced_fen_history = that?.fenHistoryExport?.().slice(0, Number(that.currentMove) + 1);
+          if (that.moveList) {
+            sliced_fen_history = that.fenHistoryExport().slice(0, that.currentMove + 1);
           }
           rtn_move_obj = fenApply(that.fen, 'playMove', [mov, p, sliced_fen_history], {
             promoteTo: that.promoteTo,
@@ -2379,29 +2378,29 @@
           });
           break block;
         }
-        let pgn_obj = that?.draftMove?.(mov, p);
+        let pgn_obj = that.draftMove(mov, p);
         if (!pgn_obj.canMove) {
           break block;
         }
-        let active_side = that[String(that.activeColor)];
-        let non_active_side = that[String(that.nonActiveColor)];
+        let active_side = that[that.activeColor];
+        let non_active_side = that[that.nonActiveColor];
         let initial_cached_square = pgn_obj.initialCachedSquare;
         let final_cached_square = pgn_obj.finalCachedSquare;
         if (pgn_obj.activeSideCastlingZero) {
           active_side.castling = 0;
         }
         if (pgn_obj.putRookAtFileShift) {
-          that?.setSquare?.(final_cached_square, active_side.rook, {
+          that.setSquare(final_cached_square, active_side.rook, {
             fileShift: pgn_obj.putRookAtFileShift,
           });
         }
         if (pgn_obj.removeRookAtFileShift) {
-          that?.setSquare?.(final_cached_square, _EMPTY_SQR, {
+          that.setSquare(final_cached_square, _EMPTY_SQR, {
             fileShift: pgn_obj.removeRookAtFileShift,
           });
         }
         if (pgn_obj.enPassantCaptureAtRankShift) {
-          that?.setSquare?.(final_cached_square, _EMPTY_SQR, {
+          that.setSquare(final_cached_square, _EMPTY_SQR, {
             rankShift: pgn_obj.enPassantCaptureAtRankShift,
           });
         }
@@ -2412,21 +2411,21 @@
             let current_rank_bos = current_side.isBlack ? '8' : '1';
             if (
               current_side.castling !== _LONG_CASTLE &&
-              sameSquare(current_square, that?.getSquare?.('h' + current_rank_bos))
+              sameSquare(current_square, that.getSquare('h' + current_rank_bos))
             ) {
               current_side.castling -= _SHORT_CASTLE;
             } else if (
               current_side.castling !== _SHORT_CASTLE &&
-              sameSquare(current_square, that?.getSquare?.('a' + current_rank_bos))
+              sameSquare(current_square, that.getSquare('a' + current_rank_bos))
             ) {
               current_side.castling -= _LONG_CASTLE;
             }
           }
         }
         that.enPassantBos = pgn_obj.newEnPassantBos;
-        that?.setSquare?.(final_cached_square, pgn_obj.promotedVal || initial_cached_square.val);
-        that?.setSquare?.(initial_cached_square, _EMPTY_SQR);
-        that?.toggleActiveNonActive?.();
+        that.setSquare(final_cached_square, pgn_obj.promotedVal || initial_cached_square.val);
+        that.setSquare(initial_cached_square, _EMPTY_SQR);
+        that.toggleActiveNonActive();
         that.halfMove++;
         if (pgn_obj.pawnMoved || final_cached_square.val) {
           that.halfMove = 0;
@@ -2434,8 +2433,8 @@
         if (active_side.isBlack) {
           that.fullMove++;
         }
-        that?.updateHelper?.({
-          currentMove: Number(that.currentMove) + 1,
+        that.updateHelper({
+          currentMove: that.currentMove + 1,
           slicedFenHistory: sliced_fen_history,
         });
         let complete_san = pgn_obj.partialSan || '';
@@ -2463,11 +2462,10 @@
         let lc_piece = (initial_cached_square.bal || '').replace('*', '').toLowerCase();
         let promotion_bal = (toBal(pgn_obj.promotedVal || 0) || '').replace('*', '').toLowerCase();
         let uci_move = initial_cached_square.bos + '' + final_cached_square.bos + promotion_bal;
-        if (Number(that.currentMove) !== that_movelist.length) {
-          that.moveList = that_movelist.slice(0, Number(that.currentMove));
-          that_movelist = that.moveList;
+        if (that.currentMove !== that.moveList.length) {
+          that.moveList = that.moveList.slice(0, that.currentMove);
         }
-        that_movelist.push({
+        that.moveList.push({
           colorMoved: that.nonActiveColor,
           colorToPlay: that.activeColor,
           fen: that.fen,
@@ -2484,12 +2482,12 @@
           canDraw: that.inDraw,
           isEnPassantCapture: pgn_obj.isEnPassantCapture,
         });
-        rtn_move_obj = that_movelist[that_movelist.length - 1];
+        rtn_move_obj = that.moveList[that.moveList.length - 1];
         if (p.isUnreferenced) {
           rtn_move_obj = _unreferencedMoveHelper(rtn_move_obj);
         }
-        that?.silentlyResetManualResult?.();
-        that?.refreshUi?.(p.isInanimated ? 0 : 1, p.playSounds);
+        that.silentlyResetManualResult();
+        that.refreshUi(p.isInanimated ? 0 : 1, p.playSounds);
       }
       return rtn_move_obj;
     }
@@ -2511,7 +2509,7 @@
         let cache_is_hidden = that.isHidden;
         that.isHidden = true;
         for (let i = 0, len = arr.length; i < len; i++) {
-          if (that?.playMove?.(arr[i], p, sliced_fen_history) === null) {
+          if (that.playMove(arr[i], p, sliced_fen_history) === null) {
             everything_parsed = false;
             break;
           }
@@ -2524,7 +2522,7 @@
         rtn = true;
       }
       if (at_least_one_parsed) {
-        that?.refreshUi?.(p_cache.isInanimated ? 0 : 1, p_cache.playSounds);
+        that.refreshUi(p_cache.isInanimated ? 0 : 1, p_cache.playSounds);
       }
       return rtn;
     }
@@ -2549,7 +2547,7 @@
         if (!uci_moves.length) {
           break block;
         }
-        rtn = that?.playMove?.(uci_moves[Math.floor(Math.random() * uci_moves.length)], p, sliced_fen_history);
+        rtn = that.playMove(uci_moves[Math.floor(Math.random() * uci_moves.length)], p, sliced_fen_history);
       }
       return rtn;
     }
@@ -2752,7 +2750,7 @@
       let del_board = getBoard(woard);
       if (del_board !== null) {
         rtn = true;
-        let del_board_name_cache = String(del_board.boardName);
+        let del_board_name_cache = del_board.boardName;
         del_board = null;
         _BOARDS[del_board_name_cache] = null;
         delete _BOARDS[del_board_name_cache];
@@ -2768,7 +2766,7 @@
           _consoleLog("[isEqualBoard]: left_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        rtn = left_board?.isEqualBoard?.(right_woard);
+        rtn = left_board.isEqualBoard(right_woard);
       }
       return rtn;
     }
@@ -2780,7 +2778,7 @@
           _consoleLog("[cloneBoard]: to_woard doesn't exist", _ALERT_ERROR);
           break block;
         }
-        rtn = to_board?.cloneBoardFrom?.(from_woard);
+        rtn = to_board.cloneBoardFrom(from_woard);
       }
       return rtn;
     }
