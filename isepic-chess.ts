@@ -710,8 +710,8 @@ import * as Ts from './isepic-chess.types';
     }
 
     function _castlingChars(num: any): Ts.CastlingRightsStr {
-      const castlingChars: Ts.CastlingRightsStr[] = ['', 'k', 'q', 'kq'];
-      return castlingChars[_toInt(num, 0, castlingChars.length - 1)];
+      const castling_chars: Ts.CastlingRightsStr[] = ['', 'k', 'q', 'kq'];
+      return castling_chars[_toInt(num, 0, castling_chars.length - 1)];
     }
 
     function _unreferenceP(p: any, changes?: Ts.ChangesTuple[]): object {
@@ -1099,7 +1099,7 @@ import * as Ts from './isepic-chess.types';
         if (isInsideBoard(pre_validated_pos)) {
           // @ts-ignore
           let validated_pos: Ts.SquarePos = pre_validated_pos;
-          rtn = _squareHelper(that!.squares![String(toBos(validated_pos) || '')], p.isUnreferenced);
+          rtn = _squareHelper(that.squares[String(toBos(validated_pos) || '')], p.isUnreferenced);
         }
       }
 
@@ -1110,7 +1110,7 @@ import * as Ts from './isepic-chess.types';
     function _setSquare(qos: Ts.Qos, new_qal: Ts.Qal, p?: Ts.OptionalParam): null | Ts.Square {
       let that: Ts.Board = this;
 
-      let rtn: null | Ts.Square = that?.getSquare?.(qos, _unreferenceP(p, [['isUnreferenced', false]])) || null;
+      let rtn: null | Ts.Square = that.getSquare(qos, _unreferenceP(p, [['isUnreferenced', false]])) || null;
 
       block: {
         if (rtn === null) {
@@ -1140,8 +1140,11 @@ import * as Ts from './isepic-chess.types';
         rtn.isKing = new_abs_val === _KING_W;
 
         if (rtn.isKing) {
+          // @ts-ignore
+          let king_bos: Ts.SquareBos = toBos(qos);
+
           let current_side = rtn.sign < 0 ? that.b : that.w;
-          current_side!.kingBos = toBos(qos);
+          current_side.kingBos = king_bos;
         }
       }
 
@@ -1151,9 +1154,9 @@ import * as Ts from './isepic-chess.types';
     function _attackersFromActive(target_qos: Ts.Qos, early_break?: boolean): number {
       let that: Ts.Board = this;
 
-      that?.toggleActiveNonActive?.();
-      let rtn_total_attackers: number = that?.attackersFromNonActive?.(target_qos, early_break);
-      that?.toggleActiveNonActive?.();
+      that.toggleActiveNonActive();
+      let rtn_total_attackers: number = that.attackersFromNonActive(target_qos, early_break);
+      that.toggleActiveNonActive();
 
       return rtn_total_attackers;
     }
@@ -1164,7 +1167,7 @@ import * as Ts from './isepic-chess.types';
       function _isAttacked(qos: Ts.Qos, piece_direction: Ts.Direction, as_knight: boolean): boolean {
         //uses: that
 
-        let rtn_is_attacked: boolean = that?.testCollision?.(
+        let rtn_is_attacked: boolean = that.testCollision(
           _TEST_COLLISION_OP_IS_ATTACKED,
           qos,
           piece_direction,
@@ -1178,9 +1181,7 @@ import * as Ts from './isepic-chess.types';
 
       let rtn_total_attackers = 0;
 
-      // @ts-ignore
-      let active_side: Ts.BlackInfo | Ts.WhiteInfo = that[that!.activeColor];
-      // @ts-ignore
+      let active_side: Ts.BlackInfo | Ts.WhiteInfo = that[that.activeColor];
       let king_bos: Ts.SquareBos = active_side.kingBos;
 
       target_qos = target_qos || king_bos;
@@ -1209,7 +1210,7 @@ import * as Ts from './isepic-chess.types';
 
       let rtn_changed: boolean = false;
 
-      let temp = typeof new_active === 'boolean' ? new_active : !that[String(that!.activeColor)].isBlack;
+      let temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
 
       if ((temp ? 'b' : 'w') !== that.activeColor || (!temp ? 'b' : 'w') !== that.nonActiveColor) {
         rtn_changed = true;
@@ -1230,7 +1231,7 @@ import * as Ts from './isepic-chess.types';
       if (temp !== that.isRotated) {
         rtn_changed = true;
         that.isRotated = temp;
-        that?.refreshUi?.(0, false); //autorefresh
+        that.refreshUi(0, false); //autorefresh
       }
 
       return rtn_changed;
@@ -1246,7 +1247,7 @@ import * as Ts from './isepic-chess.types';
       if (temp !== that.promoteTo) {
         rtn_changed = true;
         that.promoteTo = temp;
-        that?.refreshUi?.(0, false); //autorefresh
+        that.refreshUi(0, false); //autorefresh
       }
 
       return rtn_changed;
@@ -1257,7 +1258,7 @@ import * as Ts from './isepic-chess.types';
 
       that.isHidden = true; //prevents ui refresh from setPromoteTo()
       that.isRotated = false;
-      that?.setPromoteTo?.(_QUEEN_W);
+      that.setPromoteTo(_QUEEN_W);
       that.isHidden = false;
     }
 
@@ -1266,7 +1267,7 @@ import * as Ts from './isepic-chess.types';
 
       let cache_is_hidden = that.isHidden;
       that.isHidden = true;
-      that?.setManualResult?.(_RESULT_ONGOING);
+      that.setManualResult(_RESULT_ONGOING);
       that.isHidden = cache_is_hidden;
     }
 
@@ -1280,7 +1281,7 @@ import * as Ts from './isepic-chess.types';
       if (temp !== that.manualResult) {
         rtn_changed = true;
         that.manualResult = temp;
-        that?.refreshUi?.(0, false); //autorefresh
+        that.refreshUi(0, false); //autorefresh
       }
 
       return rtn_changed;
@@ -1296,36 +1297,34 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        let len = that!.moveList!.length;
+        let len = that.moveList.length;
 
         if (len < 2) {
           break block;
         }
 
-        let that_current_move = Number(that!.currentMove);
-
         if (typeof is_goto !== 'boolean') {
           num = _toInt(num, 0, len - 1);
-          let diff = num - that_current_move;
+          let diff = num - that.currentMove;
           is_goto = Math.abs(diff) !== 1;
           num = is_goto ? num : diff;
         }
 
         num = _toInt(num);
-        let temp = _toInt(is_goto ? num : num + that_current_move, 0, len - 1);
+        let temp = _toInt(is_goto ? num : num + that.currentMove, 0, len - 1);
 
-        if (temp === that_current_move) {
+        if (temp === that.currentMove) {
           break block;
         }
 
-        that?.updateHelper?.({
+        that.updateHelper({
           currentMove: temp,
           // @ts-ignore
           fen: that.moveList[temp].fen,
           skipFenValidation: true,
         }); /*! NO remove skipFenValidation*/
 
-        that?.refreshUi?.(is_goto ? 0 : num, true); //autorefresh
+        that.refreshUi(is_goto ? 0 : num, true); //autorefresh
         rtn_changed = true;
       }
 
@@ -1335,31 +1334,31 @@ import * as Ts from './isepic-chess.types';
     function _navFirst(): boolean {
       let that: Ts.Board = this;
 
-      return that?.setCurrentMove?.(0); //autorefresh (sometimes)
+      return that.setCurrentMove(0); //autorefresh (sometimes)
     }
 
     function _navPrevious(): boolean {
       let that: Ts.Board = this;
 
-      return that?.setCurrentMove?.(Number(that!.currentMove) - 1); //autorefresh (sometimes)
+      return that.setCurrentMove(that.currentMove - 1); //autorefresh (sometimes)
     }
 
     function _navNext(): boolean {
       let that: Ts.Board = this;
 
-      return that?.setCurrentMove?.(Number(that!.currentMove) + 1); //autorefresh (sometimes)
+      return that.setCurrentMove(that.currentMove + 1); //autorefresh (sometimes)
     }
 
     function _navLast(): boolean {
       let that: Ts.Board = this;
 
-      return that?.setCurrentMove?.(Number(that!.moveList!.length) - 1); //autorefresh (sometimes)
+      return that.setCurrentMove(that.moveList.length - 1); //autorefresh (sometimes)
     }
 
     function _navLinkMove(move_index?: number): boolean {
       let that: Ts.Board = this;
 
-      return that?.setCurrentMove?.(move_index); //autorefresh (sometimes)
+      return that.setCurrentMove(move_index); //autorefresh (sometimes)
     }
 
     //p = {skipFenValidation, keepOptions}
@@ -1377,9 +1376,9 @@ import * as Ts from './isepic-chess.types';
 
         p.skipFenValidation = p.skipFenValidation === true;
         p.keepOptions = p.keepOptions === true;
-        let hash_cache = that?.boardHash?.();
+        let hash_cache = that.boardHash();
 
-        let temp = that?.updateHelper?.({
+        let temp = that.updateHelper({
           currentMove: 0,
           fen: fen,
           skipFenValidation: p.skipFenValidation,
@@ -1392,11 +1391,11 @@ import * as Ts from './isepic-chess.types';
           break block;
         }
 
-        that?.silentlyResetManualResult?.();
+        that.silentlyResetManualResult();
 
-        if (that?.boardHash?.() !== hash_cache) {
+        if (that.boardHash() !== hash_cache) {
           rtn_changed = true;
-          that?.refreshUi?.(0, false); //autorefresh
+          that.refreshUi(0, false); //autorefresh
         }
       }
 
@@ -1410,7 +1409,7 @@ import * as Ts from './isepic-chess.types';
         //0...7
         for (let j = 0; j < 8; j++) {
           //0...7
-          that?.setSquare?.([i, j], _EMPTY_SQR);
+          that.setSquare([i, j], _EMPTY_SQR);
         }
       }
 
@@ -1428,7 +1427,7 @@ import * as Ts from './isepic-chess.types';
           let current_num_or_nan = Number(current_char);
 
           if (!current_num_or_nan) {
-            that?.setSquare?.([i, current_file], current_char);
+            that.setSquare([i, current_file], current_char);
           }
 
           current_file += current_num_or_nan || 1;
@@ -1438,18 +1437,18 @@ import * as Ts from './isepic-chess.types';
       // @ts-ignore
       let castling_w_rights: Ts.CastlingRights =
         (_strContains(fen_parts[2], 'K') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'Q') ? _LONG_CASTLE : 0);
-      that!.w!.castling = castling_w_rights;
+      that.w.castling = castling_w_rights;
 
       // @ts-ignore
       let castling_b_rights: Ts.CastlingRights =
         (_strContains(fen_parts[2], 'k') ? _SHORT_CASTLE : 0) + (_strContains(fen_parts[2], 'q') ? _LONG_CASTLE : 0);
-      that!.b!.castling = castling_b_rights;
+      that.b.castling = castling_b_rights;
 
       // @ts-ignore
       let en_passant_bos: Ts.EnpassantSquareBos = fen_parts[3].replace('-', '');
-      that!.enPassantBos = en_passant_bos;
+      that.enPassantBos = en_passant_bos;
 
-      that?.toggleActiveNonActive?.(fen_parts[1] === 'b');
+      that.toggleActiveNonActive(fen_parts[1] === 'b');
 
       that.halfMove = Number(fen_parts[4]) || 0;
       that.fullMove = Number(fen_parts[5]) || 1;
@@ -1468,7 +1467,7 @@ import * as Ts from './isepic-chess.types';
 
         for (let j = 0; j < 8; j++) {
           //0...7
-          let current_square: null | Ts.Square = that?.getSquare?.([i, j]);
+          let current_square: null | Ts.Square = that.getSquare([i, j]);
 
           if (current_square !== null && !current_square.isEmptySquare) {
             fen_board += (consecutive_empty_squares || '') + (current_square.bal || '');
@@ -1483,7 +1482,7 @@ import * as Ts from './isepic-chess.types';
 
       rtn += fen_board;
       rtn += ' ' + that.activeColor;
-      rtn += ' ' + (_castlingChars(that?.w?.castling).toUpperCase() + '' + _castlingChars(that?.b?.castling) || '-');
+      rtn += ' ' + (_castlingChars(that.w.castling).toUpperCase() + '' + _castlingChars(that.b.castling) || '-');
       rtn += ' ' + (that.enPassantBos || '-');
 
       return rtn;
@@ -1492,7 +1491,7 @@ import * as Ts from './isepic-chess.types';
     function _updateFenAndMisc(sliced_fen_history?): void {
       let that: Ts.Board = this;
 
-      that.checks = that?.attackersFromNonActive?.(null);
+      that.checks = that.attackersFromNonActive(null);
       that.isCheck = !!that.checks; /*! NO move below legalMovesHelper()*/
 
       that.legalUci = [];
@@ -1503,7 +1502,7 @@ import * as Ts from './isepic-chess.types';
         //0...7
         for (let j = 0; j < 8; j++) {
           //0...7
-          let legal_moves: Ts.LegalMovesHelper = that?.legalMovesHelper?.([i, j]);
+          let legal_moves: Ts.LegalMovesHelper = that.legalMovesHelper([i, j]);
           let len = legal_moves.uciMoves.length;
 
           if (!len) {
@@ -1554,7 +1553,7 @@ import * as Ts from './isepic-chess.types';
       if (that.enPassantBos) {
         let can_en_passant = false;
 
-        if (that.legalRevTree[that.enPassantBos] && that?.legalRevTree?.[String(that!.enPassantBos)]['p']) {
+        if (that.legalRevTree[that.enPassantBos] && that.legalRevTree[String(that.enPassantBos)]['p']) {
           can_en_passant = true;
         }
 
@@ -1563,14 +1562,14 @@ import * as Ts from './isepic-chess.types';
         }
       }
 
-      let clockless_fen: string = that?.getClocklessFenHelper?.();
+      let clockless_fen: string = that.getClocklessFenHelper();
       that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
       that.isThreefold = false;
 
-      if (sliced_fen_history || (that.moveList && Number(that!.currentMove) > 7 && Number(that!.halfMove) > 7)) {
+      if (sliced_fen_history || (that.moveList && that.currentMove > 7 && that.halfMove > 7)) {
         let times_found = 1;
-        let fen_arr: any[] = sliced_fen_history || that?.fenHistoryExport?.();
-        let i = sliced_fen_history ? sliced_fen_history.length - 1 : Number(that!.currentMove) - 1;
+        let fen_arr: any[] = sliced_fen_history || that.fenHistoryExport();
+        let i = sliced_fen_history ? sliced_fen_history.length - 1 : that.currentMove - 1;
 
         for (; i >= 0; i--) {
           //(len-1)...0
@@ -1607,7 +1606,7 @@ import * as Ts from './isepic-chess.types';
         if (total_pieces.w.n + total_pieces.b.n) {
           that.isInsufficientMaterial = total_pieces.w.n + total_pieces.b.n + total_pieces.w.b + total_pieces.b.b === 1; //k vs kn
         } else if (total_pieces.w.b + total_pieces.b.b) {
-          let bishop_count: Ts.ColorBishopCounts = that?.countLightDarkBishops?.();
+          let bishop_count: Ts.ColorBishopCounts = that.countLightDarkBishops();
 
           let at_least_one_light = !!(bishop_count.w.lightSquaredBishops + bishop_count.b.lightSquaredBishops);
           let at_least_one_dark = !!(bishop_count.w.darkSquaredBishops + bishop_count.b.darkSquaredBishops);
@@ -1619,13 +1618,13 @@ import * as Ts from './isepic-chess.types';
         }
       }
 
-      that.isFiftyMove = Number(that!.halfMove) >= 100;
+      that.isFiftyMove = that.halfMove >= 100;
 
       that.inDraw =
         !that.isCheckmate && (that.isStalemate || that.isThreefold || that.isInsufficientMaterial || that.isFiftyMove);
 
-      that.w!.materialDiff = [];
-      that.b!.materialDiff = [];
+      that.w.materialDiff = [];
+      that.b.materialDiff = [];
 
       for (let i = _PAWN_W; i <= _KING_W; i++) {
         //1...6
@@ -1636,11 +1635,11 @@ import * as Ts from './isepic-chess.types';
           //0<len
           if (current_diff > 0) {
             let w_piece_val: Ts.WPiecesVal = i;
-            that.w!.materialDiff.push(w_piece_val);
+            that.w.materialDiff.push(w_piece_val);
           } else {
             // @ts-ignore
             let b_piece_val: Ts.BPiecesVal = -i;
-            that.b!.materialDiff.push(b_piece_val);
+            that.b.materialDiff.push(b_piece_val);
           }
         }
       }
@@ -1769,7 +1768,7 @@ import * as Ts from './isepic-chess.types';
           //0...1
           let current_side = i ? that.b : that.w;
 
-          if (!current_side!.castling) {
+          if (!current_side.castling) {
             continue;
           }
 
@@ -1786,7 +1785,7 @@ import * as Ts from './isepic-chess.types';
           }
 
           if (
-            current_side!.castling !== _LONG_CASTLE &&
+            current_side.castling !== _LONG_CASTLE &&
             that?.getSquare?.(temp.originalShortRookBos).val !== current_side!.rook
           ) {
             rtn_msg = 'Error [12] ' + temp.completeActiveColor + ' short castling rights with missing H-file rook';
@@ -1794,7 +1793,7 @@ import * as Ts from './isepic-chess.types';
           }
 
           if (
-            current_side!.castling !== _SHORT_CASTLE &&
+            current_side.castling !== _SHORT_CASTLE &&
             that?.getSquare?.(temp.originalLongRookBos).val !== current_side!.rook
           ) {
             rtn_msg = 'Error [13] ' + temp.completeActiveColor + ' long castling rights with missing A-file rook';
@@ -2355,13 +2354,10 @@ import * as Ts from './isepic-chess.types';
         let initial_fen = move_list[0].fen || '';
         let black_starts = move_list[0].colorToPlay === 'b';
 
-        let that_current_move = Number(that!.currentMove);
-        let that_full_move = Number(that!.fullMove);
-
         let initial_full_move =
-          that_full_move -
-          Math.floor((that_current_move + Number(black_starts) - 1) / 2) +
-          Number(black_starts === !(that_current_move % 2)) -
+          that.fullMove -
+          Math.floor((that.currentMove + Number(black_starts) - 1) / 2) +
+          Number(black_starts === !(that.currentMove % 2)) -
           1;
 
         let result_tag_ow: Ts.ManualResult = _RESULT_ONGOING;

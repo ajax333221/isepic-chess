@@ -161,9 +161,9 @@ export interface WhiteInfo {
   rook: WrVal;
   queen: WqVal;
   king: WkVal;
-  kingBos: null | SquareBos;
-  castling: null | CastlingRights;
-  materialDiff: null | WPiecesVal[];
+  kingBos: SquareBos;
+  castling: CastlingRights;
+  materialDiff: WPiecesVal[];
 }
 
 export interface BlackInfo {
@@ -179,9 +179,9 @@ export interface BlackInfo {
   rook: BrVal;
   queen: BqVal;
   king: BkVal;
-  kingBos: null | SquareBos;
-  castling: null | CastlingRights;
-  materialDiff: null | BPiecesVal[];
+  kingBos: SquareBos;
+  castling: CastlingRights;
+  materialDiff: BPiecesVal[];
 }
 
 export type WhiteUciPromotionMoveWihoutPromotionBal =

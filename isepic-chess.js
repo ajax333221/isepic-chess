@@ -547,8 +547,8 @@
       return rtn;
     }
     function _castlingChars(num) {
-      const castlingChars = ['', 'k', 'q', 'kq'];
-      return castlingChars[_toInt(num, 0, castlingChars.length - 1)];
+      const castling_chars = ['', 'k', 'q', 'kq'];
+      return castling_chars[_toInt(num, 0, castling_chars.length - 1)];
     }
     function _unreferenceP(p, changes) {
       let rtn = _isObject(p) ? { ...p } : {};
@@ -843,7 +843,7 @@
     }
     function _setSquare(qos, new_qal, p) {
       let that = this;
-      let rtn = that?.getSquare?.(qos, _unreferenceP(p, [['isUnreferenced', false]])) || null;
+      let rtn = that.getSquare(qos, _unreferenceP(p, [['isUnreferenced', false]])) || null;
       block: {
         if (rtn === null) {
           break block;
@@ -867,23 +867,24 @@
         rtn.isQueen = new_abs_val === _QUEEN_W;
         rtn.isKing = new_abs_val === _KING_W;
         if (rtn.isKing) {
+          let king_bos = toBos(qos);
           let current_side = rtn.sign < 0 ? that.b : that.w;
-          current_side.kingBos = toBos(qos);
+          current_side.kingBos = king_bos;
         }
       }
       return rtn;
     }
     function _attackersFromActive(target_qos, early_break) {
       let that = this;
-      that?.toggleActiveNonActive?.();
-      let rtn_total_attackers = that?.attackersFromNonActive?.(target_qos, early_break);
-      that?.toggleActiveNonActive?.();
+      that.toggleActiveNonActive();
+      let rtn_total_attackers = that.attackersFromNonActive(target_qos, early_break);
+      that.toggleActiveNonActive();
       return rtn_total_attackers;
     }
     function _attackersFromNonActive(target_qos, early_break) {
       let that = this;
       function _isAttacked(qos, piece_direction, as_knight) {
-        let rtn_is_attacked = that?.testCollision?.(
+        let rtn_is_attacked = that.testCollision(
           _TEST_COLLISION_OP_IS_ATTACKED,
           qos,
           piece_direction,
@@ -913,7 +914,7 @@
     function _toggleActiveNonActive(new_active) {
       let that = this;
       let rtn_changed = false;
-      let temp = typeof new_active === 'boolean' ? new_active : !that[String(that.activeColor)].isBlack;
+      let temp = typeof new_active === 'boolean' ? new_active : !that[that.activeColor].isBlack;
       if ((temp ? 'b' : 'w') !== that.activeColor || (!temp ? 'b' : 'w') !== that.nonActiveColor) {
         rtn_changed = true;
         that.activeColor = temp ? 'b' : 'w';
@@ -928,7 +929,7 @@
       if (temp !== that.isRotated) {
         rtn_changed = true;
         that.isRotated = temp;
-        that?.refreshUi?.(0, false);
+        that.refreshUi(0, false);
       }
       return rtn_changed;
     }
@@ -939,7 +940,7 @@
       if (temp !== that.promoteTo) {
         rtn_changed = true;
         that.promoteTo = temp;
-        that?.refreshUi?.(0, false);
+        that.refreshUi(0, false);
       }
       return rtn_changed;
     }
@@ -947,14 +948,14 @@
       let that = this;
       that.isHidden = true;
       that.isRotated = false;
-      that?.setPromoteTo?.(_QUEEN_W);
+      that.setPromoteTo(_QUEEN_W);
       that.isHidden = false;
     }
     function _silentlyResetManualResult() {
       let that = this;
       let cache_is_hidden = that.isHidden;
       that.isHidden = true;
-      that?.setManualResult?.(_RESULT_ONGOING);
+      that.setManualResult(_RESULT_ONGOING);
       that.isHidden = cache_is_hidden;
     }
     function _setManualResult(str) {
@@ -964,7 +965,7 @@
       if (temp !== that.manualResult) {
         rtn_changed = true;
         that.manualResult = temp;
-        that?.refreshUi?.(0, false);
+        that.refreshUi(0, false);
       }
       return rtn_changed;
     }
@@ -979,49 +980,48 @@
         if (len < 2) {
           break block;
         }
-        let that_current_move = Number(that.currentMove);
         if (typeof is_goto !== 'boolean') {
           num = _toInt(num, 0, len - 1);
-          let diff = num - that_current_move;
+          let diff = num - that.currentMove;
           is_goto = Math.abs(diff) !== 1;
           num = is_goto ? num : diff;
         }
         num = _toInt(num);
-        let temp = _toInt(is_goto ? num : num + that_current_move, 0, len - 1);
-        if (temp === that_current_move) {
+        let temp = _toInt(is_goto ? num : num + that.currentMove, 0, len - 1);
+        if (temp === that.currentMove) {
           break block;
         }
-        that?.updateHelper?.({
+        that.updateHelper({
           currentMove: temp,
           // @ts-ignore
           fen: that.moveList[temp].fen,
           skipFenValidation: true,
         });
         /*! NO remove skipFenValidation*/
-        that?.refreshUi?.(is_goto ? 0 : num, true);
+        that.refreshUi(is_goto ? 0 : num, true);
         rtn_changed = true;
       }
       return rtn_changed;
     }
     function _navFirst() {
       let that = this;
-      return that?.setCurrentMove?.(0);
+      return that.setCurrentMove(0);
     }
     function _navPrevious() {
       let that = this;
-      return that?.setCurrentMove?.(Number(that.currentMove) - 1);
+      return that.setCurrentMove(that.currentMove - 1);
     }
     function _navNext() {
       let that = this;
-      return that?.setCurrentMove?.(Number(that.currentMove) + 1);
+      return that.setCurrentMove(that.currentMove + 1);
     }
     function _navLast() {
       let that = this;
-      return that?.setCurrentMove?.(Number(that.moveList.length) - 1);
+      return that.setCurrentMove(that.moveList.length - 1);
     }
     function _navLinkMove(move_index) {
       let that = this;
-      return that?.setCurrentMove?.(move_index);
+      return that.setCurrentMove(move_index);
     }
     function _loadFen(fen, p) {
       let that = this;
@@ -1033,8 +1033,8 @@
         }
         p.skipFenValidation = p.skipFenValidation === true;
         p.keepOptions = p.keepOptions === true;
-        let hash_cache = that?.boardHash?.();
-        let temp = that?.updateHelper?.({
+        let hash_cache = that.boardHash();
+        let temp = that.updateHelper({
           currentMove: 0,
           fen,
           skipFenValidation: p.skipFenValidation,
@@ -1045,10 +1045,10 @@
           _consoleLog('[_loadFen]: bad FEN', _ALERT_ERROR);
           break block;
         }
-        that?.silentlyResetManualResult?.();
-        if (that?.boardHash?.() !== hash_cache) {
+        that.silentlyResetManualResult();
+        if (that.boardHash() !== hash_cache) {
           rtn_changed = true;
-          that?.refreshUi?.(0, false);
+          that.refreshUi(0, false);
         }
       }
       return rtn_changed;
@@ -1057,7 +1057,7 @@
       let that = this;
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-          that?.setSquare?.([i, j], _EMPTY_SQR);
+          that.setSquare([i, j], _EMPTY_SQR);
         }
       }
       fen = _trimSpaces(fen);
@@ -1069,7 +1069,7 @@
           let current_char = fen_board_arr[i].charAt(j);
           let current_num_or_nan = Number(current_char);
           if (!current_num_or_nan) {
-            that?.setSquare?.([i, current_file], current_char);
+            that.setSquare([i, current_file], current_char);
           }
           current_file += current_num_or_nan || 1;
         }
@@ -1082,7 +1082,7 @@
       that.b.castling = castling_b_rights;
       let en_passant_bos = fen_parts[3].replace('-', '');
       that.enPassantBos = en_passant_bos;
-      that?.toggleActiveNonActive?.(fen_parts[1] === 'b');
+      that.toggleActiveNonActive(fen_parts[1] === 'b');
       that.halfMove = Number(fen_parts[4]) || 0;
       that.fullMove = Number(fen_parts[5]) || 1;
     }
@@ -1093,7 +1093,7 @@
       for (let i = 0; i < 8; i++) {
         let consecutive_empty_squares = 0;
         for (let j = 0; j < 8; j++) {
-          let current_square = that?.getSquare?.([i, j]);
+          let current_square = that.getSquare([i, j]);
           if (current_square !== null && !current_square.isEmptySquare) {
             fen_board += (consecutive_empty_squares || '') + (current_square.bal || '');
             consecutive_empty_squares = -1;
@@ -1104,13 +1104,13 @@
       }
       rtn += fen_board;
       rtn += ' ' + that.activeColor;
-      rtn += ' ' + (_castlingChars(that?.w?.castling).toUpperCase() + '' + _castlingChars(that?.b?.castling) || '-');
+      rtn += ' ' + (_castlingChars(that.w.castling).toUpperCase() + '' + _castlingChars(that.b.castling) || '-');
       rtn += ' ' + (that.enPassantBos || '-');
       return rtn;
     }
     function _updateFenAndMisc(sliced_fen_history) {
       let that = this;
-      that.checks = that?.attackersFromNonActive?.(null);
+      that.checks = that.attackersFromNonActive(null);
       that.isCheck = !!that.checks;
       /*! NO move below legalMovesHelper()*/
       that.legalUci = [];
@@ -1118,7 +1118,7 @@
       that.legalRevTree = {};
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-          let legal_moves = that?.legalMovesHelper?.([i, j]);
+          let legal_moves = that.legalMovesHelper([i, j]);
           let len = legal_moves.uciMoves.length;
           if (!len) {
             continue;
@@ -1152,20 +1152,20 @@
       that.isStalemate = !that.isCheck && !that.legalUci.length;
       if (that.enPassantBos) {
         let can_en_passant = false;
-        if (that.legalRevTree[that.enPassantBos] && that?.legalRevTree?.[String(that.enPassantBos)]['p']) {
+        if (that.legalRevTree[that.enPassantBos] && that.legalRevTree[String(that.enPassantBos)]['p']) {
           can_en_passant = true;
         }
         if (!can_en_passant) {
           that.enPassantBos = '';
         }
       }
-      let clockless_fen = that?.getClocklessFenHelper?.();
+      let clockless_fen = that.getClocklessFenHelper();
       that.fen = clockless_fen + ' ' + that.halfMove + ' ' + that.fullMove;
       that.isThreefold = false;
-      if (sliced_fen_history || (that.moveList && Number(that.currentMove) > 7 && Number(that.halfMove) > 7)) {
+      if (sliced_fen_history || (that.moveList && that.currentMove > 7 && that.halfMove > 7)) {
         let times_found = 1;
-        let fen_arr = sliced_fen_history || that?.fenHistoryExport?.();
-        let i = sliced_fen_history ? sliced_fen_history.length - 1 : Number(that.currentMove) - 1;
+        let fen_arr = sliced_fen_history || that.fenHistoryExport();
+        let i = sliced_fen_history ? sliced_fen_history.length - 1 : that.currentMove - 1;
         for (; i >= 0; i--) {
           let fen_parts = fen_arr[i].split(' ');
           if (fen_parts.slice(0, 4).join(' ') === clockless_fen) {
@@ -1195,7 +1195,7 @@
         if (total_pieces.w.n + total_pieces.b.n) {
           that.isInsufficientMaterial = total_pieces.w.n + total_pieces.b.n + total_pieces.w.b + total_pieces.b.b === 1;
         } else if (total_pieces.w.b + total_pieces.b.b) {
-          let bishop_count = that?.countLightDarkBishops?.();
+          let bishop_count = that.countLightDarkBishops();
           let at_least_one_light = !!(bishop_count.w.lightSquaredBishops + bishop_count.b.lightSquaredBishops);
           let at_least_one_dark = !!(bishop_count.w.darkSquaredBishops + bishop_count.b.darkSquaredBishops);
           that.isInsufficientMaterial = at_least_one_light !== at_least_one_dark;
@@ -1203,7 +1203,7 @@
           that.isInsufficientMaterial = true;
         }
       }
-      that.isFiftyMove = Number(that.halfMove) >= 100;
+      that.isFiftyMove = that.halfMove >= 100;
       that.inDraw =
         !that.isCheckmate && (that.isStalemate || that.isThreefold || that.isInsufficientMaterial || that.isFiftyMove);
       that.w.materialDiff = [];
@@ -1734,12 +1734,10 @@
         /*! TODO header from _pgnParserHelper()*/
         let initial_fen = move_list[0].fen || '';
         let black_starts = move_list[0].colorToPlay === 'b';
-        let that_current_move = Number(that.currentMove);
-        let that_full_move = Number(that.fullMove);
         let initial_full_move =
-          that_full_move -
-          Math.floor((that_current_move + Number(black_starts) - 1) / 2) +
-          Number(black_starts === !(that_current_move % 2)) -
+          that.fullMove -
+          Math.floor((that.currentMove + Number(black_starts) - 1) / 2) +
+          Number(black_starts === !(that.currentMove % 2)) -
           1;
         let result_tag_ow = _RESULT_ONGOING;
         let text_game = '';
@@ -2791,7 +2789,7 @@
       p = _unreferenceP(p);
       let board_created = false;
       let finished_block = false;
-      let new_board = null;
+      let new_board;
       block: {
         p.boardName = _isNonBlankStr(p.boardName)
           ? _formatName(p.boardName)
@@ -2825,20 +2823,20 @@
         board_created = true;
         new_board.isHidden = true;
         let valid_fen = fen_was_valid ? p.fen : _DEFAULT_FEN;
-        new_board?.updateHelper?.({
+        new_board.updateHelper({
           currentMove: 0,
           fen: valid_fen,
           skipFenValidation: true,
           resetMoveList: true,
         });
         /*! NO remove skipFenValidation*/
-        let postfen_was_valid = p.skipFenValidation || !new_board?.refinedFenTest?.();
+        let postfen_was_valid = p.skipFenValidation || !new_board.refinedFenTest();
         if (p.validOrBreak && !postfen_was_valid) {
           _consoleLog('[initBoard]: "' + board_name + '" bad postFEN', _ALERT_ERROR);
           break block;
         }
         if (!postfen_was_valid) {
-          new_board?.updateHelper?.({
+          new_board.updateHelper({
             currentMove: 0,
             fen: _DEFAULT_FEN,
             skipFenValidation: true,
@@ -2847,7 +2845,7 @@
           /*! NO remove skipFenValidation*/
         }
         if (p.pgn) {
-          let everything_parsed_pgn = new_board?.playMoves?.(p.pgn.sanMoves);
+          let everything_parsed_pgn = new_board.playMoves(p.pgn.sanMoves);
           /*! NO p.validOrBreak short-circuit*/
           if (p.validOrBreak && !everything_parsed_pgn) {
             _consoleLog('[initBoard]: "' + board_name + '" bad PGN', _ALERT_ERROR);
@@ -2858,26 +2856,26 @@
             }
           }
         } else if (p.uci) {
-          let everything_parsed_uci = new_board?.playMoves?.(p.uci);
+          let everything_parsed_uci = new_board.playMoves(p.uci);
           /*! NO p.validOrBreak short-circuit*/
           if (p.validOrBreak && !everything_parsed_uci) {
             _consoleLog('[initBoard]: "' + board_name + '" bad UCI', _ALERT_ERROR);
             break block;
           }
         }
-        p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : Number(new_board.moveList.length) - 1;
-        new_board?.setCurrentMove?.(p.moveIndex, true);
+        p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : new_board.moveList.length - 1;
+        new_board.setCurrentMove(p.moveIndex, true);
         /*! NO move below isPuzzleMode*/
         new_board.isRotated = p.isRotated;
         new_board.isPuzzleMode = p.isPuzzleMode;
-        new_board?.setPromoteTo?.(p.promoteTo);
-        new_board?.setManualResult?.(p.manualResult);
+        new_board.setPromoteTo(p.promoteTo);
+        new_board.setManualResult(p.manualResult);
         new_board.isHidden = p.isHidden;
-        new_board?.refreshUi?.(0, false);
+        new_board.refreshUi(0, false);
         rtn = new_board;
         finished_block = true;
       }
-      if (board_created && !finished_block) {
+      if (new_board !== void 0 && board_created && !finished_block) {
         removeBoard(new_board);
       }
       return rtn;
@@ -3000,6 +2998,10 @@
           break block;
         }
         board = _cloneBoardToObj({ boardName: board_name + '_copy' }, board);
+        if (board === null) {
+          _consoleLog('[fenGet]: unexpected cloned board', _ALERT_ERROR);
+          break block;
+        }
         board_created = true;
         let board_keys = [];
         if (_isArray(props)) {
