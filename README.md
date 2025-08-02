@@ -7,6 +7,7 @@
 	<a href="https://www.npmjs.com/package/isepic-chess"><img src="https://img.shields.io/npm/v/isepic-chess.svg" alt="npm version"></a>
 	<a href="https://github.com/facebook/jest"><img src="https://img.shields.io/badge/tested_with-jest-99424f.svg" alt="tested with Jest"></a>
 	<a href="#page_facing_up-copyright-and-license"><img src="https://img.shields.io/github/license/ajax333221/isepic-chess.svg" alt="license"></a>
+  <a href="https://github.com/search?q=repo%3Aajax333221%2Fisepic-chess++language%3ATypeScript&type=code"><img src="https://img.shields.io/badge/built%20with-typescript-3178C6?style=flat&logo=typescript&logoColor=white" alt="built with TypeScript"></a>
 	<a href="https://www.reddit.com/r/isepic_chess_js"><img src="https://img.shields.io/reddit/subreddit-subscribers/isepic_chess_js?style=social" alt="official subreddit"></a>
 </p>
 
