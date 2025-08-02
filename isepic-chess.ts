@@ -418,9 +418,10 @@ import * as Ts from './isepic-chess.types';
     function _nullboardHelper(board_name: string): Ts.Board {
       let rtn: Ts.Board;
 
-      let pre_rtn: null | Ts.Board = getBoard(board_name);
+      let pre_rtn: any = getBoard(board_name);
 
       if (pre_rtn === null) {
+        // @ts-ignore
         _BOARDS[board_name] = {
           boardName: board_name,
           getSquare: _getSquare,
@@ -768,7 +769,7 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
-    function _cloneBoardToObj(to_obj: Ts.Board = {}, from_woard: Ts.Woard): Ts.Board {
+    function _cloneBoardToObj(to_obj: any = {}, from_woard: Ts.Woard): any {
       block: {
         if (!_isObject(to_obj)) {
           _consoleLog('[_cloneBoardToObj]: to_obj must be Object type', _ALERT_ERROR);
@@ -3866,7 +3867,7 @@ import * as Ts from './isepic-chess.types';
       let board_created = false;
       let finished_block = false;
 
-      let new_board: null | Ts.Board = null;
+      let new_board: undefined | Ts.Board;
 
       block: {
         p.boardName = _isNonBlankStr(p.boardName)
@@ -3903,14 +3904,14 @@ import * as Ts from './isepic-chess.types';
         new_board.isHidden = true;
         let valid_fen = fen_was_valid ? p.fen : _DEFAULT_FEN;
 
-        new_board?.updateHelper?.({
+        new_board.updateHelper({
           currentMove: 0,
           fen: valid_fen,
           skipFenValidation: true,
           resetMoveList: true,
         }); /*! NO remove skipFenValidation*/
 
-        let postfen_was_valid = p.skipFenValidation || !new_board?.refinedFenTest?.();
+        let postfen_was_valid = p.skipFenValidation || !new_board.refinedFenTest();
 
         if (p.validOrBreak && !postfen_was_valid) {
           _consoleLog('[initBoard]: "' + board_name + '" bad postFEN', _ALERT_ERROR);
@@ -3918,7 +3919,7 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (!postfen_was_valid) {
-          new_board?.updateHelper?.({
+          new_board.updateHelper({
             currentMove: 0,
             fen: _DEFAULT_FEN,
             skipFenValidation: true,
@@ -3927,7 +3928,7 @@ import * as Ts from './isepic-chess.types';
         }
 
         if (p.pgn) {
-          let everything_parsed_pgn = new_board?.playMoves?.(p.pgn.sanMoves); /*! NO p.validOrBreak short-circuit*/
+          let everything_parsed_pgn = new_board.playMoves(p.pgn.sanMoves); /*! NO p.validOrBreak short-circuit*/
 
           if (p.validOrBreak && !everything_parsed_pgn) {
             _consoleLog('[initBoard]: "' + board_name + '" bad PGN', _ALERT_ERROR);
@@ -3938,7 +3939,7 @@ import * as Ts from './isepic-chess.types';
             }
           }
         } else if (p.uci) {
-          let everything_parsed_uci = new_board?.playMoves?.(p.uci); /*! NO p.validOrBreak short-circuit*/
+          let everything_parsed_uci = new_board.playMoves(p.uci); /*! NO p.validOrBreak short-circuit*/
 
           if (p.validOrBreak && !everything_parsed_uci) {
             _consoleLog('[initBoard]: "' + board_name + '" bad UCI', _ALERT_ERROR);
@@ -3946,20 +3947,20 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : Number(new_board!.moveList!.length) - 1;
-        new_board?.setCurrentMove?.(p.moveIndex, true); /*! NO move below isPuzzleMode*/
+        p.moveIndex = _isIntOrStrInt(p.moveIndex) ? p.moveIndex : new_board.moveList.length - 1;
+        new_board.setCurrentMove(p.moveIndex, true); /*! NO move below isPuzzleMode*/
         new_board.isRotated = p.isRotated;
         new_board.isPuzzleMode = p.isPuzzleMode;
-        new_board?.setPromoteTo?.(p.promoteTo);
-        new_board?.setManualResult?.(p.manualResult);
+        new_board.setPromoteTo(p.promoteTo);
+        new_board.setManualResult(p.manualResult);
         new_board.isHidden = p.isHidden;
-        new_board?.refreshUi?.(0, false); //autorefresh
+        new_board.refreshUi(0, false); //autorefresh
         rtn = new_board;
 
         finished_block = true;
       }
 
-      if (board_created && !finished_block) {
+      if (new_board !== undefined && board_created && !finished_block) {
         removeBoard(new_board);
       }
 
@@ -4102,6 +4103,12 @@ import * as Ts from './isepic-chess.types';
         }
 
         board = _cloneBoardToObj({ boardName: board_name + '_copy' }, board);
+
+        if (board === null) {
+          _consoleLog('[fenGet]: unexpected cloned board', _ALERT_ERROR);
+          break block;
+        }
+
         board_created = true;
         let board_keys: any[] = [];
 
