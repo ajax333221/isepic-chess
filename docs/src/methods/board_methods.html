@@ -876,9 +876,19 @@
     //start: pgnExport
     board.pgnExport.params = {};
 
-    board.pgnExport.returnVal = {
-      children: [{ type: 'String' }],
-    };
+    board.pgnExport.returnVal = [
+      {
+        children: [{ type: 'String' }],
+      },
+      {
+        children: [
+          {
+            type: 'String',
+            codeAfter: '""',
+          },
+        ],
+      },
+    ];
 
     board.pgnExport.description = [];
     board.pgnExport.description.push('Returns the **PGN** as text.');
@@ -887,6 +897,9 @@
     board.pgnExport.examples = [];
     board.pgnExport.examples.push('board.pgnExport() //"... *"');
     board.pgnExport.examples.push('board_after_e4.pgnExport() //"... 1. e4 *"');
+
+    board.pgnExport.errors = [];
+    board.pgnExport.errors.push('board without move zero on **move list**.');
     //end: pgnExport
 
     //start: uciExport
