@@ -294,12 +294,12 @@ import * as Ts from './isepic-chess.types';
         // @ts-ignore
         let to_bos: Ts.SquareBos = pre_to_bos;
 
-        let fromTo: Ts.MoveFromTo = [from_bos, to_bos];
+        let from_to: Ts.MoveFromTo = [from_bos, to_bos];
 
         // @ts-ignore
         let possible_promote: Ts.NoLowercasePromotePiecesBal | Ts.LowercasePromotePiecesBal = temp.charAt(4) || '';
 
-        rtn = [fromTo, possible_promote];
+        rtn = [from_to, possible_promote];
       }
 
       return rtn;
@@ -337,9 +337,9 @@ import * as Ts from './isepic-chess.types';
         // @ts-ignore
         let to_bos: Ts.SquareBos = pre_to_bos;
 
-        let fromTo: Ts.MoveFromTo = [from_bos, to_bos];
+        let from_to: Ts.MoveFromTo = [from_bos, to_bos];
 
-        rtn = fromTo;
+        rtn = from_to;
       }
 
       return rtn;
@@ -367,9 +367,9 @@ import * as Ts from './isepic-chess.types';
         // @ts-ignore
         let to_bos: Ts.SquareBos = toBos(mov[1]);
 
-        let fromTo: Ts.MoveFromTo = [from_bos, to_bos];
+        let from_to: Ts.MoveFromTo = [from_bos, to_bos];
 
-        rtn = fromTo;
+        rtn = from_to;
       }
 
       return rtn;

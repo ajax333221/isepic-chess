@@ -217,9 +217,9 @@
         }
         let from_bos = pre_from_bos;
         let to_bos = pre_to_bos;
-        let fromTo = [from_bos, to_bos];
+        let from_to = [from_bos, to_bos];
         let possible_promote = temp.charAt(4) || '';
-        rtn = [fromTo, possible_promote];
+        rtn = [from_to, possible_promote];
       }
       return rtn;
     }
@@ -243,8 +243,8 @@
         }
         let from_bos = pre_from_bos;
         let to_bos = pre_to_bos;
-        let fromTo = [from_bos, to_bos];
-        rtn = fromTo;
+        let from_to = [from_bos, to_bos];
+        rtn = from_to;
       }
       return rtn;
     }
@@ -262,8 +262,8 @@
         }
         let from_bos = toBos(mov[0]);
         let to_bos = toBos(mov[1]);
-        let fromTo = [from_bos, to_bos];
-        rtn = fromTo;
+        let from_to = [from_bos, to_bos];
+        rtn = from_to;
       }
       return rtn;
     }
