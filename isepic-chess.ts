@@ -1510,7 +1510,9 @@ import * as Ts from './isepic-chess.types';
         //0...7
         for (let j = 0; j < 8; j++) {
           //0...7
-          let legal_moves: Ts.LegalMovesHelper = that.legalMovesHelper([i, j]);
+          // @ts-ignore
+          let current_pos: Ts.SquarePos = [i, j];
+          let legal_moves: Ts.LegalMovesHelper = that.legalMovesHelper(current_pos);
           let len = legal_moves.uciMoves.length;
 
           if (!len) {
@@ -2579,6 +2581,10 @@ import * as Ts from './isepic-chess.types';
 
       block: {
         let temp = that.undoMoves(1);
+
+        if (temp === null) {
+          break block;
+        }
 
         if (temp.length !== 1) {
           break block;

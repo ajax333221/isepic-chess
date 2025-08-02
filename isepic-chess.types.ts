@@ -281,57 +281,64 @@ export type Move = Partial<_Move>;
 
 interface _Board {
   boardName: string;
-  getSquare: Function;
-  setSquare: Function;
-  attackersFromActive: Function;
-  attackersFromNonActive: Function;
-  toggleActiveNonActive: Function;
-  toggleIsRotated: Function;
-  setPromoteTo: Function;
-  silentlyResetOptions: Function;
-  silentlyResetManualResult: Function;
-  setManualResult: Function;
-  setCurrentMove: Function;
-  loadFen: Function;
-  loadValidatedFen: Function;
-  getClocklessFenHelper: Function;
-  updateFenAndMisc: Function;
-  refinedFenTest: Function;
-  testCollision: Function;
-  isLegalMove: Function;
-  legalMovesHelper: Function;
-  legalMoves: Function;
-  legalFenMoves: Function;
-  legalSanMoves: Function;
-  legalUciMoves: Function;
-  getCheckmateMoves: Function;
-  getDrawMoves: Function;
-  fenHistoryExport: Function;
-  pgnExport: Function;
-  uciExport: Function;
-  ascii: Function;
-  boardHash: Function;
-  isEqualBoard: Function;
-  cloneBoardFrom: Function;
-  cloneBoardTo: Function;
-  reset: Function;
-  undoMove: Function;
-  undoMoves: Function;
-  countLightDarkBishops: Function;
-  updateHelper: Function;
-  fenWrapmoveHelper: Function;
-  sanWrapmoveHelper: Function;
-  getWrappedMove: Function;
-  draftMove: Function;
-  playMove: Function;
-  playMoves: Function;
-  playRandomMove: Function;
-  navFirst: Function;
-  navPrevious: Function;
-  navNext: Function;
-  navLast: Function;
-  navLinkMove: Function;
-  refreshUi: Function;
+  getSquare: Function; //TODO: specify Params and Return
+  setSquare: Function; //TODO: specify Params and Return
+  attackersFromActive: Function; //TODO: specify Params and Return
+  attackersFromNonActive: Function; //TODO: specify Params and Return
+  toggleActiveNonActive(new_active?: boolean): boolean;
+  toggleIsRotated(new_is_rotated?: boolean): boolean;
+  setPromoteTo(qal: Qal): boolean;
+  silentlyResetOptions(): void;
+  silentlyResetManualResult(): void;
+  setManualResult(str?: string): boolean;
+  setCurrentMove(num?: number, is_goto?: boolean, is_puzzle_move?: boolean): boolean;
+  loadFen(fen?: string, p?: OptionalParam): boolean;
+  loadValidatedFen(fen?: string): void;
+  getClocklessFenHelper(): string;
+  updateFenAndMisc(sliced_fen_history?: string[]): void;
+  refinedFenTest(): string;
+  testCollision(
+    op: TestCollisionOp,
+    initial_qos: Qos,
+    piece_direction: Direction,
+    as_knight: boolean,
+    max_shifts: number,
+    allow_capture: boolean
+  ): TestCollision;
+  isLegalMove(mov?: Mov, p?: OptionalParam): boolean;
+  legalMovesHelper(target_qos: Qos): LegalMovesHelper;
+  legalMoves(target_qos: Qos, p?: OptionalParam): any[];
+  legalFenMoves(target_qos: Qos): string[];
+  legalSanMoves(target_qos: Qos): string[];
+  legalUciMoves(target_qos: Qos): UciMove[];
+  getCheckmateMoves(early_break?: boolean): UciMove[];
+  getDrawMoves(early_break?: boolean): UciMove[];
+  fenHistoryExport(): string[];
+  pgnExport(): string;
+  uciExport(): string;
+  ascii(is_rotated?: boolean): string;
+  boardHash(): number;
+  isEqualBoard(to_woard: Woard): boolean;
+  cloneBoardFrom(from_woard: Woard): boolean;
+  cloneBoardTo(to_woard: Woard): boolean;
+  reset(keep_options?: boolean): boolean;
+  undoMove(): null | Move;
+  undoMoves(decrease_by?: number): null | Move[];
+  countLightDarkBishops(): ColorBishopCounts;
+  updateHelper(obj?: any): boolean;
+  fenWrapmoveHelper(mov?: string): null | Wrapmove;
+  sanWrapmoveHelper(mov?: string): null | Wrapmove;
+  getWrappedMove(mov?: Mov, p?: OptionalParam): null | WrappedMove;
+  draftMove(mov?: Mov, p?: OptionalParam): DraftMove;
+  playMove: Function; //TODO: specify Params and Return
+  playMoves(arr?: Mov[], p?: OptionalParam, sliced_fen_history?: string[]): boolean;
+  playRandomMove(p?: OptionalParam, sliced_fen_history?: string[]): null | Move;
+  navFirst(): boolean;
+  navPrevious(): boolean;
+  navNext(): boolean;
+  navLast(): boolean;
+  navLinkMove(move_index?: number): boolean;
+  refreshUi(animation_type?: any, play_sounds?: boolean): void;
   w: WhiteInfo;
   b: BlackInfo;
   activeColor: Color;

@@ -1122,7 +1122,8 @@
       that.legalRevTree = {};
       for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-          let legal_moves = that.legalMovesHelper([i, j]);
+          let current_pos = [i, j];
+          let legal_moves = that.legalMovesHelper(current_pos);
           let len = legal_moves.uciMoves.length;
           if (!len) {
             continue;
@@ -1890,6 +1891,9 @@
       let rtn = null;
       block: {
         let temp = that.undoMoves(1);
+        if (temp === null) {
+          break block;
+        }
         if (temp.length !== 1) {
           break block;
         }
