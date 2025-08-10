@@ -19,7 +19,7 @@
 <li><strong>:sparkles: Flexibility:</strong> Inspired by JavaScript's flexibility, it strives to make things work without easily giving up and throwing errors.</li>
 <li><strong>:white_check_mark: Code Coverage:</strong> Despite its flexibility and complexity, it achieves an impressive <strong>98~%</strong> code coverage <sup>(as of `v6.0.0`)</sup>, ensuring reliability.</li>
 <li><strong>:chart_with_upwards_trend: Perft-Tested:</strong> Each release is rigorously tested against known Perft positions to guarantee accurate move generation.</li>
-<li><strong>:no_entry_sign: UI-less:</strong> All user interface code is completely separated into the <a href="https://github.com/ajax333221/isepic-chess-ui">Isepic Chess UI</a> project, keeping this library lightweight</li>
+<li><strong>:no_entry_sign: UI-less:</strong> All user interface code is completely separated into the <a href="https://github.com/ajax333221/isepic-chess-ui">Isepic Chess UI</a> project, keeping this library lightweight.</li>
 <li><strong>:x: Dependency-less:</strong> It operates entirely without relying on any other external libraries.</li>
 </ul>
 
