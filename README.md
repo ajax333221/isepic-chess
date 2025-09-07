@@ -57,7 +57,7 @@ The variable `Ic` will be added to window.
 ```js
 const { Ic } = require('isepic-chess');
 
-var example_pgn = `[Event "m1 London"]
+let example_pgn = `[Event "m1 London"]
 [Site "?"]
 [Date "1861.07.??"]
 [Round "9"]
@@ -75,7 +75,7 @@ Rg6+) 31... Rg6 (31...Rxh4+ $1 32.gxh4 Rg6 $1) 32. Bc1 (32.Ng2 $1) 32... Rxh4+
 $1 33. gxh4 Qf4+ 34. Kh3 Bg2+ $1 35. Nxg2 Qf3+ 36. Kh2 Qxg2# { Anderssen won
 the match by this mate (+4, =2, -3).} 0-1`;
 
-var board = Ic.initBoard({
+let board = Ic.initBoard({
   pgn: example_pgn,
 });
 
@@ -95,7 +95,7 @@ console.log(board.ascii());
 console.log(board.fen);
 // "7k/pp4pp/6r1/8/3Pp2P/1P6/P5qK/R1B1Q3 w - - 0 37"
 
-var fen_arr = [
+let fen_arr = [
   'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
   'r1bqk2r/pppp1pbp/2n2n2/4p3/5p2/2N3PN/PPPPP1BP/R1BQK2R w KQkq - 2 8',
   'r2qkb1r/pbp1p1p1/1pnp1n1p/5p2/4P2P/5NP1/PPPPKPB1/RNBQR3 w kq - 0 8',
@@ -104,7 +104,7 @@ var fen_arr = [
 ];
 
 /* transform each FEN into arrays with their legal SAN moves for the g2 square */
-var mapped = fen_arr.map((fen) => Ic.fenApply(fen, 'legalSanMoves', ['g2']));
+let mapped = fen_arr.map((fen) => Ic.fenApply(fen, 'legalSanMoves', ['g2']));
 
 console.log(mapped);
 // [
@@ -116,11 +116,9 @@ console.log(mapped);
 // ]
 
 /* get only the positions where the white king is not in its original square */
-var filtered = fen_arr.filter((fen) => {
-  var obj, rtn;
-
-  rtn = false;
-  obj = Ic.fenGet(fen, 'w');
+let filtered = fen_arr.filter((fen) => {
+  let rtn = false;
+  let obj = Ic.fenGet(fen, 'w');
 
   if (obj) {
     rtn = obj.w.kingBos !== 'e1';
@@ -135,7 +133,7 @@ console.log(filtered);
 //  "r2qkbnr/ppp4p/2np1p2/4p3/3PP3/P2B1N2/1PP2PpP/RNBQ1RK1 b kq - 1 11"
 // ]
 
-var methodChaining = Ic('otherBoard')
+let method_chaining = Ic('otherBoard')
   .playMoves(['f3', 'e5', 'g4'])
   .getCheckmateMoves()
   .undoMove()
@@ -143,7 +141,7 @@ var methodChaining = Ic('otherBoard')
   .uciExport()
   .legalUciMoves('g2');
 
-console.log(methodChaining.stack);
+console.log(method_chaining.stack);
 // [
 //  true,
 //  ["d8h4"],
@@ -161,7 +159,7 @@ console.log(methodChaining.stack);
 //  ["g2g3"]
 // ]
 
-console.log(methodChaining.board.legalUci);
+console.log(method_chaining.board.legalUci);
 // ["g2g3", "e1e2"]
 ```
 
