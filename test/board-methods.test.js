@@ -1604,6 +1604,22 @@ describe('Board methods', () => {
     expect(Ic.fenApply(shared_fen, 'ascii', [true], { isRotated: true, skipFenValidation: true })).toBe(b_view_diagram);
   });
 
+  test('b.countPieces()', () => {
+    var current_fen;
+
+    current_fen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    expect(Ic.fenApply(current_fen, 'countPieces', [], { skipFenValidation: true })).toEqual({
+      w: { p: 8, n: 2, b: 2, r: 2, q: 1, k: 1 },
+      b: { p: 8, n: 2, b: 2, r: 2, q: 1, k: 1 },
+    });
+
+    current_fen = '8/q5n1/p2k1b1r/Qp2bb1p/1P5P/RK1B3N/4B3/8 b - - 0 1';
+    expect(Ic.fenApply(current_fen, 'countPieces', [], { skipFenValidation: true })).toEqual({
+      w: { p: 2, n: 1, b: 2, r: 1, q: 1, k: 1 },
+      b: { p: 3, n: 1, b: 3, r: 1, q: 1, k: 1 },
+    });
+  });
+
   test('b.countLightDarkBishops()', () => {
     var current_fen;
 

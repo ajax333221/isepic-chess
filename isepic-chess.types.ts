@@ -324,6 +324,7 @@ interface _Board {
   reset(keep_options?: boolean): boolean;
   undoMove(): null | Move;
   undoMoves(decrease_by?: number): null | Move[];
+  countPieces(): ColorPieceCounts;
   countLightDarkBishops(): ColorBishopCounts;
   updateHelper(obj?: any): boolean;
   fenWrapmoveHelper(mov?: string): null | Wrapmove;

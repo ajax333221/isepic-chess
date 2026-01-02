@@ -6,7 +6,7 @@ import * as Ts from './isepic-chess.types';
 
 (function (windw?, expts?, defin?) {
   var Ic = (function (_WIN?: any) {
-    const _VERSION: string = '9.0.0';
+    const _VERSION: string = '9.1.0';
 
     let _SILENT_MODE: boolean = true; //mutable
     let _BOARDS: Ts.Boards = {}; //mutable
@@ -24,6 +24,8 @@ import * as Ts from './isepic-chess.types';
     const _ROOK_B: Ts.BrVal = -4;
     const _QUEEN_B: Ts.BqVal = -5;
     const _KING_B: Ts.BkVal = -6;
+    const _SIGN_W: Ts.WhiteSign = 1;
+    const _SIGN_B: Ts.BlackSign = -1;
     const _DIRECTION_TOP: Ts.DirectionTop = 1;
     const _DIRECTION_TOP_RIGHT: Ts.DirectionTopRight = 2;
     const _DIRECTION_RIGHT: Ts.DirectionRight = 3;
@@ -460,6 +462,7 @@ import * as Ts from './isepic-chess.types';
           reset: _reset,
           undoMove: _undoMove,
           undoMoves: _undoMoves,
+          countPieces: _countPieces,
           countLightDarkBishops: _countLightDarkBishops,
           updateHelper: _updateHelper,
           fenWrapmoveHelper: _fenWrapmoveHelper,
@@ -483,7 +486,7 @@ import * as Ts from './isepic-chess.types';
       pre_rtn.w = {
         //static
         isBlack: false,
-        sign: 1,
+        sign: _SIGN_W,
         firstRankPos: 7,
         secondRankPos: 6,
         lastRankPos: 0,
@@ -503,7 +506,7 @@ import * as Ts from './isepic-chess.types';
       pre_rtn.b = {
         //static
         isBlack: true,
-        sign: -1,
+        sign: _SIGN_B,
         firstRankPos: 0,
         secondRankPos: 1,
         lastRankPos: 7,
@@ -1195,19 +1198,20 @@ import * as Ts from './isepic-chess.types';
 
       target_qos = target_qos || king_bos;
 
-      outer: for (let i = 0; i < 2; i++) {
-        //0...1
-        let as_knight = !!i;
+      outer: for (let i = _DIRECTION_TOP; i <= _DIRECTION_TOP_LEFT; i++) {
+        //1...8
+        if (early_break && rtn_total_attackers) {
+          break outer;
+        }
+        if (_isAttacked(target_qos, i, false)) {
+          rtn_total_attackers++;
+        }
 
-        for (let j = _DIRECTION_TOP; j <= _DIRECTION_TOP_LEFT; j++) {
-          //1...8
-          if (_isAttacked(target_qos, j, as_knight)) {
-            rtn_total_attackers++;
-
-            if (early_break) {
-              break outer;
-            }
-          }
+        if (early_break && rtn_total_attackers) {
+          break outer;
+        }
+        if (_isAttacked(target_qos, i, true)) {
+          rtn_total_attackers++;
         }
       }
 
@@ -1600,7 +1604,7 @@ import * as Ts from './isepic-chess.types';
         }
       }
 
-      let total_pieces = countPieces(clockless_fen);
+      let total_pieces: Ts.ColorPieceCounts = that.countPieces();
       that.isInsufficientMaterial = false;
 
       if (
@@ -1638,19 +1642,22 @@ import * as Ts from './isepic-chess.types';
 
       for (let i = _PAWN_W; i <= _KING_W; i++) {
         //1...6
-        let piece_bal: Ts.SquareBal = toBal(-i);
-        let current_diff = total_pieces.w[piece_bal] - total_pieces.b[piece_bal];
+        // @ts-ignore
+        let current_lc_piece: Ts.LowercasePieceBal = toBal(i).toLowerCase();
+        let current_diff = total_pieces.w[current_lc_piece] - total_pieces.b[current_lc_piece];
+
+        if (!current_diff) {
+          continue;
+        }
+
+        // @ts-ignore
+        let current_piece_val: Ts.SquareVal = i * (current_diff < 0 ? _SIGN_B : _SIGN_W);
+        let current_side: Ts.WhiteInfo | Ts.BlackInfo = current_diff < 0 ? that.b : that.w;
 
         for (let j = 0, len = Math.abs(current_diff); j < len; j++) {
           //0<len
-          if (current_diff > 0) {
-            let w_piece_val: Ts.WPiecesVal = i;
-            that.w.materialDiff.push(w_piece_val);
-          } else {
-            // @ts-ignore
-            let b_piece_val: Ts.BPiecesVal = -i;
-            that.b.materialDiff.push(b_piece_val);
-          }
+          // @ts-ignore
+          current_side.materialDiff.push(current_piece_val);
         }
       }
     }
@@ -1703,7 +1710,7 @@ import * as Ts from './isepic-chess.types';
           }
         }
 
-        let total_pieces = countPieces(that.fen);
+        let total_pieces: Ts.ColorPieceCounts = that.countPieces();
         let bishop_count: Ts.ColorBishopCounts = that.countLightDarkBishops();
 
         for (let i = 0; i < 2; i++) {
@@ -2651,33 +2658,16 @@ import * as Ts from './isepic-chess.types';
       return rtn;
     }
 
+    function _countPieces(): Ts.ColorPieceCounts {
+      let that: Ts.Board = this;
+
+      return countPieces(that.fen);
+    }
+
     function _countLightDarkBishops(): Ts.ColorBishopCounts {
       let that: Ts.Board = this;
 
-      let rtn: Ts.ColorBishopCounts = {
-        w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
-        b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
-      };
-
-      for (let i = 0; i < 8; i++) {
-        //0...7
-        for (let j = 0; j < 8; j++) {
-          //0...7
-          let current_square: Ts.Square = that.getSquare([i, j]);
-
-          if (current_square.isBishop) {
-            let current_side: Ts.BishopCounts = Number(current_square.sign) > 0 ? rtn.w : rtn.b;
-
-            if ((i + j) % 2) {
-              current_side.darkSquaredBishops++;
-            } else {
-              current_side.lightSquaredBishops++;
-            }
-          }
-        }
-      }
-
-      return rtn;
+      return countLightDarkBishops(that.fen);
     }
 
     function _updateHelper(obj?): boolean {
@@ -3705,7 +3695,7 @@ import * as Ts from './isepic-chess.types';
     }
 
     function getSign(pvzal: Ts.PreValidatedZal): Ts.Sign {
-      return (typeof pvzal === 'boolean' ? !pvzal : toVal(pvzal) > 0) ? 1 : -1;
+      return (typeof pvzal === 'boolean' ? !pvzal : toVal(pvzal) > 0) ? _SIGN_W : _SIGN_B;
     }
 
     function getRankPos(pvqos: Ts.PreValidatedQos): null | Ts.SquareRankPos {
@@ -3799,11 +3789,58 @@ import * as Ts from './isepic-chess.types';
 
         for (let i = _PAWN_W; i <= _KING_W; i++) {
           //1...6
-          for (let j = 0; j < 2; j++) {
-            //0...1
-            let current_side: Ts.PieceCounts = j ? rtn.w : rtn.b;
-            current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
+          // @ts-ignore
+          let lc_piece: Ts.LowercasePieceBal = toBal(i).toLowerCase();
+          rtn.w[lc_piece] = _occurrences(fen_board, toBal(i * _SIGN_W));
+          rtn.b[lc_piece] = _occurrences(fen_board, toBal(i * _SIGN_B));
+        }
+      }
+
+      return rtn;
+    }
+
+    function countLightDarkBishops(fen: string): Ts.ColorBishopCounts {
+      let rtn: Ts.ColorBishopCounts = {
+        w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
+        b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
+      };
+
+      if (_isNonBlankStr(fen)) {
+        let fen_board = _trimSpaces(fen).split(' ')[0];
+
+        let rank_index = 0;
+        let file_index = 0;
+
+        for (let i = 0, len = fen_board.length; i < len; i++) {
+          //0<len
+          let current_char = fen_board.charAt(i);
+
+          if (current_char === '/') {
+            rank_index++;
+            file_index = 0;
+            continue;
           }
+
+          let current_num_or_nan = Number(current_char);
+          let current_is_num = !!current_num_or_nan;
+
+          if (!current_is_num) {
+            let piece_val: Ts.SquareVal = toVal(current_char);
+            let validated_abs_val: Ts.SquareAbsVal = toAbsVal(piece_val);
+
+            if (validated_abs_val === _BISHOP_W) {
+              let is_light = (rank_index + file_index) % 2 === 0;
+              let current_side = piece_val === _BISHOP_B ? rtn.b : rtn.w;
+
+              if (is_light) {
+                current_side.lightSquaredBishops++;
+              } else {
+                current_side.darkSquaredBishops++;
+              }
+            }
+          }
+
+          file_index += current_num_or_nan || 1;
         }
       }
 
@@ -4065,6 +4102,14 @@ import * as Ts from './isepic-chess.types';
         case 'boardHash':
           rtn = board_created ? _boardHash.apply(board, args) : '';
           break;
+        case 'countPieces':
+          rtn = board_created
+            ? _countPieces.apply(board, args)
+            : {
+                w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+                b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+              };
+          break;
         case 'countLightDarkBishops':
           rtn = board_created
             ? _countLightDarkBishops.apply(board, args)
@@ -4189,6 +4234,7 @@ import * as Ts from './isepic-chess.types';
     Ic.isInsideBoard = isInsideBoard;
     Ic.sameSquare = sameSquare;
     Ic.countPieces = countPieces;
+    Ic.countLightDarkBishops = countLightDarkBishops;
     Ic.removeBoard = removeBoard;
     Ic.isEqualBoard = isEqualBoard;
     Ic.cloneBoard = cloneBoard;

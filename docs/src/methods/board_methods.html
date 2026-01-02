@@ -103,72 +103,76 @@
         name: 'undoMoves',
         refreshUi: true,
       },
-      countLightDarkBishops: {
+      countPieces: {
         index: 19,
+        name: 'countPieces',
+      },
+      countLightDarkBishops: {
+        index: 20,
         name: 'countLightDarkBishops',
       },
       getCheckmateMoves: {
-        index: 20,
+        index: 21,
         name: 'getCheckmateMoves',
       },
       getDrawMoves: {
-        index: 21,
+        index: 22,
         name: 'getDrawMoves',
       },
       fenHistoryExport: {
-        index: 22,
+        index: 23,
         name: 'fenHistoryExport',
       },
       pgnExport: {
-        index: 23,
+        index: 24,
         name: 'pgnExport',
       },
       uciExport: {
-        index: 24,
+        index: 25,
         name: 'uciExport',
       },
       ascii: {
-        index: 25,
+        index: 26,
         name: 'ascii',
       },
       getSquare: {
-        index: 26,
+        index: 27,
         name: 'getSquare',
       },
       setSquare: {
-        index: 27,
+        index: 28,
         name: 'setSquare',
       },
       attackersFromActive: {
-        index: 28,
+        index: 29,
         name: 'attackersFromActive',
       },
       attackersFromNonActive: {
-        index: 29,
+        index: 30,
         name: 'attackersFromNonActive',
       },
       isLegalMove: {
-        index: 30,
+        index: 31,
         name: 'isLegalMove',
       },
       legalMoves: {
-        index: 31,
+        index: 32,
         name: 'legalMoves',
       },
       legalFenMoves: {
-        index: 32,
+        index: 33,
         name: 'legalFenMoves',
       },
       legalSanMoves: {
-        index: 33,
+        index: 34,
         name: 'legalSanMoves',
       },
       legalUciMoves: {
-        index: 34,
+        index: 35,
         name: 'legalUciMoves',
       },
       isEqualBoard: {
-        index: 35,
+        index: 36,
         name: 'isEqualBoard',
       },
     };
@@ -777,6 +781,25 @@
 
     board.undoMoves.links = PIN_MOVE;
     //end: undoMoves
+
+    //start: countPieces
+    board.countPieces.params = {};
+
+    board.countPieces.returnVal = {
+      children: [{ type: 'Object', codeAfter: '{w: {...}, b: {...}}' }],
+    };
+
+    board.countPieces.description = [];
+    board.countPieces.description.push(
+      'Returns the **piece count** structured by player color (`w` and `b`) and then by piece (`p`, `n`, `b`, `r`, `q` and `k`).'
+    );
+    board.countPieces.description.push(
+      'The player colors `{w: {...}, b: {...}}` have the following sub-properties:<ul><li>**p** (Number): `obj.w.p` and `obj.b.p`.</li><li>**n** (Number): `obj.w.n` and `obj.b.n`.</li><li>**b** (Number): `obj.w.b` and `obj.b.b`.</li><li>**r** (Number): `obj.w.r` and `obj.b.r`.</li><li>**q** (Number): `obj.w.q` and `obj.b.q`.</li><li>**k** (Number): `obj.w.k` and `obj.b.k`.</li></ul>'
+    );
+
+    board.countPieces.examples = [];
+    board.countPieces.examples.push('board.countPieces() //Object{...}');
+    //end: countPieces
 
     //start: countLightDarkBishops
     board.countLightDarkBishops.params = {};

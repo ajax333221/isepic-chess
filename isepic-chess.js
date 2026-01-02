@@ -1,7 +1,7 @@
 /*! Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    const _VERSION = '9.0.0';
+    const _VERSION = '9.1.0';
     let _SILENT_MODE = true;
     let _BOARDS = {};
     const _EMPTY_SQR = 0;
@@ -17,6 +17,8 @@
     const _ROOK_B = -4;
     const _QUEEN_B = -5;
     const _KING_B = -6;
+    const _SIGN_W = 1;
+    const _SIGN_B = -1;
     const _DIRECTION_TOP = 1;
     const _DIRECTION_TOP_RIGHT = 2;
     const _DIRECTION_RIGHT = 3;
@@ -339,6 +341,7 @@
           reset: _reset,
           undoMove: _undoMove,
           undoMoves: _undoMoves,
+          countPieces: _countPieces,
           countLightDarkBishops: _countLightDarkBishops,
           updateHelper: _updateHelper,
           fenWrapmoveHelper: _fenWrapmoveHelper,
@@ -360,7 +363,7 @@
       pre_rtn.w = {
         //static
         isBlack: false,
-        sign: 1,
+        sign: _SIGN_W,
         firstRankPos: 7,
         secondRankPos: 6,
         lastRankPos: 0,
@@ -379,7 +382,7 @@
       pre_rtn.b = {
         //static
         isBlack: true,
-        sign: -1,
+        sign: _SIGN_B,
         firstRankPos: 0,
         secondRankPos: 1,
         lastRankPos: 7,
@@ -903,15 +906,18 @@
       let active_side = that[that.activeColor];
       let king_bos = active_side.kingBos;
       target_qos = target_qos || king_bos;
-      outer: for (let i = 0; i < 2; i++) {
-        let as_knight = !!i;
-        for (let j = _DIRECTION_TOP; j <= _DIRECTION_TOP_LEFT; j++) {
-          if (_isAttacked(target_qos, j, as_knight)) {
-            rtn_total_attackers++;
-            if (early_break) {
-              break outer;
-            }
-          }
+      outer: for (let i = _DIRECTION_TOP; i <= _DIRECTION_TOP_LEFT; i++) {
+        if (early_break && rtn_total_attackers) {
+          break outer;
+        }
+        if (_isAttacked(target_qos, i, false)) {
+          rtn_total_attackers++;
+        }
+        if (early_break && rtn_total_attackers) {
+          break outer;
+        }
+        if (_isAttacked(target_qos, i, true)) {
+          rtn_total_attackers++;
         }
       }
       return rtn_total_attackers;
@@ -1185,7 +1191,7 @@
           }
         }
       }
-      let total_pieces = countPieces(clockless_fen);
+      let total_pieces = that.countPieces();
       that.isInsufficientMaterial = false;
       if (
         !(
@@ -1214,16 +1220,15 @@
       that.w.materialDiff = [];
       that.b.materialDiff = [];
       for (let i = _PAWN_W; i <= _KING_W; i++) {
-        let piece_bal = toBal(-i);
-        let current_diff = total_pieces.w[piece_bal] - total_pieces.b[piece_bal];
+        let current_lc_piece = toBal(i).toLowerCase();
+        let current_diff = total_pieces.w[current_lc_piece] - total_pieces.b[current_lc_piece];
+        if (!current_diff) {
+          continue;
+        }
+        let current_piece_val = i * (current_diff < 0 ? _SIGN_B : _SIGN_W);
+        let current_side = current_diff < 0 ? that.b : that.w;
         for (let j = 0, len = Math.abs(current_diff); j < len; j++) {
-          if (current_diff > 0) {
-            let w_piece_val = i;
-            that.w.materialDiff.push(w_piece_val);
-          } else {
-            let b_piece_val = -i;
-            that.b.materialDiff.push(b_piece_val);
-          }
+          current_side.materialDiff.push(current_piece_val);
         }
       }
     }
@@ -1264,7 +1269,7 @@
             break block;
           }
         }
-        let total_pieces = countPieces(that.fen);
+        let total_pieces = that.countPieces();
         let bishop_count = that.countLightDarkBishops();
         for (let i = 0; i < 2; i++) {
           let current_side = i ? total_pieces.b : total_pieces.w;
@@ -1936,26 +1941,13 @@
       }
       return rtn;
     }
+    function _countPieces() {
+      let that = this;
+      return countPieces(that.fen);
+    }
     function _countLightDarkBishops() {
       let that = this;
-      let rtn = {
-        w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
-        b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
-      };
-      for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-          let current_square = that.getSquare([i, j]);
-          if (current_square.isBishop) {
-            let current_side = Number(current_square.sign) > 0 ? rtn.w : rtn.b;
-            if ((i + j) % 2) {
-              current_side.darkSquaredBishops++;
-            } else {
-              current_side.lightSquaredBishops++;
-            }
-          }
-        }
-      }
-      return rtn;
+      return countLightDarkBishops(that.fen);
     }
     function _updateHelper(obj) {
       let that = this;
@@ -2681,7 +2673,7 @@
       return rtn;
     }
     function getSign(pvzal) {
-      return (typeof pvzal === 'boolean' ? !pvzal : toVal(pvzal) > 0) ? 1 : -1;
+      return (typeof pvzal === 'boolean' ? !pvzal : toVal(pvzal) > 0) ? _SIGN_W : _SIGN_B;
     }
     function getRankPos(pvqos) {
       let rtn = null;
@@ -2745,10 +2737,45 @@
       if (_isNonBlankStr(fen)) {
         let fen_board = _trimSpaces(fen).split(' ')[0];
         for (let i = _PAWN_W; i <= _KING_W; i++) {
-          for (let j = 0; j < 2; j++) {
-            let current_side = j ? rtn.w : rtn.b;
-            current_side[toBal(-i)] = _occurrences(fen_board, toBal(i * getSign(!j)));
+          let lc_piece = toBal(i).toLowerCase();
+          rtn.w[lc_piece] = _occurrences(fen_board, toBal(i * _SIGN_W));
+          rtn.b[lc_piece] = _occurrences(fen_board, toBal(i * _SIGN_B));
+        }
+      }
+      return rtn;
+    }
+    function countLightDarkBishops(fen) {
+      let rtn = {
+        w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
+        b: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
+      };
+      if (_isNonBlankStr(fen)) {
+        let fen_board = _trimSpaces(fen).split(' ')[0];
+        let rank_index = 0;
+        let file_index = 0;
+        for (let i = 0, len = fen_board.length; i < len; i++) {
+          let current_char = fen_board.charAt(i);
+          if (current_char === '/') {
+            rank_index++;
+            file_index = 0;
+            continue;
           }
+          let current_num_or_nan = Number(current_char);
+          let current_is_num = !!current_num_or_nan;
+          if (!current_is_num) {
+            let piece_val = toVal(current_char);
+            let validated_abs_val = toAbsVal(piece_val);
+            if (validated_abs_val === _BISHOP_W) {
+              let is_light = (rank_index + file_index) % 2 === 0;
+              let current_side = piece_val === _BISHOP_B ? rtn.b : rtn.w;
+              if (is_light) {
+                current_side.lightSquaredBishops++;
+              } else {
+                current_side.darkSquaredBishops++;
+              }
+            }
+          }
+          file_index += current_num_or_nan || 1;
         }
       }
       return rtn;
@@ -2970,6 +2997,14 @@
         case 'boardHash':
           rtn = board_created ? _boardHash.apply(board, args) : '';
           break;
+        case 'countPieces':
+          rtn = board_created
+            ? _countPieces.apply(board, args)
+            : {
+                w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+                b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+              };
+          break;
         case 'countLightDarkBishops':
           rtn = board_created
             ? _countLightDarkBishops.apply(board, args)
@@ -3068,6 +3103,7 @@
     Ic2.isInsideBoard = isInsideBoard;
     Ic2.sameSquare = sameSquare;
     Ic2.countPieces = countPieces;
+    Ic2.countLightDarkBishops = countLightDarkBishops;
     Ic2.removeBoard = removeBoard;
     Ic2.isEqualBoard = isEqualBoard;
     Ic2.cloneBoard = cloneBoard;

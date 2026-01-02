@@ -17,6 +17,7 @@ Boards created by `Ic.initBoard()` have the following accessible properties:
 <li>board.moveList</li>
 <li>board.currentMove</li>
 <li>board.isRotated</li>
+<li>board.isPuzzleMode</li>
 <li>board.checks</li>
 <li>board.isCheck</li>
 <li>board.isCheckmate</li>
@@ -48,6 +49,7 @@ Property | Type | Description
 **moveList** | Array | The **move list** is a collection of :pushpin:**move**s stored as an array `[move0, move1, ..., moveN]`.<br><br>The **fen** from where the **board** was first initialized is always stored in the first element `board.moveList[0].fen`.<hr>Examples:<ul><li>`board.moveList //[{...}]`</li><li>`board_after_nc3.moveList //[{...}, {...}]`</li></ul><hr>:pushpin:Move documentation link:<ul><li>[move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties).</li></ul>
 **currentMove** | Number | The **current move** is the index of **move list** that the **board** is currently in.<br><br>If this "cursor" is not at the end of the **move list** when a new move is made, the **move list** will record the move and erase the rest.<br><br>This is always a zero-based index regardless of the initial **fullmove clock** used.<hr>Examples:<ul><li>`board.currentMove //0`</li><li>`board_after_e4.currentMove //1`</li><li>`board_after_e4_e5.currentMove //2`</li><li>`board_after_e4_e5_nf3.currentMove //3`</li><li>`rff_board.currentMove //0`</li></ul>
 **isRotated** | Boolean | This affects the visual representation of the **board** in `board.ascii()` and `IcUi` from **isepic-chess-ui.js**.<hr>Examples:<ul><li>`board.isRotated //false`</li><li>`board_currently_rotated.isRotated //true`</li></ul>
+**isPuzzleMode** | Boolean | This enables **puzzle mode** &#x1f6a7; work in progress &#x1f6a7;.<hr>Examples:<ul><li>`board.isPuzzleMode //false`</li><li>`board_with_puzzle.isPuzzleMode //true`</li></ul>
 **checks** | Number | The number of attacks to the **active** king.<hr>Examples:<ul><li>`board_not_in_check.checks //0`</li><li>`board_simple_check.checks //1`</li><li>`board_double_check.checks //2`</li></ul>
 **isCheck** | Boolean | Indicates that the **active** king is being attacked at least once.<hr>Examples:<ul><li>`board_in_check.isCheck //true`</li><li>`board_in_checkmate.isCheck //true`</li><li>`board_in_stalemate.isCheck //false`</li><li>`board_not_in_check.isCheck //false`</li></ul>
 **isCheckmate** | Boolean | Indicates that there aren't any legal moves for the side to move and the **active** king is at check.<hr>Examples:<ul><li>`board_in_check.isCheckmate //false`</li><li>`board_in_checkmate.isCheckmate //true`</li><li>`board_in_stalemate.isCheckmate //false`</li><li>`board_not_in_check.isCheckmate //false`</li></ul>

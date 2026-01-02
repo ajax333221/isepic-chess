@@ -892,6 +892,38 @@ describe('Ic methods', () => {
     });
   });
 
+  test('Ic.countLightDarkBishops()', () => {
+    expect(Ic.countLightDarkBishops('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')).toEqual({
+      w: { lightSquaredBishops: 1, darkSquaredBishops: 1 },
+      b: { lightSquaredBishops: 1, darkSquaredBishops: 1 },
+    });
+
+    expect(Ic.countLightDarkBishops('1n1Rkb1r/p4ppp/4q3/4p1B1/4P3/8/PPP2PPP/2K5 b k - 1 17')).toEqual({
+      w: { lightSquaredBishops: 0, darkSquaredBishops: 1 },
+      b: { lightSquaredBishops: 0, darkSquaredBishops: 1 },
+    });
+
+    expect(Ic.countLightDarkBishops('rnbqkbnr/p1pp2pp/p3p3/5P2/1P6/8/P1PP1PPP/RNBQK1NR b KQkq - 0 4')).toEqual({
+      w: { lightSquaredBishops: 0, darkSquaredBishops: 1 },
+      b: { lightSquaredBishops: 1, darkSquaredBishops: 1 },
+    });
+
+    expect(Ic.countLightDarkBishops(' rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ')).toEqual({
+      w: { lightSquaredBishops: 1, darkSquaredBishops: 1 },
+      b: { lightSquaredBishops: 1, darkSquaredBishops: 1 },
+    });
+
+    expect(Ic.countLightDarkBishops('badFenGetsParsedAnyway up until first space')).toEqual({
+      w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },
+      b: { lightSquaredBishops: 1, darkSquaredBishops: 0 },
+    });
+
+    expect(Ic.countLightDarkBishops('BBBBBBBBBBBBBBBBBBBbBpPpb nNkK')).toEqual({
+      w: { lightSquaredBishops: 11, darkSquaredBishops: 9 },
+      b: { lightSquaredBishops: 1, darkSquaredBishops: 1 },
+    });
+  });
+
   test('Ic.isEqualBoard() and Ic.cloneBoard()', () => {
     var board_a_name, board_b_name, board_a, board_b;
 
@@ -1570,6 +1602,11 @@ Rb7 24. Rd3 --- Bd8 25. Rb3   Rxb3   Rxa7+	 Nc7  -+  axb3 Bf6
       expect(Ic.fenApply('0invalidfen0', 'ascii')).toBe(''); //NO use {skipFenValidation: true}
 
       expect(Ic.fenApply('0invalidfen0', 'boardHash')).toBe(''); //NO use {skipFenValidation: true}
+
+      expect(Ic.fenApply('0invalidfen0', 'countPieces')).toEqual({
+        w: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+        b: { p: 0, n: 0, b: 0, r: 0, q: 0, k: 0 },
+      }); //NO use {skipFenValidation: true}
 
       expect(Ic.fenApply('0invalidfen0', 'countLightDarkBishops')).toEqual({
         w: { lightSquaredBishops: 0, darkSquaredBishops: 0 },

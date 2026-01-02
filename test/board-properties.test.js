@@ -15,6 +15,7 @@ Ic.setSilentMode(false);
 //(mm) isHidden (N/A)(en ic solo afecta el board hash + solo cambia por ui)
 //
 //(x) isRotated (completado)(b.ascii() en board-methods.test.js + hasta se le hizo test por board hash)
+//(x) isPuzzleMode
 //(x) inDraw = (N/A)(solo un caso edge de checkmate + 50move rule, pero ya en regression test)
 
 describe('Board properties', () => {

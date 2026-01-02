@@ -17,6 +17,7 @@
 <li><a href="#10">Playing multiple moves</a></li>
 <li><a href="#11">Playing a random move</a></li>
 <li><a href="#12">Method chaining</a></li>
+<li><a href="#13">Puzzle mode</a></li>
 </ul>
 
 <h3 id="1">→ Creating a board</h3>
@@ -395,5 +396,10 @@ console.log(methodChaining.board);
 
 <small><strong>Note:</strong> if the selector identifies an existing board, that board will be used. Otherwise, a new board will be created with the board name (if provided).</small>
 <br><small><strong>Note:</strong> each time the `Ic(...)` function is called, a new stack will be initialized. However, reusing a reference to the chainable board will append results to the existing stack.</small>
+
+<hr>
+
+<h3 id="13">→ Puzzle mode</h3>
+<strong>&#x1f6a7; work in progress &#x1f6a7;.</strong>
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
