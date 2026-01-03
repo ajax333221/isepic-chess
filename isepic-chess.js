@@ -1,7 +1,7 @@
-/*! Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
+/*! Copyright (c) 2026 Ajax Isepic (ajax333221) Licensed MIT */
 (function (windw, expts, defin) {
   var Ic = (function (_WIN) {
-    const _VERSION = '9.1.0';
+    const _VERSION = '9.1.1';
     let _SILENT_MODE = true;
     let _BOARDS = {};
     const _EMPTY_SQR = 0;

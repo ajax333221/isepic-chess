@@ -1,4 +1,4 @@
-/** Copyright (c) 2025 Ajax Isepic (ajax333221) Licensed MIT */
+/** Copyright (c) 2026 Ajax Isepic (ajax333221) Licensed MIT */
 
 export type SquareRankPos = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type SquareFilePos = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
