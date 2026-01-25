@@ -8,38 +8,38 @@ Isepic Chess library `isepic-chess.js` has the following available methods.
 
 | Method | Returns | UI? | Brief |
 |--------|---------|-----|-------|
-| [`Ic.setSilentMode()`](#icsetsilentmodemuteconsole) | - | - | Turns on/off the silent mode to hide/show console.log()... |
-| [`Ic.isLegalFen()`](#icislegalfenfen) | `Boolean` | - | Tests the validity of a fen string. |
-| [`Ic.getBoard()`](#icgetboardboard) | **board** | - | Returns a board. |
-| [`Ic.toVal()`](#ictovalqal) | **squareVal** | - | Converts the input to a square val. |
-| [`Ic.toAbsVal()`](#ictoabsvalqal) | **squareAbsVal** | - | Converts the input to a square abs val. |
-| [`Ic.toBal()`](#ictobalqal) | **squareBal** | - | Converts the input to a square bal. |
-| [`Ic.toAbsBal()`](#ictoabsbalqal) | **squareAbsBal** | - | Converts the input to a square abs bal. |
-| [`Ic.toClassName()`](#ictoclassnameqal) | **squareClassName** | - | Converts the input to a square class name. |
-| [`Ic.toBos()`](#ictobosqos) | **squareBos** | - | Converts the input to a square bos. |
-| [`Ic.toPos()`](#ictoposqos) | **squarePos** | - | Converts the input to a square pos. |
-| [`Ic.getSign()`](#icgetsignzal) | **squareSign** | - | Infers the square sign from a Boolean or a square qal. |
-| [`Ic.getRankPos()`](#icgetrankposqos) | **squareRankPos** | - | Converts the input to a square rank pos. |
-| [`Ic.getFilePos()`](#icgetfileposqos) | **squareFilePos** | - | Converts the input to a square file pos. |
-| [`Ic.getRankBos()`](#icgetrankbosqos) | **squareRankBos** | - | Converts the input to a square rank bos. |
-| [`Ic.getFileBos()`](#icgetfilebosqos) | **squareFileBos** | - | Converts the input to a square file bos. |
-| [`Ic.isInsideBoard()`](#icisinsideboardqos) | `Boolean` | - | Test to see if a square is valid or not. |
-| [`Ic.sameSquare()`](#icsamesquareqos1-qos2) | `Boolean` | - | Test to see if two squares evaluate to the same square ... |
-| [`Ic.countPieces()`](#iccountpiecesfen) | `Object` | - | Returns the total of each piece for white and black. |
-| [`Ic.countLightDarkBishops()`](#iccountlightdarkbishopsfen) | `Object` | - | Returns the total of light and dark bishops for white a... |
-| [`Ic.removeBoard()`](#icremoveboardboard) | `Boolean` | - | Removes a board completely. |
-| [`Ic.isEqualBoard()`](#icisequalboardleftboard-rightboard) | `Boolean` | - | Tests for the equality of the board properties <sup>(ex... |
-| [`Ic.cloneBoard()`](#iccloneboardtoboard-fromboard) | `Boolean` | ✓ | Clones the board properties <sup>(except for board.boar... |
-| [`Ic.initBoard()`](#icinitboardp) | **board** | ✓ | Initializes/overwrites a board. |
-| [`Ic.fenApply()`](#icfenapplyfen-fnname-args-p) | `(mixed results)` | - | Calls one of the allowed board methods (listed below) o... |
-| [`Ic.fenGet()`](#icfengetfen-props-p) | `Object` | - | Get board properties (except for board.boardName) from ... |
+| [`Ic.setSilentMode()`](#icsetsilentmode) | - | - | Turns on/off the silent mode to hide/show console.log()... |
+| [`Ic.isLegalFen()`](#icislegalfen) | `Boolean` | - | Tests the validity of a fen string. |
+| [`Ic.getBoard()`](#icgetboard) | **board** | - | Returns a board. |
+| [`Ic.toVal()`](#ictoval) | **squareVal** | - | Converts the input to a square val. |
+| [`Ic.toAbsVal()`](#ictoabsval) | **squareAbsVal** | - | Converts the input to a square abs val. |
+| [`Ic.toBal()`](#ictobal) | **squareBal** | - | Converts the input to a square bal. |
+| [`Ic.toAbsBal()`](#ictoabsbal) | **squareAbsBal** | - | Converts the input to a square abs bal. |
+| [`Ic.toClassName()`](#ictoclassname) | **squareClassName** | - | Converts the input to a square class name. |
+| [`Ic.toBos()`](#ictobos) | **squareBos** | - | Converts the input to a square bos. |
+| [`Ic.toPos()`](#ictopos) | **squarePos** | - | Converts the input to a square pos. |
+| [`Ic.getSign()`](#icgetsign) | **squareSign** | - | Infers the square sign from a Boolean or a square qal. |
+| [`Ic.getRankPos()`](#icgetrankpos) | **squareRankPos** | - | Converts the input to a square rank pos. |
+| [`Ic.getFilePos()`](#icgetfilepos) | **squareFilePos** | - | Converts the input to a square file pos. |
+| [`Ic.getRankBos()`](#icgetrankbos) | **squareRankBos** | - | Converts the input to a square rank bos. |
+| [`Ic.getFileBos()`](#icgetfilebos) | **squareFileBos** | - | Converts the input to a square file bos. |
+| [`Ic.isInsideBoard()`](#icisinsideboard) | `Boolean` | - | Test to see if a square is valid or not. |
+| [`Ic.sameSquare()`](#icsamesquare) | `Boolean` | - | Test to see if two squares evaluate to the same square ... |
+| [`Ic.countPieces()`](#iccountpieces) | `Object` | - | Returns the total of each piece for white and black. |
+| [`Ic.countLightDarkBishops()`](#iccountlightdarkbishops) | `Object` | - | Returns the total of light and dark bishops for white a... |
+| [`Ic.removeBoard()`](#icremoveboard) | `Boolean` | - | Removes a board completely. |
+| [`Ic.isEqualBoard()`](#icisequalboard) | `Boolean` | - | Tests for the equality of the board properties <sup>(ex... |
+| [`Ic.cloneBoard()`](#iccloneboard) | `Boolean` | ✓ | Clones the board properties <sup>(except for board.boar... |
+| [`Ic.initBoard()`](#icinitboard) | **board** | ✓ | Initializes/overwrites a board. |
+| [`Ic.fenApply()`](#icfenapply) | `(mixed results)` | - | Calls one of the allowed board methods (listed below) o... |
+| [`Ic.fenGet()`](#icfenget) | `Object` | - | Get board properties (except for board.boardName) from ... |
 | [`Ic.getBoardNames()`](#icgetboardnames) | `Array` | - | Returns a board names array. |
 
 ## Method Details
 
 ---
 
-### `Ic.setSilentMode(muteConsole)`
+### `Ic.setSilentMode(...)`
 
 Turns on/off the **silent mode** to hide/show `console.log()` messages.
 
@@ -65,7 +65,7 @@ Ic.setSilentMode(false)
 
 ---
 
-### `Ic.isLegalFen(fen)`
+### `Ic.isLegalFen(...)`
 
 Tests the validity of a **fen** string.
 
@@ -92,7 +92,7 @@ Ic.isLegalFen("0invalidfen0") //false
 
 ---
 
-### `Ic.getBoard(board)`
+### `Ic.getBoard(...)`
 
 Returns a **board**.
 
@@ -128,7 +128,7 @@ Ic.getBoard("nonexistent") //null
 
 ---
 
-### `Ic.toVal(qal)`
+### `Ic.toVal(...)`
 
 Converts the input to a **square val**.
 
@@ -167,7 +167,7 @@ Ic.toVal(-99) //-6
 
 ---
 
-### `Ic.toAbsVal(qal)`
+### `Ic.toAbsVal(...)`
 
 Converts the input to a **square abs val**.
 
@@ -206,7 +206,7 @@ Ic.toAbsVal(-99) //6
 
 ---
 
-### `Ic.toBal(qal)`
+### `Ic.toBal(...)`
 
 Converts the input to a **square bal**.
 
@@ -245,7 +245,7 @@ Ic.toBal(-99) //"k"
 
 ---
 
-### `Ic.toAbsBal(qal)`
+### `Ic.toAbsBal(...)`
 
 Converts the input to a **square abs bal**.
 
@@ -284,7 +284,7 @@ Ic.toAbsBal(-99) //"K"
 
 ---
 
-### `Ic.toClassName(qal)`
+### `Ic.toClassName(...)`
 
 Converts the input to a **square class name**.
 
@@ -323,7 +323,7 @@ Ic.toClassName(-99) //"bk"
 
 ---
 
-### `Ic.toBos(qos)`
+### `Ic.toBos(...)`
 
 Converts the input to a **square bos**.
 
@@ -356,7 +356,7 @@ Ic.toBos("B2") //"b2"
 
 ---
 
-### `Ic.toPos(qos)`
+### `Ic.toPos(...)`
 
 Converts the input to a **square pos**.
 
@@ -389,7 +389,7 @@ Ic.toPos([6, 1]) //[6, 1]
 
 ---
 
-### `Ic.getSign(zal)`
+### `Ic.getSign(...)`
 
 Infers the **square sign** from a Boolean or a square **qal**.
 
@@ -435,7 +435,7 @@ Ic.getSign("err") //-1
 
 ---
 
-### `Ic.getRankPos(qos)`
+### `Ic.getRankPos(...)`
 
 Converts the input to a **square rank pos**.
 
@@ -469,7 +469,7 @@ Ic.getRankPos([6, 3]) //6
 
 ---
 
-### `Ic.getFilePos(qos)`
+### `Ic.getFilePos(...)`
 
 Converts the input to a **square file pos**.
 
@@ -503,7 +503,7 @@ Ic.getFilePos([6, 3]) //3
 
 ---
 
-### `Ic.getRankBos(qos)`
+### `Ic.getRankBos(...)`
 
 Converts the input to a **square rank bos**.
 
@@ -537,7 +537,7 @@ Ic.getRankBos([6, 3]) //"2"
 
 ---
 
-### `Ic.getFileBos(qos)`
+### `Ic.getFileBos(...)`
 
 Converts the input to a **square file bos**.
 
@@ -571,7 +571,7 @@ Ic.getFileBos([6, 3]) //"d"
 
 ---
 
-### `Ic.isInsideBoard(qos)`
+### `Ic.isInsideBoard(...)`
 
 Test to see if a square is valid or not.
 
@@ -601,7 +601,7 @@ Ic.isInsideBoard([8, 8]) //false
 
 ---
 
-### `Ic.sameSquare(qos1, qos2)`
+### `Ic.sameSquare(...)`
 
 Test to see if two **square**s evaluate to the same **square** or not.
 
@@ -636,7 +636,7 @@ Ic.sameSquare([4, 5], [5, 4]) //false
 
 ---
 
-### `Ic.countPieces(fen)`
+### `Ic.countPieces(...)`
 
 Returns the total of each piece for white and black.
 
@@ -665,7 +665,7 @@ Ic.countPieces("badFenGetsParsedAnyway up until first space") //{w: {p: 1, n: 0,
 
 ---
 
-### `Ic.countLightDarkBishops(fen)`
+### `Ic.countLightDarkBishops(...)`
 
 Returns the total of light and dark bishops for white and black.
 
@@ -694,7 +694,7 @@ Ic.countLightDarkBishops("badFenGetsParsedAnyway up until first space") //{w: {l
 
 ---
 
-### `Ic.removeBoard(board)`
+### `Ic.removeBoard(...)`
 
 Removes a **board** completely.
 
@@ -722,7 +722,7 @@ Ic.removeBoard("nonexistent") //false
 
 ---
 
-### `Ic.isEqualBoard(leftBoard, rightBoard)`
+### `Ic.isEqualBoard(...)`
 
 Tests for the equality of the [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) <sup>(except for `board.boardName`)</sup> between two **board**s.
 
@@ -760,7 +760,7 @@ Ic.isEqualBoard(other_board, "nonexistent") //false
 
 ---
 
-### `Ic.cloneBoard(toBoard, fromBoard)`
+### `Ic.cloneBoard(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -801,7 +801,7 @@ Ic.cloneBoard(to_nonexistent, "from_nonexistent") //false
 
 ---
 
-### `Ic.initBoard(p?)`
+### `Ic.initBoard(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -894,7 +894,7 @@ Ic.initBoard({fen: "0invalidfen0", validOrBreak: true}) //null
 
 ---
 
-### `Ic.fenApply(fen, fnName?, args?, p?)`
+### `Ic.fenApply(...)`
 
 Calls one of the allowed **board methods** (listed below) on a **temporal board** and returns the result.
 
@@ -949,7 +949,7 @@ Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "0invalidfnname0", ["a1"]) //nul
 
 ---
 
-### `Ic.fenGet(fen, props?, p?)`
+### `Ic.fenGet(...)`
 
 Get [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) (except for `board.boardName`) from a **fen**.
 

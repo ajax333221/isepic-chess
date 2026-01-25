@@ -216,23 +216,11 @@ function docoGenMethodList(obj) {
   return rtn;
 }
 
-// Generate signature string like: loadFen(fen, p?)
+// Generate signature string like: loadFen(...) or navFirst()
 function getSignature(method) {
-  var params = [];
+  var hasParams = method.params && method.params.children && method.params.children.length > 0;
   
-  if (method.params && method.params.children && method.params.children.length) {
-    for (var i = 0; i < method.params.children.length; i++) {
-      var param = method.params.children[i];
-      var paramName = param.name || '';
-      var isOptional = param.icon === 'eight_pointed_black_star';
-      
-      if (paramName) {
-        params.push(isOptional ? paramName + '?' : paramName);
-      }
-    }
-  }
-  
-  return method.name + '(' + params.join(', ') + ')';
+  return method.name + '(' + (hasParams ? '...' : '') + ')';
 }
 
 // Format a parameter for display
@@ -446,21 +434,9 @@ function docoGenToc(obj) {
 
 // Generate anchor for method (matches GitHub's heading anchor generation)
 function generateAnchor(method, prefix) {
-  // Build the signature as it appears in the heading: methodName(param1, param2?)
-  var signature = (prefix || '') + method.name + '(';
-  
-  // Add param names with commas
-  if (method.params && method.params.children && method.params.children.length) {
-    var paramNames = [];
-    for (var i = 0; i < method.params.children.length; i++) {
-      var param = method.params.children[i];
-      if (param.name) {
-        paramNames.push(param.name + (param.isOptional ? '?' : ''));
-      }
-    }
-    signature += paramNames.join(', ');
-  }
-  signature += ')';
+  // Build the signature as it appears in the heading: methodName(...) or methodName()
+  var hasParams = method.params && method.params.children && method.params.children.length > 0;
+  var signature = (prefix || '') + method.name + '(' + (hasParams ? '...' : '') + ')';
   
   // GitHub anchor generation:
   // 1. Lowercase

@@ -8,48 +8,48 @@ Boards created by `Ic.initBoard()` have the following available methods.
 
 | Method | Returns | UI? | Brief |
 |--------|---------|-----|-------|
-| [`board.loadFen()`](#loadfenfen-p) | `Boolean` | ✓ | Loads a fen position. |
-| [`board.playMove()`](#playmovemov-p) | **move** | ✓ | Generates and returns a move. |
-| [`board.playMoves()`](#playmovesmovarray-p) | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
-| [`board.playRandomMove()`](#playrandommovep) | **move** | ✓ | Generates and returns a random move. |
-| [`board.toggleIsRotated()`](#toggleisrotatednewisrotated) | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
-| [`board.setPromoteTo()`](#setpromotetoqal) | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
-| [`board.setManualResult()`](#setmanualresultres) | `Boolean` | ✓ | Changes the board property of board.manualResult. |
-| [`board.setCurrentMove()`](#setcurrentmoveval-isgoto) | `Boolean` | ✓ | Changes the board property of board.currentMove. |
+| [`board.loadFen()`](#loadfen) | `Boolean` | ✓ | Loads a fen position. |
+| [`board.playMove()`](#playmove) | **move** | ✓ | Generates and returns a move. |
+| [`board.playMoves()`](#playmoves) | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
+| [`board.playRandomMove()`](#playrandommove) | **move** | ✓ | Generates and returns a random move. |
+| [`board.toggleIsRotated()`](#toggleisrotated) | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
+| [`board.setPromoteTo()`](#setpromoteto) | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
+| [`board.setManualResult()`](#setmanualresult) | `Boolean` | ✓ | Changes the board property of board.manualResult. |
+| [`board.setCurrentMove()`](#setcurrentmove) | `Boolean` | ✓ | Changes the board property of board.currentMove. |
 | [`board.navFirst()`](#navfirst) | `Boolean` | ✓ | Performs a board.setCurrentMove(0). |
 | [`board.navPrevious()`](#navprevious) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove-1). |
 | [`board.navNext()`](#navnext) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove+1). |
 | [`board.navLast()`](#navlast) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.moveList.length-1... |
-| [`board.navLinkMove()`](#navlinkmovemoveindex) | `Boolean` | ✓ | Performs a board.setCurrentMove(moveIndex). |
-| [`board.cloneBoardFrom()`](#cloneboardfromfromboard) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
-| [`board.cloneBoardTo()`](#cloneboardtotoboard) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
-| [`board.reset()`](#resetkeepoptions) | `Boolean` | ✓ | Loads the default fen position. |
+| [`board.navLinkMove()`](#navlinkmove) | `Boolean` | ✓ | Performs a board.setCurrentMove(moveIndex). |
+| [`board.cloneBoardFrom()`](#cloneboardfrom) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
+| [`board.cloneBoardTo()`](#cloneboardto) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
+| [`board.reset()`](#reset) | `Boolean` | ✓ | Loads the default fen position. |
 | [`board.undoMove()`](#undomove) | **move** | ✓ | Removes the last move played and returns it. |
-| [`board.undoMoves()`](#undomovesdecreaseby) | `Array` | ✓ | Removes the last N moves played and returns them as a m... |
+| [`board.undoMoves()`](#undomoves) | `Array` | ✓ | Removes the last N moves played and returns them as a m... |
 | [`board.countPieces()`](#countpieces) | `Object` | - | Returns the piece count structured by player color (w a... |
 | [`board.countLightDarkBishops()`](#countlightdarkbishops) | `Object` | - | Returns the bishop count structured by player color (w ... |
-| [`board.getCheckmateMoves()`](#getcheckmatemovesearlybreak) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
-| [`board.getDrawMoves()`](#getdrawmovesearlybreak) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
+| [`board.getCheckmateMoves()`](#getcheckmatemoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
+| [`board.getDrawMoves()`](#getdrawmoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
 | [`board.fenHistoryExport()`](#fenhistoryexport) | `Array` | - | Returns the FEN history list. |
 | [`board.pgnExport()`](#pgnexport) | `String` | - | Returns the PGN as text. |
 | [`board.uciExport()`](#uciexport) | `String` | - | Returns the UCI moves as text. |
-| [`board.ascii()`](#asciiisrotated) | `String` | - | Returns the chess diagram as text. |
-| [`board.getSquare()`](#getsquareqos-p) | **square** | - | Returns a square. |
-| [`board.setSquare()`](#setsquareqos-qal-p) | **square** | - | Updates and returns a square. |
-| [`board.attackersFromActive()`](#attackersfromactiveqos-earlybreak) | `Number` | - | This can be called to know how many times active side p... |
-| [`board.attackersFromNonActive()`](#attackersfromnonactiveqos-earlybreak) | `Number` | - | This can be called to know how many times non-active si... |
-| [`board.isLegalMove()`](#islegalmovemov-p) | `Boolean` | - | Test to see if a move is legal or not. |
-| [`board.legalMoves()`](#legalmovesinitialqos-p) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
-| [`board.legalFenMoves()`](#legalfenmovesinitialqos) | **finalFenArray** | - | Returns a final fen array with all the FEN positions th... |
-| [`board.legalSanMoves()`](#legalsanmovesinitialqos) | **finalSanArray** | - | Returns a final san array with all the san moves that a... |
-| [`board.legalUciMoves()`](#legalucimovesinitialqos) | **finalUciArray** | - | Returns a final uci array with all the uci moves that a... |
-| [`board.isEqualBoard()`](#isequalboardtoboard) | `Boolean` | - | Tests for the equality of the board properties (except ... |
+| [`board.ascii()`](#ascii) | `String` | - | Returns the chess diagram as text. |
+| [`board.getSquare()`](#getsquare) | **square** | - | Returns a square. |
+| [`board.setSquare()`](#setsquare) | **square** | - | Updates and returns a square. |
+| [`board.attackersFromActive()`](#attackersfromactive) | `Number` | - | This can be called to know how many times active side p... |
+| [`board.attackersFromNonActive()`](#attackersfromnonactive) | `Number` | - | This can be called to know how many times non-active si... |
+| [`board.isLegalMove()`](#islegalmove) | `Boolean` | - | Test to see if a move is legal or not. |
+| [`board.legalMoves()`](#legalmoves) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
+| [`board.legalFenMoves()`](#legalfenmoves) | **finalFenArray** | - | Returns a final fen array with all the FEN positions th... |
+| [`board.legalSanMoves()`](#legalsanmoves) | **finalSanArray** | - | Returns a final san array with all the san moves that a... |
+| [`board.legalUciMoves()`](#legalucimoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that a... |
+| [`board.isEqualBoard()`](#isequalboard) | `Boolean` | - | Tests for the equality of the board properties (except ... |
 
 ## Method Details
 
 ---
 
-### `loadFen(fen, p?)`
+### `loadFen(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -93,7 +93,7 @@ board.loadFen("0invalidfen0") //false
 
 ---
 
-### `playMove(mov, p?)`
+### `playMove(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -165,7 +165,7 @@ board.playMove("0invalidmove0") //null
 
 ---
 
-### `playMoves(movArray, p?)`
+### `playMoves(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -228,7 +228,7 @@ board.playMoves(["e4", "0invalidmove0"]) //false
 
 ---
 
-### `playRandomMove(p?)`
+### `playRandomMove(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -287,7 +287,7 @@ other_board.playRandomMove({promoteTo: "q"}) //Object{...}
 
 ---
 
-### `toggleIsRotated(newIsRotated?)`
+### `toggleIsRotated(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -318,7 +318,7 @@ board.toggleIsRotated(true) //false
 
 ---
 
-### `setPromoteTo(qal)`
+### `setPromoteTo(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -361,7 +361,7 @@ board.setPromoteTo() //false
 
 ---
 
-### `setManualResult(res)`
+### `setManualResult(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -392,7 +392,7 @@ board.setManualResult("0invalidresult0") //true
 
 ---
 
-### `setCurrentMove(val, isGoto?)`
+### `setCurrentMove(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -515,7 +515,7 @@ board.navLast() //false
 
 ---
 
-### `navLinkMove(moveIndex)`
+### `navLinkMove(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -541,7 +541,7 @@ board.navLinkMove(2) //false
 
 ---
 
-### `cloneBoardFrom(fromBoard)`
+### `cloneBoardFrom(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -574,7 +574,7 @@ board.cloneBoardFrom(board) //false
 
 ---
 
-### `cloneBoardTo(toBoard)`
+### `cloneBoardTo(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -607,7 +607,7 @@ board.cloneBoardTo(board) //false
 
 ---
 
-### `reset(keepOptions?)`
+### `reset(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -675,7 +675,7 @@ board.undoMove() //null
 
 ---
 
-### `undoMoves(decreaseBy?)`
+### `undoMoves(...)`
 
 > 🔄 **Triggers UI refresh**
 
@@ -763,7 +763,7 @@ board.countLightDarkBishops() //Object{...}
 
 ---
 
-### `getCheckmateMoves(earlyBreak?)`
+### `getCheckmateMoves(...)`
 
 Returns a **final uci array** with all the uci moves that deliver checkmate after playing any of them.
 
@@ -789,7 +789,7 @@ board_after_f4_e6_g4.getCheckmateMoves() //["d8h4"]
 
 ---
 
-### `getDrawMoves(earlyBreak?)`
+### `getDrawMoves(...)`
 
 Returns a **final uci array** with all the uci moves that draw or a draw is claimable after playing any of them.
 
@@ -882,7 +882,7 @@ board_after_e4.uciExport() //"e2e4"
 
 ---
 
-### `ascii(isRotated?)`
+### `ascii(...)`
 
 Returns the **chess diagram** as text.
 
@@ -911,7 +911,7 @@ board.ascii(false) //"..."
 
 ---
 
-### `getSquare(qos, p?)`
+### `getSquare(...)`
 
 Returns a :pushpin:**square**.
 
@@ -956,7 +956,7 @@ board.getSquare("0invalidsquare0") //null
 
 ---
 
-### `setSquare(qos, qal, p?)`
+### `setSquare(...)`
 
 Updates and returns a :pushpin:**square**.
 
@@ -1008,7 +1008,7 @@ board.setSquare("0invalidsquare0", "wr") //null
 
 ---
 
-### `attackersFromActive(qos?, earlyBreak?)`
+### `attackersFromActive(...)`
 
 This can be called to know how many times active side pieces are attacking a square.
 
@@ -1046,7 +1046,7 @@ board.attackersFromActive("e4", false) //0
 
 ---
 
-### `attackersFromNonActive(qos?, earlyBreak?)`
+### `attackersFromNonActive(...)`
 
 This can be called to know how many times non-active side pieces are attacking a square.
 
@@ -1084,7 +1084,7 @@ board.attackersFromNonActive("e4", false) //0
 
 ---
 
-### `isLegalMove(mov, p?)`
+### `isLegalMove(...)`
 
 Test to see if a move is legal or not.
 
@@ -1128,7 +1128,7 @@ board.isLegalMove(["a1", "0invalidsquare0"]) //false
 
 ---
 
-### `legalMoves(initialQos, p?)`
+### `legalMoves(...)`
 
 Returns a **final bos array** with all the squares that a piece from an **initial qos** square can legally move to.
 
@@ -1172,7 +1172,7 @@ board.legalMoves("0invalidsquare0") //[]
 
 ---
 
-### `legalFenMoves(initialQos)`
+### `legalFenMoves(...)`
 
 Returns a **final fen array** with all the FEN positions that can be legally reached when moving a piece from an **initial qos**.
 
@@ -1208,7 +1208,7 @@ board.legalFenMoves("0invalidsquare0") //[]
 
 ---
 
-### `legalSanMoves(initialQos)`
+### `legalSanMoves(...)`
 
 Returns a **final san array** with all the san moves that a piece from an **initial qos** square can legally move to.
 
@@ -1244,7 +1244,7 @@ board.legalSanMoves("0invalidsquare0") //[]
 
 ---
 
-### `legalUciMoves(initialQos)`
+### `legalUciMoves(...)`
 
 Returns a **final uci array** with all the uci moves that a piece from an **initial qos** square can legally move to.
 
@@ -1280,7 +1280,7 @@ board.legalUciMoves("0invalidsquare0") //[]
 
 ---
 
-### `isEqualBoard(toBoard)`
+### `isEqualBoard(...)`
 
 Tests for the equality of the [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) (except for `board.boardName`) between the calling **board** and another **board**.
 
