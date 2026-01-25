@@ -8,42 +8,42 @@ Boards created by `Ic.initBoard()` have the following available methods.
 
 | Method | Returns | UI? | Brief |
 |--------|---------|-----|-------|
-| [`board.loadFen()`](#loadfen) | `Boolean` | ✓ | Loads a fen position. |
-| [`board.playMove()`](#playmove) | **move** | ✓ | Generates and returns a move. |
-| [`board.playMoves()`](#playmoves) | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
-| [`board.playRandomMove()`](#playrandommove) | **move** | ✓ | Generates and returns a random move. |
-| [`board.toggleIsRotated()`](#toggleisrotated) | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
-| [`board.setPromoteTo()`](#setpromoteto) | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
-| [`board.setManualResult()`](#setmanualresult) | `Boolean` | ✓ | Changes the board property of board.manualResult. |
-| [`board.setCurrentMove()`](#setcurrentmove) | `Boolean` | ✓ | Changes the board property of board.currentMove. |
-| [`board.navFirst()`](#navfirst) | `Boolean` | ✓ | Performs a board.setCurrentMove(0). |
-| [`board.navPrevious()`](#navprevious) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove-1). |
-| [`board.navNext()`](#navnext) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove+1). |
-| [`board.navLast()`](#navlast) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.moveList.length-1... |
-| [`board.navLinkMove()`](#navlinkmove) | `Boolean` | ✓ | Performs a board.setCurrentMove(moveIndex). |
-| [`board.cloneBoardFrom()`](#cloneboardfrom) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
-| [`board.cloneBoardTo()`](#cloneboardto) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
-| [`board.reset()`](#reset) | `Boolean` | ✓ | Loads the default fen position. |
-| [`board.undoMove()`](#undomove) | **move** | ✓ | Removes the last move played and returns it. |
-| [`board.undoMoves()`](#undomoves) | `Array` | ✓ | Removes the last N moves played and returns them as a m... |
-| [`board.countPieces()`](#countpieces) | `Object` | - | Returns the piece count structured by player color (w a... |
-| [`board.countLightDarkBishops()`](#countlightdarkbishops) | `Object` | - | Returns the bishop count structured by player color (w ... |
-| [`board.getCheckmateMoves()`](#getcheckmatemoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
-| [`board.getDrawMoves()`](#getdrawmoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
-| [`board.fenHistoryExport()`](#fenhistoryexport) | `Array` | - | Returns the FEN history list. |
-| [`board.pgnExport()`](#pgnexport) | `String` | - | Returns the PGN as text. |
-| [`board.uciExport()`](#uciexport) | `String` | - | Returns the UCI moves as text. |
-| [`board.ascii()`](#ascii) | `String` | - | Returns the chess diagram as text. |
-| [`board.getSquare()`](#getsquare) | **square** | - | Returns a square. |
-| [`board.setSquare()`](#setsquare) | **square** | - | Updates and returns a square. |
-| [`board.attackersFromActive()`](#attackersfromactive) | `Number` | - | This can be called to know how many times active side p... |
-| [`board.attackersFromNonActive()`](#attackersfromnonactive) | `Number` | - | This can be called to know how many times non-active si... |
-| [`board.isLegalMove()`](#islegalmove) | `Boolean` | - | Test to see if a move is legal or not. |
-| [`board.legalMoves()`](#legalmoves) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
-| [`board.legalFenMoves()`](#legalfenmoves) | **finalFenArray** | - | Returns a final fen array with all the FEN positions th... |
-| [`board.legalSanMoves()`](#legalsanmoves) | **finalSanArray** | - | Returns a final san array with all the san moves that a... |
-| [`board.legalUciMoves()`](#legalucimoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that a... |
-| [`board.isEqualBoard()`](#isequalboard) | `Boolean` | - | Tests for the equality of the board properties (except ... |
+| [`board.loadFen()`](#boardloadfen) | `Boolean` | ✓ | Loads a fen position. |
+| [`board.playMove()`](#boardplaymove) | **move** | ✓ | Generates and returns a move. |
+| [`board.playMoves()`](#boardplaymoves) | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
+| [`board.playRandomMove()`](#boardplayrandommove) | **move** | ✓ | Generates and returns a random move. |
+| [`board.toggleIsRotated()`](#boardtoggleisrotated) | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
+| [`board.setPromoteTo()`](#boardsetpromoteto) | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
+| [`board.setManualResult()`](#boardsetmanualresult) | `Boolean` | ✓ | Changes the board property of board.manualResult. |
+| [`board.setCurrentMove()`](#boardsetcurrentmove) | `Boolean` | ✓ | Changes the board property of board.currentMove. |
+| [`board.navFirst()`](#boardnavfirst) | `Boolean` | ✓ | Performs a board.setCurrentMove(0). |
+| [`board.navPrevious()`](#boardnavprevious) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove-1). |
+| [`board.navNext()`](#boardnavnext) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove+1). |
+| [`board.navLast()`](#boardnavlast) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.moveList.length-1... |
+| [`board.navLinkMove()`](#boardnavlinkmove) | `Boolean` | ✓ | Performs a board.setCurrentMove(moveIndex). |
+| [`board.cloneBoardFrom()`](#boardcloneboardfrom) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
+| [`board.cloneBoardTo()`](#boardcloneboardto) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
+| [`board.reset()`](#boardreset) | `Boolean` | ✓ | Loads the default fen position. |
+| [`board.undoMove()`](#boardundomove) | **move** | ✓ | Removes the last move played and returns it. |
+| [`board.undoMoves()`](#boardundomoves) | `Array` | ✓ | Removes the last N moves played and returns them as a m... |
+| [`board.countPieces()`](#boardcountpieces) | `Object` | - | Returns the piece count structured by player color (w a... |
+| [`board.countLightDarkBishops()`](#boardcountlightdarkbishops) | `Object` | - | Returns the bishop count structured by player color (w ... |
+| [`board.getCheckmateMoves()`](#boardgetcheckmatemoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
+| [`board.getDrawMoves()`](#boardgetdrawmoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
+| [`board.fenHistoryExport()`](#boardfenhistoryexport) | `Array` | - | Returns the FEN history list. |
+| [`board.pgnExport()`](#boardpgnexport) | `String` | - | Returns the PGN as text. |
+| [`board.uciExport()`](#boarduciexport) | `String` | - | Returns the UCI moves as text. |
+| [`board.ascii()`](#boardascii) | `String` | - | Returns the chess diagram as text. |
+| [`board.getSquare()`](#boardgetsquare) | **square** | - | Returns a square. |
+| [`board.setSquare()`](#boardsetsquare) | **square** | - | Updates and returns a square. |
+| [`board.attackersFromActive()`](#boardattackersfromactive) | `Number` | - | This can be called to know how many times active side p... |
+| [`board.attackersFromNonActive()`](#boardattackersfromnonactive) | `Number` | - | This can be called to know how many times non-active si... |
+| [`board.isLegalMove()`](#boardislegalmove) | `Boolean` | - | Test to see if a move is legal or not. |
+| [`board.legalMoves()`](#boardlegalmoves) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
+| [`board.legalFenMoves()`](#boardlegalfenmoves) | **finalFenArray** | - | Returns a final fen array with all the FEN positions th... |
+| [`board.legalSanMoves()`](#boardlegalsanmoves) | **finalSanArray** | - | Returns a final san array with all the san moves that a... |
+| [`board.legalUciMoves()`](#boardlegalucimoves) | **finalUciArray** | - | Returns a final uci array with all the uci moves that a... |
+| [`board.isEqualBoard()`](#boardisequalboard) | `Boolean` | - | Tests for the equality of the board properties (except ... |
 
 ## Method Details
 
