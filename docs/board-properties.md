@@ -73,9 +73,9 @@ White and black player property objects.
 - `lastRankPos` `(Number)` — `board.w.lastRankPos = 0` and `board.b.lastRankPos = 7`
 - `singlePawnRankShift` `(Number)` — `board.w.singlePawnRankShift = -1` and `board.b.singlePawnRankShift = 1`
 - `pawn / knight / bishop / rook / queen / king` `(Number)` — `board.w.<PIECE> = (1, 2, ..., 6)` and `board.b.<PIECE> = (-1, -2, ..., -6)`
-- `kingBos` `(String)` — holds the **king bos** square of their respective king
-- `castling` `(Number)` — holds the **castling rights**: `0 = no castling`, `1 = only short`, `2 = only long`, `3 = both`
-- `materialDiff` `(Array)` — exceeding pieces that the player has over the opponent
+- `kingBos` `(String)` — `board.w.kingBos` and `board.b.kingBos` hold the **king bos** square of their respective king
+- `castling` `(Number)` — `board.w.castling` and `board.b.castling` hold the **castling rights** in a single digit value: `0 = no castling rights`, `1 = only short castle`, `2 = only long castle`, `3 = both castling rights`
+- `materialDiff` `(Array)` — `board.w.materialDiff` holds a **piece val array** (with *positive* **piece sign**s) of exceeding pieces that white has over black and `board.b.materialDiff` holds a **piece val array** (with *negative* **piece sign**s) of exceeding pieces that black has over white. Differences by more than one piece of the same value will result in appearing multiple times e.g. `[1, 1, ...]`
 
 </details>
 
@@ -107,7 +107,7 @@ rff_board.b.materialDiff //[-2]
 **Type:** `String`
 
 > [!TIP]
-> You can use `board[board.activeColor]` and `board[board.nonActiveColor]` to access the sub-properties of `board.w` and `board.b` depending on the actual **active** or **non active color**.
+> You can use `board[board.activeColor]` and `board[board.nonActiveColor]` to access the sub-properties of `board.w` and `board.b` <sup>(not respectively)</sup> depending on the actual **active** or **non active color**.
 
 **Examples:**
 
