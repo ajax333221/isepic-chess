@@ -1201,7 +1201,7 @@
 
   // Full documentation for each method
   res += '## Method Details\n\n';
-  res += docoGenMethods(ic).join('').replace(/### `(\w+)\(/g, '### `Ic.$1(');
+  res += docoGenMethods(ic, 'Ic.').join('');
 
   res += '\n<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>\n';
 

@@ -216,11 +216,11 @@ function docoGenMethodList(obj) {
   return rtn;
 }
 
-// Generate signature string like: loadFen(...) or navFirst()
-function getSignature(method) {
+// Generate signature string like: board.loadFen(...) or board.navFirst()
+function getSignature(method, prefix) {
   var hasParams = method.params && method.params.children && method.params.children.length > 0;
   
-  return method.name + '(' + (hasParams ? '...' : '') + ')';
+  return (prefix || '') + method.name + '(' + (hasParams ? '...' : '') + ')';
 }
 
 // Format a parameter for display
@@ -331,12 +331,12 @@ function countNestedParams(params) {
 }
 
 // Generate single method documentation
-function docoGenMethod(methodKey, method) {
+function docoGenMethod(methodKey, method, prefix) {
   var res = '';
   
   // Method header with anchor
   res += '---\n\n';
-  res += '### `' + getSignature(method) + '`\n\n';
+  res += '### `' + getSignature(method, prefix) + '`\n\n';
   
   // UI refresh badge
   if (method.refreshUi === true) {
@@ -399,7 +399,7 @@ function docoGenMethod(methodKey, method) {
 }
 
 // Generate all methods documentation
-function docoGenMethods(obj) {
+function docoGenMethods(obj, prefix) {
   var rtn = [];
   var curr_table = Object.keys(obj);
   
@@ -408,7 +408,7 @@ function docoGenMethods(obj) {
     var method = obj[methodKey];
     
     if (method.description) {
-      rtn.push(docoGenMethod(methodKey, method));
+      rtn.push(docoGenMethod(methodKey, method, prefix));
     }
   }
   

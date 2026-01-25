@@ -1428,7 +1428,7 @@
 
   // Full documentation for each method
   res += '## Method Details\n\n';
-  res += docoGenMethods(board).join('');
+  res += docoGenMethods(board, 'board.').join('');
 
   res += '\n<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>\n';
 
