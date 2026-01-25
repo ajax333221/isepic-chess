@@ -24,15 +24,15 @@ Isepic Chess library `isepic-chess.js` has the following available methods.
 | [`Ic.getRankBos()`](#icgetrankbosqos) | **squareRankBos** | - | Converts the input to a square rank bos. |
 | [`Ic.getFileBos()`](#icgetfilebosqos) | **squareFileBos** | - | Converts the input to a square file bos. |
 | [`Ic.isInsideBoard()`](#icisinsideboardqos) | `Boolean` | - | Test to see if a square is valid or not. |
-| [`Ic.sameSquare()`](#icsamesquareqos1qos2) | `Boolean` | - | Test to see if two squares evaluate to the same square ... |
+| [`Ic.sameSquare()`](#icsamesquareqos1-qos2) | `Boolean` | - | Test to see if two squares evaluate to the same square ... |
 | [`Ic.countPieces()`](#iccountpiecesfen) | `Object` | - | Returns the total of each piece for white and black. |
 | [`Ic.countLightDarkBishops()`](#iccountlightdarkbishopsfen) | `Object` | - | Returns the total of light and dark bishops for white a... |
 | [`Ic.removeBoard()`](#icremoveboardboard) | `Boolean` | - | Removes a board completely. |
-| [`Ic.isEqualBoard()`](#icisequalboardleftboardrightboard) | `Boolean` | - | Tests for the equality of the board properties <sup>(ex... |
-| [`Ic.cloneBoard()`](#iccloneboardtoboardfromboard) | `Boolean` | ✓ | Clones the board properties <sup>(except for board.boar... |
+| [`Ic.isEqualBoard()`](#icisequalboardleftboard-rightboard) | `Boolean` | - | Tests for the equality of the board properties <sup>(ex... |
+| [`Ic.cloneBoard()`](#iccloneboardtoboard-fromboard) | `Boolean` | ✓ | Clones the board properties <sup>(except for board.boar... |
 | [`Ic.initBoard()`](#icinitboardp) | **board** | ✓ | Initializes/overwrites a board. |
-| [`Ic.fenApply()`](#icfenapplyfenfnnameargsp) | `(mixed results)` | - | Calls one of the allowed board methods (listed below) o... |
-| [`Ic.fenGet()`](#icfengetfenpropsp) | `Object` | - | Get board properties (except for board.boardName) from ... |
+| [`Ic.fenApply()`](#icfenapplyfen-fnname-args-p) | `(mixed results)` | - | Calls one of the allowed board methods (listed below) o... |
+| [`Ic.fenGet()`](#icfengetfen-props-p) | `Object` | - | Get board properties (except for board.boardName) from ... |
 | [`Ic.getBoardNames()`](#icgetboardnames) | `Array` | - | Returns a board names array. |
 
 ## Method Details
@@ -107,11 +107,10 @@ Returns a **board**.
 
 **Returns:**
 
-**On success:**
-- **board** `(Object)`
-
-**On error:**
-- `null`
+- *On success:*
+  - **board** `(Object)`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -145,11 +144,10 @@ Converts the input to a **square val**.
 
 **Returns:**
 
-**On success:**
-- **squareVal** `(Number)` — `-6 to 6`
-
-**On error:**
-- `Number` — `0`
+- *On success:*
+  - **squareVal** `(Number)` — `-6 to 6`
+- *On error:*
+  - `Number` — `0`
 
 **Examples:**
 
@@ -185,11 +183,10 @@ Converts the input to a **square abs val**.
 
 **Returns:**
 
-**On success:**
-- **squareAbsVal** `(Number)` — `0 to 6`
-
-**On error:**
-- `Number` — `0`
+- *On success:*
+  - **squareAbsVal** `(Number)` — `0 to 6`
+- *On error:*
+  - `Number` — `0`
 
 **Examples:**
 
@@ -225,11 +222,10 @@ Converts the input to a **square bal**.
 
 **Returns:**
 
-**On success:**
-- **squareBal** `(String)` — `"k", "q", "r", "b", "n", "p", "*", "P", "N", "B", "R", "Q", "K"`
-
-**On error:**
-- `String` — `*`
+- *On success:*
+  - **squareBal** `(String)` — `"k", "q", "r", "b", "n", "p", "*", "P", "N", "B", "R", "Q", "K"`
+- *On error:*
+  - `String` — `*`
 
 **Examples:**
 
@@ -265,11 +261,10 @@ Converts the input to a **square abs bal**.
 
 **Returns:**
 
-**On success:**
-- **squareAbsBal** `(String)` — `"*", "P", "N", "B", "R", "Q", "K"`
-
-**On error:**
-- `String` — `*`
+- *On success:*
+  - **squareAbsBal** `(String)` — `"*", "P", "N", "B", "R", "Q", "K"`
+- *On error:*
+  - `String` — `*`
 
 **Examples:**
 
@@ -305,11 +300,10 @@ Converts the input to a **square class name**.
 
 **Returns:**
 
-**On success:**
-- **squareClassName** `(String)` — `"bk", "bq", "br", "bb", "bn", "bp", "", "wp", "wn", "wb", "wr", "wq", "wk"`
-
-**On error:**
-- `String` — `""`
+- *On success:*
+  - **squareClassName** `(String)` — `"bk", "bq", "br", "bb", "bn", "bp", "", "wp", "wn", "wb", "wr", "wq", "wk"`
+- *On error:*
+  - `String` — `""`
 
 **Examples:**
 
@@ -342,11 +336,10 @@ Converts the input to a **square bos**.
 
 **Returns:**
 
-**On success:**
-- **squareBos** `(String)` — `"a1" to "h8"`
-
-**On error:**
-- `null`
+- *On success:*
+  - **squareBos** `(String)` — `"a1" to "h8"`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -376,11 +369,10 @@ Converts the input to a **square pos**.
 
 **Returns:**
 
-**On success:**
-- **squarePos** `(Array)` — `[0-7, 0-7]`
-
-**On error:**
-- `null`
+- *On success:*
+  - **squarePos** `(Array)` — `[0-7, 0-7]`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -419,11 +411,10 @@ Any non-Boolean value will pass through `toVal()` and have its **square val** te
 
 **Returns:**
 
-**On success:**
-- **squareSign** `(Number)` — `-1 or 1`
-
-**On error:**
-- `Number` — `-1`
+- *On success:*
+  - **squareSign** `(Number)` — `-1 or 1`
+- *On error:*
+  - `Number` — `-1`
 
 **Examples:**
 
@@ -457,11 +448,10 @@ Converts the input to a **square rank pos**.
 
 **Returns:**
 
-**On success:**
-- **squareRankPos** `(Number)` — `0-7`
-
-**On error:**
-- `null`
+- *On success:*
+  - **squareRankPos** `(Number)` — `0-7`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -492,11 +482,10 @@ Converts the input to a **square file pos**.
 
 **Returns:**
 
-**On success:**
-- **squareFilePos** `(Number)` — `0-7`
-
-**On error:**
-- `null`
+- *On success:*
+  - **squareFilePos** `(Number)` — `0-7`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -527,11 +516,10 @@ Converts the input to a **square rank bos**.
 
 **Returns:**
 
-**On success:**
-- **squareRankBos** `(String)` — `1-8`
-
-**On error:**
-- `null`
+- *On success:*
+  - **squareRankBos** `(String)` — `1-8`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -562,11 +550,10 @@ Converts the input to a **square file bos**.
 
 **Returns:**
 
-**On success:**
-- **squareFileBos** `(String)` — `a-h`
-
-**On error:**
-- `null`
+- *On success:*
+  - **squareFileBos** `(String)` — `a-h`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -631,11 +618,10 @@ Test to see if two **square**s evaluate to the same **square** or not.
 
 **Returns:**
 
-**On success:**
-- `Boolean`
-
-**On error:**
-- `Boolean` — `false`
+- *On success:*
+  - `Boolean`
+- *On error:*
+  - `Boolean` — `false`
 
 **Examples:**
 
@@ -662,11 +648,10 @@ The **fen** doesn't need to be valid (it can be any string and it will stop afte
 
 **Returns:**
 
-**On success:**
-- `Object` — `{w: {...}, b: {...}}`
-
-**On error:**
-- `Object` — `{w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}}`
+- *On success:*
+  - `Object` — `{w: {...}, b: {...}}`
+- *On error:*
+  - `Object` — `{w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}}`
 
 **Examples:**
 
@@ -692,11 +677,10 @@ The **fen** doesn't need to be valid (it can be any string and it will stop afte
 
 **Returns:**
 
-**On success:**
-- `Object` — `{w: {...}, b: {...}}`
-
-**On error:**
-- `Object` — `{w: {lightSquaredBishops: 0, darkSquaredBishops: 0}, b: {lightSquaredBishops: 0, darkSquaredBishops: 0}}`
+- *On success:*
+  - `Object` — `{w: {...}, b: {...}}`
+- *On error:*
+  - `Object` — `{w: {lightSquaredBishops: 0, darkSquaredBishops: 0}, b: {lightSquaredBishops: 0, darkSquaredBishops: 0}}`
 
 **Examples:**
 
@@ -753,11 +737,10 @@ Tests for the equality of the [board properties](https://github.com/ajax333221/i
 
 **Returns:**
 
-**On success:**
-- `Boolean`
-
-**On error:**
-- `Boolean` — `false`
+- *On success:*
+  - `Boolean`
+- *On error:*
+  - `Boolean` — `false`
 
 **Examples:**
 
@@ -768,7 +751,7 @@ Ic.isEqualBoard("board", "other") //false
 Ic.isEqualBoard(other_board, "nonexistent") //false
 ```
 
-> ⚠️ **Errors:**
+> ⚠️ **Possible errors:**
 > - the *left board* is not found.
 > - the *right board* is not found.
 
@@ -794,11 +777,10 @@ Clones the [board properties](https://github.com/ajax333221/isepic-chess/blob/ma
 
 **Returns:**
 
-**On success:**
-- `Boolean` — `true`
-
-**On error:**
-- `Boolean` — `false`
+- *On success:*
+  - `Boolean` — `true`
+- *On error:*
+  - `Boolean` — `false`
 
 **Examples:**
 
@@ -809,7 +791,7 @@ Ic.cloneBoard("to_nonexistent", from_board) //false
 Ic.cloneBoard(to_nonexistent, "from_nonexistent") //false
 ```
 
-> ⚠️ **Errors:**
+> ⚠️ **Possible errors:**
 > - the *to board* is not found.
 > - the *from board* is not found.
 > - attempting to clone a board with itself.
@@ -881,11 +863,10 @@ If both `pgn` and `uci` are supplied, the **pgn** will take precedence and the *
 
 **Returns:**
 
-**On success:**
-- **board** `(Object)`
-
-**On error:**
-- `null`
+- *On success:*
+  - **board** `(Object)`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -899,7 +880,7 @@ Ic.initBoard({fen: "0invalidfen0", validOrBreak: true}) //null
 
 **See also:** [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties), [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
 
-> ⚠️ **Errors:**
+> ⚠️ **Possible errors:**
 > - `validOrBreak` is `true` and the *pgn* fails the parsing.
 > - `validOrBreak` is `true` and the *uci* fails the parsing.
 > - `validOrBreak` is `true` and the *fen* fails the **basic fen test**.
@@ -942,11 +923,10 @@ The **p** options (`isRotated`, `promoteTo` and `skipFenValidation`) are passed 
 
 **Returns:**
 
-**On success:**
-- `(mixed results)`
-
-**On error:**
-- `(mixed results)`
+- *On success:*
+  - `(mixed results)`
+- *On error:*
+  - `(mixed results)`
 
 **Examples:**
 
@@ -958,7 +938,7 @@ Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "playMove", ["c2_a2", {delimiter
 Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "0invalidfnname0", ["a1"]) //null
 ```
 
-> ⚠️ **Errors:**
+> ⚠️ **Possible errors:**
 > - (mixed reasons)
 
 ---
@@ -991,11 +971,10 @@ The **p** option `skipFenValidation` is passed to `Ic.initBoard()` when creating
 
 **Returns:**
 
-**On success:**
-- `Object` — `{propA: valA, propB: valB, ..., propZ: valZ}`
-
-**On error:**
-- `null`
+- *On success:*
+  - `Object` — `{propA: valA, propB: valB, ..., propZ: valZ}`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -1007,7 +986,7 @@ Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //Object{.
 Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0") //null
 ```
 
-> ⚠️ **Errors:**
+> ⚠️ **Possible errors:**
 > - `fen` is an **invalid fen**.
 > - an **invalid property** was found in `props`.
 

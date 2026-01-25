@@ -8,16 +8,16 @@ Boards created by `Ic.initBoard()` have the following available methods.
 
 | Method | Returns | UI? | Brief |
 |--------|---------|-----|-------|
-| [`board.loadFen()`](#loadfenfenp) | `Boolean` | ✓ | Loads a fen position. |
-| [`board.playMove()`](#playmovemovp) | **move** | ✓ | Generates and returns a move. |
-| [`board.playMoves()`](#playmovesmovarrayp) | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
+| [`board.loadFen()`](#loadfenfen-p) | `Boolean` | ✓ | Loads a fen position. |
+| [`board.playMove()`](#playmovemov-p) | **move** | ✓ | Generates and returns a move. |
+| [`board.playMoves()`](#playmovesmovarray-p) | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
 | [`board.playRandomMove()`](#playrandommovep) | **move** | ✓ | Generates and returns a random move. |
 | [`board.toggleIsRotated()`](#toggleisrotatednewisrotated) | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
 | [`board.setPromoteTo()`](#setpromotetoqal) | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
 | [`board.navFirst()`](#navfirst) | `Boolean` | ✓ | Performs a board.setCurrentMove(0). |
-| [`board.getSquare()`](#getsquareqosp) | **square** | - | Returns a square. |
-| [`board.isLegalMove()`](#islegalmovemovp) | `Boolean` | - | Test to see if a move is legal or not. |
-| [`board.legalMoves()`](#legalmovesinitialqosp) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
+| [`board.getSquare()`](#getsquareqos-p) | **square** | - | Returns a square. |
+| [`board.isLegalMove()`](#islegalmovemov-p) | `Boolean` | - | Test to see if a move is legal or not. |
+| [`board.legalMoves()`](#legalmovesinitialqos-p) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
 
 ## Method Details
 
@@ -49,11 +49,10 @@ Successfully loading a fen will set `"*"` to `board.manualResult`.
 
 **Returns:**
 
-**On success:**
-- `Boolean`
-
-**On error:**
-- `Boolean` — `false`
+- *On success:*
+  - `Boolean`
+- *On error:*
+  - `Boolean` — `false`
 
 **Examples:**
 
@@ -63,7 +62,7 @@ board.loadFen("2k5/8/1K1R4/8/8/8/8/8 b - - 0 1", {keepOptions: true}) //true
 board.loadFen("0invalidfen0") //false
 ```
 
-> ⚠️ **Errors:**
+> ⚠️ **Possible errors:**
 > - `fen` is an **invalid fen**.
 
 ---
@@ -121,11 +120,10 @@ Successfully playing a move will set `"*"` to `board.manualResult`.
 
 **Returns:**
 
-**On success:**
-- **move** `(Object)`
-
-**On error:**
-- `null`
+- *On success:*
+  - **move** `(Object)`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -171,11 +169,10 @@ It tries to play all the moves consecutively and tells you if all moves were suc
 
 **Returns:**
 
-**On success:**
-- `Boolean`
-
-**On error:**
-- `Boolean` — `false`
+- *On success:*
+  - `Boolean`
+- *On error:*
+  - `Boolean` — `false`
 
 **Examples:**
 
@@ -215,11 +212,10 @@ Generates and returns a random **move**.
 
 **Returns:**
 
-**On success:**
-- **move** `(Object)`
-
-**On error:**
-- `null`
+- *On success:*
+  - **move** `(Object)`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -344,11 +340,10 @@ If the **square** is invalid (before or after shifting by `rankShift` and `fileS
 
 **Returns:**
 
-**On success:**
-- **square** `(Object)`
-
-**On error:**
-- `null`
+- *On success:*
+  - **square** `(Object)`
+- *On error:*
+  - `null`
 
 **Examples:**
 
@@ -385,11 +380,10 @@ Test to see if a move is legal or not.
 
 **Returns:**
 
-**On success:**
-- `Boolean`
-
-**On error:**
-- `Boolean` — `false`
+- *On success:*
+  - `Boolean`
+- *On error:*
+  - `Boolean` — `false`
 
 **Examples:**
 
@@ -429,11 +423,10 @@ Passing an **initial qos** square with a **square val** of `0` or a **non active
 
 **Returns:**
 
-**On success:**
-- **finalBosArray** `(Array)`
-
-**On error:**
-- `Array` — `[]`
+- *On success:*
+  - **finalBosArray** `(Array)`
+- *On error:*
+  - `Array` — `[]`
 
 **Examples:**
 

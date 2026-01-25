@@ -303,18 +303,18 @@ function formatReturn(returnVal) {
   var result = '';
   
   if (isArr(returnVal) && returnVal.length === 2) {
-    // Success/Error pattern
-    result += '**On success:**\n';
+    // Success/Error pattern - indent under Returns
+    result += '- *On success:*\n';
     if (returnVal[0].children && returnVal[0].children.length) {
       for (var i = 0; i < returnVal[0].children.length; i++) {
-        result += formatParam(returnVal[0].children[i], 0);
+        result += formatParam(returnVal[0].children[i], 1);
       }
     }
     
-    result += '\n**On error:**\n';
+    result += '- *On error:*\n';
     if (returnVal[1].children && returnVal[1].children.length) {
       for (var i = 0; i < returnVal[1].children.length; i++) {
-        result += formatParam(returnVal[1].children[i], 0);
+        result += formatParam(returnVal[1].children[i], 1);
       }
     }
   } else if (isObj(returnVal)) {
@@ -399,9 +399,9 @@ function docoGenMethod(methodKey, method) {
     res += links.join(', ') + '\n\n';
   }
   
-  // Errors section
+  // Possible errors section
   if (method.errors && method.errors.length) {
-    res += '> ⚠️ **Errors:**\n';
+    res += '> ⚠️ **Possible errors:**\n';
     for (var i = 0; i < method.errors.length; i++) {
       res += '> - ' + method.errors[i] + '\n';
     }
@@ -447,20 +447,32 @@ function docoGenToc(obj) {
 
 // Generate anchor for method (matches GitHub's heading anchor generation)
 function generateAnchor(method, prefix) {
-  var signature = (prefix || '') + method.name;
+  // Build the signature as it appears in the heading: methodName(param1, param2?)
+  var signature = (prefix || '') + method.name + '(';
   
-  // Add param names
+  // Add param names with commas
   if (method.params && method.params.children && method.params.children.length) {
+    var paramNames = [];
     for (var i = 0; i < method.params.children.length; i++) {
       var param = method.params.children[i];
       if (param.name) {
-        signature += param.name;
+        paramNames.push(param.name + (param.isOptional ? '?' : ''));
       }
     }
+    signature += paramNames.join(', ');
   }
+  signature += ')';
   
-  // Convert to lowercase and remove dots/special chars (matches GitHub anchor generation)
-  return '#' + signature.toLowerCase().replace(/[^a-z0-9]/g, '');
+  // GitHub anchor generation:
+  // 1. Lowercase
+  // 2. Remove special chars except spaces/hyphens
+  // 3. Replace spaces with hyphens
+  return '#' + signature
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, '')  // Remove everything except alphanumeric, space, hyphen
+    .replace(/\s+/g, '-')          // Replace spaces with hyphens
+    .replace(/-+/g, '-')           // Collapse multiple hyphens
+    .replace(/^-|-$/g, '');        // Trim leading/trailing hyphens
 }
 
 // Quick reference table (simplified)
