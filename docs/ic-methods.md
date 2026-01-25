@@ -4,65 +4,36 @@
 
 Isepic Chess library `isepic-chess.js` has the following available methods.
 
-## Quick Navigation
-
-- [`Ic.setSilentMode()`](#setsilentmode)
-- [`Ic.isLegalFen()`](#islegalfen)
-- [`Ic.getBoard()`](#getboard)
-- [`Ic.toVal()`](#toval)
-- [`Ic.toAbsVal()`](#toabsval)
-- [`Ic.toBal()`](#tobal)
-- [`Ic.toAbsBal()`](#toabsbal)
-- [`Ic.toClassName()`](#toclassname)
-- [`Ic.toBos()`](#tobos)
-- [`Ic.toPos()`](#topos)
-- [`Ic.getSign()`](#getsign)
-- [`Ic.getRankPos()`](#getrankpos)
-- [`Ic.getFilePos()`](#getfilepos)
-- [`Ic.getRankBos()`](#getrankbos)
-- [`Ic.getFileBos()`](#getfilebos)
-- [`Ic.isInsideBoard()`](#isinsideboard)
-- [`Ic.sameSquare()`](#samesquare)
-- [`Ic.countPieces()`](#countpieces)
-- [`Ic.countLightDarkBishops()`](#countlightdarkbishops)
-- [`Ic.removeBoard()`](#removeboard)
-- [`Ic.isEqualBoard()`](#isequalboard)
-- [`Ic.cloneBoard()`](#cloneboard)
-- [`Ic.initBoard()`](#initboard)
-- [`Ic.fenApply()`](#fenapply)
-- [`Ic.fenGet()`](#fenget)
-- [`Ic.getBoardNames()`](#getboardnames)
-
 ## Quick Reference
 
 | Method | Returns | UI? | Brief |
 |--------|---------|-----|-------|
-| `Ic.setSilentMode()` | - | - | Turns on/off the silent mode to hide/show console.log()... |
-| `Ic.isLegalFen()` | `Boolean` | - | Tests the validity of a fen string. |
-| `Ic.getBoard()` | **board** | - | Returns a board. |
-| `Ic.toVal()` | **squareVal** | - | Converts the input to a square val. |
-| `Ic.toAbsVal()` | **squareAbsVal** | - | Converts the input to a square abs val. |
-| `Ic.toBal()` | **squareBal** | - | Converts the input to a square bal. |
-| `Ic.toAbsBal()` | **squareAbsBal** | - | Converts the input to a square abs bal. |
-| `Ic.toClassName()` | **squareClassName** | - | Converts the input to a square class name. |
-| `Ic.toBos()` | **squareBos** | - | Converts the input to a square bos. |
-| `Ic.toPos()` | **squarePos** | - | Converts the input to a square pos. |
-| `Ic.getSign()` | **squareSign** | - | Infers the square sign from a Boolean or a square qal. |
-| `Ic.getRankPos()` | **squareRankPos** | - | Converts the input to a square rank pos. |
-| `Ic.getFilePos()` | **squareFilePos** | - | Converts the input to a square file pos. |
-| `Ic.getRankBos()` | **squareRankBos** | - | Converts the input to a square rank bos. |
-| `Ic.getFileBos()` | **squareFileBos** | - | Converts the input to a square file bos. |
-| `Ic.isInsideBoard()` | `Boolean` | - | Test to see if a square is valid or not. |
-| `Ic.sameSquare()` | `Boolean` | - | Test to see if two squares evaluate to the same square ... |
-| `Ic.countPieces()` | `Object` | - | Returns the total of each piece for white and black. |
-| `Ic.countLightDarkBishops()` | `Object` | - | Returns the total of light and dark bishops for white a... |
-| `Ic.removeBoard()` | `Boolean` | - | Removes a board completely. |
-| `Ic.isEqualBoard()` | `Boolean` | - | Tests for the equality of the board properties <sup>(ex... |
-| `Ic.cloneBoard()` | `Boolean` | ✓ | Clones the board properties <sup>(except for board.boar... |
-| `Ic.initBoard()` | **board** | ✓ | Initializes/overwrites a board. |
-| `Ic.fenApply()` | `(mixed results)` | - | Calls one of the allowed board methods (listed below) o... |
-| `Ic.fenGet()` | `Object` | - | Get board properties (except for board.boardName) from ... |
-| `Ic.getBoardNames()` | `Array` | - | Returns a board names array. |
+| [`Ic.setSilentMode()`](#icsetsilentmodemuteconsole) | - | - | Turns on/off the silent mode to hide/show console.log()... |
+| [`Ic.isLegalFen()`](#icislegalfenfen) | `Boolean` | - | Tests the validity of a fen string. |
+| [`Ic.getBoard()`](#icgetboardboard) | **board** | - | Returns a board. |
+| [`Ic.toVal()`](#ictovalqal) | **squareVal** | - | Converts the input to a square val. |
+| [`Ic.toAbsVal()`](#ictoabsvalqal) | **squareAbsVal** | - | Converts the input to a square abs val. |
+| [`Ic.toBal()`](#ictobalqal) | **squareBal** | - | Converts the input to a square bal. |
+| [`Ic.toAbsBal()`](#ictoabsbalqal) | **squareAbsBal** | - | Converts the input to a square abs bal. |
+| [`Ic.toClassName()`](#ictoclassnameqal) | **squareClassName** | - | Converts the input to a square class name. |
+| [`Ic.toBos()`](#ictobosqos) | **squareBos** | - | Converts the input to a square bos. |
+| [`Ic.toPos()`](#ictoposqos) | **squarePos** | - | Converts the input to a square pos. |
+| [`Ic.getSign()`](#icgetsignzal) | **squareSign** | - | Infers the square sign from a Boolean or a square qal. |
+| [`Ic.getRankPos()`](#icgetrankposqos) | **squareRankPos** | - | Converts the input to a square rank pos. |
+| [`Ic.getFilePos()`](#icgetfileposqos) | **squareFilePos** | - | Converts the input to a square file pos. |
+| [`Ic.getRankBos()`](#icgetrankbosqos) | **squareRankBos** | - | Converts the input to a square rank bos. |
+| [`Ic.getFileBos()`](#icgetfilebosqos) | **squareFileBos** | - | Converts the input to a square file bos. |
+| [`Ic.isInsideBoard()`](#icisinsideboardqos) | `Boolean` | - | Test to see if a square is valid or not. |
+| [`Ic.sameSquare()`](#icsamesquareqos1qos2) | `Boolean` | - | Test to see if two squares evaluate to the same square ... |
+| [`Ic.countPieces()`](#iccountpiecesfen) | `Object` | - | Returns the total of each piece for white and black. |
+| [`Ic.countLightDarkBishops()`](#iccountlightdarkbishopsfen) | `Object` | - | Returns the total of light and dark bishops for white a... |
+| [`Ic.removeBoard()`](#icremoveboardboard) | `Boolean` | - | Removes a board completely. |
+| [`Ic.isEqualBoard()`](#icisequalboardleftboardrightboard) | `Boolean` | - | Tests for the equality of the board properties <sup>(ex... |
+| [`Ic.cloneBoard()`](#iccloneboardtoboardfromboard) | `Boolean` | ✓ | Clones the board properties <sup>(except for board.boar... |
+| [`Ic.initBoard()`](#icinitboardp) | **board** | ✓ | Initializes/overwrites a board. |
+| [`Ic.fenApply()`](#icfenapplyfenfnnameargsp) | `(mixed results)` | - | Calls one of the allowed board methods (listed below) o... |
+| [`Ic.fenGet()`](#icfengetfenpropsp) | `Object` | - | Get board properties (except for board.boardName) from ... |
+| [`Ic.getBoardNames()`](#icgetboardnames) | `Array` | - | Returns a board names array. |
 
 ## Method Details
 

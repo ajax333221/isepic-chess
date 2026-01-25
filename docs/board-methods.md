@@ -4,33 +4,20 @@
 
 Boards created by `Ic.initBoard()` have the following available methods.
 
-## Quick Navigation
-
-- [`loadFen()`](#loadfen)
-- [`playMove()`](#playmove)
-- [`playMoves()`](#playmoves)
-- [`playRandomMove()`](#playrandommove)
-- [`toggleIsRotated()`](#toggleisrotated)
-- [`setPromoteTo()`](#setpromoteto)
-- [`navFirst()`](#navfirst)
-- [`getSquare()`](#getsquare)
-- [`isLegalMove()`](#islegalmove)
-- [`legalMoves()`](#legalmoves)
-
 ## Quick Reference
 
 | Method | Returns | UI? | Brief |
 |--------|---------|-----|-------|
-| `loadFen()` | `Boolean` | ✓ | Loads a fen position. |
-| `playMove()` | **move** | ✓ | Generates and returns a move. |
-| `playMoves()` | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
-| `playRandomMove()` | **move** | ✓ | Generates and returns a random move. |
-| `toggleIsRotated()` | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
-| `setPromoteTo()` | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
-| `navFirst()` | `Boolean` | ✓ | Performs a board.setCurrentMove(0). |
-| `getSquare()` | **square** | - | Returns a square. |
-| `isLegalMove()` | `Boolean` | - | Test to see if a move is legal or not. |
-| `legalMoves()` | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
+| [`board.loadFen()`](#loadfenfenp) | `Boolean` | ✓ | Loads a fen position. |
+| [`board.playMove()`](#playmovemovp) | **move** | ✓ | Generates and returns a move. |
+| [`board.playMoves()`](#playmovesmovarrayp) | `Boolean` | ✓ | It tries to play all the moves consecutively and tells ... |
+| [`board.playRandomMove()`](#playrandommovep) | **move** | ✓ | Generates and returns a random move. |
+| [`board.toggleIsRotated()`](#toggleisrotatednewisrotated) | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
+| [`board.setPromoteTo()`](#setpromotetoqal) | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
+| [`board.navFirst()`](#navfirst) | `Boolean` | ✓ | Performs a board.setCurrentMove(0). |
+| [`board.getSquare()`](#getsquareqosp) | **square** | - | Returns a square. |
+| [`board.isLegalMove()`](#islegalmovemovp) | `Boolean` | - | Test to see if a move is legal or not. |
+| [`board.legalMoves()`](#legalmovesinitialqosp) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
 
 ## Method Details
 

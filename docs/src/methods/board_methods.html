@@ -526,14 +526,9 @@
 
   res += 'Boards created by `Ic.initBoard()` have the following available methods.\n\n';
 
-  // Table of Contents
-  res += '## Quick Navigation\n\n';
-  res += docoGenToc(board);
-  res += '\n';
-
   // Quick Reference Table
   res += '## Quick Reference\n\n';
-  res += docoGenQuickRef(board);
+  res += docoGenQuickRef(board, 'board.', '');
   res += '\n';
 
   // Full documentation for each method

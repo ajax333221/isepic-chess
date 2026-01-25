@@ -445,8 +445,28 @@ function docoGenToc(obj) {
   return result;
 }
 
+// Generate anchor for method (matches GitHub's heading anchor generation)
+function generateAnchor(method, prefix) {
+  var signature = (prefix || '') + method.name;
+  
+  // Add param names
+  if (method.params && method.params.children && method.params.children.length) {
+    for (var i = 0; i < method.params.children.length; i++) {
+      var param = method.params.children[i];
+      if (param.name) {
+        signature += param.name;
+      }
+    }
+  }
+  
+  // Convert to lowercase and remove dots/special chars (matches GitHub anchor generation)
+  return '#' + signature.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
 // Quick reference table (simplified)
-function docoGenQuickRef(obj) {
+// displayPrefix: shown in table (e.g., "board." or "Ic.")
+// anchorPrefix: used for link anchor (e.g., "" or "Ic.")
+function docoGenQuickRef(obj, displayPrefix, anchorPrefix) {
   var result = '';
   result += '| Method | Returns | UI? | Brief |\n';
   result += '|--------|---------|-----|-------|\n';
@@ -480,7 +500,10 @@ function docoGenQuickRef(obj) {
         brief = brief.substring(0, 55) + '...';
       }
       
-      result += '| `' + method.name + '()` | ' + returnType + ' | ' + (method.refreshUi ? '✓' : '-') + ' | ' + brief + ' |\n';
+      var anchor = generateAnchor(method, anchorPrefix || '');
+      var methodDisplay = (displayPrefix || '') + method.name + '()';
+      
+      result += '| [`' + methodDisplay + '`](' + anchor + ') | ' + returnType + ' | ' + (method.refreshUi ? '✓' : '-') + ' | ' + brief + ' |\n';
     }
   }
   

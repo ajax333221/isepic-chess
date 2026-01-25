@@ -1194,14 +1194,9 @@
 
   res += 'Isepic Chess library `isepic-chess.js` has the following available methods.\n\n';
 
-  // Table of Contents
-  res += '## Quick Navigation\n\n';
-  res += docoGenToc(ic).replace(/`(\w+)\(\)`/g, '`Ic.$1()`');
-  res += '\n';
-
   // Quick Reference Table
   res += '## Quick Reference\n\n';
-  res += docoGenQuickRef(ic).replace(/`(\w+)\(\)`/g, '`Ic.$1()`');
+  res += docoGenQuickRef(ic, 'Ic.', 'Ic.');
   res += '\n';
 
   // Full documentation for each method
