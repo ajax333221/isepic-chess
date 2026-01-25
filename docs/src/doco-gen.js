@@ -311,7 +311,7 @@ function formatReturn(returnVal) {
       }
     }
     
-    result += '- *On error:*\n';
+    result += '- ⚠️ *On error:*\n';
     if (returnVal[1].children && returnVal[1].children.length) {
       for (var i = 0; i < returnVal[1].children.length; i++) {
         result += formatParam(returnVal[1].children[i], 1);
@@ -399,9 +399,9 @@ function docoGenMethod(methodKey, method) {
     res += links.join(', ') + '\n\n';
   }
   
-  // Possible errors section
+  // Errors section
   if (method.errors && method.errors.length) {
-    res += '> ⚠️ **Possible errors:**\n';
+    res += '> ⚠️ **Error emits a `console.log(...)` when:**\n';
     for (var i = 0; i < method.errors.length; i++) {
       res += '> - ' + method.errors[i] + '\n';
     }
