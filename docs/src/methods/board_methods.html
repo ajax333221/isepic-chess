@@ -246,8 +246,25 @@
     '`isMockMove = true` plays the moves on a **temporal board** instead of affecting the **board**.'
   );
   board.playMoves.description.push(
-    '**Tip:** when **isMockMove** is used, all the moves are expected to be from the active side (do not alternate them with the non-active side as the moves will not be being played). However, it is preferred to validate multiple moves with `board.isLegalMove(...)` and a loop with early break.'
+    '> [!TIP]\n> When **isMockMove** is used, all the moves are expected to be from the active side (do not alternate them with the non-active side as the moves will not be being played). However, it is preferred to validate multiple moves with `board.isLegalMove(...)` and a loop with early break.'
   );
+  board.playMoves.description.push(
+    '`isLegalMove = true` skips the legal move validation. This should only be used if the moves are known to be legal moves for a specific fen and the current board fen matches it.'
+  );
+  board.playMoves.description.push(
+    '`isInanimated = true` prevents the **piece animations** in UI (the UI refresh takes place normally).'
+  );
+  board.playMoves.description.push('`playSounds = true` plays the moves with **sound effects** in UI.');
+  board.playMoves.description.push(
+    'The Boolean options (`isMockMove`, `isLegalMove`, `isInanimated` and `playSounds`) default to `false` when not set to a Boolean value of `true`.'
+  );
+  board.playMoves.description.push(
+    '`promoteTo` takes precedence over everything when specified and a pawn promotion takes place.'
+  );
+  board.playMoves.description.push(
+    '`delimiter` is a single character to look for in **moveJoined** (like `"-" in "a2-a4"`) to allow the use of any delimiters. Defaults to `"-"` if not specified.'
+  );
+  board.playMoves.description.push('Successfully playing all moves will set `"*"` to `board.manualResult`.');
 
   board.playMoves.examples = [];
   board.playMoves.examples.push('board.playMoves(["e4", "e7-e5", "Nf3"]) //true');
