@@ -318,17 +318,6 @@ function formatReturn(returnVal) {
   return result || '*None*\n';
 }
 
-// Count total nested params to determine complexity
-function countNestedParams(params) {
-  if (!params || !params.children) return 0;
-  var count = params.children.length;
-  for (var i = 0; i < params.children.length; i++) {
-    if (params.children[i].children) {
-      count += countNestedParams(params.children[i]);
-    }
-  }
-  return count;
-}
 
 // Generate single method documentation
 function docoGenMethod(methodKey, method, prefix) {
@@ -351,8 +340,7 @@ function docoGenMethod(methodKey, method, prefix) {
   }
   
   // Parameters section (always collapsible)
-  var totalParams = countNestedParams(method.params);
-  var hasParams = totalParams > 0;
+  var hasParams = method.params && method.params.children && method.params.children.length > 0;
   
   if (hasParams) {
     res += '<details>\n<summary><strong>Parameters</strong></summary>\n\n';
