@@ -248,12 +248,12 @@ function formatParam(param, indent) {
     }
   }
   
-  if (isOptional) {
-    line += ' — *optional*';
-  }
-  
   if (param.codeAfter) {
     line += ' — `' + param.codeAfter + '`';
+  }
+  
+  if (isOptional) {
+    line += ' — *optional*';
   }
   
   result += line + '\n';
@@ -379,7 +379,7 @@ function docoGenMethod(methodKey, method, prefix) {
   
   // Related documentation links
   if (method.links) {
-    res += '**See also:**\n\n';
+    res += '📌 **See also:**\n\n';
     for (var i = 0; i < method.links.urls.length; i++) {
       res += '- ' + urlLink(method.links.urls[i]) + '\n';
     }
@@ -388,7 +388,7 @@ function docoGenMethod(methodKey, method, prefix) {
   
   // Errors section
   if (method.errors && method.errors.length) {
-    res += '> ⚠️ **Outputs an error to the console when:**\n';
+    res += '> 📢 **Outputs an error to the console when:**\n';
     for (var i = 0; i < method.errors.length; i++) {
       res += '> - ' + method.errors[i] + '\n';
     }

@@ -121,7 +121,7 @@ Ic.getBoard("myboard") //Object{...}
 Ic.getBoard("nonexistent") //null
 ```
 
-**See also:**
+📌 **See also:**
 
 - [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
 - [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
@@ -754,7 +754,7 @@ Ic.isEqualBoard("board", "other") //false
 Ic.isEqualBoard(other_board, "nonexistent") //false
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - the *left board* is not found.
 > - the *right board* is not found.
 
@@ -794,7 +794,7 @@ Ic.cloneBoard("to_nonexistent", from_board) //false
 Ic.cloneBoard(to_nonexistent, "from_nonexistent") //false
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - the *to board* is not found.
 > - the *from board* is not found.
 > - attempting to clone a board with itself.
@@ -881,12 +881,12 @@ Ic.initBoard({uci: "0invaliduci0", validOrBreak: true}) //null
 Ic.initBoard({fen: "0invalidfen0", validOrBreak: true}) //null
 ```
 
-**See also:**
+📌 **See also:**
 
 - [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
 - [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - `validOrBreak` is `true` and the *pgn* fails the parsing.
 > - `validOrBreak` is `true` and the *uci* fails the parsing.
 > - `validOrBreak` is `true` and the *fen* fails the **basic fen test**.
@@ -944,7 +944,7 @@ Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "playMove", ["c2_a2", {delimiter
 Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "0invalidfnname0", ["a1"]) //null
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - (mixed reasons)
 
 ---
@@ -992,7 +992,7 @@ Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //Object{.
 Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0") //null
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - `fen` is an **invalid fen**.
 > - an **invalid property** was found in `props`.
 

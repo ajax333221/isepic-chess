@@ -88,7 +88,7 @@ board.loadFen("2k5/8/1K1R4/8/8/8/8/8 b - - 0 1", {keepOptions: true}) //true
 board.loadFen("0invalidfen0") //false
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - `fen` is an **invalid fen**.
 
 ---
@@ -159,7 +159,7 @@ board.playMove("b1_c3", {delimiter: "_"}) //Object{...}
 board.playMove("0invalidmove0") //null
 ```
 
-**See also:**
+📌 **See also:**
 
 - [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
@@ -281,7 +281,7 @@ board_game_over.playRandomMove() //null
 other_board.playRandomMove({promoteTo: "q"}) //Object{...}
 ```
 
-**See also:**
+📌 **See also:**
 
 - [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
@@ -568,7 +568,7 @@ board.cloneBoardFrom("0invalid0") //false
 board.cloneBoardFrom(board) //false
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - the *from board* is not found.
 > - attempting to clone the board from itself.
 
@@ -601,7 +601,7 @@ board.cloneBoardTo("0invalid0") //false
 board.cloneBoardTo(board) //false
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - the *to board* is not found.
 > - attempting to clone the board to itself.
 
@@ -669,7 +669,7 @@ board.undoMove() //Object{...}
 board.undoMove() //null
 ```
 
-**See also:**
+📌 **See also:**
 
 - [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
@@ -709,7 +709,7 @@ board.undoMoves(1) //[{...}]
 board.undoMoves(0) //[]
 ```
 
-**See also:**
+📌 **See also:**
 
 - [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
@@ -858,7 +858,7 @@ board.pgnExport() //"... *"
 board_after_e4.pgnExport() //"... 1. e4 *"
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - board without move zero on **move list**.
 
 ---
@@ -929,8 +929,8 @@ The Boolean option `isUnreferenced` defaults to `false` when not set to a Boolea
   - **squarePos** `(Array)`
   - **square** `(Object)`
 - `p` `(Object)` — *optional*
-  - `rankShift` `(Number)` — *optional* — `-7 to 7`
-  - `fileShift` `(Number)` — *optional* — `-7 to 7`
+  - `rankShift` `(Number)` — `-7 to 7` — *optional*
+  - `fileShift` `(Number)` — `-7 to 7` — *optional*
   - `isUnreferenced` `(Boolean)` — *optional*
 
 </details>
@@ -950,7 +950,7 @@ board.getSquare("a1", {rankShift: -7, fileShift: 7}) //Object{...}
 board.getSquare("0invalidsquare0") //null
 ```
 
-**See also:**
+📌 **See also:**
 
 - [square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
 
@@ -982,8 +982,8 @@ The **square** object will have every non-static property updated.
   - **squareClassName** `(String)`
   - **square** `(Object)`
 - `p` `(Object)` — *optional*
-  - `rankShift` `(Number)` — *optional* — `-7 to 7`
-  - `fileShift` `(Number)` — *optional* — `-7 to 7`
+  - `rankShift` `(Number)` — `-7 to 7` — *optional*
+  - `fileShift` `(Number)` — `-7 to 7` — *optional*
 
 </details>
 
@@ -1002,7 +1002,7 @@ board.setSquare("a1", "Q", {rankShift: -7, fileShift: 7}) //Object{...}
 board.setSquare("0invalidsquare0", "wr") //null
 ```
 
-**See also:**
+📌 **See also:**
 
 - [square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
 
@@ -1309,7 +1309,7 @@ same_board.isEqualBoard(same_board) //true
 other_board.isEqualBoard("nonexistent") //false
 ```
 
-> ⚠️ **Outputs an error to the console when:**
+> 📢 **Outputs an error to the console when:**
 > - the *to board* is not found.
 
 
