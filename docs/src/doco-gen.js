@@ -282,10 +282,17 @@ function formatParams(params) {
   return result;
 }
 
+// Check if return value is empty
+function isEmptyReturn(returnVal) {
+  if (!returnVal) return true;
+  if (isObj(returnVal) && (!returnVal.children || !returnVal.children.length) && !returnVal.name && !returnVal.type) return true;
+  return false;
+}
+
 // Format return value
 function formatReturn(returnVal) {
-  if (!returnVal) {
-    return '*None*\n';
+  if (isEmptyReturn(returnVal)) {
+    return '';
   }
   
   var result = '';
@@ -351,9 +358,13 @@ function docoGenMethod(methodKey, method, prefix) {
   }
   
   // Returns section
-  res += '**Returns:**\n\n';
-  res += formatReturn(method.returnVal);
-  res += '\n';
+  if (isEmptyReturn(method.returnVal)) {
+    res += '**Returns:** None\n\n';
+  } else {
+    res += '**Returns:**\n\n';
+    res += formatReturn(method.returnVal);
+    res += '\n';
+  }
   
   // Examples section
   if (method.examples && method.examples.length) {

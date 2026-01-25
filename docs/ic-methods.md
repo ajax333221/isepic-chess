@@ -52,9 +52,7 @@ The **slient mode** is initially turned on to prevent all console messages that 
 
 </details>
 
-**Returns:**
-
-*None*
+**Returns:** None
 
 **Examples:**
 
