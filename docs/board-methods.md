@@ -49,7 +49,7 @@ Successfully loading a fen will set `"*"` to `board.manualResult`.
 
 **Returns:**
 
-- *On success:*
+- ✅ *On success:*
   - `Boolean`
 - ⚠️ *On error:*
   - `Boolean` — `false`
@@ -62,7 +62,7 @@ board.loadFen("2k5/8/1K1R4/8/8/8/8/8 b - - 0 1", {keepOptions: true}) //true
 board.loadFen("0invalidfen0") //false
 ```
 
-> ⚠️ **Error emits a `console.log(...)` when:**
+> ⚠️ **Outputs an error to the console when:**
 > - `fen` is an **invalid fen**.
 
 ---
@@ -120,7 +120,7 @@ Successfully playing a move will set `"*"` to `board.manualResult`.
 
 **Returns:**
 
-- *On success:*
+- ✅ *On success:*
   - **move** `(Object)`
 - ⚠️ *On error:*
   - `null`
@@ -169,7 +169,7 @@ It tries to play all the moves consecutively and tells you if all moves were suc
 
 **Returns:**
 
-- *On success:*
+- ✅ *On success:*
   - `Boolean`
 - ⚠️ *On error:*
   - `Boolean` — `false`
@@ -212,7 +212,7 @@ Generates and returns a random **move**.
 
 **Returns:**
 
-- *On success:*
+- ✅ *On success:*
   - **move** `(Object)`
 - ⚠️ *On error:*
   - `null`
@@ -340,7 +340,7 @@ If the **square** is invalid (before or after shifting by `rankShift` and `fileS
 
 **Returns:**
 
-- *On success:*
+- ✅ *On success:*
   - **square** `(Object)`
 - ⚠️ *On error:*
   - `null`
@@ -380,7 +380,7 @@ Test to see if a move is legal or not.
 
 **Returns:**
 
-- *On success:*
+- ✅ *On success:*
   - `Boolean`
 - ⚠️ *On error:*
   - `Boolean` — `false`
@@ -423,7 +423,7 @@ Passing an **initial qos** square with a **square val** of `0` or a **non active
 
 **Returns:**
 
-- *On success:*
+- ✅ *On success:*
   - **finalBosArray** `(Array)`
 - ⚠️ *On error:*
   - `Array` — `[]`

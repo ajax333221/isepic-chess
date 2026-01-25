@@ -304,7 +304,7 @@ function formatReturn(returnVal) {
   
   if (isArr(returnVal) && returnVal.length === 2) {
     // Success/Error pattern - indent under Returns
-    result += '- *On success:*\n';
+    result += '- ✅ *On success:*\n';
     if (returnVal[0].children && returnVal[0].children.length) {
       for (var i = 0; i < returnVal[0].children.length; i++) {
         result += formatParam(returnVal[0].children[i], 1);
@@ -401,7 +401,7 @@ function docoGenMethod(methodKey, method) {
   
   // Errors section
   if (method.errors && method.errors.length) {
-    res += '> ⚠️ **Error emits a `console.log(...)` when:**\n';
+    res += '> ⚠️ **Outputs an error to the console when:**\n';
     for (var i = 0; i < method.errors.length; i++) {
       res += '> - ' + method.errors[i] + '\n';
     }
