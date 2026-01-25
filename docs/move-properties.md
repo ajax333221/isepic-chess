@@ -83,8 +83,8 @@ The **san** (Standard Algebraic Notation) for this move.
 
 ```javascript
 board_after_e4.moveList[1].san //"e4"
+board_after_e4_e5.moveList[2].san //"e5"
 board_after_e4_e5_nf3.moveList[3].san //"Nf3"
-board_after_nc3_nc6_nxb5.moveList[3].san //"Nxb5"
 ```
 
 ---
