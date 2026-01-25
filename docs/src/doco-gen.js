@@ -391,12 +391,11 @@ function docoGenMethod(methodKey, method) {
   
   // Related documentation links
   if (method.links) {
-    res += '**See also:** ';
-    var links = [];
+    res += '**See also:**\n\n';
     for (var i = 0; i < method.links.urls.length; i++) {
-      links.push(urlLink(method.links.urls[i]));
+      res += '- ' + urlLink(method.links.urls[i]) + '\n';
     }
-    res += links.join(', ') + '\n\n';
+    res += '\n';
   }
   
   // Errors section

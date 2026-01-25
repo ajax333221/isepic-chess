@@ -121,7 +121,10 @@ Ic.getBoard("myboard") //Object{...}
 Ic.getBoard("nonexistent") //null
 ```
 
-**See also:** [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties), [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
+**See also:**
+
+- [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
+- [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
 
 ---
 
@@ -878,7 +881,10 @@ Ic.initBoard({uci: "0invaliduci0", validOrBreak: true}) //null
 Ic.initBoard({fen: "0invalidfen0", validOrBreak: true}) //null
 ```
 
-**See also:** [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties), [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
+**See also:**
+
+- [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
+- [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
 
 > ⚠️ **Outputs an error to the console when:**
 > - `validOrBreak` is `true` and the *pgn* fails the parsing.

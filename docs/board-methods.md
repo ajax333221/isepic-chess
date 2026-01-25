@@ -14,10 +14,36 @@ Boards created by `Ic.initBoard()` have the following available methods.
 | [`board.playRandomMove()`](#playrandommovep) | **move** | ✓ | Generates and returns a random move. |
 | [`board.toggleIsRotated()`](#toggleisrotatednewisrotated) | `Boolean` | ✓ | Toggles (or sets) the board property of board.isRotated... |
 | [`board.setPromoteTo()`](#setpromotetoqal) | `Boolean` | ✓ | Changes the board property of board.promoteTo. |
+| [`board.setManualResult()`](#setmanualresultres) | `Boolean` | ✓ | Changes the board property of board.manualResult. |
+| [`board.setCurrentMove()`](#setcurrentmoveval-isgoto) | `Boolean` | ✓ | Changes the board property of board.currentMove. |
 | [`board.navFirst()`](#navfirst) | `Boolean` | ✓ | Performs a board.setCurrentMove(0). |
+| [`board.navPrevious()`](#navprevious) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove-1). |
+| [`board.navNext()`](#navnext) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.currentMove+1). |
+| [`board.navLast()`](#navlast) | `Boolean` | ✓ | Performs a board.setCurrentMove(board.moveList.length-1... |
+| [`board.navLinkMove()`](#navlinkmovemoveindex) | `Boolean` | ✓ | Performs a board.setCurrentMove(moveIndex). |
+| [`board.cloneBoardFrom()`](#cloneboardfromfromboard) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
+| [`board.cloneBoardTo()`](#cloneboardtotoboard) | `Boolean` | ✓ | Copies all the board properties (except board.boardName... |
+| [`board.reset()`](#resetkeepoptions) | `Boolean` | ✓ | Loads the default fen position. |
+| [`board.undoMove()`](#undomove) | **move** | ✓ | Removes the last move played and returns it. |
+| [`board.undoMoves()`](#undomovesdecreaseby) | `Array` | ✓ | Removes the last N moves played and returns them as a m... |
+| [`board.countPieces()`](#countpieces) | `Object` | - | Returns the piece count structured by player color (w a... |
+| [`board.countLightDarkBishops()`](#countlightdarkbishops) | `Object` | - | Returns the bishop count structured by player color (w ... |
+| [`board.getCheckmateMoves()`](#getcheckmatemovesearlybreak) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
+| [`board.getDrawMoves()`](#getdrawmovesearlybreak) | **finalUciArray** | - | Returns a final uci array with all the uci moves that d... |
+| [`board.fenHistoryExport()`](#fenhistoryexport) | `Array` | - | Returns the FEN history list. |
+| [`board.pgnExport()`](#pgnexport) | `String` | - | Returns the PGN as text. |
+| [`board.uciExport()`](#uciexport) | `String` | - | Returns the UCI moves as text. |
+| [`board.ascii()`](#asciiisrotated) | `String` | - | Returns the chess diagram as text. |
 | [`board.getSquare()`](#getsquareqos-p) | **square** | - | Returns a square. |
+| [`board.setSquare()`](#setsquareqos-qal-p) | **square** | - | Updates and returns a square. |
+| [`board.attackersFromActive()`](#attackersfromactiveqos-earlybreak) | `Number` | - | This can be called to know how many times active side p... |
+| [`board.attackersFromNonActive()`](#attackersfromnonactiveqos-earlybreak) | `Number` | - | This can be called to know how many times non-active si... |
 | [`board.isLegalMove()`](#islegalmovemov-p) | `Boolean` | - | Test to see if a move is legal or not. |
 | [`board.legalMoves()`](#legalmovesinitialqos-p) | **finalBosArray** | - | Returns a final bos array with all the squares that a p... |
+| [`board.legalFenMoves()`](#legalfenmovesinitialqos) | **finalFenArray** | - | Returns a final fen array with all the FEN positions th... |
+| [`board.legalSanMoves()`](#legalsanmovesinitialqos) | **finalSanArray** | - | Returns a final san array with all the san moves that a... |
+| [`board.legalUciMoves()`](#legalucimovesinitialqos) | **finalUciArray** | - | Returns a final uci array with all the uci moves that a... |
+| [`board.isEqualBoard()`](#isequalboardtoboard) | `Boolean` | - | Tests for the equality of the board properties (except ... |
 
 ## Method Details
 
@@ -71,7 +97,7 @@ board.loadFen("0invalidfen0") //false
 
 > 🔄 **Triggers UI refresh**
 
-Generates and returns a **move**.
+Generates and returns a :pushpin:**move**.
 
 `isMockMove = true` plays the move on a **temporal board** instead of affecting the **board**.
 
@@ -133,7 +159,9 @@ board.playMove("b1_c3", {delimiter: "_"}) //Object{...}
 board.playMove("0invalidmove0") //null
 ```
 
-**See also:** [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
+**See also:**
+
+- [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
 ---
 
@@ -160,7 +188,7 @@ The Boolean options (`isMockMove`, `isLegalMove`, `isInanimated` and `playSounds
 
 `delimiter` is a single character to look for in **moveJoined** (like `"-" in "a2-a4"`) to allow the use of any delimiters. Defaults to `"-"` if not specified.
 
-Successfully playing all moves will set `"*"` to `board.manualResult`.
+Successfully playing a move will set `"*"` to `board.manualResult`.
 
 <details>
 <summary><strong>Parameters</strong></summary>
@@ -195,6 +223,7 @@ Successfully playing all moves will set `"*"` to `board.manualResult`.
 board.playMoves(["e4", "e7-e5", "Nf3"]) //true
 board.playMoves(["e2_e4", "e5", "Nf3"], {delimiter: "_"}) //true
 board.playMoves(["0invalidmove0"]) //false
+board.playMoves(["e4", "0invalidmove0"]) //false
 ```
 
 ---
@@ -203,9 +232,21 @@ board.playMoves(["0invalidmove0"]) //false
 
 > 🔄 **Triggers UI refresh**
 
-Generates and returns a random **move**.
+Generates and returns a random :pushpin:**move**.
 
 `isMockMove = true` plays the move on a **temporal board** instead of affecting the **board**.
+
+`isInanimated = true` prevents the **piece animation** in UI (the UI refresh takes place normally).
+
+`playSounds = true` plays the move with **sound effects** in UI.
+
+`isUnreferenced = true` means that the returned **move** will not be referenced (modifying these unreferenced copies will not affect the corresponding elements in the **move list** or the other way around).
+
+The Boolean options (`isMockMove`, `isInanimated`, `playSounds` and `isUnreferenced`) default to `false` when not set to a Boolean value of `true`.
+
+`promoteTo` takes precedence over everything when specified and a pawn promotion takes place.
+
+Successfully playing a move will set `"*"` to `board.manualResult`.
 
 <details>
 <summary><strong>Parameters</strong></summary>
@@ -240,7 +281,9 @@ board_game_over.playRandomMove() //null
 other_board.playRandomMove({promoteTo: "q"}) //Object{...}
 ```
 
-**See also:** [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
+**See also:**
+
+- [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
 
 ---
 
@@ -268,7 +311,9 @@ When a Boolean is passed, `board.isRotated` will be setting that specific value 
 ```javascript
 board.toggleIsRotated() //true
 board.toggleIsRotated(false) //true
+board.toggleIsRotated(false) //false
 board.toggleIsRotated(true) //true
+board.toggleIsRotated(true) //false
 ```
 
 ---
@@ -304,8 +349,84 @@ Min and max inclusive limits of `2` (knight) and `5` (queen) will be enforced.
 
 ```javascript
 board.setPromoteTo(3) //true
+board.setPromoteTo(3) //false
+board.setPromoteTo(-4) //true
 board.setPromoteTo("q") //true
 board.setPromoteTo("N") //true
+board.setPromoteTo("wr") //true
+board.setPromoteTo("br") //false
+board.setPromoteTo() //true
+board.setPromoteTo() //false
+```
+
+---
+
+### `setManualResult(res)`
+
+> 🔄 **Triggers UI refresh**
+
+Changes the **board property** of `board.manualResult`.
+
+Valid inputs are `"*", "1-0", "0-1" and "1/2-1/2"`. The fallback `"*"` will be used for invalid inputs.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `res` `(String)`
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.setManualResult("*") //false
+board.setManualResult("1-0") //true
+board.setManualResult("0-1") //true
+board.setManualResult("1/2-1/2") //true
+board.setManualResult("0invalidresult0") //true
+```
+
+---
+
+### `setCurrentMove(val, isGoto?)`
+
+> 🔄 **Triggers UI refresh**
+
+Changes the **board property** of `board.currentMove`.
+
+When a Boolean `true` is passed (or not passing a Boolean type), the value will be set to the **current move**.
+
+When a Boolean `false` is passed, the **current move** will be shifted by the value instead of setting the value.
+
+The **piece animation** in UI will be prevented when:
+- Boolean `true` is passed in `isGoto`.
+- `isGoto` is not a Boolean type and the **current move** change is bigger than one.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `val` `(Number)`
+- `isGoto` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.setCurrentMove(2) //true
+board.setCurrentMove(2) //false
+board.setCurrentMove(1, false) //true
+board.setCurrentMove(1, false) //true
+board.setCurrentMove(4, true) //true
+board.setCurrentMove(4, true) //false
 ```
 
 ---
@@ -331,13 +452,474 @@ board.navFirst() //false
 
 ---
 
+### `navPrevious()`
+
+> 🔄 **Triggers UI refresh**
+
+Performs a `board.setCurrentMove(board.currentMove-1)`.
+
+**Parameters:** None
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.navPrevious() //true
+board.navPrevious() //false
+```
+
+---
+
+### `navNext()`
+
+> 🔄 **Triggers UI refresh**
+
+Performs a `board.setCurrentMove(board.currentMove+1)`.
+
+**Parameters:** None
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.navNext() //true
+board.navNext() //false
+```
+
+---
+
+### `navLast()`
+
+> 🔄 **Triggers UI refresh**
+
+Performs a `board.setCurrentMove(board.moveList.length-1)`.
+
+**Parameters:** None
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.navLast() //true
+board.navLast() //false
+```
+
+---
+
+### `navLinkMove(moveIndex)`
+
+> 🔄 **Triggers UI refresh**
+
+Performs a `board.setCurrentMove(moveIndex)`.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `moveIndex` `(Number)`
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.navLinkMove(2) //true
+board.navLinkMove(2) //false
+```
+
+---
+
+### `cloneBoardFrom(fromBoard)`
+
+> 🔄 **Triggers UI refresh**
+
+Copies all the board properties (except `board.boardName`) from another board into this board.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `fromBoard`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.cloneBoardFrom(from_board) //true
+board.cloneBoardFrom("0invalid0") //false
+board.cloneBoardFrom(board) //false
+```
+
+> ⚠️ **Outputs an error to the console when:**
+> - the *from board* is not found.
+> - attempting to clone the board from itself.
+
+---
+
+### `cloneBoardTo(toBoard)`
+
+> 🔄 **Triggers UI refresh**
+
+Copies all the board properties (except `board.boardName`) from this board into another board.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `toBoard`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.cloneBoardTo(to_board) //true
+board.cloneBoardTo("0invalid0") //false
+board.cloneBoardTo(board) //false
+```
+
+> ⚠️ **Outputs an error to the console when:**
+> - the *to board* is not found.
+> - attempting to clone the board to itself.
+
+---
+
+### `reset(keepOptions?)`
+
+> 🔄 **Triggers UI refresh**
+
+Loads the **default fen position**.
+
+`keepOptions` can be used to prevent the overwrite of `board.isRotated`, `board.promoteTo` and `board.isHidden` to their respectives defaults.
+
+All the played moves are deleted.
+
+It will set `"*"` to `board.manualResult`.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `keepOptions` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+board.reset() //true
+board.reset() //false
+board.reset(true) //true
+board.reset(true) //false
+```
+
+---
+
+### `undoMove()`
+
+> 🔄 **Triggers UI refresh**
+
+Removes the last :pushpin:**move** played and returns it.
+
+The returned move is unreferenced and no longer tied to the board (modifying this unreferenced copy will not affect the corresponding element in the **move list** or the other way around).
+
+The **current move** will be decreased as necessary if it was pointing to the removed move.
+
+Successfully removing a move will set `"*"` to `board.manualResult`.
+
+**Parameters:** None
+
+**Returns:**
+
+- ✅ *On success:*
+  - **move** `(Object)`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+board.undoMove() //Object{...}
+board.undoMove() //null
+```
+
+**See also:**
+
+- [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
+
+---
+
+### `undoMoves(decreaseBy?)`
+
+> 🔄 **Triggers UI refresh**
+
+Removes the last N :pushpin:**move**s played and returns them as a **move array**.
+
+If `decreaseBy` is omitted, all the moves will be removed.
+
+The returned moves are unreferenced and no longer tied to the board (modifying these unreferenced copies will not affect the corresponding elements in the **move list** or the other way around).
+
+The **current move** will be decreased as necessary if it was pointing to one of the removed moves.
+
+Successfully removing a move will set `"*"` to `board.manualResult`.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `decreaseBy` `(Number)` — *optional*
+
+</details>
+
+**Returns:**
+
+- **moveArray** `(Array)`
+
+**Examples:**
+
+```javascript
+board.undoMoves() //[{...}, {...}, ..., {...}]
+board.undoMoves(2) //[{...}, {...}]
+board.undoMoves(1) //[{...}]
+board.undoMoves(0) //[]
+```
+
+**See also:**
+
+- [move properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/move-properties.md#move-properties)
+
+---
+
+### `countPieces()`
+
+Returns the **piece count** structured by player color (`w` and `b`) and then by piece (`p`, `n`, `b`, `r`, `q` and `k`).
+
+The player colors `{w: {...}, b: {...}}` have the following sub-properties:
+- **p** (Number): `obj.w.p` and `obj.b.p`.
+- **n** (Number): `obj.w.n` and `obj.b.n`.
+- **b** (Number): `obj.w.b` and `obj.b.b`.
+- **r** (Number): `obj.w.r` and `obj.b.r`.
+- **q** (Number): `obj.w.q` and `obj.b.q`.
+- **k** (Number): `obj.w.k` and `obj.b.k`.
+
+**Parameters:** None
+
+**Returns:**
+
+- `Object` — `{w: {...}, b: {...}}`
+
+**Examples:**
+
+```javascript
+board.countPieces() //Object{...}
+```
+
+---
+
+### `countLightDarkBishops()`
+
+Returns the **bishop count** structured by player color (`w` and `b`) and then by square color (`lightSquaredBishops` and `darkSquaredBishops`).
+
+The player colors `{w: {...}, b: {...}}` have the following sub-properties:
+- **lightSquaredBishops** (Number): `obj.w.lightSquaredBishops` and `obj.b.lightSquaredBishops`.
+- **darkSquaredBishops** (Number): `obj.w.darkSquaredBishops` and `obj.b.darkSquaredBishops`.
+
+**Parameters:** None
+
+**Returns:**
+
+- `Object` — `{w: {...}, b: {...}}`
+
+**Examples:**
+
+```javascript
+board.countLightDarkBishops() //Object{...}
+```
+
+---
+
+### `getCheckmateMoves(earlyBreak?)`
+
+Returns a **final uci array** with all the uci moves that deliver checkmate after playing any of them.
+
+Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single move is found.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `earlyBreak` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- **finalUciArray** `(Array)`
+
+**Examples:**
+
+```javascript
+board.getCheckmateMoves() //[]
+board_after_f4_e6_g4.getCheckmateMoves() //["d8h4"]
+```
+
+---
+
+### `getDrawMoves(earlyBreak?)`
+
+Returns a **final uci array** with all the uci moves that draw or a draw is claimable after playing any of them.
+
+Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single move is found.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `earlyBreak` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- **finalUciArray** `(Array)`
+
+**Examples:**
+
+```javascript
+board.getDrawMoves() //[]
+a8_cornered_k_vs_kq.getDrawMoves() //["d6b6", "d6c7"]
+```
+
+---
+
+### `fenHistoryExport()`
+
+Returns the **FEN history** list.
+
+The first element (index 0) holds the initial fen position.
+
+**Parameters:** None
+
+**Returns:**
+
+- `Array`
+
+**Examples:**
+
+```javascript
+board.fenHistoryExport() //["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"]
+board_after_e4.fenHistoryExport() //["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1"]
+```
+
+---
+
+### `pgnExport()`
+
+Returns the **PGN** as text.
+
+A line feed `\n` is used as the line break character.
+
+**Parameters:** None
+
+**Returns:**
+
+- ✅ *On success:*
+  - `String`
+- ⚠️ *On error:*
+  - `String` — `""`
+
+**Examples:**
+
+```javascript
+board.pgnExport() //"... *"
+board_after_e4.pgnExport() //"... 1. e4 *"
+```
+
+> ⚠️ **Outputs an error to the console when:**
+> - board without move zero on **move list**.
+
+---
+
+### `uciExport()`
+
+Returns the **UCI** moves as text.
+
+**Parameters:** None
+
+**Returns:**
+
+- `String`
+
+**Examples:**
+
+```javascript
+board.uciExport() //""
+board_after_e4.uciExport() //"e2e4"
+```
+
+---
+
+### `ascii(isRotated?)`
+
+Returns the **chess diagram** as text.
+
+Boolean parameters will take precedence over the **board property** of `board.isRotated`.
+
+A line feed `\n` is used as the line break character.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `isRotated` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- `String`
+
+**Examples:**
+
+```javascript
+board.ascii() //"..."
+board.ascii(true) //"..."
+board.ascii(false) //"..."
+```
+
+---
+
 ### `getSquare(qos, p?)`
 
-Returns a **square**.
+Returns a :pushpin:**square**.
 
 If the **square** is invalid (before or after shifting by `rankShift` and `fileShift`), then `null` will be returned.
 
 `isUnreferenced = true` means that the returned **square** will not be referenced (updates made to the **board** do not affect these unreferenced copies or the other way around).
+
+The Boolean option `isUnreferenced` defaults to `false` when not set to a Boolean value of `true`.
 
 <details>
 <summary><strong>Parameters</strong></summary>
@@ -368,7 +950,137 @@ board.getSquare("a1", {rankShift: -7, fileShift: 7}) //Object{...}
 board.getSquare("0invalidsquare0") //null
 ```
 
-**See also:** [square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
+**See also:**
+
+- [square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
+
+---
+
+### `setSquare(qos, qal, p?)`
+
+Updates and returns a :pushpin:**square**.
+
+It updates the **king bos** (`board.w.kingBos` or `board.b.kingBos`) when setting a king.
+
+The **square** object will have every non-static property updated.
+
+> [!WARNING]
+> This method is not meant to be used unless you know exactly how everything works (the validation, castle rights and UI must be manually checked, updated and refreshed).
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+- `qal`
+  - **squareBal** `(String)`
+  - **squareAbsBal** `(String)`
+  - **squareVal** `(Number)`
+  - **squareAbsVal** `(Number)`
+  - **squareClassName** `(String)`
+  - **square** `(Object)`
+- `p` `(Object)` — *optional*
+  - `rankShift` `(Number)` — *optional* — `-7 to 7`
+  - `fileShift` `(Number)` — *optional* — `-7 to 7`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **square** `(Object)`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+board.setSquare("e4", 0) //Object{...}
+board.setSquare("a1", "Q", {rankShift: -7, fileShift: 7}) //Object{...}
+board.setSquare("0invalidsquare0", "wr") //null
+```
+
+**See also:**
+
+- [square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
+
+---
+
+### `attackersFromActive(qos?, earlyBreak?)`
+
+This can be called to know how many times active side pieces are attacking a square.
+
+Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single attack on the square (in this case, either a 0 or 1 will be returned).
+
+The non-active side **king bos** will be used as default if the optional **qos** is missing.
+
+It is a waste of resources to re-count the times attacked to the non-active side king square by active side pieces attacks (it is not possible to have the non-active side king at check while still be the active side to move, the result will always be `0`).
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos` — *optional*
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+- `earlyBreak` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- `Number`
+
+**Examples:**
+
+```javascript
+board.attackersFromActive("c3") //3
+board.attackersFromActive("c3", true) //1
+board.attackersFromActive("c3", false) //3
+board.attackersFromActive("e4") //0
+board.attackersFromActive("e4", true) //0
+board.attackersFromActive("e4", false) //0
+```
+
+---
+
+### `attackersFromNonActive(qos?, earlyBreak?)`
+
+This can be called to know how many times non-active side pieces are attacking a square.
+
+Any truthy-value in `earlyBreak` will short-circuit and stop looking after a single attack on the square (in this case, either a 0 or 1 will be returned).
+
+The active side **king bos** will be used as default if the optional **qos** is missing.
+
+It is a waste of resources to re-count the times attacked to the active side king square by non-active side pieces attacks (this information is already calculated and stored in `board.checks`).
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos` — *optional*
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+- `earlyBreak` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- `Number`
+
+**Examples:**
+
+```javascript
+board.attackersFromNonActive("c6") //3
+board.attackersFromNonActive("c6", true) //1
+board.attackersFromNonActive("c6", false) //3
+board.attackersFromNonActive("e4") //0
+board.attackersFromNonActive("e4", true) //0
+board.attackersFromNonActive("e4", false) //0
+```
 
 ---
 
@@ -407,7 +1119,11 @@ board.isLegalMove("Nf3") //true
 board.isLegalMove("g1f3") //true
 board.isLegalMove("g1-f3") //true
 board.isLegalMove("g1_f3", {delimiter: "_"}) //true
+board.isLegalMove("rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1") //true
+board.isLegalMove(["g1", [5, 5]]) //true
 board.isLegalMove("0invalidsan0") //false
+board.isLegalMove("a1-h7") //false
+board.isLegalMove(["a1", "0invalidsquare0"]) //false
 ```
 
 ---
@@ -420,7 +1136,9 @@ Passing an **initial qos** square with a **square val** of `0` or a **non active
 
 `returnType` accepted values: `"joined"`, `"fromToSquares"`, `"fen"`, `"san"`, `"uci"` and `"toSquare"`. Defaults to `"toSquare"` if not specified.
 
-`squareType` accepted values: `"square"`, `"pos"` and `"bos"`. Defaults to `"bos"` if not specified.
+`squareType` accepted values: `"square"`, `"pos"` and `"bos"`. Defaults to `"bos"` if not specified. Only used in `returnType = "fromToSquares" and returnType = "toSquare"`.
+
+`delimiter` is a single character to be used in `returnType = "joined"`. Defaults to `"-"` if not specified.
 
 <details>
 <summary><strong>Parameters</strong></summary>
@@ -448,8 +1166,151 @@ Passing an **initial qos** square with a **square val** of `0` or a **non active
 ```javascript
 board.legalMoves("b1") //["c3", "a3"]
 board.legalMoves("a3") //[]
+board.legalMoves("e7") //[]
 board.legalMoves("0invalidsquare0") //[]
 ```
+
+---
+
+### `legalFenMoves(initialQos)`
+
+Returns a **final fen array** with all the FEN positions that can be legally reached when moving a piece from an **initial qos**.
+
+Passing an **initial qos** square with a **square val** of `0` or a **non active sign** will result in a `[]`.
+
+All pawn promotions will be included.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `initialQos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **finalFenArray** `(Array)`
+- ⚠️ *On error:*
+  - `Array` — `[]`
+
+**Examples:**
+
+```javascript
+board.legalFenMoves("b1") //["rnbqkbnr/pppppppp/8/8/8/2N5/PPPPPPPP/R1BQKBNR b KQkq - 1 1", "rnbqkbnr/pppppppp/8/8/8/N7/PPPPPPPP/R1BQKBNR b KQkq - 1 1"]
+board.legalFenMoves("a3") //[]
+board.legalFenMoves("e7") //[]
+board.legalFenMoves("0invalidsquare0") //[]
+```
+
+---
+
+### `legalSanMoves(initialQos)`
+
+Returns a **final san array** with all the san moves that a piece from an **initial qos** square can legally move to.
+
+Passing an **initial qos** square with a **square val** of `0` or a **non active sign** will result in a `[]`.
+
+All pawn promotions will be included.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `initialQos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **finalSanArray** `(Array)`
+- ⚠️ *On error:*
+  - `Array` — `[]`
+
+**Examples:**
+
+```javascript
+board.legalSanMoves("b1") //["Nc3", "Na3"]
+board.legalSanMoves("a3") //[]
+board.legalSanMoves("e7") //[]
+board.legalSanMoves("0invalidsquare0") //[]
+```
+
+---
+
+### `legalUciMoves(initialQos)`
+
+Returns a **final uci array** with all the uci moves that a piece from an **initial qos** square can legally move to.
+
+Passing an **initial qos** square with a **square val** of `0` or a **non active sign** will result in a `[]`.
+
+All pawn promotions will be included.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `initialQos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **finalUciArray** `(Array)`
+- ⚠️ *On error:*
+  - `Array` — `[]`
+
+**Examples:**
+
+```javascript
+board.legalUciMoves("b1") //["b1c3", "b1a3"]
+board.legalUciMoves("a3") //[]
+board.legalUciMoves("e7") //[]
+board.legalUciMoves("0invalidsquare0") //[]
+```
+
+---
+
+### `isEqualBoard(toBoard)`
+
+Tests for the equality of the [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) (except for `board.boardName`) between the calling **board** and another **board**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `toBoard`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `Boolean`
+- ⚠️ *On error:*
+  - `Boolean` — `false`
+
+**Examples:**
+
+```javascript
+board.isEqualBoard("board_copy") //true
+board.isEqualBoard(other_board) //false
+same_board.isEqualBoard(same_board) //true
+other_board.isEqualBoard("nonexistent") //false
+```
+
+> ⚠️ **Outputs an error to the console when:**
+> - the *to board* is not found.
 
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
