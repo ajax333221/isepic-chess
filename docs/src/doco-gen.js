@@ -219,7 +219,7 @@ function docoGenMethodList(obj) {
 // Generate signature string like: board.loadFen(...) or board.navFirst()
 function getSignature(method, prefix) {
   var hasParams = method.params && method.params.children && method.params.children.length > 0;
-  
+
   return (prefix || '') + method.name + '(' + (hasParams ? '...' : '') + ')';
 }
 
@@ -229,10 +229,10 @@ function formatParam(param, indent) {
   var prefix = '  '.repeat(indent);
   var result = '';
   var isOptional = param.icon === 'eight_pointed_black_star' || param.icon === 'eight_spoked_asterisk';
-  
+
   // Parameter name and type
   var line = prefix + '- ';
-  
+
   // Handle case where there's only a type (no name) - used in return values
   if (!param.name && param.type) {
     line += '`' + param.type + '`';
@@ -247,24 +247,24 @@ function formatParam(param, indent) {
       line += ' `(' + param.type + ')`';
     }
   }
-  
+
   if (param.codeAfter) {
     line += ' — `' + param.codeAfter + '`';
   }
-  
+
   if (isOptional) {
     line += ' — *optional*';
   }
-  
+
   result += line + '\n';
-  
+
   // Children (nested params or union types)
   if (param.children && param.children.length) {
     for (var i = 0; i < param.children.length; i++) {
       result += formatParam(param.children[i], indent + 1);
     }
   }
-  
+
   return result;
 }
 
@@ -273,19 +273,20 @@ function formatParams(params) {
   if (!params || !params.children || !params.children.length) {
     return '*None*\n';
   }
-  
+
   var result = '';
   for (var i = 0; i < params.children.length; i++) {
     result += formatParam(params.children[i], 0);
   }
-  
+
   return result;
 }
 
 // Check if return value is empty
 function isEmptyReturn(returnVal) {
   if (!returnVal) return true;
-  if (isObj(returnVal) && (!returnVal.children || !returnVal.children.length) && !returnVal.name && !returnVal.type) return true;
+  if (isObj(returnVal) && (!returnVal.children || !returnVal.children.length) && !returnVal.name && !returnVal.type)
+    return true;
   return false;
 }
 
@@ -294,9 +295,9 @@ function formatReturn(returnVal) {
   if (isEmptyReturn(returnVal)) {
     return '';
   }
-  
+
   var result = '';
-  
+
   if (isArr(returnVal) && returnVal.length === 2) {
     // Success/Error pattern - indent under Returns
     result += '- ✅ *On success:*\n';
@@ -305,7 +306,7 @@ function formatReturn(returnVal) {
         result += formatParam(returnVal[0].children[i], 1);
       }
     }
-    
+
     result += '- ⚠️ *On error:*\n';
     if (returnVal[1].children && returnVal[1].children.length) {
       for (var i = 0; i < returnVal[1].children.length; i++) {
@@ -321,34 +322,33 @@ function formatReturn(returnVal) {
       result += formatParam(returnVal, 0);
     }
   }
-  
+
   return result || '*None*\n';
 }
-
 
 // Generate single method documentation
 function docoGenMethod(methodKey, method, prefix) {
   var res = '';
-  
+
   // Method header with anchor
   res += '---\n\n';
   res += '### `' + getSignature(method, prefix) + '`\n\n';
-  
+
   // UI refresh badge
   if (method.refreshUi === true) {
     res += '> 🔄 **Triggers UI refresh**\n\n';
   }
-  
+
   // Description
   if (method.description && method.description.length) {
     for (var i = 0; i < method.description.length; i++) {
       res += method.description[i] + '\n\n';
     }
   }
-  
+
   // Parameters section (always collapsible)
   var hasParams = method.params && method.params.children && method.params.children.length > 0;
-  
+
   if (hasParams) {
     res += '<details>\n<summary><strong>Parameters</strong></summary>\n\n';
     res += formatParams(method.params);
@@ -356,7 +356,7 @@ function docoGenMethod(methodKey, method, prefix) {
   } else {
     res += '**Parameters:** None\n\n';
   }
-  
+
   // Returns section
   if (isEmptyReturn(method.returnVal)) {
     res += '**Returns:** None\n\n';
@@ -365,7 +365,7 @@ function docoGenMethod(methodKey, method, prefix) {
     res += formatReturn(method.returnVal);
     res += '\n';
   }
-  
+
   // Examples section
   if (method.examples && method.examples.length) {
     res += '**Examples:**\n\n';
@@ -375,7 +375,7 @@ function docoGenMethod(methodKey, method, prefix) {
     }
     res += '```\n\n';
   }
-  
+
   // Related documentation links
   if (method.links) {
     res += '📌 **See also:**\n\n';
@@ -384,7 +384,7 @@ function docoGenMethod(methodKey, method, prefix) {
     }
     res += '\n';
   }
-  
+
   // Errors section
   if (method.errors && method.errors.length) {
     res += '> 📢 **Outputs an error to the console when:**\n';
@@ -393,7 +393,7 @@ function docoGenMethod(methodKey, method, prefix) {
     }
     res += '\n';
   }
-  
+
   return res;
 }
 
@@ -401,16 +401,16 @@ function docoGenMethod(methodKey, method, prefix) {
 function docoGenMethods(obj, prefix) {
   var rtn = [];
   var curr_table = Object.keys(obj);
-  
+
   for (var i = 0, len = curr_table.length; i < len; i++) {
     var methodKey = curr_table[i];
     var method = obj[methodKey];
-    
+
     if (method.description) {
       rtn.push(docoGenMethod(methodKey, method, prefix));
     }
   }
-  
+
   return rtn;
 }
 
@@ -418,7 +418,7 @@ function docoGenMethods(obj, prefix) {
 function docoGenToc(obj) {
   var curr_table = Object.keys(obj);
   var result = '';
-  
+
   for (var i = 0, len = curr_table.length; i < len; i++) {
     var method = obj[curr_table[i]];
     if (method.description) {
@@ -427,7 +427,7 @@ function docoGenToc(obj) {
       result += '- [`' + method.name + '()`](#' + method.name.toLowerCase() + ')\n';
     }
   }
-  
+
   return result;
 }
 
@@ -436,17 +436,20 @@ function generateAnchor(method, prefix) {
   // Build the signature as it appears in the heading: methodName(...) or methodName()
   var hasParams = method.params && method.params.children && method.params.children.length > 0;
   var signature = (prefix || '') + method.name + '(' + (hasParams ? '...' : '') + ')';
-  
+
   // GitHub anchor generation:
   // 1. Lowercase
   // 2. Remove special chars except spaces/hyphens
   // 3. Replace spaces with hyphens
-  return '#' + signature
-    .toLowerCase()
-    .replace(/[^a-z0-9 -]/g, '')  // Remove everything except alphanumeric, space, hyphen
-    .replace(/\s+/g, '-')          // Replace spaces with hyphens
-    .replace(/-+/g, '-')           // Collapse multiple hyphens
-    .replace(/^-|-$/g, '');        // Trim leading/trailing hyphens
+  return (
+    '#' +
+    signature
+      .toLowerCase()
+      .replace(/[^a-z0-9 -]/g, '') // Remove everything except alphanumeric, space, hyphen
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Collapse multiple hyphens
+      .replace(/^-|-$/g, '')
+  ); // Trim leading/trailing hyphens
 }
 
 // Quick reference table (simplified)
@@ -456,9 +459,9 @@ function docoGenQuickRef(obj, displayPrefix, anchorPrefix) {
   var result = '';
   result += '| Method | Returns | UI? | Brief |\n';
   result += '|--------|---------|-----|-------|\n';
-  
+
   var curr_table = Object.keys(obj);
-  
+
   for (var i = 0, len = curr_table.length; i < len; i++) {
     var method = obj[curr_table[i]];
     if (method.description) {
@@ -470,35 +473,48 @@ function docoGenQuickRef(obj, displayPrefix, anchorPrefix) {
           returnType = getSimpleType(method.returnVal);
         }
       }
-      
+
       var brief = method.description[0] || '';
       // Clean up markdown formatting for table display
       brief = brief
-        .replace(/\*\*/g, '')           // Remove bold
-        .replace(/:pushpin:/g, '')       // Remove emoji shortcodes
+        .replace(/\*\*/g, '') // Remove bold
+        .replace(/:pushpin:/g, '') // Remove emoji shortcodes
         .replace(/:zap:/g, '')
         .replace(/:warning:/g, '')
-        .replace(/`[^`]+`/g, function(m) { return m.slice(1, -1); }) // Remove code backticks but keep text
+        .replace(/`[^`]+`/g, function (m) {
+          return m.slice(1, -1);
+        }) // Remove code backticks but keep text
         .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'); // Convert links to just text
-      
+
       // Truncate
       if (brief.length > 55) {
         brief = brief.substring(0, 55) + '...';
       }
-      
+
       var anchor = generateAnchor(method, anchorPrefix || '');
       var methodDisplay = (displayPrefix || '') + method.name + '()';
-      
-      result += '| [`' + methodDisplay + '`](' + anchor + ') | ' + returnType + ' | ' + (method.refreshUi ? '✓' : '-') + ' | ' + brief + ' |\n';
+
+      result +=
+        '| [`' +
+        methodDisplay +
+        '`](' +
+        anchor +
+        ') | ' +
+        returnType +
+        ' | ' +
+        (method.refreshUi ? '✓' : '-') +
+        ' | ' +
+        brief +
+        ' |\n';
     }
   }
-  
+
   return result;
 }
 
 function getSimpleType(returnObj) {
   if (!returnObj) return '-';
-  
+
   if (returnObj.children && returnObj.children.length) {
     var child = returnObj.children[0];
     // Prefer the name if it's bold (meaning it's a meaningful type name like "move", "square")
@@ -512,14 +528,14 @@ function getSimpleType(returnObj) {
       return '`' + child.name + '`';
     }
   }
-  
+
   if (returnObj.type) {
     return '`' + returnObj.type + '`';
   }
-  
+
   if (returnObj.name) {
     return returnObj.isBold ? '**' + returnObj.name + '**' : '`' + returnObj.name + '`';
   }
-  
+
   return '-';
 }
