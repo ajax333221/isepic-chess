@@ -1,5 +1,6 @@
-var GIT_README_DOCS_URL = 'https://github.com/ajax333221/isepic-chess';
-var GIT_DOCS_URL = GIT_README_DOCS_URL + '/blob/master/docs/';
+var GIT_REPO_URL = 'https://github.com/ajax333221/isepic-chess';
+var GIT_README_URL = GIT_REPO_URL + '?tab=readme-ov-file';
+var GIT_DOCS_URL = GIT_REPO_URL + '/blob/master/docs/';
 
 var URL_BOARD_PROPS = ['board properties', 'board-properties.md#board-properties'];
 var URL_BOARD_METHODS = ['board methods', 'board-methods.md#board-methods'];
@@ -181,7 +182,7 @@ function urlHrefLink(arr) {
   rtn = '';
 
   if (isArr(arr) && arr.length === 2) {
-    rtn = '<a href="' + GIT_README_DOCS_URL + '' + arr[1] + '">' + arr[0] + '</a>';
+    rtn = '<a href="' + GIT_README_URL + arr[1] + '">' + arr[0] + '</a>';
   }
 
   return rtn;

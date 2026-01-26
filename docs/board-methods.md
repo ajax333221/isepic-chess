@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>
 
 # Board Methods
 
@@ -1313,4 +1313,4 @@ other_board.isEqualBoard("nonexistent") //false
 > - the *to board* is not found.
 
 
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>

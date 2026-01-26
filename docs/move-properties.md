@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>
 
 # Move Properties
 
@@ -260,4 +260,4 @@ board_after_exf6_enpassant.moveList[1].isEnPassantCapture //true
 ```
 
 
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>

@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>
 
 # Board Properties
 
@@ -533,4 +533,4 @@ board.squares["h8"] //Object{...}
 - [square properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/square-properties.md#square-properties)
 
 
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>

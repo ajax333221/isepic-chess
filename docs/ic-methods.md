@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>
 
 # Ic Methods
 
@@ -1034,4 +1034,4 @@ Ic.getBoardNames() //[]
 ```
 
 
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>

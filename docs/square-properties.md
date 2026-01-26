@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>
 
 # Square Properties
 
@@ -330,4 +330,4 @@ board.getSquare("d1").isKing //false
 ```
 
 
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>

@@ -1,6 +1,6 @@
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>
 
-<h1 align="center">Examples</h1>
+# Examples
 
 <p>Some examples of recurrent tasks users might have:</p>
 
@@ -402,4 +402,4 @@ console.log(methodChaining.board);
 <h3 id="13">→ Puzzle mode</h3>
 <strong>&#x1f6a7; work in progress &#x1f6a7;.</strong>
 
-<p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
+<p align="center"><a href="https://github.com/ajax333221/isepic-chess?tab=readme-ov-file#book-documentation">« Return</a></p>

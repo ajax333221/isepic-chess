@@ -1,6 +1,6 @@
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess"><img width="100" src="https://github.com/ajax333221/isepic-chess-ui/raw/master/css/images/ic_logo.png" alt="Ic.js logo"></a></p>
 
-<h1 align="center">isepic-chess.js</h1>
+<h1 align="center" id="isepic-chessjs">isepic-chess.js</h1>
 
 <p align="center">
 	<a href="https://github.com/ajax333221/isepic-chess/releases/latest"><img src="https://img.shields.io/github/v/release/ajax333221/isepic-chess.svg?colorB=dddddd" alt="latest release"></a>
@@ -25,14 +25,14 @@
 
 ## :pushpin: Table of contents
 
-- [isepic-chess.js](https://github.com/ajax333221/isepic-chess#isepic-chessjs)
-- [Table of contents](https://github.com/ajax333221/isepic-chess#pushpin-table-of-contents)
-- [Installation](https://github.com/ajax333221/isepic-chess#computer_mouse-installation)
-- [Node.js example](https://github.com/ajax333221/isepic-chess#green_heart-nodejs-example)
-- [Demo](https://github.com/ajax333221/isepic-chess#eye-demo-from-isepic-chess-ui)
-- [Features](https://github.com/ajax333221/isepic-chess#rocket-features)
-- [Documentation](https://github.com/ajax333221/isepic-chess#book-documentation)
-- [Copyright and license](https://github.com/ajax333221/isepic-chess#page_facing_up-copyright-and-license)
+- [isepic-chess.js](#isepic-chessjs)
+- [Table of contents](#pushpin-table-of-contents)
+- [Installation](#computer_mouse-installation)
+- [Node.js example](#green_heart-nodejs-example)
+- [Demo](#eye-demo-from-isepic-chess-ui)
+- [Features](#rocket-features)
+- [Documentation](#book-documentation)
+- [Copyright and license](#page_facing_up-copyright-and-license)
 
 ## :computer_mouse: Installation
 
