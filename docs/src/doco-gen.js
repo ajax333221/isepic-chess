@@ -200,6 +200,8 @@ function overwriteAndUnreference(obj, arr) {
   return temp;
 }
 
+//=====================================================
+
 function docoGenMethodList(obj) {
   var i, len, curr_table, rtn;
 
@@ -214,253 +216,326 @@ function docoGenMethodList(obj) {
   return rtn;
 }
 
-function docoGenMethodTable(obj) {
-  var i, j, len, len2, temp, temp2, temp3, curr_table, res, rtn;
+// Generate signature string like: board.loadFen(...) or board.navFirst()
+function getSignature(method, prefix) {
+  var hasParams = method.params && method.params.children && method.params.children.length > 0;
 
-  rtn = [];
-  curr_table = Object.keys(obj);
+  return (prefix || '') + method.name + '(' + (hasParams ? '...' : '') + ')';
+}
 
-  for (i = 0, len = curr_table.length; i < len; i++) {
-    //0<len
-    temp = obj[curr_table[i]];
+// Format a parameter for display
+function formatParam(param, indent) {
+  indent = indent || 0;
+  var prefix = '  '.repeat(indent);
+  var result = '';
+  var isOptional = param.icon === 'eight_pointed_black_star' || param.icon === 'eight_spoked_asterisk';
 
-    if (temp.description) {
-      res = '**' + curr_table[i] + '**(';
-      if (temp.params && temp.params.children && temp.params.children.length) {
-        temp2 = Object.keys(temp.params.children);
-        len2 = temp2.length;
+  // Parameter name and type
+  var line = prefix + '- ';
 
-        if (len2) {
-          temp3 = [];
+  // Handle case where there's only a type (no name) - used in return values
+  if (!param.name && param.type) {
+    line += '`' + param.type + '`';
+  } else if (param.isBold && param.name) {
+    line += '**' + param.name + '**';
+    if (param.type) {
+      line += ' `(' + param.type + ')`';
+    }
+  } else if (param.name) {
+    line += '`' + param.name + '`';
+    if (param.type) {
+      line += ' `(' + param.type + ')`';
+    }
+  }
 
-          for (j = 0; j < len2; j++) {
-            //0<len2
-            if (temp.params.children[temp2[j]].name) {
-              temp3.push(temp.params.children[temp2[j]].name);
-            }
-          }
+  if (param.codeAfter) {
+    line += ' — `' + param.codeAfter + '`';
+  }
 
-          res += '<br>*' + temp3.join('*,<br>*') + '*<br>';
-        }
+  if (isOptional) {
+    line += ' — *optional*';
+  }
+
+  result += line + '\n';
+
+  // Children (nested params or union types)
+  if (param.children && param.children.length) {
+    for (var i = 0; i < param.children.length; i++) {
+      result += formatParam(param.children[i], indent + 1);
+    }
+  }
+
+  return result;
+}
+
+// Format parameters section
+function formatParams(params) {
+  if (!params || !params.children || !params.children.length) {
+    return '*None*\n';
+  }
+
+  var result = '';
+  for (var i = 0; i < params.children.length; i++) {
+    result += formatParam(params.children[i], 0);
+  }
+
+  return result;
+}
+
+// Check if return value is empty
+function isEmptyReturn(returnVal) {
+  if (!returnVal) return true;
+  if (isObj(returnVal) && (!returnVal.children || !returnVal.children.length) && !returnVal.name && !returnVal.type)
+    return true;
+  return false;
+}
+
+// Format return value
+function formatReturn(returnVal) {
+  if (isEmptyReturn(returnVal)) {
+    return '';
+  }
+
+  var result = '';
+
+  if (isArr(returnVal) && returnVal.length === 2) {
+    // Success/Error pattern - indent under Returns
+    result += '- ✅ *On success:*\n';
+    if (returnVal[0].children && returnVal[0].children.length) {
+      for (var i = 0; i < returnVal[0].children.length; i++) {
+        result += formatParam(returnVal[0].children[i], 1);
       }
-      res += ')';
+    }
 
-      res += ' | ';
-
-      temp.paramOptions = isObj(temp.paramOptions) ? temp.paramOptions : {};
-
-      res += getHtmlParam(temp.params, temp.paramOptions);
-
-      res += ' | ';
-
-      temp.returnValOptions = isObj(temp.returnValOptions) ? temp.returnValOptions : {};
-
-      if (temp.errors) {
-        temp.returnValOptions.errorTriangle = true;
+    result += '- ⚠️ *On error:*\n';
+    if (returnVal[1].children && returnVal[1].children.length) {
+      for (var i = 0; i < returnVal[1].children.length; i++) {
+        result += formatParam(returnVal[1].children[i], 1);
       }
-
-      res += getHtmlReturnVal(temp.returnVal, temp.returnValOptions);
-
-      res += ' | ';
-
-      res += temp.refreshUi === true ? 'Yes' : 'No';
-
-      res += ' | ';
-
-      res += temp.description.join('<br><br>');
-
-      if (temp.examples && temp.examples.length) {
-        res += '<hr>Example' + (temp.examples.length !== 1 ? 's' : '') + ':';
-        res += '<ul><li>`' + temp.examples.join('`</li><li>`') + '`</li></ul>';
+    }
+  } else if (isObj(returnVal)) {
+    if (returnVal.children && returnVal.children.length) {
+      for (var i = 0; i < returnVal.children.length; i++) {
+        result += formatParam(returnVal.children[i], 0);
       }
+    } else if (returnVal.name || returnVal.type) {
+      result += formatParam(returnVal, 0);
+    }
+  }
 
-      if (temp.links) {
-        res +=
-          '<hr>:pushpin:' + temp.links.name + ' documentation link' + (temp.links.urls.length !== 1 ? 's' : '') + ':';
+  return result || '*None*\n';
+}
 
-        res += '<ul>';
+// Generate single method documentation
+function docoGenMethod(methodKey, method, prefix) {
+  var res = '';
 
-        for (j = 0, len2 = temp.links.urls.length; j < len2; j++) {
-          //0<len2
-          res += '<li>' + urlLink(temp.links.urls[j]) + '.</li>';
-        }
+  // Method header with anchor
+  res += '---\n\n';
+  res += '### `' + getSignature(method, prefix) + '`\n\n';
 
-        res += '</ul>';
-      }
+  // UI refresh badge
+  if (method.refreshUi === true) {
+    res += '> 🔄 **Triggers UI refresh**\n\n';
+  }
 
-      if (temp.errors) {
-        res += '<hr>:small_red_triangle_down:Error emits a `console.log(...)` when:';
+  // Description
+  if (method.description && method.description.length) {
+    for (var i = 0; i < method.description.length; i++) {
+      res += method.description[i] + '\n\n';
+    }
+  }
 
-        res += '<ul>';
+  // Parameters section (always collapsible)
+  var hasParams = method.params && method.params.children && method.params.children.length > 0;
 
-        for (j = 0, len2 = temp.errors.length; j < len2; j++) {
-          //0<len2
-          res += '<li>' + temp.errors[j] + '</li>';
-        }
+  if (hasParams) {
+    res += '<details>\n<summary><strong>Parameters</strong></summary>\n\n';
+    res += formatParams(method.params);
+    res += '\n</details>\n\n';
+  } else {
+    res += '**Parameters:** None\n\n';
+  }
 
-        res += '</ul>';
-      }
+  // Returns section
+  if (isEmptyReturn(method.returnVal)) {
+    res += '**Returns:** None\n\n';
+  } else {
+    res += '**Returns:**\n\n';
+    res += formatReturn(method.returnVal);
+    res += '\n';
+  }
 
-      rtn.push(res);
+  // Examples section
+  if (method.examples && method.examples.length) {
+    res += '**Examples:**\n\n';
+    res += '```javascript\n';
+    for (var i = 0; i < method.examples.length; i++) {
+      res += method.examples[i] + '\n';
+    }
+    res += '```\n\n';
+  }
+
+  // Related documentation links
+  if (method.links) {
+    res += '📌 **See also:**\n\n';
+    for (var i = 0; i < method.links.urls.length; i++) {
+      res += '- ' + urlLink(method.links.urls[i]) + '\n';
+    }
+    res += '\n';
+  }
+
+  // Errors section
+  if (method.errors && method.errors.length) {
+    res += '> 📢 **Outputs an error to the console when:**\n';
+    for (var i = 0; i < method.errors.length; i++) {
+      res += '> - ' + method.errors[i] + '\n';
+    }
+    res += '\n';
+  }
+
+  return res;
+}
+
+// Generate all methods documentation
+function docoGenMethods(obj, prefix) {
+  var rtn = [];
+  var curr_table = Object.keys(obj);
+
+  for (var i = 0, len = curr_table.length; i < len; i++) {
+    var methodKey = curr_table[i];
+    var method = obj[methodKey];
+
+    if (method.description) {
+      rtn.push(docoGenMethod(methodKey, method, prefix));
     }
   }
 
   return rtn;
 }
 
-function recursiveFormat(obj, options, has_op_params, has_op_keys) {
-  var i, len, rtn, temp, temp2;
+// Generate table of contents
+function docoGenToc(obj) {
+  var curr_table = Object.keys(obj);
+  var result = '';
 
-  rtn = '';
-
-  if (typeof obj.name !== 'string' && typeof obj.type === 'string') {
-    obj.name = obj.type;
-
-    delete obj.type;
-  }
-
-  if (typeof obj.name !== 'string') {
-    obj.name = '';
-  }
-
-  if (options && typeof options.removeKey === 'string') {
-    if (obj.name === options.removeKey) {
-      return { html: '', hasOpParams: false, hasOpKeys: false };
+  for (var i = 0, len = curr_table.length; i < len; i++) {
+    var method = obj[curr_table[i]];
+    if (method.description) {
+      // Create anchor link
+      var anchor = method.name.toLowerCase();
+      result += '- [`' + method.name + '()`](#' + method.name.toLowerCase() + ')\n';
     }
   }
 
-  if (typeof obj.icon === 'string') {
-    rtn += ':' + obj.icon + ':';
-
-    if (obj.icon === 'eight_pointed_black_star') {
-      has_op_params = true;
-    }
-
-    if (obj.icon === 'eight_spoked_asterisk') {
-      has_op_keys = true;
-    }
-  }
-
-  if (obj.isCode) {
-    rtn += '`';
-  } else if (obj.isBold) {
-    rtn += '**';
-  }
-
-  rtn += obj.name;
-
-  if (obj.isCode) {
-    rtn += '`';
-  } else if (obj.isBold) {
-    rtn += '**';
-  }
-
-  if (typeof obj.type === 'string') {
-    rtn += ' (' + obj.type + ')';
-  }
-
-  if (typeof obj.codeAfter === 'string') {
-    rtn += (rtn ? ': ' : '') + '`' + obj.codeAfter + '`';
-  } else if (obj.children && obj.children.length) {
-    temp = '';
-
-    for (i = 0, len = obj.children.length; i < len; i++) {
-      //0<len
-      temp2 = recursiveFormat(obj.children[i], options, has_op_params, has_op_keys);
-
-      if (temp2.html !== '') {
-        temp += '<li>' + temp2.html + '</li>';
-
-        if (temp2.hasOpParams) {
-          has_op_params = true;
-        }
-
-        if (temp2.hasOpKeys) {
-          has_op_keys = true;
-        }
-      }
-    }
-
-    if (temp) {
-      rtn += (rtn ? ':' : '') + '<ul>' + temp + '</ul>';
-    }
-  }
-
-  return { html: rtn, hasOpParams: has_op_params, hasOpKeys: has_op_keys };
+  return result;
 }
 
-function getHtmlParam(obj, p) {
-  var call_res, rtn;
+// Generate anchor for method (matches GitHub's heading anchor generation)
+function generateAnchor(method, prefix) {
+  // Build the signature as it appears in the heading: methodName(...) or methodName()
+  var hasParams = method.params && method.params.children && method.params.children.length > 0;
+  var signature = (prefix || '') + method.name + '(' + (hasParams ? '...' : '') + ')';
 
-  rtn = '-';
-
-  call_res = recursiveFormat(obj, p);
-
-  if (call_res.html !== '') {
-    rtn = call_res.html;
-
-    if (call_res.hasOpParams || call_res.hasOpKeys) {
-      rtn += '<hr>';
-
-      if (call_res.hasOpParams) {
-        rtn += ':eight_pointed_black_star:Optional Parameter';
-      }
-
-      if (call_res.hasOpParams && call_res.hasOpKeys) {
-        rtn += '<br>';
-      }
-
-      if (call_res.hasOpKeys) {
-        rtn += ':eight_spoked_asterisk:Optional Object key';
-      }
-    }
-  }
-
-  return rtn;
+  // GitHub anchor generation:
+  // 1. Lowercase
+  // 2. Remove special chars except spaces/hyphens
+  // 3. Replace spaces with hyphens
+  return (
+    '#' +
+    signature
+      .toLowerCase()
+      .replace(/[^a-z0-9 -]/g, '') // Remove everything except alphanumeric, space, hyphen
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Collapse multiple hyphens
+      .replace(/^-|-$/g, '')
+  ); // Trim leading/trailing hyphens
 }
 
-function getHtmlReturnVal(obj, p) {
-  var call_res, rtn;
+// Quick reference table (simplified)
+// displayPrefix: shown in table (e.g., "board." or "Ic.")
+// anchorPrefix: used for link anchor (e.g., "" or "Ic.")
+function docoGenQuickRef(obj, displayPrefix, anchorPrefix) {
+  var result = '';
+  result += '| Method | Returns | UI? | Brief |\n';
+  result += '|--------|---------|-----|-------|\n';
 
-  rtn = '-';
+  var curr_table = Object.keys(obj);
 
-  if (isArr(obj) && obj.length === 2) {
-    rtn = 'Success:';
-
-    call_res = recursiveFormat(obj[0], p);
-
-    if (call_res.html !== '') {
-      rtn += call_res.html;
-    } else {
-      rtn += '<ul><li>-</li></ul>';
-    }
-
-    rtn += '<hr>';
-
-    if (p && p.errorTriangle) {
-      rtn += ':small_red_triangle_down:';
-    }
-
-    rtn += 'Error:';
-
-    call_res = recursiveFormat(obj[1], p);
-
-    if (call_res.html !== '') {
-      rtn += call_res.html;
-    } else {
-      rtn += '<ul><li>-</li></ul>';
-    }
-  } else if (isObj(obj)) {
-    call_res = recursiveFormat(obj, p);
-
-    if (call_res.html !== '') {
-      if (call_res.html.slice(0, 8) === '<ul><li>' && call_res.html.slice(-10) === '</li></ul>') {
-        call_res.html = call_res.html.slice(8, -10);
+  for (var i = 0, len = curr_table.length; i < len; i++) {
+    var method = obj[curr_table[i]];
+    if (method.description) {
+      var returnType = '-';
+      if (method.returnVal) {
+        if (isArr(method.returnVal)) {
+          returnType = getSimpleType(method.returnVal[0]);
+        } else {
+          returnType = getSimpleType(method.returnVal);
+        }
       }
 
-      rtn = call_res.html;
+      var brief = method.description[0] || '';
+      // Clean up markdown formatting for table display
+      brief = brief
+        .replace(/\*\*/g, '') // Remove bold
+        .replace(/:pushpin:/g, '') // Remove emoji shortcodes
+        .replace(/:zap:/g, '')
+        .replace(/:warning:/g, '')
+        .replace(/`[^`]+`/g, function (m) {
+          return m.slice(1, -1);
+        }) // Remove code backticks but keep text
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'); // Convert links to just text
+
+      // Truncate
+      if (brief.length > 55) {
+        brief = brief.substring(0, 55) + '...';
+      }
+
+      var anchor = generateAnchor(method, anchorPrefix || '');
+      var methodDisplay = (displayPrefix || '') + method.name + '()';
+
+      result +=
+        '| [`' +
+        methodDisplay +
+        '`](' +
+        anchor +
+        ') | ' +
+        returnType +
+        ' | ' +
+        (method.refreshUi ? '✓' : '-') +
+        ' | ' +
+        brief +
+        ' |\n';
     }
   }
 
-  return rtn;
+  return result;
+}
+
+function getSimpleType(returnObj) {
+  if (!returnObj) return '-';
+
+  if (returnObj.children && returnObj.children.length) {
+    var child = returnObj.children[0];
+    // Prefer the name if it's bold (meaning it's a meaningful type name like "move", "square")
+    if (child.isBold && child.name) {
+      return '**' + child.name + '**';
+    }
+    if (child.type) {
+      return '`' + child.type + '`';
+    }
+    if (child.name) {
+      return '`' + child.name + '`';
+    }
+  }
+
+  if (returnObj.type) {
+    return '`' + returnObj.type + '`';
+  }
+
+  if (returnObj.name) {
+    return returnObj.isBold ? '**' + returnObj.name + '**' : '`' + returnObj.name + '`';
+  }
+
+  return '-';
 }

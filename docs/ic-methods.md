@@ -1,67 +1,1037 @@
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>
 
-<h1 align="center">Ic methods</h1>
+# Ic Methods
 
-Isepic Chess library `isepic-chess.js` has the following available methods:
+Isepic Chess library `isepic-chess.js` has the following available methods.
 
-<ul>
-<li>Ic.setSilentMode()</li>
-<li>Ic.isLegalFen()</li>
-<li>Ic.getBoard()</li>
-<li>Ic.toVal()</li>
-<li>Ic.toAbsVal()</li>
-<li>Ic.toBal()</li>
-<li>Ic.toAbsBal()</li>
-<li>Ic.toClassName()</li>
-<li>Ic.toBos()</li>
-<li>Ic.toPos()</li>
-<li>Ic.getSign()</li>
-<li>Ic.getRankPos()</li>
-<li>Ic.getFilePos()</li>
-<li>Ic.getRankBos()</li>
-<li>Ic.getFileBos()</li>
-<li>Ic.isInsideBoard()</li>
-<li>Ic.sameSquare()</li>
-<li>Ic.countPieces()</li>
-<li>Ic.countLightDarkBishops()</li>
-<li>Ic.removeBoard()</li>
-<li>Ic.isEqualBoard()</li>
-<li>Ic.cloneBoard()</li>
-<li>Ic.initBoard()</li>
-<li>Ic.fenApply()</li>
-<li>Ic.fenGet()</li>
-<li>Ic.getBoardNames()</li>
-</ul>
+## Quick Reference
 
-#### Table `Ic.<methods>(...)`:
+| Method | Returns | UI? | Brief |
+|--------|---------|-----|-------|
+| [`Ic.setSilentMode()`](#icsetsilentmode) | - | - | Turns on/off the silent mode to hide/show console.log()... |
+| [`Ic.isLegalFen()`](#icislegalfen) | `Boolean` | - | Tests the validity of a fen string. |
+| [`Ic.getBoard()`](#icgetboard) | **board** | - | Returns a board. |
+| [`Ic.toVal()`](#ictoval) | **squareVal** | - | Converts the input to a square val. |
+| [`Ic.toAbsVal()`](#ictoabsval) | **squareAbsVal** | - | Converts the input to a square abs val. |
+| [`Ic.toBal()`](#ictobal) | **squareBal** | - | Converts the input to a square bal. |
+| [`Ic.toAbsBal()`](#ictoabsbal) | **squareAbsBal** | - | Converts the input to a square abs bal. |
+| [`Ic.toClassName()`](#ictoclassname) | **squareClassName** | - | Converts the input to a square class name. |
+| [`Ic.toBos()`](#ictobos) | **squareBos** | - | Converts the input to a square bos. |
+| [`Ic.toPos()`](#ictopos) | **squarePos** | - | Converts the input to a square pos. |
+| [`Ic.getSign()`](#icgetsign) | **squareSign** | - | Infers the square sign from a Boolean or a square qal. |
+| [`Ic.getRankPos()`](#icgetrankpos) | **squareRankPos** | - | Converts the input to a square rank pos. |
+| [`Ic.getFilePos()`](#icgetfilepos) | **squareFilePos** | - | Converts the input to a square file pos. |
+| [`Ic.getRankBos()`](#icgetrankbos) | **squareRankBos** | - | Converts the input to a square rank bos. |
+| [`Ic.getFileBos()`](#icgetfilebos) | **squareFileBos** | - | Converts the input to a square file bos. |
+| [`Ic.isInsideBoard()`](#icisinsideboard) | `Boolean` | - | Test to see if a square is valid or not. |
+| [`Ic.sameSquare()`](#icsamesquare) | `Boolean` | - | Test to see if two squares evaluate to the same square ... |
+| [`Ic.countPieces()`](#iccountpieces) | `Object` | - | Returns the total of each piece for white and black. |
+| [`Ic.countLightDarkBishops()`](#iccountlightdarkbishops) | `Object` | - | Returns the total of light and dark bishops for white a... |
+| [`Ic.removeBoard()`](#icremoveboard) | `Boolean` | - | Removes a board completely. |
+| [`Ic.isEqualBoard()`](#icisequalboard) | `Boolean` | - | Tests for the equality of the board properties <sup>(ex... |
+| [`Ic.cloneBoard()`](#iccloneboard) | `Boolean` | ✓ | Clones the board properties <sup>(except for board.boar... |
+| [`Ic.initBoard()`](#icinitboard) | **board** | ✓ | Initializes/overwrites a board. |
+| [`Ic.fenApply()`](#icfenapply) | `(mixed results)` | - | Calls one of the allowed board methods (listed below) o... |
+| [`Ic.fenGet()`](#icfenget) | `Object` | - | Get board properties (except for board.boardName) from ... |
+| [`Ic.getBoardNames()`](#icgetboardnames) | `Array` | - | Returns a board names array. |
 
-Function | Parameters | Return | UI refresh? | Description
--------- | ---------- | ------ | ----------- | -----------
-**setSilentMode**(<br>*muteConsole*<br>) | <ul><li>muteConsole (Boolean)</li></ul> | - | No | Turns on/off the **silent mode** to hide/show `console.log()` messages.<br><br>The **slient mode** is initially turned on to prevent all console messages that could be emitted by the library.<hr>Examples:<ul><li>`Ic.setSilentMode(true)`</li><li>`Ic.setSilentMode(false)`</li></ul>
-**isLegalFen**(<br>*fen*<br>) | <ul><li>fen (String)</li></ul> | Boolean | No | Tests the validity of a **fen** string.<br><br>No support for **Fischer random chess** (it will likely misclassify positions from this chess variant).<hr>Examples:<ul><li>`Ic.isLegalFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //true`</li><li>`Ic.isLegalFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -") //true`</li><li>`Ic.isLegalFen("0invalidfen0") //false`</li></ul>
-**getBoard**(<br>*board*<br>) | <ul><li>board:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li></ul> | Success:<ul><li>**board** (Object)</li></ul><hr>Error:<ul><li>null</li></ul> | No | Returns a :pushpin:**board**.<hr>Examples:<ul><li>`Ic.getBoard(myboard) //Object{...}`</li><li>`Ic.getBoard(nonexistent) //null`</li><li>`Ic.getBoard("myboard") //Object{...}`</li><li>`Ic.getBoard("nonexistent") //null`</li></ul><hr>:pushpin:Board documentation links:<ul><li>[board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties).</li><li>[board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods).</li></ul>
-**toVal**(<br>*qal*<br>) | <ul><li>qal:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareVal** (Number): `-6 to 6`</li></ul><hr>Error:<ul><li>Number: `0`</li></ul> | No | Converts the input to a **square val**.<hr>Examples:<ul><li>`Ic.toVal("b") //-3`</li><li>`Ic.toVal("K") //6`</li><li>`Ic.toVal("*") //0`</li><li>`Ic.toVal(-5) //-5`</li><li>`Ic.toVal("bq") //-5`</li><li>`Ic.toVal("err") //0`</li><li>`Ic.toVal(99) //6`</li><li>`Ic.toVal(-99) //-6`</li></ul>
-**toAbsVal**(<br>*qal*<br>) | <ul><li>qal:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareAbsVal** (Number): `0 to 6`</li></ul><hr>Error:<ul><li>Number: `0`</li></ul> | No | Converts the input to a **square abs val**.<hr>Examples:<ul><li>`Ic.toAbsVal("b") //3`</li><li>`Ic.toAbsVal("K") //6`</li><li>`Ic.toAbsVal("*") //0`</li><li>`Ic.toAbsVal(-5) //5`</li><li>`Ic.toAbsVal("bq") //5`</li><li>`Ic.toAbsVal("err") //0`</li><li>`Ic.toAbsVal(99) //6`</li><li>`Ic.toAbsVal(-99) //6`</li></ul>
-**toBal**(<br>*qal*<br>) | <ul><li>qal:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareBal** (String): `"k", "q", "r", "b", "n", "p", "*", "P", "N", "B", "R", "Q", "K"`</li></ul><hr>Error:<ul><li>String: `*`</li></ul> | No | Converts the input to a **square bal**.<hr>Examples:<ul><li>`Ic.toBal(-3) //"b"`</li><li>`Ic.toBal(6) //"K"`</li><li>`Ic.toBal(0) //"*"`</li><li>`Ic.toBal("q") //"q"`</li><li>`Ic.toBal("bq") //"q"`</li><li>`Ic.toBal("err") //"*"`</li><li>`Ic.toBal(99) //"K"`</li><li>`Ic.toBal(-99) //"k"`</li></ul>
-**toAbsBal**(<br>*qal*<br>) | <ul><li>qal:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareAbsBal** (String): `"*", "P", "N", "B", "R", "Q", "K"`</li></ul><hr>Error:<ul><li>String: `*`</li></ul> | No | Converts the input to a **square abs bal**.<hr>Examples:<ul><li>`Ic.toAbsBal(-3) //"B"`</li><li>`Ic.toAbsBal(6) //"K"`</li><li>`Ic.toAbsBal(0) //"*"`</li><li>`Ic.toAbsBal("q") //"Q"`</li><li>`Ic.toAbsBal("bq") //"Q"`</li><li>`Ic.toAbsBal("err") //"*"`</li><li>`Ic.toAbsBal(99) //"K"`</li><li>`Ic.toAbsBal(-99) //"K"`</li></ul>
-**toClassName**(<br>*qal*<br>) | <ul><li>qal:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareClassName** (String): `"bk", "bq", "br", "bb", "bn", "bp", "", "wp", "wn", "wb", "wr", "wq", "wk"`</li></ul><hr>Error:<ul><li>String: `""`</li></ul> | No | Converts the input to a **square class name**.<hr>Examples:<ul><li>`Ic.toClassName("b") //"bb"`</li><li>`Ic.toClassName("K") //"wk"`</li><li>`Ic.toClassName("*") //""`</li><li>`Ic.toClassName(-5) //"bq"`</li><li>`Ic.toClassName("bq") //"bq"`</li><li>`Ic.toClassName("err") //""`</li><li>`Ic.toClassName(99) //"wk"`</li><li>`Ic.toClassName(-99) //"bk"`</li></ul>
-**toBos**(<br>*qos*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareBos** (String): `"a1" to "h8"`</li></ul><hr>Error:<ul><li>null</li></ul> | No | Converts the input to a **square bos**.<hr>Examples:<ul><li>`Ic.toBos([7, 0]) //"a1"`</li><li>`Ic.toBos([0, 0]) //"a8"`</li><li>`Ic.toBos([7, 7]) //"h1"`</li><li>`Ic.toBos([0, 7]) //"h8"`</li><li>`Ic.toBos("B2") //"b2"`</li></ul>
-**toPos**(<br>*qos*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squarePos** (Array): `[0-7, 0-7]`</li></ul><hr>Error:<ul><li>null</li></ul> | No | Converts the input to a **square pos**.<hr>Examples:<ul><li>`Ic.toPos("a1") //[7, 0]`</li><li>`Ic.toPos("a8") //[0, 0]`</li><li>`Ic.toPos("h1") //[7, 7]`</li><li>`Ic.toPos("h8") //[0, 7]`</li><li>`Ic.toPos([6, 1]) //[6, 1]`</li></ul>
-**getSign**(<br>*zal*<br>) | <ul><li>zal:<ul><li>Boolean</li><li>qal:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li></ul></li></ul> | Success:<ul><li>**squareSign** (Number): `-1 or 1`</li></ul><hr>Error:<ul><li>Number: `-1`</li></ul> | No | Infers the **square sign** from a Boolean or a square **qal**.<br><br>Boolean value `true` returns a negative sign (`-1`) and `false` a positive sign (`1`), the Boolean is meant to be the answer to *"is black the active color?"*.<br><br>Any non-Boolean value will pass through `toVal()` and have its **square val** tested to a greater-than-zero comparison. White pieces have a positive sign (`1`) and empty squares/black pieces a negative sign (`-1`).<hr>Examples:<ul><li>`Ic.getSign("q") //-1`</li><li>`Ic.getSign("Q") //1`</li><li>`Ic.getSign(-5) //-1`</li><li>`Ic.getSign(5) //1`</li><li>`Ic.getSign(true) //-1`</li><li>`Ic.getSign(false) //1`</li><li>`Ic.getSign("bq") //-1`</li><li>`Ic.getSign("wq") //1`</li><li>`Ic.getSign("err") //-1`</li></ul>
-**getRankPos**(<br>*qos*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareRankPos** (Number): `0-7`</li></ul><hr>Error:<ul><li>null</li></ul> | No | Converts the input to a **square rank pos**.<hr>Examples:<ul><li>`Ic.getRankPos("a1") //7`</li><li>`Ic.getRankPos("a8") //0`</li><li>`Ic.getRankPos("h1") //7`</li><li>`Ic.getRankPos("h8") //0`</li><li>`Ic.getRankPos([3, 6]) //3`</li><li>`Ic.getRankPos([6, 3]) //6`</li></ul>
-**getFilePos**(<br>*qos*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareFilePos** (Number): `0-7`</li></ul><hr>Error:<ul><li>null</li></ul> | No | Converts the input to a **square file pos**.<hr>Examples:<ul><li>`Ic.getFilePos("a1") //0`</li><li>`Ic.getFilePos("a8") //0`</li><li>`Ic.getFilePos("h1") //7`</li><li>`Ic.getFilePos("h8") //7`</li><li>`Ic.getFilePos([3, 6]) //6`</li><li>`Ic.getFilePos([6, 3]) //3`</li></ul>
-**getRankBos**(<br>*qos*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareRankBos** (String): `1-8`</li></ul><hr>Error:<ul><li>null</li></ul> | No | Converts the input to a **square rank bos**.<hr>Examples:<ul><li>`Ic.getRankBos("a1") //"1"`</li><li>`Ic.getRankBos("a8") //"8"`</li><li>`Ic.getRankBos("h1") //"1"`</li><li>`Ic.getRankBos("h8") //"8"`</li><li>`Ic.getRankBos([3, 6]) //"5"`</li><li>`Ic.getRankBos([6, 3]) //"2"`</li></ul>
-**getFileBos**(<br>*qos*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>**squareFileBos** (String): `a-h`</li></ul><hr>Error:<ul><li>null</li></ul> | No | Converts the input to a **square file bos**.<hr>Examples:<ul><li>`Ic.getFileBos("a1") //"a"`</li><li>`Ic.getFileBos("a8") //"a"`</li><li>`Ic.getFileBos("h1") //"h"`</li><li>`Ic.getFileBos("h8") //"h"`</li><li>`Ic.getFileBos([3, 6]) //"g"`</li><li>`Ic.getFileBos([6, 3]) //"d"`</li></ul>
-**isInsideBoard**(<br>*qos*<br>) | <ul><li>qos:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Boolean | No | Test to see if a square is valid or not.<hr>Examples:<ul><li>`Ic.isInsideBoard("a1") //true`</li><li>`Ic.isInsideBoard("a9") //false`</li><li>`Ic.isInsideBoard("i3") //false`</li><li>`Ic.isInsideBoard([7, 7]) //true`</li><li>`Ic.isInsideBoard([8, 8]) //false`</li></ul>
-**sameSquare**(<br>*qos1*,<br>*qos2*<br>) | <ul><li>qos1:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li><li>qos2:<ul><li>**squareBos** (String)</li><li>**squarePos** (Array)</li><li>**square** (Object)</li></ul></li></ul> | Success:<ul><li>Boolean</li></ul><hr>Error:<ul><li>Boolean: `false`</li></ul> | No | Test to see if two **square**s evaluate to the same **square** or not.<hr>Examples:<ul><li>`Ic.sameSquare("a1", "a1") //true`</li><li>`Ic.sameSquare("d2", [6, 3]) //true`</li><li>`Ic.sameSquare([4, 5], [5, 4]) //false`</li></ul>
-**countPieces**(<br>*fen*<br>) | <ul><li>fen (String)</li></ul> | Success:<ul><li>Object: `{w: {...}, b: {...}}`</li></ul><hr>Error:<ul><li>Object: `{w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}}`</li></ul> | No | Returns the total of each piece for white and black.<br><br>The **fen** doesn't need to be valid (it can be any string and it will stop after a white space or the end of the string).<hr>Examples:<ul><li>`Ic.countPieces(defaultFen) //{w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}, b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}}`</li><li>`Ic.countPieces("badFenGetsParsedAnyway up until first space") //{w: {p: 1, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 2, b: 1, r: 1, q: 0, k: 0}}`</li></ul>
-**countLightDarkBishops**(<br>*fen*<br>) | <ul><li>fen (String)</li></ul> | Success:<ul><li>Object: `{w: {...}, b: {...}}`</li></ul><hr>Error:<ul><li>Object: `{w: {lightSquaredBishops: 0, darkSquaredBishops: 0}, b: {lightSquaredBishops: 0, darkSquaredBishops: 0}}`</li></ul> | No | Returns the total of light and dark bishops for white and black.<br><br>The **fen** doesn't need to be valid (it can be any string and it will stop after a white space or the end of the string).<hr>Examples:<ul><li>`Ic.countLightDarkBishops(defaultFen) //{w: {lightSquaredBishops: 1, darkSquaredBishops: 1}, b: {lightSquaredBishops: 1, darkSquaredBishops: 1}}`</li><li>`Ic.countLightDarkBishops("badFenGetsParsedAnyway up until first space") //{w: {lightSquaredBishops: 0, darkSquaredBishops: 0}, b: {lightSquaredBishops: 1, darkSquaredBishops: 0}}`</li></ul>
-**removeBoard**(<br>*board*<br>) | <ul><li>board:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li></ul> | Boolean | No | Removes a **board** completely.<hr>Examples:<ul><li>`Ic.removeBoard(myboard) //true`</li><li>`Ic.removeBoard(nonexistent) //false`</li><li>`Ic.removeBoard("myboard") //true`</li><li>`Ic.removeBoard("nonexistent") //false`</li></ul>
-**isEqualBoard**(<br>*leftBoard*,<br>*rightBoard*<br>) | <ul><li>leftBoard:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li><li>rightBoard:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li></ul> | Success:<ul><li>Boolean</li></ul><hr>:small_red_triangle_down:Error:<ul><li>Boolean: `false`</li></ul> | No | Tests for the equality of the [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) <sup>(except for `board.boardName`)</sup> between two **board**s.<hr>Examples:<ul><li>`Ic.isEqualBoard("board", "board_copy") //true`</li><li>`Ic.isEqualBoard(same_board, same_board) //true`</li><li>`Ic.isEqualBoard("board", "other") //false`</li><li>`Ic.isEqualBoard(other_board, "nonexistent") //false`</li></ul><hr>:small_red_triangle_down:Error emits a `console.log(...)` when:<ul><li>the *left board* is not found.</li><li>the *right board* is not found.</li></ul>
-**cloneBoard**(<br>*toBoard*,<br>*fromBoard*<br>) | <ul><li>toBoard:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li><li>fromBoard:<ul><li>**boardName** (String)</li><li>**board** (Object)</li></ul></li></ul> | Success:<ul><li>Boolean: `true`</li></ul><hr>:small_red_triangle_down:Error:<ul><li>Boolean: `false`</li></ul> | Yes | Clones the [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) <sup>(except for `board.boardName`)</sup> of a **board** to another **board**.<hr>Examples:<ul><li>`Ic.cloneBoard(to_board, from_board) //true`</li><li>`Ic.cloneBoard(to_board, from_nonexistent) //false`</li><li>`Ic.cloneBoard("to_nonexistent", from_board) //false`</li><li>`Ic.cloneBoard(to_nonexistent, "from_nonexistent") //false`</li></ul><hr>:small_red_triangle_down:Error emits a `console.log(...)` when:<ul><li>the *to board* is not found.</li><li>the *from board* is not found.</li><li>attempting to clone a board with itself.</li></ul>
-**initBoard**(<br>*p*<br>) | <ul><li>:eight_pointed_black_star:p (Object):<ul><li>:eight_spoked_asterisk:boardName (String)</li><li>:eight_spoked_asterisk:pgn (String)</li><li>:eight_spoked_asterisk:uci (String)</li><li>:eight_spoked_asterisk:fen (String)</li><li>:eight_spoked_asterisk:moveIndex (Number)</li><li>:eight_spoked_asterisk:isRotated (Boolean)</li><li>:eight_spoked_asterisk:isPuzzleMode (Boolean)</li><li>:eight_spoked_asterisk:skipFenValidation (Boolean)</li><li>:eight_spoked_asterisk:isHidden (Boolean)</li><li>:eight_spoked_asterisk:promoteTo:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li><li>:eight_spoked_asterisk:manualResult (String)</li><li>:eight_spoked_asterisk:validOrBreak (Boolean)</li></ul></li></ul><hr>:eight_pointed_black_star:Optional Parameter<br>:eight_spoked_asterisk:Optional Object key | Success:<ul><li>**board** (Object)</li></ul><hr>:small_red_triangle_down:Error:<ul><li>null</li></ul> | Yes | Initializes/overwrites a :pushpin:**board**.<br><br>`isRotated = true` rotates the **board** to be displayed as black view.<br><br>`isPuzzleMode = true` changes the mode to **puzzle mode** &#x1f6a7; work in progress &#x1f6a7;.<br><br>`skipFenValidation = true` skips the fen validation. This should only be used if the fen is known to pass the fen tests of `isepic-chess.js` or the fen was generated by `isepic-chess.js`.<br><br>`isHidden = true` prevents visual display or anything DOM-related when **isepic-chess-ui.js** is present (the flag becomes irrelevant otherwise).<br><br>`validOrBreak = true` (when loading a `pgn`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original pgn** is returned.<br><br>`validOrBreak = true` (when loading a `uci`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original uci** is returned.<br><br>`validOrBreak = true` (when loading a `fen` and not parsing a game `pgn` or `uci`) prevents the use of **default fen position**s when the **original fen** fails, ensuring that either `null` or a **board** with the **original fen** is returned.<br><br>The Boolean options (`isRotated`, `isPuzzleMode`, `skipFenValidation`, `isHidden` and `validOrBreak`) default to `false` when not set to a Boolean value of `true`.<br><br>`moveIndex` can be specified to set a `board.currentMove` after a game is parsed, if not specified it will result in the last parsed move `(board.moveList.length-1)`. When not parsing a game (`pgn` or `uci`), this parameter becomes irrelevant because the **current move** index will always be `0` since no moves would have been played/parsed.<br><br>`promoteTo` passes through `toAbsVal()`, any empty or invalid values will turn to `0` and default to `5` (queen), valid values out of bounds will stop at min of `2` (bishop) and max of `5` (queen).<br><br>`manualResult` can be set to `"*", "1-0", "0-1" or "1/2-1/2"` to change the default **board property** of `board.manualResult` of `"*"`. When used at the same time of `pgn`, this will have higher precedence than the attempts to parse the game result from the `pgn`.<br><br>If `boardName` is not a String (or is one but resolves to `""` after removing spaces), a **random board name** will be generated and used.<br><br>The **board name** will have any non-Alphanumeric values turned into underscores.<br><br>When using a **board name** that is already in use, the **board** with that **board name** will be used instead of creating a new **board** (old references to that **board** will continue to work).<br><br>`fen` can be mixed together with `pgn` and `uci` (`fen` will take precedence over the `pgn` **FEN tag**). The **default fen position** will be used if no **fen** is supplied.<br><br>If both `pgn` and `uci` are supplied, the **pgn** will take precedence and the **uci** will be ignored.<hr>Examples:<ul><li>`Ic.initBoard({boardName: "main"}) //Object{...}`</li><li>`Ic.initBoard({fen: "8/k7/P7/K7/8/8/8/8 b - - 0 1", isRotated: true, promoteTo: "b"}) //Object{...}`</li><li>`Ic.initBoard({pgn: "0invalidpgn0", validOrBreak: true}) //null`</li><li>`Ic.initBoard({uci: "0invaliduci0", validOrBreak: true}) //null`</li><li>`Ic.initBoard({fen: "0invalidfen0", validOrBreak: true}) //null`</li></ul><hr>:pushpin:Board documentation links:<ul><li>[board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties).</li><li>[board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods).</li></ul><hr>:small_red_triangle_down:Error emits a `console.log(...)` when:<ul><li>`validOrBreak` is `true` and the *pgn* fails the parsing.</li><li>`validOrBreak` is `true` and the *uci* fails the parsing.</li><li>`validOrBreak` is `true` and the *fen* fails the **basic fen test**.</li><li>`validOrBreak` is `true` and the *fen* fails the **refined fen test**.</li></ul>
-**fenApply**(<br>*fen*,<br>*fnName*,<br>*args*,<br>*p*<br>) | <ul><li>fen (String)</li><li>:eight_pointed_black_star:fnName (String)</li><li>:eight_pointed_black_star:args (Array)</li><li>:eight_pointed_black_star:p (Object):<ul><li>:eight_spoked_asterisk:isRotated (Boolean)</li><li>:eight_spoked_asterisk:promoteTo:<ul><li>**squareBal** (String)</li><li>**squareAbsBal** (String)</li><li>**squareVal** (Number)</li><li>**squareAbsVal** (Number)</li><li>**squareClassName** (String)</li><li>**square** (Object)</li></ul></li><li>:eight_spoked_asterisk:skipFenValidation (Boolean)</li></ul></li></ul><hr>:eight_pointed_black_star:Optional Parameter<br>:eight_spoked_asterisk:Optional Object key | Success:<ul><li>(mixed results)</li></ul><hr>:small_red_triangle_down:Error:<ul><li>(mixed results)</li></ul> | No | Calls one of the allowed **board methods** <sup>(listed below)</sup> on a **temporal board** and returns the result.<br><br>The list of allowed `fnName` (String):<ul><li>`"playMove"`</li><li>`"playMoves"`</li><li>`"playRandomMove"`</li><li>`"legalMoves"`</li><li>`"legalFenMoves"`</li><li>`"legalSanMoves"`</li><li>`"legalUciMoves"`</li><li>`"isLegalMove"`</li><li>`"isLegalFen"`</li><li>`"getCheckmateMoves"`</li><li>`"getDrawMoves"`</li><li>`"getSquare"`</li><li>`"attackersFromActive"`</li><li>`"attackersFromNonActive"`</li><li>`"ascii"`</li><li>`"boardHash"`</li><li>`"countPieces"`</li><li>`"countLightDarkBishops"`</li></ul>`"isLegalFen"` is not a real **board method** and any error in the creation of the **temporal board** in `Ic.initBoard()` will be supressed in this call.<br><br>If **fnName** is not supplied, the default value is `"isLegalFen"` which returns the validity of **fen**.<br><br>The **args** parameter is optional in the sense that measures were taken to prevent crashes, but the function to be applied will probably be expecting real arguments.<br><br>The **p** options (`isRotated`, `promoteTo` and `skipFenValidation`) are passed to `Ic.initBoard()` when creating the **temporal board**.<hr>Examples:<ul><li>`Ic.fenApply("r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4", "ascii") //"..."`</li><li>`Ic.fenApply("r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4") //true`</li><li>`Ic.fenApply("0invalidfen0") //false`</li><li>`Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "playMove", ["c2_a2", {delimiter: "_"}]) //Object{...}`</li><li>`Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "0invalidfnname0", ["a1"]) //null`</li></ul><hr>:small_red_triangle_down:Error emits a `console.log(...)` when:<ul><li>(mixed reasons)</li></ul>
-**fenGet**(<br>*fen*,<br>*props*,<br>*p*<br>) | <ul><li>fen (String)</li><li>:eight_pointed_black_star:props:<ul><li>**strList** (String)</li><li>**arrList** (Array)</li></ul></li><li>:eight_pointed_black_star:p (Object):<ul><li>:eight_spoked_asterisk:skipFenValidation (Boolean)</li></ul></li></ul><hr>:eight_pointed_black_star:Optional Parameter<br>:eight_spoked_asterisk:Optional Object key | Success:<ul><li>Object: `{propA: valA, propB: valB, ..., propZ: valZ}`</li></ul><hr>:small_red_triangle_down:Error:<ul><li>null</li></ul> | No | Get [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) <sup>(except for `board.boardName`)</sup> from a **fen**.<br><br>If **props** is not supplied (or resolves to empty), then all the **board properties** <sup>(except for `board.boardName`)</sup> will be returned by default.<br><br>The **board properties** are **case-sensitive**.<br><br>When passing a **string list**, this must be **space-separated** <sup>(not comma-separated)</sup>.<br><br>Duplicated **board properties** will not result in errors and only the first occurrence will be used.<br><br>The **p** option `skipFenValidation` is passed to `Ic.initBoard()` when creating the **temporal board**.<hr>Examples:<ul><li>`Ic.fenGet("6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54", "isStalemate inDraw") //{isStalemate: true, inDraw: true}`</li><li>`Ic.fenGet("6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54", ["halfMove", "fullMove"]) //{halfMove: 0, fullMove: 54}`</li><li>`Ic.fenGet("0invalidfen0", "isCheck") //null`</li><li>`Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //Object{...}`</li><li>`Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0") //null`</li></ul><hr>:small_red_triangle_down:Error emits a `console.log(...)` when:<ul><li>`fen` is an **invalid fen**.</li><li>an **invalid property** was found in `props`.</li></ul>
-**getBoardNames**() | - | **boardNamesArray** (Array) | No | Returns a **board names array**.<br><br>The **board**s with `isHidden = true` are also included.<hr>Examples:<ul><li>`Ic.getBoardNames() //["main", "other", "other_copy", "hidden_board", "resume_from_fen"]`</li><li>`Ic.getBoardNames() //[]`</li></ul>
+## Method Details
+
+---
+
+### `Ic.setSilentMode(...)`
+
+Turns on/off the **silent mode** to hide/show `console.log()` messages.
+
+The **slient mode** is initially turned on to prevent all console messages that could be emitted by the library.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `muteConsole` `(Boolean)`
+
+</details>
+
+**Returns:** None
+
+**Examples:**
+
+```javascript
+Ic.setSilentMode(true)
+Ic.setSilentMode(false)
+```
+
+---
+
+### `Ic.isLegalFen(...)`
+
+Tests the validity of a **fen** string.
+
+No support for **Fischer random chess** (it will likely misclassify positions from this chess variant).
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `fen` `(String)`
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+Ic.isLegalFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //true
+Ic.isLegalFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -") //true
+Ic.isLegalFen("0invalidfen0") //false
+```
+
+---
+
+### `Ic.getBoard(...)`
+
+Returns a :pushpin:**board**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `board`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **board** `(Object)`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.getBoard(myboard) //Object{...}
+Ic.getBoard(nonexistent) //null
+Ic.getBoard("myboard") //Object{...}
+Ic.getBoard("nonexistent") //null
+```
+
+📌 **See also:**
+
+- [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
+- [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
+
+---
+
+### `Ic.toVal(...)`
+
+Converts the input to a **square val**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qal`
+  - **squareBal** `(String)`
+  - **squareAbsBal** `(String)`
+  - **squareVal** `(Number)`
+  - **squareAbsVal** `(Number)`
+  - **squareClassName** `(String)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareVal** `(Number)` — `-6 to 6`
+- ⚠️ *On error:*
+  - `Number` — `0`
+
+**Examples:**
+
+```javascript
+Ic.toVal("b") //-3
+Ic.toVal("K") //6
+Ic.toVal("*") //0
+Ic.toVal(-5) //-5
+Ic.toVal("bq") //-5
+Ic.toVal("err") //0
+Ic.toVal(99) //6
+Ic.toVal(-99) //-6
+```
+
+---
+
+### `Ic.toAbsVal(...)`
+
+Converts the input to a **square abs val**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qal`
+  - **squareBal** `(String)`
+  - **squareAbsBal** `(String)`
+  - **squareVal** `(Number)`
+  - **squareAbsVal** `(Number)`
+  - **squareClassName** `(String)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareAbsVal** `(Number)` — `0 to 6`
+- ⚠️ *On error:*
+  - `Number` — `0`
+
+**Examples:**
+
+```javascript
+Ic.toAbsVal("b") //3
+Ic.toAbsVal("K") //6
+Ic.toAbsVal("*") //0
+Ic.toAbsVal(-5) //5
+Ic.toAbsVal("bq") //5
+Ic.toAbsVal("err") //0
+Ic.toAbsVal(99) //6
+Ic.toAbsVal(-99) //6
+```
+
+---
+
+### `Ic.toBal(...)`
+
+Converts the input to a **square bal**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qal`
+  - **squareBal** `(String)`
+  - **squareAbsBal** `(String)`
+  - **squareVal** `(Number)`
+  - **squareAbsVal** `(Number)`
+  - **squareClassName** `(String)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareBal** `(String)` — `"k", "q", "r", "b", "n", "p", "*", "P", "N", "B", "R", "Q", "K"`
+- ⚠️ *On error:*
+  - `String` — `*`
+
+**Examples:**
+
+```javascript
+Ic.toBal(-3) //"b"
+Ic.toBal(6) //"K"
+Ic.toBal(0) //"*"
+Ic.toBal("q") //"q"
+Ic.toBal("bq") //"q"
+Ic.toBal("err") //"*"
+Ic.toBal(99) //"K"
+Ic.toBal(-99) //"k"
+```
+
+---
+
+### `Ic.toAbsBal(...)`
+
+Converts the input to a **square abs bal**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qal`
+  - **squareBal** `(String)`
+  - **squareAbsBal** `(String)`
+  - **squareVal** `(Number)`
+  - **squareAbsVal** `(Number)`
+  - **squareClassName** `(String)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareAbsBal** `(String)` — `"*", "P", "N", "B", "R", "Q", "K"`
+- ⚠️ *On error:*
+  - `String` — `*`
+
+**Examples:**
+
+```javascript
+Ic.toAbsBal(-3) //"B"
+Ic.toAbsBal(6) //"K"
+Ic.toAbsBal(0) //"*"
+Ic.toAbsBal("q") //"Q"
+Ic.toAbsBal("bq") //"Q"
+Ic.toAbsBal("err") //"*"
+Ic.toAbsBal(99) //"K"
+Ic.toAbsBal(-99) //"K"
+```
+
+---
+
+### `Ic.toClassName(...)`
+
+Converts the input to a **square class name**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qal`
+  - **squareBal** `(String)`
+  - **squareAbsBal** `(String)`
+  - **squareVal** `(Number)`
+  - **squareAbsVal** `(Number)`
+  - **squareClassName** `(String)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareClassName** `(String)` — `"bk", "bq", "br", "bb", "bn", "bp", "", "wp", "wn", "wb", "wr", "wq", "wk"`
+- ⚠️ *On error:*
+  - `String` — `""`
+
+**Examples:**
+
+```javascript
+Ic.toClassName("b") //"bb"
+Ic.toClassName("K") //"wk"
+Ic.toClassName("*") //""
+Ic.toClassName(-5) //"bq"
+Ic.toClassName("bq") //"bq"
+Ic.toClassName("err") //""
+Ic.toClassName(99) //"wk"
+Ic.toClassName(-99) //"bk"
+```
+
+---
+
+### `Ic.toBos(...)`
+
+Converts the input to a **square bos**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareBos** `(String)` — `"a1" to "h8"`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.toBos([7, 0]) //"a1"
+Ic.toBos([0, 0]) //"a8"
+Ic.toBos([7, 7]) //"h1"
+Ic.toBos([0, 7]) //"h8"
+Ic.toBos("B2") //"b2"
+```
+
+---
+
+### `Ic.toPos(...)`
+
+Converts the input to a **square pos**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squarePos** `(Array)` — `[0-7, 0-7]`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.toPos("a1") //[7, 0]
+Ic.toPos("a8") //[0, 0]
+Ic.toPos("h1") //[7, 7]
+Ic.toPos("h8") //[0, 7]
+Ic.toPos([6, 1]) //[6, 1]
+```
+
+---
+
+### `Ic.getSign(...)`
+
+Infers the **square sign** from a Boolean or a square **qal**.
+
+Boolean value `true` returns a negative sign (`-1`) and `false` a positive sign (`1`), the Boolean is meant to be the answer to *"is black the active color?"*.
+
+Any non-Boolean value will pass through `toVal()` and have its **square val** tested to a greater-than-zero comparison. White pieces have a positive sign (`1`) and empty squares/black pieces a negative sign (`-1`).
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `zal`
+  - `Boolean`
+  - `qal`
+    - **squareBal** `(String)`
+    - **squareAbsBal** `(String)`
+    - **squareVal** `(Number)`
+    - **squareAbsVal** `(Number)`
+    - **squareClassName** `(String)`
+    - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareSign** `(Number)` — `-1 or 1`
+- ⚠️ *On error:*
+  - `Number` — `-1`
+
+**Examples:**
+
+```javascript
+Ic.getSign("q") //-1
+Ic.getSign("Q") //1
+Ic.getSign(-5) //-1
+Ic.getSign(5) //1
+Ic.getSign(true) //-1
+Ic.getSign(false) //1
+Ic.getSign("bq") //-1
+Ic.getSign("wq") //1
+Ic.getSign("err") //-1
+```
+
+---
+
+### `Ic.getRankPos(...)`
+
+Converts the input to a **square rank pos**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareRankPos** `(Number)` — `0-7`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.getRankPos("a1") //7
+Ic.getRankPos("a8") //0
+Ic.getRankPos("h1") //7
+Ic.getRankPos("h8") //0
+Ic.getRankPos([3, 6]) //3
+Ic.getRankPos([6, 3]) //6
+```
+
+---
+
+### `Ic.getFilePos(...)`
+
+Converts the input to a **square file pos**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareFilePos** `(Number)` — `0-7`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.getFilePos("a1") //0
+Ic.getFilePos("a8") //0
+Ic.getFilePos("h1") //7
+Ic.getFilePos("h8") //7
+Ic.getFilePos([3, 6]) //6
+Ic.getFilePos([6, 3]) //3
+```
+
+---
+
+### `Ic.getRankBos(...)`
+
+Converts the input to a **square rank bos**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareRankBos** `(String)` — `1-8`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.getRankBos("a1") //"1"
+Ic.getRankBos("a8") //"8"
+Ic.getRankBos("h1") //"1"
+Ic.getRankBos("h8") //"8"
+Ic.getRankBos([3, 6]) //"5"
+Ic.getRankBos([6, 3]) //"2"
+```
+
+---
+
+### `Ic.getFileBos(...)`
+
+Converts the input to a **square file bos**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **squareFileBos** `(String)` — `a-h`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.getFileBos("a1") //"a"
+Ic.getFileBos("a8") //"a"
+Ic.getFileBos("h1") //"h"
+Ic.getFileBos("h8") //"h"
+Ic.getFileBos([3, 6]) //"g"
+Ic.getFileBos([6, 3]) //"d"
+```
+
+---
+
+### `Ic.isInsideBoard(...)`
+
+Test to see if a square is valid or not.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+Ic.isInsideBoard("a1") //true
+Ic.isInsideBoard("a9") //false
+Ic.isInsideBoard("i3") //false
+Ic.isInsideBoard([7, 7]) //true
+Ic.isInsideBoard([8, 8]) //false
+```
+
+---
+
+### `Ic.sameSquare(...)`
+
+Test to see if two **square**s evaluate to the same **square** or not.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `qos1`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+- `qos2`
+  - **squareBos** `(String)`
+  - **squarePos** `(Array)`
+  - **square** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `Boolean`
+- ⚠️ *On error:*
+  - `Boolean` — `false`
+
+**Examples:**
+
+```javascript
+Ic.sameSquare("a1", "a1") //true
+Ic.sameSquare("d2", [6, 3]) //true
+Ic.sameSquare([4, 5], [5, 4]) //false
+```
+
+---
+
+### `Ic.countPieces(...)`
+
+Returns the total of each piece for white and black.
+
+The **fen** doesn't need to be valid (it can be any string and it will stop after a white space or the end of the string).
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `fen` `(String)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `Object` — `{w: {...}, b: {...}}`
+- ⚠️ *On error:*
+  - `Object` — `{w: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 0, b: 0, r: 0, q: 0, k: 0}}`
+
+**Examples:**
+
+```javascript
+Ic.countPieces(defaultFen) //{w: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}, b: {p: 8, n: 2, b: 2, r: 2, q: 1, k: 1}}
+Ic.countPieces("badFenGetsParsedAnyway up until first space") //{w: {p: 1, n: 0, b: 0, r: 0, q: 0, k: 0}, b: {p: 0, n: 2, b: 1, r: 1, q: 0, k: 0}}
+```
+
+---
+
+### `Ic.countLightDarkBishops(...)`
+
+Returns the total of light and dark bishops for white and black.
+
+The **fen** doesn't need to be valid (it can be any string and it will stop after a white space or the end of the string).
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `fen` `(String)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `Object` — `{w: {...}, b: {...}}`
+- ⚠️ *On error:*
+  - `Object` — `{w: {lightSquaredBishops: 0, darkSquaredBishops: 0}, b: {lightSquaredBishops: 0, darkSquaredBishops: 0}}`
+
+**Examples:**
+
+```javascript
+Ic.countLightDarkBishops(defaultFen) //{w: {lightSquaredBishops: 1, darkSquaredBishops: 1}, b: {lightSquaredBishops: 1, darkSquaredBishops: 1}}
+Ic.countLightDarkBishops("badFenGetsParsedAnyway up until first space") //{w: {lightSquaredBishops: 0, darkSquaredBishops: 0}, b: {lightSquaredBishops: 1, darkSquaredBishops: 0}}
+```
+
+---
+
+### `Ic.removeBoard(...)`
+
+Removes a **board** completely.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `board`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+
+</details>
+
+**Returns:**
+
+- `Boolean`
+
+**Examples:**
+
+```javascript
+Ic.removeBoard(myboard) //true
+Ic.removeBoard(nonexistent) //false
+Ic.removeBoard("myboard") //true
+Ic.removeBoard("nonexistent") //false
+```
+
+---
+
+### `Ic.isEqualBoard(...)`
+
+Tests for the equality of the [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) <sup>(except for `board.boardName`)</sup> between two **board**s.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `leftBoard`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+- `rightBoard`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `Boolean`
+- ⚠️ *On error:*
+  - `Boolean` — `false`
+
+**Examples:**
+
+```javascript
+Ic.isEqualBoard("board", "board_copy") //true
+Ic.isEqualBoard(same_board, same_board) //true
+Ic.isEqualBoard("board", "other") //false
+Ic.isEqualBoard(other_board, "nonexistent") //false
+```
+
+> 📢 **Outputs an error to the console when:**
+> - the *left board* is not found.
+> - the *right board* is not found.
+
+---
+
+### `Ic.cloneBoard(...)`
+
+> 🔄 **Triggers UI refresh**
+
+Clones the [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) <sup>(except for `board.boardName`)</sup> of a **board** to another **board**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `toBoard`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+- `fromBoard`
+  - **boardName** `(String)`
+  - **board** `(Object)`
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `Boolean` — `true`
+- ⚠️ *On error:*
+  - `Boolean` — `false`
+
+**Examples:**
+
+```javascript
+Ic.cloneBoard(to_board, from_board) //true
+Ic.cloneBoard(to_board, from_nonexistent) //false
+Ic.cloneBoard("to_nonexistent", from_board) //false
+Ic.cloneBoard(to_nonexistent, "from_nonexistent") //false
+```
+
+> 📢 **Outputs an error to the console when:**
+> - the *to board* is not found.
+> - the *from board* is not found.
+> - attempting to clone a board with itself.
+
+---
+
+### `Ic.initBoard(...)`
+
+> 🔄 **Triggers UI refresh**
+
+Initializes/overwrites a :pushpin:**board**.
+
+`isRotated = true` rotates the **board** to be displayed as black view.
+
+`isPuzzleMode = true` changes the mode to **puzzle mode** 🚧 work in progress 🚧.
+
+`skipFenValidation = true` skips the fen validation. This should only be used if the fen is known to pass the fen tests of `isepic-chess.js` or the fen was generated by `isepic-chess.js`.
+
+`isHidden = true` prevents visual display or anything DOM-related when **isepic-chess-ui.js** is present (the flag becomes irrelevant otherwise).
+
+`validOrBreak = true` (when loading a `pgn`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original pgn** is returned.
+
+`validOrBreak = true` (when loading a `uci`) prevents having partially parsed games when a move is not recognized as playable, ensuring that either `null` or a **board** with the complete **original uci** is returned.
+
+`validOrBreak = true` (when loading a `fen` and not parsing a game `pgn` or `uci`) prevents the use of **default fen position**s when the **original fen** fails, ensuring that either `null` or a **board** with the **original fen** is returned.
+
+The Boolean options (`isRotated`, `isPuzzleMode`, `skipFenValidation`, `isHidden` and `validOrBreak`) default to `false` when not set to a Boolean value of `true`.
+
+`moveIndex` can be specified to set a `board.currentMove` after a game is parsed, if not specified it will result in the last parsed move `(board.moveList.length-1)`. When not parsing a game (`pgn` or `uci`), this parameter becomes irrelevant because the **current move** index will always be `0` since no moves would have been played/parsed.
+
+`promoteTo` passes through `toAbsVal()`, any empty or invalid values will turn to `0` and default to `5` (queen), valid values out of bounds will stop at min of `2` (bishop) and max of `5` (queen).
+
+`manualResult` can be set to `"*", "1-0", "0-1" or "1/2-1/2"` to change the default **board property** of `board.manualResult` of `"*"`. When used at the same time of `pgn`, this will have higher precedence than the attempts to parse the game result from the `pgn`.
+
+If `boardName` is not a String (or is one but resolves to `""` after removing spaces), a **random board name** will be generated and used.
+
+The **board name** will have any non-Alphanumeric values turned into underscores.
+
+When using a **board name** that is already in use, the **board** with that **board name** will be used instead of creating a new **board** (old references to that **board** will continue to work).
+
+`fen` can be mixed together with `pgn` and `uci` (`fen` will take precedence over the `pgn` **FEN tag**). The **default fen position** will be used if no **fen** is supplied.
+
+If both `pgn` and `uci` are supplied, the **pgn** will take precedence and the **uci** will be ignored.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `p` `(Object)` — *optional*
+  - `boardName` `(String)` — *optional*
+  - `pgn` `(String)` — *optional*
+  - `uci` `(String)` — *optional*
+  - `fen` `(String)` — *optional*
+  - `moveIndex` `(Number)` — *optional*
+  - `isRotated` `(Boolean)` — *optional*
+  - `isPuzzleMode` `(Boolean)` — *optional*
+  - `skipFenValidation` `(Boolean)` — *optional*
+  - `isHidden` `(Boolean)` — *optional*
+  - `promoteTo` — *optional*
+    - **squareBal** `(String)`
+    - **squareAbsBal** `(String)`
+    - **squareVal** `(Number)`
+    - **squareAbsVal** `(Number)`
+    - **squareClassName** `(String)`
+    - **square** `(Object)`
+  - `manualResult` `(String)` — *optional*
+  - `validOrBreak` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - **board** `(Object)`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.initBoard({boardName: "main"}) //Object{...}
+Ic.initBoard({fen: "8/k7/P7/K7/8/8/8/8 b - - 0 1", isRotated: true, promoteTo: "b"}) //Object{...}
+Ic.initBoard({pgn: "0invalidpgn0", validOrBreak: true}) //null
+Ic.initBoard({uci: "0invaliduci0", validOrBreak: true}) //null
+Ic.initBoard({fen: "0invalidfen0", validOrBreak: true}) //null
+```
+
+📌 **See also:**
+
+- [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties)
+- [board methods](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-methods.md#board-methods)
+
+> 📢 **Outputs an error to the console when:**
+> - `validOrBreak` is `true` and the *pgn* fails the parsing.
+> - `validOrBreak` is `true` and the *uci* fails the parsing.
+> - `validOrBreak` is `true` and the *fen* fails the **basic fen test**.
+> - `validOrBreak` is `true` and the *fen* fails the **refined fen test**.
+
+---
+
+### `Ic.fenApply(...)`
+
+Calls one of the allowed **board methods** (listed below) on a **temporal board** and returns the result.
+
+The list of allowed `fnName` (String):
+- `"playMove"`
+- `"playMoves"`
+- `"playRandomMove"`
+- `"legalMoves"`
+- `"legalFenMoves"`
+- `"legalSanMoves"`
+- `"legalUciMoves"`
+- `"isLegalMove"`
+- `"isLegalFen"`
+- `"getCheckmateMoves"`
+- `"getDrawMoves"`
+- `"getSquare"`
+- `"attackersFromActive"`
+- `"attackersFromNonActive"`
+- `"ascii"`
+- `"boardHash"`
+- `"countPieces"`
+- `"countLightDarkBishops"`
+
+`"isLegalFen"` is not a real **board method** and any error in the creation of the **temporal board** in `Ic.initBoard()` will be supressed in this call.
+
+If **fnName** is not supplied, the default value is `"isLegalFen"` which returns the validity of **fen**.
+
+The **args** parameter is optional in the sense that measures were taken to prevent crashes, but the function to be applied will probably be expecting real arguments.
+
+The **p** options (`isRotated`, `promoteTo` and `skipFenValidation`) are passed to `Ic.initBoard()` when creating the **temporal board**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `fen` `(String)`
+- `fnName` `(String)` — *optional*
+- `args` `(Array)` — *optional*
+- `p` `(Object)` — *optional*
+  - `isRotated` `(Boolean)` — *optional*
+  - `promoteTo` — *optional*
+    - **squareBal** `(String)`
+    - **squareAbsBal** `(String)`
+    - **squareVal** `(Number)`
+    - **squareAbsVal** `(Number)`
+    - **squareClassName** `(String)`
+    - **square** `(Object)`
+  - `skipFenValidation` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `(mixed results)`
+- ⚠️ *On error:*
+  - `(mixed results)`
+
+**Examples:**
+
+```javascript
+Ic.fenApply("r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4", "ascii") //"..."
+Ic.fenApply("r1bqkbnr/pppp2pp/2n2p2/4p3/2B1P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 1 4") //true
+Ic.fenApply("0invalidfen0") //false
+Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "playMove", ["c2_a2", {delimiter: "_"}]) //Object{...}
+Ic.fenApply("8/8/8/4k3/8/8/r1R1K3/8 w - - 0 1", "0invalidfnname0", ["a1"]) //null
+```
+
+> 📢 **Outputs an error to the console when:**
+> - (mixed reasons)
+
+---
+
+### `Ic.fenGet(...)`
+
+Get [board properties](https://github.com/ajax333221/isepic-chess/blob/master/docs/board-properties.md#board-properties) (except for `board.boardName`) from a **fen**.
+
+If **props** is not supplied (or resolves to empty), then all the **board properties** (except for `board.boardName`) will be returned by default.
+
+The **board properties** are **case-sensitive**.
+
+When passing a **string list**, this must be **space-separated** (not comma-separated).
+
+Duplicated **board properties** will not result in errors and only the first occurrence will be used.
+
+The **p** option `skipFenValidation` is passed to `Ic.initBoard()` when creating the **temporal board**.
+
+<details>
+<summary><strong>Parameters</strong></summary>
+
+- `fen` `(String)`
+- `props` — *optional*
+  - **strList** `(String)`
+  - **arrList** `(Array)`
+- `p` `(Object)` — *optional*
+  - `skipFenValidation` `(Boolean)` — *optional*
+
+</details>
+
+**Returns:**
+
+- ✅ *On success:*
+  - `Object` — `{propA: valA, propB: valB, ..., propZ: valZ}`
+- ⚠️ *On error:*
+  - `null`
+
+**Examples:**
+
+```javascript
+Ic.fenGet("6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54", "isStalemate inDraw") //{isStalemate: true, inDraw: true}
+Ic.fenGet("6k1/b7/8/8/5p2/7p/7P/7K w - - 0 54", ["halfMove", "fullMove"]) //{halfMove: 0, fullMove: 54}
+Ic.fenGet("0invalidfen0", "isCheck") //null
+Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") //Object{...}
+Ic.fenGet("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", "fen 0invalidprop0") //null
+```
+
+> 📢 **Outputs an error to the console when:**
+> - `fen` is an **invalid fen**.
+> - an **invalid property** was found in `props`.
+
+---
+
+### `Ic.getBoardNames()`
+
+Returns a **board names array**.
+
+The **board**s with `isHidden = true` are also included.
+
+**Parameters:** None
+
+**Returns:**
+
+- **boardNamesArray** `(Array)`
+
+**Examples:**
+
+```javascript
+Ic.getBoardNames() //["main", "other", "other_copy", "hidden_board", "resume_from_fen"]
+Ic.getBoardNames() //[]
+```
+
 
 <p align="center"><a href="https://github.com/ajax333221/isepic-chess#book-documentation">« Return</a></p>

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Doco. Generator (Board methods)</title>
   </head>
+
   <body>
     <h1>board-methods.md</h1>
     <textarea id="result" style="width: 100%; height: 400px">...</textarea>
@@ -286,7 +287,7 @@
       '`isLegalMove = true` skips the legal move validation. This should only be used if the move is known to be a legal move for a specific fen and the current board fen matches it.'
     );
     board.playMove.description.push(
-      '`isInanimated = true` prevents the **piece animation** in UI <sup>(the UI refresh takes place normally)</sup>.'
+      '`isInanimated = true` prevents the **piece animation** in UI (the UI refresh takes place normally).'
     );
     board.playMove.description.push('`playSounds = true` plays the move with **sound effects** in UI.');
     board.playMove.description.push(
@@ -359,13 +360,13 @@
       '`isMockMove = true` plays the moves on a **temporal board** instead of affecting the **board**.'
     );
     board.playMoves.description.push(
-      ':zap:**Tip:** when **isMockMove** is used, all the moves are expected to be from the active side (do not alternate them with the non-active side as the moves will not be being played). However, it is preferred to validate multiple moves with `board.isLegalMove(...)` and a loop with early break.'
+      '> [!TIP]\n> When **isMockMove** is used, all the moves are expected to be from the active side (do not alternate them with the non-active side as the moves will not be being played). However, it is preferred to validate multiple moves with `board.isLegalMove(...)` and a loop with early break.'
     );
     board.playMoves.description.push(
       '`isLegalMove = true` skips the legal move validation. This should only be used if the moves are known to be legal moves for a specific fen and the current board fen matches it.'
     );
     board.playMoves.description.push(
-      '`isInanimated = true` prevents the **piece animations** in UI <sup>(the UI refresh takes place normally)</sup>.'
+      '`isInanimated = true` prevents the **piece animations** in UI (the UI refresh takes place normally).'
     );
     board.playMoves.description.push('`playSounds = true` plays the moves with **sound effects** in UI.');
     board.playMoves.description.push(
@@ -427,12 +428,12 @@
     ];
 
     board.playRandomMove.description = [];
-    board.playRandomMove.description.push('Generates and returns a :pushpin:**move**.');
+    board.playRandomMove.description.push('Generates and returns a random :pushpin:**move**.');
     board.playRandomMove.description.push(
       '`isMockMove = true` plays the move on a **temporal board** instead of affecting the **board**.'
     );
     board.playRandomMove.description.push(
-      '`isInanimated = true` prevents the **piece animation** in UI <sup>(the UI refresh takes place normally)</sup>.'
+      '`isInanimated = true` prevents the **piece animation** in UI (the UI refresh takes place normally).'
     );
     board.playRandomMove.description.push('`playSounds = true` plays the move with **sound effects** in UI.');
     board.playRandomMove.description.push(
@@ -549,7 +550,7 @@
       'When a Boolean `false` is passed, the **current move** will be shifted by the value instead of setting the value.'
     );
     board.setCurrentMove.description.push(
-      'The **piece animation** in UI will be prevented when:<ul><li>Boolean `true` is passed in `isGoto`.</li><li>`isGoto` is not a Boolean type and the **current move** change is bigger than one.</li></ul>'
+      'The **piece animation** in UI will be prevented when:\n- Boolean `true` is passed in `isGoto`.\n- `isGoto` is not a Boolean type and the **current move** change is bigger than one.'
     );
 
     board.setCurrentMove.examples = [];
@@ -794,7 +795,7 @@
       'Returns the **piece count** structured by player color (`w` and `b`) and then by piece (`p`, `n`, `b`, `r`, `q` and `k`).'
     );
     board.countPieces.description.push(
-      'The player colors `{w: {...}, b: {...}}` have the following sub-properties:<ul><li>**p** (Number): `obj.w.p` and `obj.b.p`.</li><li>**n** (Number): `obj.w.n` and `obj.b.n`.</li><li>**b** (Number): `obj.w.b` and `obj.b.b`.</li><li>**r** (Number): `obj.w.r` and `obj.b.r`.</li><li>**q** (Number): `obj.w.q` and `obj.b.q`.</li><li>**k** (Number): `obj.w.k` and `obj.b.k`.</li></ul>'
+      'The player colors `{w: {...}, b: {...}}` have the following sub-properties:\n- **p** (Number): `obj.w.p` and `obj.b.p`.\n- **n** (Number): `obj.w.n` and `obj.b.n`.\n- **b** (Number): `obj.w.b` and `obj.b.b`.\n- **r** (Number): `obj.w.r` and `obj.b.r`.\n- **q** (Number): `obj.w.q` and `obj.b.q`.\n- **k** (Number): `obj.w.k` and `obj.b.k`.'
     );
 
     board.countPieces.examples = [];
@@ -813,7 +814,7 @@
       'Returns the **bishop count** structured by player color (`w` and `b`) and then by square color (`lightSquaredBishops` and `darkSquaredBishops`).'
     );
     board.countLightDarkBishops.description.push(
-      'The player colors `{w: {...}, b: {...}}` have the following sub-properties:<ul><li>**lightSquaredBishops** (Number): `obj.w.lightSquaredBishops` and `obj.b.lightSquaredBishops`.</li><li>**darkSquaredBishops** (Number): `obj.w.darkSquaredBishops` and `obj.b.darkSquaredBishops`.</li></ul>'
+      'The player colors `{w: {...}, b: {...}}` have the following sub-properties:\n- **lightSquaredBishops** (Number): `obj.w.lightSquaredBishops` and `obj.b.lightSquaredBishops`.\n- **darkSquaredBishops** (Number): `obj.w.darkSquaredBishops` and `obj.b.darkSquaredBishops`.'
     );
 
     board.countLightDarkBishops.examples = [];
@@ -1061,7 +1062,7 @@
     );
     board.setSquare.description.push('The **square** object will have every non-static property updated.');
     board.setSquare.description.push(
-      '**:warning:Important:** this method is not meant to be used unless you know exactly how everything works (the validation, castle rights and UI must be manually checked, updated and refreshed).'
+      '> [!WARNING]\n> This method is not meant to be used unless you know exactly how everything works (the validation, castle rights and UI must be manually checked, updated and refreshed).'
     );
 
     board.setSquare.links = PIN_SQUARE;
@@ -1398,7 +1399,7 @@
     board.isEqualBoard.description.push(
       'Tests for the equality of the ' +
         urlLink(URL_BOARD_PROPS) +
-        ' <sup>(except for `board.boardName`)</sup> between the calling **board** and another **board**.'
+        ' (except for `board.boardName`) between the calling **board** and another **board**.'
     );
 
     board.isEqualBoard.examples = [];
@@ -1413,46 +1414,22 @@
 
     res = '';
 
-    res += '<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>';
+    res += '<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>\n\n';
 
-    res += '\n\n';
+    res += '# Board Methods\n\n';
 
-    res += '<h1 align="center">Board methods</h1>';
+    res += 'Boards created by `Ic.initBoard()` have the following available methods.\n\n';
 
-    res += '\n\n';
-
-    res += 'Boards created by `Ic.initBoard()` have the following available methods:';
-
-    res += '\n\n';
-
-    res += '<ul>\n<li>board.' + docoGenMethodList(board).join('()</li>\n<li>board.') + '()</li>\n</ul>';
-
-    res += '\n\n';
-
-    res += '#### Table `board.<methods>(...)`:';
-
-    res += '\n\n';
-
-    res += 'Function | Parameters | Return | UI refresh? | Description';
-
+    // Quick Reference Table
+    res += '## Quick Reference\n\n';
+    res += docoGenQuickRef(board, 'board.', 'board.');
     res += '\n';
 
-    res += '-------- | ---------- | ------ | ----------- | -----------';
+    // Full documentation for each method
+    res += '## Method Details\n\n';
+    res += docoGenMethods(board, 'board.').join('');
 
-    res += '\n';
-
-    res += docoGenMethodTable(board).join('\n');
-
-    res += '\n\n';
-
-    res +=
-      '<sup>And the [board UI methods](https://github.com/ajax333221/isepic-chess-ui/blob/master/docs/board-ui-methods.md#board-ui-methods) when **isepic-chess-ui.js** is present.</sup>';
-
-    res += '\n\n';
-
-    res += '<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>';
-
-    res += '\n';
+    res += '\n<p align="center">' + urlHrefLink(['« Return', '#book-documentation']) + '</p>\n';
 
     document.getElementById('result').value = res;
   </script>
