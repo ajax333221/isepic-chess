@@ -3141,7 +3141,7 @@ import * as Ts from './isepic-chess.types';
             if (legal_rev_tree) {
               let bos_moves: Ts.SquareBos[] = legal_rev_tree[(initial_cached_square.bal || '').toLowerCase()];
 
-              if (bos_moves.length > 1) {
+              if (bos_moves?.length > 1) {
                 is_ambiguous = true;
                 let bos_csv_list = bos_moves.join(',');
 
