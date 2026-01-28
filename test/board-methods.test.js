@@ -1339,6 +1339,18 @@ describe('Board methods', () => {
       expect(board_a.uciExport()).toBe('e2e4 _e5_ _Nf3_');
       expect(board_b.uciExport()).toBe('e2e4 e7e5 _Nf3_');
     });
+
+    test('play move from illegal position', () => {
+      const b = Ic.initBoard({
+        fen: 'rnbQ1bnr/pppp1ppp/8/8/1B6/8/PPPP1PPP/RB1Q1RK1 b - - 0 1',
+        skipFenValidation: true,
+      });
+      // set white to move
+      // (Using a FEN where it's already white to move didn't lead to a crash)
+      b.toggleActiveNonActive(false);
+      b.playMove('b4-a5', { isLegalMove: true });
+      expect(b.fen).toBe('rnbQ1bnr/pppp1ppp/8/B7/8/8/PPPP1PPP/RB1Q1RK1 b - - 1 1');
+    });
   });
 
   test('b.playRandomMove()', () => {
